@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -13,43 +12,32 @@ interface InboxTabsProps {
 }
 
 const InboxTabs = ({ activeTab, onTabChange, currentPage, totalPages, onPageChange }: InboxTabsProps) => {
+  const tabs = [
+    { id: 'inbox', label: 'Inbox' },
+    { id: 'drafts', label: 'Drafts' },
+    { id: 'sent', label: 'Sent' },
+    { id: 'archive', label: 'Archive' },
+    { id: 'trash', label: 'Trash' },
+  ];
+
   return (
-    <div className="border-b border-border">
-      <div className="px-4 py-2 flex items-center justify-between">
-        <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1">
-          <TabsList className="bg-transparent h-auto p-0 space-x-6">
-            <TabsTrigger 
-              value="inbox" 
-              className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
+    <div className="border-b border-border px-4 py-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={`text-xs font-medium ${
+                activeTab === tab.id 
+                  ? 'text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
-              Inbox
-            </TabsTrigger>
-            <TabsTrigger 
-              value="drafts" 
-              className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-            >
-              Drafts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="sent" 
-              className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-            >
-              Sent
-            </TabsTrigger>
-            <TabsTrigger 
-              value="archive" 
-              className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-            >
-              Archive
-            </TabsTrigger>
-            <TabsTrigger 
-              value="trash" 
-              className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-            >
-              Trash
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+              {tab.label}
+            </button>
+          ))}
+        </div>
         
         {/* Pagination arrows */}
         <div className="flex items-center gap-1">
