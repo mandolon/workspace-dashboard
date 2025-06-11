@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Printer, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -81,7 +82,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
         </div>
 
         {/* Email card */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm">
           {/* Email header */}
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-start gap-4">
