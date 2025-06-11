@@ -29,7 +29,9 @@ const InboxTopBar = ({ onToggleSidebar }: InboxTopBarProps) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button size="sm">Compose</Button>
+        <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
+          Compose
+        </Button>
       </div>
     </div>
   );
