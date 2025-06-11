@@ -58,12 +58,12 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-background border border-border shadow-lg">
-        <DialogHeader className="py-6">
+      <DialogContent className="sm:max-w-2xl bg-background border border-border shadow-lg">
+        <DialogHeader className="py-4">
           <DialogTitle className="text-lg font-semibold">Task</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6 py-8">
+        <div className="space-y-4 py-4">
           {/* Project and Status Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -159,7 +159,7 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
           {/* Attachments */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">Attachments</Label>
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
               <Paperclip className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 Drop your files here to{' '}
@@ -170,7 +170,7 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
         </div>
 
         {/* Create Task Button */}
-        <div className="flex justify-end pt-6 pb-6">
+        <div className="flex justify-end pt-4 pb-4">
           <Button 
             onClick={handleCreateTask}
             className="bg-gray-800 hover:bg-gray-900 text-white px-6"
