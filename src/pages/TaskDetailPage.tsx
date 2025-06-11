@@ -3,6 +3,13 @@ import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const TaskDetailPage = () => {
   const navigate = useNavigate();
@@ -52,6 +59,20 @@ const TaskDetailPage = () => {
   };
 
   const task = getTaskData(taskId);
+  const [selectedProject, setSelectedProject] = useState(task.project);
+
+  // Available projects for the dropdown
+  const availableProjects = [
+    "Piner Haus Garage",
+    "Rathbun - USFS Cabin", 
+    "Ogden - Thew - 2709 T Street",
+    "Adams - 1063 40th Street"
+  ];
+
+  const handleProjectChange = (newProject: string) => {
+    setSelectedProject(newProject);
+    console.log('Project changed to:', newProject);
+  };
 
   const attachments = [
     {
@@ -168,7 +189,18 @@ const TaskDetailPage = () => {
                     >
                       <ArrowLeft className="w-4 h-4" />
                     </button>
-                    <span className="text-sm text-muted-foreground">{task.project}</span>
+                    <Select value={selectedProject} onValueChange={handleProjectChange}>
+                      <SelectTrigger className="w-auto border-none shadow-none p-0 h-auto text-sm text-muted-foreground hover:text-foreground">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableProjects.map((project) => (
+                          <SelectItem key={project} value={project}>
+                            {project}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <div className="ml-auto">
                       <div className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
                         {task.status}
@@ -183,7 +215,7 @@ const TaskDetailPage = () => {
                     {/* Task Title */}
                     <div>
                       <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
-                      <div className="text-sm text-muted-foreground mb-2">{task.project}</div>
+                      <div className="text-sm text-muted-foreground mb-2">{selectedProject}</div>
                       <div className="flex items-center gap-2">
                         <input type="checkbox" className="w-4 h-4" />
                         <span className="text-sm text-muted-foreground">Add description</span>
