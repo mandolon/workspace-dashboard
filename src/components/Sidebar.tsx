@@ -32,11 +32,11 @@ interface SidebarProps {
 
 const Sidebar = ({ isCollapsed }: SidebarProps) => {
   const [openSections, setOpenSections] = useState({
-    home: true,
-    projects: true,
+    spaces: true,
     inProgress: true,
     onHold: false,
     completed: false,
+    favorites: false,
     mainNav: true
   });
 
@@ -48,6 +48,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
   };
 
   const mainNavItems = [
+    { icon: Home, label: 'Home', active: false },
     { icon: Inbox, label: 'Inbox', active: false },
     { icon: MessageSquare, label: 'Chat', active: false },
     { icon: Users, label: 'Teams', active: false },
@@ -60,6 +61,10 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
     { icon: Target, label: 'Goals', active: false },
     { icon: Clock, label: 'Timesheets', active: false },
     { icon: MoreHorizontal, label: 'More', active: false },
+  ];
+
+  const workspaces = [
+    { name: 'PinerWorks', active: true, locked: true },
   ];
 
   const inProgressProjects = [
@@ -104,14 +109,6 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
           </div>
         </div>
         <nav className="flex-1 py-2 px-1 space-y-0">
-          <div
-            className={cn(
-              "flex items-center justify-center p-2 rounded text-sm cursor-pointer transition-colors my-0.5",
-              "text-sidebar-foreground hover:bg-sidebar-accent/50"
-            )}
-          >
-            <Home className="w-4 h-4" />
-          </div>
           {mainNavItems.map((item, index) => (
             <div
               key={index}
@@ -161,127 +158,6 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <nav className="space-y-0 mt-2">
-                  {/* Home Section with Projects */}
-                  <Collapsible open={openSections.home} onOpenChange={() => toggleSection('home')}>
-                    <div className="space-y-1">
-                      <CollapsibleTrigger className="flex items-center gap-3 px-3 py-2 rounded text-sm cursor-pointer transition-colors my-0.5 w-full text-left hover:bg-sidebar-accent/50">
-                        <Home className="w-4 h-4 flex-shrink-0" />
-                        <span className="text-sm truncate flex-1">Home</span>
-                        {openSections.home ? (
-                          <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                        ) : (
-                          <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                        )}
-                      </CollapsibleTrigger>
-                      
-                      <CollapsibleContent>
-                        <div className="ml-6 space-y-1">
-                          {/* Projects Workspace */}
-                          <Collapsible open={openSections.projects} onOpenChange={() => toggleSection('projects')}>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
-                                <div className="w-3 h-3 bg-purple-500 rounded-sm flex-shrink-0"></div>
-                                <span className="truncate flex-1 text-sm">Projects</span>
-                                <div className="flex items-center gap-1 flex-shrink-0">
-                                  <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-                                  <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-                                </div>
-                              </div>
-
-                              {/* In Progress Projects */}
-                              <Collapsible open={openSections.inProgress} onOpenChange={() => toggleSection('inProgress')}>
-                                <div className="ml-3">
-                                  <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-blue-50 rounded">
-                                    {openSections.inProgress ? (
-                                      <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    ) : (
-                                      <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    )}
-                                    <div className="w-3 h-3 bg-blue-500 rounded-sm flex-shrink-0"></div>
-                                    <span className="text-sm font-medium truncate">in Progress</span>
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent>
-                                    <div className="ml-5 mt-1 space-y-1">
-                                      {inProgressProjects.slice(0, 4).map((project, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                                        >
-                                          <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                                          <span className="truncate text-xs flex-1">{project}</span>
-                                          {project === 'Ogden - Thew - 2709 T Street' && (
-                                            <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </CollapsibleContent>
-                                </div>
-                              </Collapsible>
-
-                              {/* On Hold Projects */}
-                              <Collapsible open={openSections.onHold} onOpenChange={() => toggleSection('onHold')}>
-                                <div className="ml-3 mt-1">
-                                  <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
-                                    {openSections.onHold ? (
-                                      <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    ) : (
-                                      <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    )}
-                                    <div className="w-3 h-3 bg-orange-500 rounded-sm flex-shrink-0"></div>
-                                    <span className="text-sm font-medium truncate">on Hold</span>
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent>
-                                    <div className="ml-5 mt-1 space-y-1">
-                                      {onHoldProjects.map((project, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                                        >
-                                          <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                                          <span className="truncate text-xs">{project}</span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </CollapsibleContent>
-                                </div>
-                              </Collapsible>
-
-                              {/* Completed Projects */}
-                              <Collapsible open={openSections.completed} onOpenChange={() => toggleSection('completed')}>
-                                <div className="ml-3 mt-1">
-                                  <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
-                                    {openSections.completed ? (
-                                      <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    ) : (
-                                      <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    )}
-                                    <div className="w-3 h-3 bg-green-500 rounded-sm flex-shrink-0"></div>
-                                    <span className="text-sm font-medium truncate">completed</span>
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent>
-                                    <div className="ml-5 mt-1 space-y-1">
-                                      {completedProjects.map((project, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                                        >
-                                          <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                                          <span className="truncate text-xs">{project}</span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </CollapsibleContent>
-                                </div>
-                              </Collapsible>
-                            </div>
-                          </Collapsible>
-                        </div>
-                      </CollapsibleContent>
-                    </div>
-                  </Collapsible>
-
-                  {/* Other Navigation Items */}
                   {mainNavItems.map((item, index) => (
                     <div
                       key={index}
@@ -301,11 +177,32 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             </div>
           </Collapsible>
 
-          {/* Projects Section */}
+          {/* Favorites Section - Collapsible */}
+          <Collapsible open={openSections.favorites} onOpenChange={() => toggleSection('favorites')}>
+            <div className="px-4 mb-2">
+              <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 hover:bg-sidebar-accent/50 rounded px-2 py-1">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
+                  Favorites
+                </span>
+                {openSections.favorites ? (
+                  <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                ) : (
+                  <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="text-sm text-muted-foreground px-2 py-2">
+                  No favorites yet
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+
+          {/* Spaces Section */}
           <div className="mt-4 px-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
-                Projects
+                Spaces
               </span>
               <div className="flex items-center gap-1 flex-shrink-0">
                 <MoreHorizontal className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground" />
@@ -313,104 +210,115 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
               </div>
             </div>
 
-            {/* Projects Workspace */}
-            <Collapsible open={openSections.projects} onOpenChange={() => toggleSection('projects')}>
+            {/* Everything Item */}
+            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50 mb-1">
+              <MoreHorizontal className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+              <span className="text-sm truncate">Everything</span>
+            </div>
+
+            {/* PinerWorks Workspace */}
+            <Collapsible open={openSections.spaces} onOpenChange={() => toggleSection('spaces')}>
               <div className="space-y-1">
-                <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
-                  <div className="w-3 h-3 bg-purple-500 rounded-sm flex-shrink-0"></div>
-                  <span className="truncate flex-1 text-sm">Projects</span>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-                    <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-                  </div>
-                </div>
-
-                {/* In Progress Projects */}
-                <Collapsible open={openSections.inProgress} onOpenChange={() => toggleSection('inProgress')}>
-                  <div className="ml-3">
-                    <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-blue-50 rounded">
-                      {openSections.inProgress ? (
-                        <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      )}
-                      <div className="w-3 h-3 bg-blue-500 rounded-sm flex-shrink-0"></div>
-                      <span className="text-sm font-medium truncate">in Progress</span>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <div className="ml-5 mt-1 space-y-1">
-                        {inProgressProjects.slice(0, 4).map((project, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                          >
-                            <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                            <span className="truncate text-xs flex-1">{project}</span>
-                            {project === 'Ogden - Thew - 2709 T Street' && (
-                              <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
-                            )}
-                          </div>
-                        ))}
+                {workspaces.map((workspace, index) => (
+                  <div key={index}>
+                    <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
+                      <div className="w-3 h-3 bg-purple-500 rounded-sm flex-shrink-0"></div>
+                      <span className="truncate flex-1 text-sm">{workspace.name}</span>
+                      {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs flex-shrink-0">🔒</div>}
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
+                        <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
                       </div>
-                    </CollapsibleContent>
-                  </div>
-                </Collapsible>
+                    </div>
 
-                {/* On Hold Projects */}
-                <Collapsible open={openSections.onHold} onOpenChange={() => toggleSection('onHold')}>
-                  <div className="ml-3 mt-1">
-                    <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
-                      {openSections.onHold ? (
-                        <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      )}
-                      <div className="w-3 h-3 bg-orange-500 rounded-sm flex-shrink-0"></div>
-                      <span className="text-sm font-medium truncate">on Hold</span>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <div className="ml-5 mt-1 space-y-1">
-                        {onHoldProjects.map((project, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                          >
-                            <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                            <span className="truncate text-xs">{project}</span>
+                    {/* In Progress Projects */}
+                    <Collapsible open={openSections.inProgress} onOpenChange={() => toggleSection('inProgress')}>
+                      <div className="ml-3">
+                        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-blue-50 rounded">
+                          {openSections.inProgress ? (
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          ) : (
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          )}
+                          <div className="w-3 h-3 bg-blue-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">in Progress</span>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <div className="ml-5 mt-1 space-y-1">
+                            {inProgressProjects.slice(0, 4).map((project, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
+                              >
+                                <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
+                                <span className="truncate text-xs flex-1">{project}</span>
+                                {project === 'Ogden - Thew - 2709 T Street' && (
+                                  <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
+                                )}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </CollapsibleContent>
                       </div>
-                    </CollapsibleContent>
-                  </div>
-                </Collapsible>
+                    </Collapsible>
 
-                {/* Completed Projects */}
-                <Collapsible open={openSections.completed} onOpenChange={() => toggleSection('completed')}>
-                  <div className="ml-3 mt-1">
-                    <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
-                      {openSections.completed ? (
-                        <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      )}
-                      <div className="w-3 h-3 bg-green-500 rounded-sm flex-shrink-0"></div>
-                      <span className="text-sm font-medium truncate">completed</span>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <div className="ml-5 mt-1 space-y-1">
-                        {completedProjects.map((project, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
-                          >
-                            <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                            <span className="truncate text-xs">{project}</span>
+                    {/* On Hold Projects */}
+                    <Collapsible open={openSections.onHold} onOpenChange={() => toggleSection('onHold')}>
+                      <div className="ml-3 mt-1">
+                        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
+                          {openSections.onHold ? (
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          ) : (
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          )}
+                          <div className="w-3 h-3 bg-orange-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">on Hold</span>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <div className="ml-5 mt-1 space-y-1">
+                            {onHoldProjects.map((project, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
+                              >
+                                <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
+                                <span className="truncate text-xs">{project}</span>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </CollapsibleContent>
                       </div>
-                    </CollapsibleContent>
+                    </Collapsible>
+
+                    {/* Completed Projects */}
+                    <Collapsible open={openSections.completed} onOpenChange={() => toggleSection('completed')}>
+                      <div className="ml-3 mt-1">
+                        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
+                          {openSections.completed ? (
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          ) : (
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          )}
+                          <div className="w-3 h-3 bg-green-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">completed</span>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <div className="ml-5 mt-1 space-y-1">
+                            {completedProjects.map((project, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
+                              >
+                                <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
+                                <span className="truncate text-xs">{project}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </CollapsibleContent>
+                      </div>
+                    </Collapsible>
                   </div>
-                </Collapsible>
+                ))}
               </div>
             </Collapsible>
           </div>
