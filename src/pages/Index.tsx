@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
@@ -11,9 +12,9 @@ const Index = () => {
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
-          defaultSize={15} 
+          defaultSize={20} 
           minSize={15} 
-          maxSize={35}
+          maxSize={30}
           collapsedSize={4}
           collapsible={true}
           onCollapse={() => setSidebarCollapsed(true)}
@@ -27,7 +28,7 @@ const Index = () => {
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={85} className="min-h-screen">
+        <ResizablePanel defaultSize={80} className="min-h-screen">
           <div className="flex flex-col h-screen">
             {/* Top Bar */}
             <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">

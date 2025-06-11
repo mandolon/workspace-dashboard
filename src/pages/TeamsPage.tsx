@@ -13,9 +13,9 @@ const TeamsPage = () => {
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
-          defaultSize={15} 
+          defaultSize={20} 
           minSize={15} 
-          maxSize={35}
+          maxSize={30}
           collapsedSize={4}
           collapsible={true}
           onCollapse={() => setSidebarCollapsed(true)}
@@ -29,7 +29,7 @@ const TeamsPage = () => {
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={85} className="min-h-screen">
+        <ResizablePanel defaultSize={80} className="min-h-screen">
           <div className="flex flex-col h-screen">
             <TeamsTopBar 
               sidebarCollapsed={sidebarCollapsed}
