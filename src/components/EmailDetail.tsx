@@ -70,8 +70,8 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
         </div>
       </div>
 
-      {/* Email content container with Gmail-style card */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
+      {/* Email content container with white background */}
+      <div className="flex-1 overflow-y-auto bg-white p-4">
         <div className="max-w-4xl mx-auto">
           {/* Subject line */}
           <div className="mb-6">
