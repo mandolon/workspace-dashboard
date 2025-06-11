@@ -14,7 +14,8 @@ const TaskDetailPage = () => {
     const projects: Record<string, string> = {
       '1': "Adams - 1063 40th Street",
       '2': "Rathbun - USFS Cabin", 
-      '3': "Ogden - Thew - 2709 T Street"
+      '3': "Ogden - Thew - 2709 T Street",
+      '4': "Piner Haus Garage"
     };
     
     return projects[id || '1'] || "Adams - 1063 40th Street";
@@ -41,6 +42,12 @@ const TaskDetailPage = () => {
         title: "Site survey completed",
         project: "Ogden - Thew - 2709 T Street",
         status: "IN PROGRESS"
+      },
+      '4': {
+        id: id,
+        title: "Garage Foundation Review",
+        project: "Piner Haus Garage",
+        status: "REDLINE / TO DO"
       }
     };
     
