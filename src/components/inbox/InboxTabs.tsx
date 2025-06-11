@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Inbox, FileText, Send, Archive, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface InboxTabsProps {
@@ -13,30 +13,34 @@ interface InboxTabsProps {
 
 const InboxTabs = ({ activeTab, onTabChange, currentPage, totalPages, onPageChange }: InboxTabsProps) => {
   const tabs = [
-    { id: 'inbox', label: 'Inbox' },
-    { id: 'drafts', label: 'Drafts' },
-    { id: 'sent', label: 'Sent' },
-    { id: 'archive', label: 'Archive' },
-    { id: 'trash', label: 'Trash' },
+    { id: 'inbox', label: 'Inbox', icon: Inbox },
+    { id: 'drafts', label: 'Drafts', icon: FileText },
+    { id: 'sent', label: 'Sent', icon: Send },
+    { id: 'archive', label: 'Archive', icon: Archive },
+    { id: 'trash', label: 'Trash', icon: Trash2 },
   ];
 
   return (
     <div className="px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`text-xs py-1 ${
-                activeTab === tab.id 
-                  ? 'text-foreground font-medium' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const IconComponent = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`text-xs py-1 flex items-center gap-2 ${
+                  activeTab === tab.id 
+                    ? 'text-foreground font-medium' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <IconComponent className="w-3 h-3" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
         
         {/* Pagination arrows */}
