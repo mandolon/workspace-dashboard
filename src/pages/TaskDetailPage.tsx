@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
