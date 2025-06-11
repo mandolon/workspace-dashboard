@@ -41,6 +41,28 @@ const TaskGroupSection = ({
   onQuickAddSave, 
   onTaskClick 
 }: TaskGroupSectionProps) => {
+  const getRandomColor = (name: string) => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500', 
+      'bg-green-500',
+      'bg-yellow-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500'
+    ];
+    // Use a hash of the name to consistently assign the same color
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div className="space-y-2">
       {/* Group Header */}
@@ -89,13 +111,13 @@ const TaskGroupSection = ({
               <TableCell className="py-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center -space-x-1">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
                       {task.assignee.name}
                     </div>
                     {task.collaborators?.map((collaborator, index) => (
                       <div
                         key={index}
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${collaborator.avatar}`}
+                        className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}
                       >
                         {collaborator.name}
                       </div>

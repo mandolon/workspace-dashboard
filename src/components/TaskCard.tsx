@@ -26,6 +26,28 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  const getRandomColor = (id: string) => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500', 
+      'bg-green-500',
+      'bg-yellow-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500'
+    ];
+    // Use a hash of the name to consistently assign the same color
+    const hash = id.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
       {/* Checkbox and Task Info */}
@@ -70,7 +92,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <div className="flex items-center -space-x-1">
           <div className={cn(
             "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium",
-            task.assignee.avatar
+            getRandomColor(task.assignee.name)
           )}>
             {task.assignee.name}
           </div>
@@ -79,7 +101,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
               key={index}
               className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
-                collaborator.avatar
+                getRandomColor(collaborator.name)
               )}
             >
               {collaborator.name}

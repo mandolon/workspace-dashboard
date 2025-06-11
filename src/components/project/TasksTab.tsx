@@ -10,6 +10,28 @@ interface TasksTabProps {
 const TasksTab = ({ projectName }: TasksTabProps) => {
   const navigate = useNavigate();
 
+  const getRandomColor = (name: string) => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500', 
+      'bg-green-500',
+      'bg-yellow-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500'
+    ];
+    // Use a hash of the name to consistently assign the same color
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   // Flatten all tasks from groups into a single array
   const allTasks = [
     {
@@ -109,7 +131,7 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
             <div className="col-span-3 text-muted-foreground">{task.dateCreated}</div>
             <div className="col-span-3 flex items-center justify-between">
               <div className="flex items-center -space-x-1">
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
                   {task.assignee.name}
                 </div>
               </div>
