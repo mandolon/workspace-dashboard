@@ -112,7 +112,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="text-xs font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
               autoFocus
             />
-            <div className="text-xs text-muted-foreground">{selectedProject || 'No Project'}</div>
+            {selectedProject && (
+              <div className="text-xs text-muted-foreground">{selectedProject}</div>
+            )}
           </div>
         </div>
 
