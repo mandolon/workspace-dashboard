@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { X, Calendar, User, Paperclip } from 'lucide-react';
+import { format } from 'date-fns';
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 interface TaskDialogProps {
   isOpen: boolean;
@@ -30,34 +38,55 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
   const [selectedProject, setSelectedProject] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [addDescription, setAddDescription] = useState(false);
+  const [description, setDescription] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [hasButton, setHasButton] = useState(false);
+  const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
   const handleCreateTask = () => {
+    if (!taskName.trim()) {
+      return;
+    }
+
     const taskData = {
-      taskName,
-      selectedProject,
-      selectedStatus,
-      addDescription,
+      id: Date.now(), // Simple ID generation
+      title: taskName,
+      project: selectedProject,
+      status: selectedStatus || 'progress',
+      description: addDescription ? description : '',
       assignedTo,
-      dueDate,
-      hasButton,
+      dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '',
+      dateCreated: format(new Date(), 'MM/dd/yy'),
+      hasAttachment: false,
+      assignee: {
+        name: assignedTo || 'UN',
+        avatar: assignedTo === 'MH' ? 'bg-purple-500' : 
+                assignedTo === 'AL' ? 'bg-gray-600' : 
+                assignedTo === 'MP' ? 'bg-green-500' : 'bg-blue-500'
+      }
     };
+    
     onCreateTask(taskData);
+    handleReset();
     onClose();
-    // Reset form
+  };
+
+  const handleReset = () => {
     setTaskName('');
     setSelectedProject('');
     setSelectedStatus('');
     setAddDescription(false);
+    setDescription('');
     setAssignedTo('');
-    setDueDate('');
-    setHasButton(false);
+    setDueDate(undefined);
+  };
+
+  const handleClose = () => {
+    handleReset();
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-3xl w-[900px] bg-background border border-border shadow-lg">
         <DialogHeader className="py-3">
           <DialogTitle className="text-base font-medium">Task</DialogTitle>
@@ -114,6 +143,18 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
             <Label htmlFor="addDescription" className="text-sm text-muted-foreground">Add description</Label>
           </div>
 
+          {/* Description Field (if enabled) */}
+          {addDescription && (
+            <div>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter task description..."
+                className="w-full h-20 px-3 py-2 text-sm border border-input rounded-md bg-background resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              />
+            </div>
+          )}
+
           {/* Bottom Row: Assignee, Due Date, and Additional Options */}
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -123,32 +164,46 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
                   <SelectValue placeholder="Assignee" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mh">MH</SelectItem>
-                  <SelectItem value="al">AL</SelectItem>
-                  <SelectItem value="mp">MP</SelectItem>
+                  <SelectItem value="MH">MH</SelectItem>
+                  <SelectItem value="AL">AL</SelectItem>
+                  <SelectItem value="MP">MP</SelectItem>
                 </SelectContent>
               </Select>
               
-              <div className="relative">
-                <Input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="w-32 h-7 text-xs pl-7"
-                  placeholder="Due date"
-                />
-                <Calendar className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-32 h-7 text-xs pl-7 justify-start text-left font-normal",
+                      !dueDate && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="w-3 h-3 absolute left-2" />
+                    {dueDate ? format(dueDate, "PPP") : "Due date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={dueDate}
+                    onSelect={setDueDate}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
 
               <button className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground">
                 <Paperclip className="w-3 h-3" />
-                <span>1</span>
+                <span>0</span>
               </button>
             </div>
 
             <Button 
               onClick={handleCreateTask}
-              className="h-7 px-4 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={!taskName.trim()}
+              className="h-7 px-4 text-xs bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
             >
               Create Task
             </Button>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit, Folder } from 'lucide-react';
@@ -9,12 +10,14 @@ const TaskBoard = () => {
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
+  const [customTasks, setCustomTasks] = useState<any[]>([]);
 
-  const taskGroups = [
+  const defaultTaskGroups = [
     {
       title: "TASK/ REDLINE",
       count: 1,
       color: "bg-red-500",
+      status: "redline",
       tasks: [
         {
           id: 1,
@@ -33,6 +36,7 @@ const TaskBoard = () => {
       title: "PROGRESS/ UPDATE",
       count: 3,
       color: "bg-blue-500",
+      status: "progress",
       tasks: [
         {
           id: 2,
@@ -72,6 +76,51 @@ const TaskBoard = () => {
     }
   ];
 
+  // Combine default tasks with custom tasks and group by status
+  const getTaskGroups = () => {
+    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks];
+    
+    const groupedTasks = {
+      redline: allTasks.filter(task => task.status === 'redline'),
+      progress: allTasks.filter(task => task.status === 'progress'),
+      completed: allTasks.filter(task => task.status === 'completed')
+    };
+
+    const taskGroups = [];
+
+    if (groupedTasks.redline.length > 0) {
+      taskGroups.push({
+        title: "TASK/ REDLINE",
+        count: groupedTasks.redline.length,
+        color: "bg-red-500",
+        status: "redline",
+        tasks: groupedTasks.redline
+      });
+    }
+
+    if (groupedTasks.progress.length > 0) {
+      taskGroups.push({
+        title: "PROGRESS/ UPDATE",
+        count: groupedTasks.progress.length,
+        color: "bg-blue-500",
+        status: "progress",
+        tasks: groupedTasks.progress
+      });
+    }
+
+    if (groupedTasks.completed.length > 0) {
+      taskGroups.push({
+        title: "COMPLETED",
+        count: groupedTasks.completed.length,
+        color: "bg-green-500",
+        status: "completed",
+        tasks: groupedTasks.completed
+      });
+    }
+
+    return taskGroups;
+  };
+
   const renderStatusIcon = (status: string) => {
     const baseClasses = "w-4 h-4 rounded-full border-2 flex items-center justify-center";
     
@@ -105,7 +154,7 @@ const TaskBoard = () => {
 
   const handleCreateTask = (taskData: any) => {
     console.log('Creating task:', taskData);
-    // Here you would typically add the task to your state or send it to an API
+    setCustomTasks(prev => [taskData, ...prev]);
   };
 
   const handleTaskClick = (task: any) => {
@@ -116,6 +165,8 @@ const TaskBoard = () => {
     setIsTaskDetailOpen(false);
     setSelectedTask(null);
   };
+
+  const taskGroups = getTaskGroups();
 
   return (
     <div className="flex-1 bg-background pl-2">
@@ -308,7 +359,10 @@ const TaskBoard = () => {
               </Table>
 
               {/* Add Task Button */}
-              <button className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground">
+              <button 
+                onClick={() => setIsTaskDialogOpen(true)}
+                className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground"
+              >
                 <Plus className="w-3 h-3" />
                 <span>Add task</span>
               </button>
