@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -298,7 +299,7 @@ const TaskDetailPage = () => {
               </div>
 
               {/* Activity Sidebar */}
-              <div className="w-72 border-l border-border bg-background flex flex-col">
+              <div className="w-80 border-l border-border bg-background flex flex-col">
                 <div className="p-4 border-b border-border flex-shrink-0">
                   <h3 className="font-semibold text-sm">Activity</h3>
                 </div>
@@ -345,3 +346,4 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
+
