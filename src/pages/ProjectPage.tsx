@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Menu, FileText, Calendar, MessageSquare, ExternalLink, Users, Folder } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import TaskGroup from '@/components/TaskGroup';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
@@ -17,14 +18,13 @@ const ProjectPage = () => {
       'adams-1063-40th-street': 'Adams - 1063 40th Street',
       'tiverton': '1524 Tiverton',
       'i-street': '2015 10th Street',
-      // Add more mappings as needed
     };
     return projectMap[id || ''] || 'Unknown Project';
   };
 
   const projectName = getProjectName(projectId);
 
-  // Mock data for files based on your screenshot
+  // Mock data for files
   const files = [
     {
       name: "CDO-0063-Planning-Entitlement-Application - Letter of Agency",
@@ -55,6 +55,89 @@ const ProjectPage = () => {
       dateCreated: "Jul 23, 2024",
       author: "Matthew P.",
       type: "contact"
+    }
+  ];
+
+  // Task data from the overview page
+  const taskGroups = [
+    {
+      title: "To Do",
+      count: 7,
+      color: "bg-gray-400",
+      tasks: [
+        {
+          id: 1,
+          title: "Review building permits",
+          project: projectName,
+          estimatedCompletion: "2 days",
+          dateCreated: "Jul 15, 2024",
+          dueDate: "Jul 30, 2024",
+          assignee: {
+            name: "MP",
+            avatar: "bg-blue-500"
+          },
+          hasAttachment: true
+        },
+        {
+          id: 2,
+          title: "Schedule site inspection",
+          project: projectName,
+          estimatedCompletion: "1 day",
+          dateCreated: "Jul 16, 2024",
+          dueDate: "Jul 25, 2024",
+          assignee: {
+            name: "AL",
+            avatar: "bg-green-500"
+          },
+          hasAttachment: false
+        }
+      ]
+    },
+    {
+      title: "In Progress",
+      count: 3,
+      color: "bg-blue-500",
+      tasks: [
+        {
+          id: 3,
+          title: "Coordinate with city planning",
+          project: projectName,
+          estimatedCompletion: "3 days",
+          dateCreated: "Jul 10, 2024",
+          dueDate: "Jul 28, 2024",
+          assignee: {
+            name: "MP",
+            avatar: "bg-blue-500"
+          },
+          hasAttachment: true,
+          collaborators: [
+            {
+              name: "AL",
+              avatar: "bg-green-500"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Done",
+      count: 12,
+      color: "bg-green-500",
+      tasks: [
+        {
+          id: 4,
+          title: "Initial client consultation",
+          project: projectName,
+          estimatedCompletion: "Completed",
+          dateCreated: "Jul 1, 2024",
+          dueDate: "Jul 5, 2024",
+          assignee: {
+            name: "MP",
+            avatar: "bg-blue-500"
+          },
+          hasAttachment: false
+        }
+      ]
     }
   ];
 
@@ -147,59 +230,111 @@ const ProjectPage = () => {
                   </div>
                 </div>
 
-                {/* Tab Navigation */}
-                <div className="border-b border-border px-4 flex-shrink-0">
-                  <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium border-b-2 border-blue-600 text-blue-600">
-                      <FileText className="w-3 h-3" />
-                      Files
-                    </button>
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs text-muted-foreground hover:text-foreground">
-                      <Calendar className="w-3 h-3" />
-                      Tasks
-                    </button>
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs text-muted-foreground hover:text-foreground">
-                      <MessageSquare className="w-3 h-3" />
-                      Message
-                    </button>
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs text-muted-foreground hover:text-foreground">
-                      <FileText className="w-3 h-3" />
-                      Invoices
-                    </button>
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs text-muted-foreground hover:text-foreground">
-                      <ExternalLink className="w-3 h-3" />
-                      Links
-                    </button>
-                    <button className="flex items-center gap-1.5 px-2 py-2 text-xs text-muted-foreground hover:text-foreground">
-                      <Users className="w-3 h-3" />
-                      Client
-                    </button>
+                {/* Tabs */}
+                <Tabs defaultValue="files" className="flex-1 flex flex-col">
+                  <div className="border-b border-border px-4 flex-shrink-0">
+                    <TabsList className="h-auto p-0 bg-transparent">
+                      <TabsTrigger 
+                        value="files" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <FileText className="w-3 h-3" />
+                        Files
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="tasks" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <Calendar className="w-3 h-3" />
+                        Tasks
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="message" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <MessageSquare className="w-3 h-3" />
+                        Message
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="invoices" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <FileText className="w-3 h-3" />
+                        Invoices
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="links" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        Links
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="client" 
+                        className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+                      >
+                        <Users className="w-3 h-3" />
+                        Client
+                      </TabsTrigger>
+                    </TabsList>
                   </div>
-                </div>
 
-                {/* File List */}
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-0.5">
-                    {/* Header Row */}
-                    <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
-                      <div className="col-span-6">Name</div>
-                      <div className="col-span-3">Date Created</div>
-                      <div className="col-span-3">by</div>
-                    </div>
-                    
-                    {/* File Rows */}
-                    {files.map((file, index) => (
-                      <div key={index} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30">
-                        <div className="col-span-6 flex items-center gap-2">
-                          {getFileIcon(file.type)}
-                          <span className="text-blue-600 hover:underline truncate">{file.name}</span>
-                        </div>
-                        <div className="col-span-3 text-muted-foreground">{file.dateCreated}</div>
-                        <div className="col-span-3 text-muted-foreground">{file.author}</div>
+                  {/* Files Tab Content */}
+                  <TabsContent value="files" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="space-y-0.5">
+                      {/* Header Row */}
+                      <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+                        <div className="col-span-6">Name</div>
+                        <div className="col-span-3">Date Created</div>
+                        <div className="col-span-3">by</div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                      
+                      {/* File Rows */}
+                      {files.map((file, index) => (
+                        <div key={index} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30">
+                          <div className="col-span-6 flex items-center gap-2">
+                            {getFileIcon(file.type)}
+                            <span className="text-blue-600 hover:underline truncate">{file.name}</span>
+                          </div>
+                          <div className="col-span-3 text-muted-foreground">{file.dateCreated}</div>
+                          <div className="col-span-3 text-muted-foreground">{file.author}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+
+                  {/* Tasks Tab Content */}
+                  <TabsContent value="tasks" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="space-y-8">
+                      {taskGroups.map((group, index) => (
+                        <TaskGroup
+                          key={index}
+                          title={group.title}
+                          count={group.count}
+                          color={group.color}
+                          tasks={group.tasks}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+
+                  {/* Other Tab Contents (placeholder) */}
+                  <TabsContent value="message" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="text-center text-muted-foreground">Message content coming soon...</div>
+                  </TabsContent>
+
+                  <TabsContent value="invoices" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="text-center text-muted-foreground">Invoice content coming soon...</div>
+                  </TabsContent>
+
+                  <TabsContent value="links" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="text-center text-muted-foreground">Links content coming soon...</div>
+                  </TabsContent>
+
+                  <TabsContent value="client" className="flex-1 overflow-y-auto p-4 mt-0">
+                    <div className="text-center text-muted-foreground">Client content coming soon...</div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </div>
           </div>
