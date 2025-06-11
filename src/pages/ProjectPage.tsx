@@ -28,9 +28,9 @@ const ProjectPage = () => {
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
-          defaultSize={20} 
+          defaultSize={15} 
           minSize={15} 
-          maxSize={30}
+          maxSize={35}
           collapsedSize={4}
           collapsible={true}
           onCollapse={() => setSidebarCollapsed(true)}
@@ -44,7 +44,7 @@ const ProjectPage = () => {
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={80} className="min-h-screen">
+        <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
             <ProjectTopBar 
               sidebarCollapsed={sidebarCollapsed}
