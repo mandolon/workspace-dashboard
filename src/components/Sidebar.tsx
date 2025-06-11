@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -36,7 +37,6 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
     inProgress: true,
     onHold: false,
     completed: false,
-    favorites: false,
     mainNav: true
   });
 
@@ -177,43 +177,16 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             </div>
           </Collapsible>
 
-          {/* Favorites Section - Collapsible */}
-          <Collapsible open={openSections.favorites} onOpenChange={() => toggleSection('favorites')}>
-            <div className="px-4 mb-2">
-              <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 hover:bg-sidebar-accent/50 rounded px-2 py-1">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
-                  Favorites
-                </span>
-                {openSections.favorites ? (
-                  <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                ) : (
-                  <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                )}
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="text-sm text-muted-foreground px-2 py-2">
-                  No favorites yet
-                </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-
-          {/* Spaces Section */}
+          {/* Projects Section */}
           <div className="mt-4 px-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
-                Spaces
+                Projects
               </span>
               <div className="flex items-center gap-1 flex-shrink-0">
                 <MoreHorizontal className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground" />
                 <Plus className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground" />
               </div>
-            </div>
-
-            {/* Everything Item */}
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50 mb-1">
-              <MoreHorizontal className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-              <span className="text-sm truncate">Everything</span>
             </div>
 
             {/* PinerWorks Workspace */}
