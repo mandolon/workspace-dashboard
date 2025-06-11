@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Users, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import TaskStatusIcon from './TaskStatusIcon';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
@@ -60,14 +61,14 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <div>
-      {/* Project Selector - Outside the border */}
-      <div className="relative mb-1 pl-6">
+    <div className="space-y-2">
+      {/* Project Line */}
+      <div className="relative pl-6">
         <button
           className="text-left text-xs text-blue-600 hover:text-blue-700"
           onClick={() => setShowProjectDropdown(!showProjectDropdown)}
         >
-          {selectedProject || 'Select Project...'}
+          {selectedProject || 'Select List...'}
         </button>
         
         {showProjectDropdown && (
@@ -98,52 +99,54 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         )}
       </div>
 
-      {/* Main Task Input - Inside the border */}
-      <div className="border border-border rounded-md bg-background">
-        <div className="px-4 py-2 space-y-1">
-          {/* Task Name Input */}
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
-            <Input
-              placeholder="Task Name"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-              className="text-xs font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent"
-              autoFocus
-            />
-          </div>
+      {/* Task Input Row */}
+      <div className="flex items-center gap-3 px-0">
+        <TaskStatusIcon status={defaultStatus} />
+        
+        <div className="flex-1 min-w-0">
+          <Input
+            placeholder="Task Name or type '/' for commands"
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+            className="text-sm h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
+            autoFocus
+          />
+        </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 pt-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
-            >
-              <Users className="w-3 h-3" />
-              Assign
-            </Button>
-            
-            <div className="flex-1"></div>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onCancel}
-              className="text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground mr-1"
-            >
-              Cancel
-            </Button>
-            
-            <Button
-              size="sm"
-              onClick={handleSave}
-              className="text-xs px-3 py-1 h-6"
-              disabled={!taskName.trim()}
-            >
-              Save
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+          >
+            Task
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+          >
+            <Users className="w-3 h-3" />
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </Button>
+          
+          <Button
+            size="sm"
+            onClick={handleSave}
+            className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
+            disabled={!taskName.trim()}
+          >
+            Save
+          </Button>
         </div>
       </div>
     </div>
