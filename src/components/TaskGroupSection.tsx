@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronDown, Plus, Edit, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskStatusIcon from './TaskStatusIcon';
 import QuickAddTask from './QuickAddTask';
@@ -136,13 +136,16 @@ const TaskGroupSection = ({
           defaultStatus={group.status}
         />
       ) : (
-        <button 
-          onClick={() => onSetShowQuickAdd(group.status)}
-          className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground"
-        >
-          <Plus className="w-3 h-3" strokeWidth="2" />
-          <span>Add task</span>
-        </button>
+        <div className="px-4 py-2">
+          <button 
+            onClick={() => onSetShowQuickAdd(group.status)}
+            className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+          >
+            <Plus className="w-3 h-3" strokeWidth="2" />
+            <span>Add Task</span>
+            <ChevronDownIcon className="w-3 h-3" strokeWidth="2" />
+          </button>
+        </div>
       )}
     </div>
   );
