@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,7 +13,7 @@ interface ProjectTabsProps {
 const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
   return (
     <Tabs defaultValue="files" className="flex-1 flex flex-col">
-      <div className="border-b border-border px-8 flex-shrink-0">
+      <div className="border-b border-border px-4 flex-shrink-0">
         <TabsList className="h-auto p-0 bg-transparent">
           <TabsTrigger 
             value="files" 
@@ -62,7 +61,7 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
       </div>
 
       {/* Tab Contents */}
-      <div className="px-8 pt-6 flex-1 overflow-hidden">
+      <div className="px-4 pt-3 flex-1 overflow-hidden">
         <TabsContent value="files" className="mt-0 h-full">
           <FilesTab />
         </TabsContent>
