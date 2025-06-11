@@ -60,86 +60,90 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <div className="border border-border rounded-md bg-background">
-      <div className="px-4 py-2 space-y-1">
-        {/* Project Selector */}
-        <div className="relative">
-          <button
-            className="text-left text-xs text-muted-foreground hover:text-foreground"
-            onClick={() => setShowProjectDropdown(!showProjectDropdown)}
-          >
-            {selectedProject || 'Select Project...'}
-          </button>
-          
-          {showProjectDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
-              <div className="p-2 border-b border-border">
-                <div className="relative">
-                  <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
-                  />
-                </div>
-              </div>
-              <div className="max-h-32 overflow-y-auto">
-                {filteredProjects.map((project, index) => (
-                  <button
-                    key={index}
-                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
-                    onClick={() => handleProjectSelect(project)}
-                  >
-                    {project}
-                  </button>
-                ))}
+    <div>
+      {/* Project Selector - Outside the border */}
+      <div className="relative mb-1 pl-6">
+        <button
+          className="text-left text-xs text-muted-foreground hover:text-foreground"
+          onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+        >
+          {selectedProject || 'Select Project...'}
+        </button>
+        
+        {showProjectDropdown && (
+          <div className="absolute top-full left-6 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
+            <div className="p-2 border-b border-border">
+              <div className="relative">
+                <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
+                />
               </div>
             </div>
-          )}
-        </div>
+            <div className="max-h-32 overflow-y-auto">
+              {filteredProjects.map((project, index) => (
+                <button
+                  key={index}
+                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
+                  onClick={() => handleProjectSelect(project)}
+                >
+                  {project}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
-        {/* Task Name Input */}
-        <div>
-          <Input
-            placeholder="Task Name"
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-            className="text-sm font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent"
-            autoFocus
-          />
-        </div>
+      {/* Main Task Input - Inside the border */}
+      <div className="border border-border rounded-md bg-background">
+        <div className="px-4 py-2 space-y-1">
+          {/* Task Name Input */}
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
+            <Input
+              placeholder="Task Name"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              className="text-xs font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent"
+              autoFocus
+            />
+          </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 pt-1">
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
-          >
-            <Users className="w-3 h-3" />
-            Assign
-          </Button>
-          
-          <div className="flex-1"></div>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onCancel}
-            className="text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
-          >
-            Cancel
-          </Button>
-          
-          <Button
-            size="sm"
-            onClick={handleSave}
-            className="text-xs px-3 py-1 h-6"
-            disabled={!taskName.trim()}
-          >
-            Save
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 pt-1">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
+            >
+              <Users className="w-3 h-3" />
+              Assign
+            </Button>
+            
+            <div className="flex-1"></div>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onCancel}
+              className="text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </Button>
+            
+            <Button
+              size="sm"
+              onClick={handleSave}
+              className="text-xs px-3 py-1 h-6"
+              disabled={!taskName.trim()}
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </div>
     </div>
