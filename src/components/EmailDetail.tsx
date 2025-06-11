@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, Forward, MoreVertical, Send, Bold, Italic, List, ListOrdered } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -121,7 +122,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
           {/* Message content */}
           <div 
-            className="prose prose-sm max-w-none text-gray-900 mb-6"
+            className="text-sm text-gray-700 leading-relaxed mb-6 [&>p]:mb-4 [&>ul]:mb-4 [&>ul]:ml-6 [&>ul]:list-disc [&>li]:mb-1"
             dangerouslySetInnerHTML={{ __html: emailContent }}
           />
 
