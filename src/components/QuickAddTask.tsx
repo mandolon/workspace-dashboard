@@ -61,21 +61,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
   return (
     <div className="border border-border rounded-md p-2 bg-background space-y-2">
-      {/* Task Name Input */}
-      <div>
-        <Input
-          placeholder="Task Name"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-          className="text-sm h-8 border-0 shadow-none focus-visible:ring-0 px-2"
-          autoFocus
-        />
-      </div>
-
-      {/* Project Selector */}
+      {/* Project Selector - moved to top */}
       <div className="relative">
         <button
-          className="w-full text-left px-2 py-1 text-sm text-blue-600 hover:bg-accent rounded-sm"
+          className="w-full text-left px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent rounded-sm"
           onClick={() => setShowProjectDropdown(!showProjectDropdown)}
         >
           {selectedProject || 'Select Project...'}
@@ -107,6 +96,17 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Task Name Input - moved below project selector */}
+      <div>
+        <Input
+          placeholder="Task Name"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          className="text-xs h-8 border-0 shadow-none focus-visible:ring-0 px-2 font-medium"
+          autoFocus
+        />
       </div>
 
       {/* Action Buttons */}
