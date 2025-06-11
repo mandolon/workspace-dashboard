@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -89,7 +90,20 @@ const TaskGroupSection = ({
         <TableHeader>
           <TableRow className="border-b border-border">
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[45%]">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">
+              <div className="flex items-center gap-1">
+                Files
+                <button 
+                  className="p-0.5 hover:bg-accent rounded"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Handle file attachment
+                  }}
+                >
+                  <Plus className="w-3 h-3" strokeWidth="2" />
+                </button>
+              </div>
+            </TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Date Created</TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Due Date</TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[9%]">Assignee</TableHead>
