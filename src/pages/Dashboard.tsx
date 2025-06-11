@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 
@@ -36,6 +37,8 @@ const Dashboard = () => {
               sidebarCollapsed={sidebarCollapsed}
               setSidebarCollapsed={setSidebarCollapsed}
             />
+
+            <DashboardPageHeader />
 
             <div className="flex-1 overflow-auto">
               <div className="p-4 space-y-4">
