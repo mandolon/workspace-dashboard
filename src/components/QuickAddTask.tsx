@@ -62,51 +62,12 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
   return (
     <div className="px-4 py-2 hover:bg-accent/50">
-      {/* Project Selection Above Task Input */}
-      {!selectedProject && (
-        <div className="mb-2 relative">
-          <button
-            className="text-left text-xs text-blue-500 hover:text-blue-600"
-            onClick={() => setShowProjectDropdown(!showProjectDropdown)}
-          >
-            Select List...
-          </button>
-          
-          {showProjectDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
-              <div className="p-2 border-b border-border">
-                <div className="relative">
-                  <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
-                  />
-                </div>
-              </div>
-              <div className="max-h-32 overflow-y-auto">
-                {filteredProjects.map((project, index) => (
-                  <button
-                    key={index}
-                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
-                    onClick={() => handleProjectSelect(project)}
-                  >
-                    {project}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - matches first column */}
         <div className="col-span-3 flex items-center gap-2">
           <TaskStatusIcon status={defaultStatus} />
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <Input
               placeholder="Task Name or type '/' for commands"
               value={taskName}
@@ -116,6 +77,41 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             />
             {selectedProject && (
               <div className="text-xs text-muted-foreground">{selectedProject}</div>
+            )}
+            {!selectedProject && (
+              <button
+                className="text-left text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+              >
+                Select List...
+              </button>
+            )}
+            
+            {showProjectDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
+                <div className="p-2 border-b border-border">
+                  <div className="relative">
+                    <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
+                    />
+                  </div>
+                </div>
+                <div className="max-h-32 overflow-y-auto">
+                  {filteredProjects.map((project, index) => (
+                    <button
+                      key={index}
+                      className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
+                      onClick={() => handleProjectSelect(project)}
+                    >
+                      {project}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </div>
