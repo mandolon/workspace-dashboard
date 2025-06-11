@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -187,7 +186,7 @@ const TaskDetailPage = () => {
                 <div className="border-b border-border px-6 py-3 flex-shrink-0">
                   <div className="flex items-center gap-3">
                     <button 
-                      onClick={() => navigate('/')} 
+                      onClick={() => navigate('/tasks')} 
                       className="p-1 hover:bg-accent rounded"
                     >
                       <ArrowLeft className="w-4 h-4" />
@@ -346,4 +345,3 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
-
