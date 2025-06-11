@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -36,7 +35,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
     spaces: true,
     inProgress: true,
     onHold: false,
-    completed: false
+    completed: false,
+    favorites: false,
+    mainNav: true
   });
 
   const toggleSection = (section: keyof typeof openSections) => {
@@ -142,32 +143,60 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
       {/* Main Navigation with custom ScrollArea */}
       <ScrollArea className="flex-1">
         <div className="py-2">
-          <nav className="space-y-0 px-2">
-            {mainNavItems.map((item, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded text-sm cursor-pointer transition-colors my-0.5",
-                  item.active 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+          {/* Main Navigation - Collapsible */}
+          <Collapsible open={openSections.mainNav} onOpenChange={() => toggleSection('mainNav')}>
+            <div className="px-2 mb-2">
+              <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
+                {openSections.mainNav ? (
+                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
                 )}
-              >
-                <item.icon className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">{item.label}</span>
-              </div>
-            ))}
-          </nav>
-
-          {/* Favorites Section */}
-          <div className="mt-6 px-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                Favorites
-              </span>
-              <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Navigation
+                </span>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <nav className="space-y-0 mt-2">
+                  {mainNavItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2 rounded text-sm cursor-pointer transition-colors my-0.5",
+                        item.active 
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                          : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+                      )}
+                    >
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      <span className="text-sm">{item.label}</span>
+                    </div>
+                  ))}
+                </nav>
+              </CollapsibleContent>
             </div>
-          </div>
+          </Collapsible>
+
+          {/* Favorites Section - Collapsible */}
+          <Collapsible open={openSections.favorites} onOpenChange={() => toggleSection('favorites')}>
+            <div className="px-4 mb-2">
+              <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 hover:bg-sidebar-accent/50 rounded px-2 py-1">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Favorites
+                </span>
+                {openSections.favorites ? (
+                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="text-sm text-muted-foreground px-2 py-2">
+                  No favorites yet
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
 
           {/* Spaces Section */}
           <div className="mt-4 px-4">
