@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -5,7 +6,7 @@ import {
   Inbox, 
   MessageSquare, 
   Users, 
-  FileText, 
+  Receipt, 
   FileImage, 
   ClipboardList, 
   Clock,
@@ -34,7 +35,7 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
     { icon: Inbox, label: 'Inbox', active: false, onClick: () => navigate('/inbox') },
     { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
     { icon: Users, label: 'Teams', active: false, onClick: () => navigate('/teams') },
-    { icon: FileText, label: 'Docs', active: false, onClick: () => {} },
+    { icon: Receipt, label: 'Invoices', active: false, onClick: () => navigate('/invoices') },
     { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => {} },
     { icon: Clock, label: 'Timesheets', active: false, onClick: () => {} },
   ];
