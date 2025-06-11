@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SidebarProjectSection from './SidebarProjectSection';
 
 interface Workspace {
@@ -14,6 +14,7 @@ interface SidebarWorkspaceProps {
 }
 
 const SidebarWorkspace = ({ workspace }: SidebarWorkspaceProps) => {
+  const navigate = useNavigate();
   const [openSections, setOpenSections] = useState({
     inProgress: true,
     onHold: false,
@@ -25,6 +26,10 @@ const SidebarWorkspace = ({ workspace }: SidebarWorkspaceProps) => {
       ...prev,
       [section]: !prev[section]
     }));
+  };
+
+  const handleWorkspaceClick = () => {
+    navigate('/');
   };
 
   const inProgressProjects = [
@@ -62,7 +67,10 @@ const SidebarWorkspace = ({ workspace }: SidebarWorkspaceProps) => {
 
   return (
     <div>
-      <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
+      <div 
+        onClick={handleWorkspaceClick}
+        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50"
+      >
         <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         <span className="truncate flex-1 text-sm">{workspace.name}</span>
         {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs flex-shrink-0">🔒</div>}
