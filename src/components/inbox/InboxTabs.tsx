@@ -28,9 +28,9 @@ const InboxTabs = ({ activeTab, onTabChange, currentPage, totalPages, onPageChan
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`text-xs font-medium py-1 ${
+              className={`text-xs py-1 ${
                 activeTab === tab.id 
-                  ? 'text-foreground' 
+                  ? 'text-foreground font-medium' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
