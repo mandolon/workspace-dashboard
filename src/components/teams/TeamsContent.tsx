@@ -67,6 +67,24 @@ const TeamsContent = () => {
     );
   };
 
+  const getRandomColor = (id: string) => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500', 
+      'bg-green-500',
+      'bg-yellow-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500'
+    ];
+    // Use the member ID to consistently assign the same color
+    const index = parseInt(id) % colors.length;
+    return colors[index];
+  };
+
   const filteredMembers = teamMembers.filter(member => 
     member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -123,7 +141,7 @@ const TeamsContent = () => {
           <div key={member.id} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
             <div className="col-span-3">
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                <div className={`w-5 h-5 ${getRandomColor(member.id)} rounded-full flex items-center justify-center text-white text-xs font-medium`}>
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <span className="font-medium">{member.name}</span>
