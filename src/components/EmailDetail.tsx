@@ -1,9 +1,9 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Printer, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import ComposeDialog from '@/components/inbox/ComposeDialog';
 
 interface EmailDetailProps {
   email: {
@@ -22,6 +22,8 @@ interface EmailDetailProps {
 }
 
 const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
+  const [showReplyDialog, setShowReplyDialog] = useState(false);
+
   const emailContent = email.content || `
     <p>Hi team,</p>
     
@@ -40,6 +42,10 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
   `;
 
   const senderInitials = email.sender.split(' ').map(n => n[0]).join('').toUpperCase();
+
+  const handleReply = () => {
+    setShowReplyDialog(true);
+  };
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -120,7 +126,11 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
             {/* Action buttons */}
             <div className="px-6 pb-6">
               <div className="flex items-center gap-3">
-                <Button variant="outline" className="bg-white border-gray-300 hover:bg-gray-50">
+                <Button 
+                  variant="outline" 
+                  className="bg-white border-gray-300 hover:bg-gray-50"
+                  onClick={handleReply}
+                >
                   <Reply className="w-4 h-4 mr-2" />
                   Reply
                 </Button>
@@ -133,6 +143,16 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
           </div>
         </div>
       </div>
+
+      <ComposeDialog
+        isOpen={showReplyDialog}
+        onClose={() => setShowReplyDialog(false)}
+        replyTo={{
+          sender: email.sender,
+          senderEmail: email.senderEmail,
+          subject: email.subject
+        }}
+      />
     </div>
   );
 };
