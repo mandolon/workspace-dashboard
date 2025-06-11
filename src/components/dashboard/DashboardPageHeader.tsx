@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home } from 'lucide-react';
+import { Home, CheckSquare, FileText, Calendar } from 'lucide-react';
 
 interface DashboardPageHeaderProps {
   activeTab: string;
@@ -9,10 +9,10 @@ interface DashboardPageHeaderProps {
 
 const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProps) => {
   const tabs = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'tasks', label: 'To Do' },
-    { id: 'notes', label: 'Notes' },
-    { id: 'calendar', label: 'Calendar' },
+    { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'tasks', label: 'To Do', icon: CheckSquare },
+    { id: 'notes', label: 'Notes', icon: FileText },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
   ];
 
   return (
@@ -33,19 +33,23 @@ const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProp
       
       <div className="px-4 py-2">
         <div className="flex items-center gap-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`text-xs font-medium ${
-                activeTab === tab.id 
-                  ? 'text-foreground' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const IconComponent = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`text-xs flex items-center gap-2 ${
+                  activeTab === tab.id 
+                    ? 'text-foreground font-medium' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <IconComponent className="w-3 h-3" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
