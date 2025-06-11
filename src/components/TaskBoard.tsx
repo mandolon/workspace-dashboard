@@ -191,45 +191,6 @@ const TaskBoard = () => {
           </div>
         </div>
 
-        {/* Sub Navigation */}
-        <div className="border-b border-border px-4 py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button className="text-xs font-medium text-foreground">Overview</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground">To Do</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground">Calendar</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground">Weekly Update</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground">Board</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground">Table</button>
-              <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
-                <Plus className="w-3 h-3" />
-                View
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                <Search className="w-3 h-3" />
-                Search
-              </button>
-              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                <Eye className="w-3 h-3" />
-                Hide
-              </button>
-              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                <Settings className="w-3 h-3" />
-                Customize
-              </button>
-              <button 
-                onClick={() => setIsTaskDialogOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
-              >
-                Add Task
-                <Plus className="w-3 h-3" />
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* Filters */}
         <div className="px-4 py-2 border-b border-border">
           <div className="flex items-center gap-2">
@@ -261,6 +222,13 @@ const TaskBoard = () => {
                   className="pl-7 pr-3 py-1 border border-border rounded text-xs w-48"
                 />
               </div>
+              <button 
+                onClick={() => setIsTaskDialogOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
+              >
+                Add Task
+                <Plus className="w-3 h-3" />
+              </button>
             </div>
           </div>
         </div>
