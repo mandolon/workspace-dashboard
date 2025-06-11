@@ -7,9 +7,44 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import DashboardContent from '@/components/dashboard/DashboardContent';
+import NotesTab from '@/components/dashboard/NotesTab';
 
 const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState('overview');
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return (
+          <>
+            <DashboardStats />
+            <DashboardContent />
+          </>
+        );
+      case 'notes':
+        return <NotesTab />;
+      case 'tasks':
+        return (
+          <div className="p-4">
+            <p className="text-muted-foreground">Tasks tab content coming soon...</p>
+          </div>
+        );
+      case 'calendar':
+        return (
+          <div className="p-4">
+            <p className="text-muted-foreground">Calendar tab content coming soon...</p>
+          </div>
+        );
+      default:
+        return (
+          <>
+            <DashboardStats />
+            <DashboardContent />
+          </>
+        );
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-background flex">
@@ -38,13 +73,19 @@ const Dashboard = () => {
               setSidebarCollapsed={setSidebarCollapsed}
             />
 
-            <DashboardPageHeader />
+            <DashboardPageHeader 
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
 
             <div className="flex-1 overflow-auto">
-              <div className="p-4 space-y-4">
-                <DashboardStats />
-                <DashboardContent />
-              </div>
+              {activeTab === 'overview' ? (
+                <div className="p-4 space-y-4">
+                  {renderTabContent()}
+                </div>
+              ) : (
+                renderTabContent()
+              )}
             </div>
           </div>
         </ResizablePanel>

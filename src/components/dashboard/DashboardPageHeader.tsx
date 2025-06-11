@@ -2,12 +2,17 @@
 import React from 'react';
 import { Home } from 'lucide-react';
 
-const DashboardPageHeader = () => {
+interface DashboardPageHeaderProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProps) => {
   const tabs = [
-    { id: 'overview', label: 'Overview', active: true },
-    { id: 'tasks', label: 'Tasks', active: false },
-    { id: 'todo', label: 'To do', active: false },
-    { id: 'calendar', label: 'Calendar', active: false },
+    { id: 'overview', label: 'Overview' },
+    { id: 'tasks', label: 'Tasks' },
+    { id: 'notes', label: 'Notes' },
+    { id: 'calendar', label: 'Calendar' },
   ];
 
   return (
@@ -31,8 +36,9 @@ const DashboardPageHeader = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              onClick={() => onTabChange(tab.id)}
               className={`text-xs font-medium ${
-                tab.active 
+                activeTab === tab.id 
                   ? 'text-foreground' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
