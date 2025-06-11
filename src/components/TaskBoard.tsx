@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskDialog from './TaskDialog';
+import QuickAddTask from './QuickAddTask';
 
 const TaskBoard = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const TaskBoard = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const [customTasks, setCustomTasks] = useState<any[]>([]);
+  const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
 
   const defaultTaskGroups = [
     {
@@ -154,6 +156,11 @@ const TaskBoard = () => {
   const handleCreateTask = (taskData: any) => {
     console.log('Creating task:', taskData);
     setCustomTasks(prev => [taskData, ...prev]);
+  };
+
+  const handleQuickAddSave = (taskData: any) => {
+    handleCreateTask(taskData);
+    setShowQuickAdd(null);
   };
 
   const handleTaskClick = (task: any) => {
@@ -322,14 +329,22 @@ const TaskBoard = () => {
                 </TableBody>
               </Table>
 
-              {/* Add Task Button */}
-              <button 
-                onClick={() => setIsTaskDialogOpen(true)}
-                className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground"
-              >
-                <Plus className="w-3 h-3" />
-                <span>Add task</span>
-              </button>
+              {/* Quick Add Task or Add Task Button */}
+              {showQuickAdd === group.status ? (
+                <QuickAddTask
+                  onSave={handleQuickAddSave}
+                  onCancel={() => setShowQuickAdd(null)}
+                  defaultStatus={group.status}
+                />
+              ) : (
+                <button 
+                  onClick={() => setShowQuickAdd(group.status)}
+                  className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>Add task</span>
+                </button>
+              )}
             </div>
           ))}
         </div>
