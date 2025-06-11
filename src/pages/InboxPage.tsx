@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import EmailDetail from '@/components/EmailDetail';
 import InboxTopBar from '@/components/inbox/InboxTopBar';
 import InboxHeader from '@/components/inbox/InboxHeader';
+import InboxTabs from '@/components/inbox/InboxTabs';
 import InboxToolbar from '@/components/inbox/InboxToolbar';
 import EmailList from '@/components/inbox/EmailList';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
