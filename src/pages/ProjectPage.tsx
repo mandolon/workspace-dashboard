@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Menu, FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
+import { ArrowLeft, Menu, FileText, Calendar, MessageSquare, ExternalLink, Users, Folder } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
@@ -123,19 +123,26 @@ const ProjectPage = () => {
             {/* Main Content */}
             <div className="flex-1 overflow-hidden">
               <div className="h-full flex flex-col max-w-5xl mx-auto">
-                {/* Header */}
-                <div className="border-b border-border px-4 py-3 flex-shrink-0">
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => navigate('/')} 
-                      className="p-0.5 hover:bg-accent rounded"
-                    >
-                      <ArrowLeft className="w-3 h-3" />
-                    </button>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground">PinerWorks</span>
-                      <span className="text-xs text-muted-foreground">/</span>
-                      <h1 className="text-sm font-semibold">{projectName}</h1>
+                {/* Header with Breadcrumb */}
+                <div className="border-b border-border px-4 py-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <Folder className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-semibold text-sm">PinerWorks</span>
+                        <span className="text-muted-foreground">/</span>
+                        <span className="font-semibold text-sm">{projectName}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        <span className="text-xs">Agents</span>
+                        <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">2</span>
+                      </div>
+                      <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
+                      <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
+                      <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
                     </div>
                   </div>
                 </div>
