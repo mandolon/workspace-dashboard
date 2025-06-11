@@ -174,7 +174,6 @@ const TaskDetailPage = () => {
                     {/* Task Title */}
                     <div>
                       <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
-                      <div className="text-sm text-muted-foreground mb-2">{task.project}</div>
                       <div className="flex items-center gap-2">
                         <input type="checkbox" className="w-4 h-4" />
                         <span className="text-sm text-muted-foreground">Add description</span>
