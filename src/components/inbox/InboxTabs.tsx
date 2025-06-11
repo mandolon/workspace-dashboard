@@ -21,7 +21,7 @@ const InboxTabs = ({ activeTab, onTabChange, currentPage, totalPages, onPageChan
   ];
 
   return (
-    <div className="border-b border-border px-4 py-1">
+    <div className="px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {tabs.map((tab) => (
