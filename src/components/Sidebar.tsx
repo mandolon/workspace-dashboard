@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -53,14 +52,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
     { icon: MessageSquare, label: 'Chat', active: false },
     { icon: Users, label: 'Teams', active: false },
     { icon: FileText, label: 'Docs', active: false },
-    { icon: BarChart3, label: 'Dashboards', active: true },
     { icon: FileImage, label: 'Whiteboards', active: false },
     { icon: ClipboardList, label: 'Forms', active: false },
-    { icon: Target, label: 'Clips', active: false },
-    { icon: Clock, label: 'Pulse', active: false },
-    { icon: Target, label: 'Goals', active: false },
     { icon: Clock, label: 'Timesheets', active: false },
-    { icon: MoreHorizontal, label: 'More', active: false },
   ];
 
   const workspaces = [
