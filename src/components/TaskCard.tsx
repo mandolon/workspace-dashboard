@@ -26,7 +26,7 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
-  const getRandomColor = (id: string) => {
+  const getRandomColor = (name: string) => {
     const colors = [
       'bg-red-500',
       'bg-blue-500', 
@@ -40,12 +40,16 @@ const TaskCard = ({ task }: TaskCardProps) => {
       'bg-cyan-500'
     ];
     // Use a hash of the name to consistently assign the same color
-    const hash = id.split('').reduce((a, b) => {
+    const hash = name.split('').reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);
       return a & a;
     }, 0);
     const index = Math.abs(hash) % colors.length;
     return colors[index];
+  };
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   };
 
   return (
@@ -91,20 +95,20 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div className="col-span-1 flex items-center justify-end gap-1">
         <div className="flex items-center -space-x-1">
           <div className={cn(
-            "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium",
+            "w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium",
             getRandomColor(task.assignee.name)
           )}>
-            {task.assignee.name}
+            {getInitials(task.assignee.name)}
           </div>
           {task.collaborators?.map((collaborator, index) => (
             <div
               key={index}
               className={cn(
-                "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
+                "w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
                 getRandomColor(collaborator.name)
               )}
             >
-              {collaborator.name}
+              {getInitials(collaborator.name)}
             </div>
           ))}
         </div>
