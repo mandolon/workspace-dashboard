@@ -14,7 +14,7 @@ interface ProjectTabsProps {
 const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
   return (
     <Tabs defaultValue="files" className="flex-1 flex flex-col">
-      <div className="border-b border-border px-4 flex-shrink-0">
+      <div className="border-b border-border px-8 flex-shrink-0">
         <TabsList className="h-auto p-0 bg-transparent">
           <TabsTrigger 
             value="files" 
@@ -62,29 +62,31 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
       </div>
 
       {/* Tab Contents */}
-      <TabsContent value="files">
-        <FilesTab />
-      </TabsContent>
+      <div className="px-8 pt-6 flex-1 overflow-hidden">
+        <TabsContent value="files" className="mt-0 h-full">
+          <FilesTab />
+        </TabsContent>
 
-      <TabsContent value="tasks">
-        <TasksTab projectName={projectName} />
-      </TabsContent>
+        <TabsContent value="tasks" className="mt-0 h-full">
+          <TasksTab projectName={projectName} />
+        </TabsContent>
 
-      <TabsContent value="invoices">
-        <InvoicesTab />
-      </TabsContent>
+        <TabsContent value="invoices" className="mt-0 h-full">
+          <InvoicesTab />
+        </TabsContent>
 
-      <TabsContent value="links" className="flex-1 overflow-y-auto p-4 mt-0">
-        <div className="text-center text-muted-foreground">Links content coming soon...</div>
-      </TabsContent>
+        <TabsContent value="links" className="flex-1 overflow-y-auto p-4 mt-0">
+          <div className="text-center text-muted-foreground">Links content coming soon...</div>
+        </TabsContent>
 
-      <TabsContent value="client" className="flex-1 overflow-y-auto p-4 mt-0">
-        <div className="text-center text-muted-foreground">Client content coming soon...</div>
-      </TabsContent>
+        <TabsContent value="client" className="flex-1 overflow-y-auto p-4 mt-0">
+          <div className="text-center text-muted-foreground">Client content coming soon...</div>
+        </TabsContent>
 
-      <TabsContent value="chat">
-        <MessagesTab />
-      </TabsContent>
+        <TabsContent value="chat" className="mt-0 h-full">
+          <MessagesTab />
+        </TabsContent>
+      </div>
     </Tabs>
   );
 };
