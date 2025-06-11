@@ -1,44 +1,73 @@
+
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { ChevronDown, Plus, MoreHorizontal } from 'lucide-react';
 import TaskCard from './TaskCard';
 
 interface Task {
-  id: string;
-  name: string;
+  id: number;
+  title: string;
   project: string;
-  status: string;
-  assignedTo?: string;
-  dueDate?: string;
-  hasAttachment?: boolean;
+  estimatedCompletion: string;
+  dateCreated: string;
+  dueDate: string;
+  assignee: {
+    name: string;
+    avatar: string;
+  };
+  hasAttachment: boolean;
+  collaborators?: Array<{
+    name: string;
+    avatar: string;
+  }>;
 }
 
 interface TaskGroupProps {
   title: string;
+  count: number;
+  color: string;
   tasks: Task[];
-  onTaskClick: (task: Task) => void;
 }
 
-const TaskGroup = ({ title, tasks, onTaskClick }: TaskGroupProps) => {
+const TaskGroup = ({ title, count, color, tasks }: TaskGroupProps) => {
   return (
-    <div className="flex-shrink-0 w-80">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4">
-        <h2 className="text-sm font-semibold">{title}</h2>
-        <button className="p-1 text-gray-500 hover:bg-gray-100 rounded">
+    <div className="space-y-4">
+      {/* Group Header */}
+      <div className="flex items-center gap-3">
+        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+        <div className="flex items-center gap-2">
+          <div className={`w-3 h-3 rounded-sm ${color}`}></div>
+          <span className="font-semibold text-sm">{title}</span>
+          <span className="text-muted-foreground text-sm">{count}</span>
+        </div>
+        <MoreHorizontal className="w-4 h-4 text-muted-foreground ml-auto" />
+        <button className="text-muted-foreground hover:text-foreground">
           <Plus className="w-4 h-4" />
         </button>
+        <span className="text-xs text-muted-foreground">Add Task</span>
+      </div>
+
+      {/* Column Headers */}
+      <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wide border-b border-border">
+        <div className="col-span-4">Name</div>
+        <div className="col-span-2">Est. Complet...</div>
+        <div className="col-span-1">Files</div>
+        <div className="col-span-2">Date cre...</div>
+        <div className="col-span-2">Due date</div>
+        <div className="col-span-1">Assignee</div>
       </div>
 
       {/* Tasks */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onClick={() => onTaskClick(task)}
-          />
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
+
+      {/* Add Task Button */}
+      <button className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground group">
+        <Plus className="w-4 h-4" />
+        <span>Add Task</span>
+      </button>
     </div>
   );
 };
