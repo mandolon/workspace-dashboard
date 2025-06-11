@@ -2,6 +2,7 @@
 import React from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,6 +24,14 @@ const SidebarProjectSection = ({
   onToggle, 
   isActive = false 
 }: SidebarProjectSectionProps) => {
+  const navigate = useNavigate();
+
+  const handleProjectClick = (projectName: string) => {
+    // Convert project name to URL-friendly format
+    const projectId = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    navigate(`/project/${projectId}`);
+  };
+
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
       <div className="ml-3 mt-1">
@@ -44,6 +53,7 @@ const SidebarProjectSection = ({
             {projects.slice(0, 4).map((project, index) => (
               <div
                 key={index}
+                onClick={() => handleProjectClick(project)}
                 className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
               >
                 <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
