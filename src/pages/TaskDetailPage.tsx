@@ -9,17 +9,8 @@ const TaskDetailPage = () => {
   const { taskId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Mock project data - simplified to 2 categories
-  const getProjectData = (id: string | undefined) => {
-    const projects: Record<string, string> = {
-      '1': "Task Title Category",
-      '2': "Project Name Category"
-    };
-    
-    return projects[id || '1'] || "Task Title Category";
-  };
-
-  // Mock task data - now using only ID 1 and 2
+  // Mock task data - using only ID 1 and 2
+  // ID "1" = Task Titles, ID "2" = Project Names
   const getTaskData = (id: string | undefined) => {
     const tasks: Record<string, any> = {
       '1': {
@@ -30,7 +21,7 @@ const TaskDetailPage = () => {
       },
       '2': {
         id: id,
-        title: "Alternate Cabin Design",
+        title: "Alternate Cabin Design", 
         project: "Rathbun - USFS Cabin",
         status: "REDLINE / TO DO"
       }
