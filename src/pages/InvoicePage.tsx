@@ -35,15 +35,26 @@ const InvoicePage = () => {
   const total = subtotal + processingFee;
 
   return (
-    <div className="h-screen bg-background">
-      <ResizablePanelGroup direction="horizontal" className="h-full">
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <Sidebar isCollapsed={sidebarCollapsed} />
+    <div className="min-h-screen w-full bg-background flex">
+      <ResizablePanelGroup direction="horizontal" className="min-h-screen">
+        <ResizablePanel 
+          defaultSize={15} 
+          minSize={15} 
+          maxSize={30}
+          collapsedSize={4}
+          collapsible={true}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
+          className="min-h-screen"
+        >
+          <div className="h-screen overflow-hidden">
+            <Sidebar isCollapsed={sidebarCollapsed} />
+          </div>
         </ResizablePanel>
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={80}>
+        <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-full min-w-0">
             {/* Header */}
             <div className="border-b border-border px-6 py-4">
