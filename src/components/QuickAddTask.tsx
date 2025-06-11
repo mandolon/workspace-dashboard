@@ -76,7 +76,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           <TaskStatusIcon status={defaultStatus} />
           <div className="flex-1 relative">
             <button
-              className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1 font-medium"
+              className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1"
               onClick={() => setShowProjectDropdown(!showProjectDropdown)}
             >
               {selectedProject || 'Select List...'}
@@ -86,7 +86,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
+              className="text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
               autoFocus
             />
             
