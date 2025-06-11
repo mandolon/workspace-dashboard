@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
@@ -8,6 +7,7 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import NotesTab from '@/components/dashboard/NotesTab';
+import CalendarTab from '@/components/dashboard/CalendarTab';
 
 const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
@@ -31,11 +31,7 @@ const Dashboard = () => {
           </div>
         );
       case 'calendar':
-        return (
-          <div className="p-4">
-            <p className="text-muted-foreground">Calendar tab content coming soon...</p>
-          </div>
-        );
+        return <CalendarTab />;
       default:
         return (
           <>
