@@ -54,6 +54,13 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     setSelectedProject('');
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   const handleProjectSelect = (project: string) => {
     setSelectedProject(project);
     setShowProjectDropdown(false);
@@ -78,6 +85,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               placeholder="Task Name or type '/' for commands"
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
               autoFocus
             />
