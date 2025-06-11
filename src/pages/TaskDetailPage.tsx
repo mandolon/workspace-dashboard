@@ -69,9 +69,9 @@ const TaskDetailPage = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Main Content */}
-      <div className="flex-1 max-w-4xl">
+      <div className="flex-1 max-w-4xl flex flex-col">
         {/* Header */}
-        <div className="border-b border-border px-6 py-3">
+        <div className="border-b border-border px-6 py-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => navigate('/')} 
@@ -88,78 +88,84 @@ const TaskDetailPage = () => {
           </div>
         </div>
 
-        <div className="px-6 py-4 space-y-6">
-          {/* Task Title */}
-          <div>
-            <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm text-muted-foreground">Add description</span>
-            </div>
-          </div>
-
-          {/* Task Details Form */}
-          <div className="grid grid-cols-4 gap-4">
+        {/* Scrollable Main Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-6 py-4 space-y-6">
+            {/* Task Title */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Created by</label>
-              <select className="w-full border border-border rounded px-2 py-1 text-sm">
-                <option>Select User</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Date Created</label>
-              <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-border rounded px-2 py-1 text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Assigned to</label>
-              <select className="w-full border border-border rounded px-2 py-1 text-sm">
-                <option>Select User</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Mark Complete</label>
-              <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-border rounded px-2 py-1 text-sm" />
-            </div>
-          </div>
-
-          {/* Attachments */}
-          <div>
-            <h2 className="text-base font-semibold mb-3">Attachments</h2>
-            
-            {/* Upload Area */}
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center mb-4">
-              <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground">Drop your files here to upload</p>
-            </div>
-
-            {/* Attachments Table */}
-            <div className="space-y-2">
-              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground py-2 border-b">
-                <div className="col-span-6">Name</div>
-                <div className="col-span-3">Date Created</div>
-                <div className="col-span-3">by</div>
+              <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
+              <div className="flex items-center gap-2">
+                <input type="checkbox" className="w-4 h-4" />
+                <span className="text-sm text-muted-foreground">Add description</span>
               </div>
+            </div>
+
+            {/* Task Details Form */}
+            <div className="grid grid-cols-4 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Created by</label>
+                <select className="w-full border border-border rounded px-2 py-1 text-sm">
+                  <option>Select User</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Date Created</label>
+                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-border rounded px-2 py-1 text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Assigned to</label>
+                <select className="w-full border border-border rounded px-2 py-1 text-sm">
+                  <option>Select User</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Mark Complete</label>
+                <input type="text" placeholder="mm/dd/yyyy" className="w-full border border-border rounded px-2 py-1 text-sm" />
+              </div>
+            </div>
+
+            {/* Attachments */}
+            <div>
+              <h2 className="text-base font-semibold mb-3">Attachments</h2>
               
-              {attachments.map((attachment, index) => (
-                <div key={index} className="grid grid-cols-12 gap-4 text-sm py-2 hover:bg-accent/50 rounded">
-                  <div className="col-span-6 flex items-center gap-2">
-                    <Paperclip className="w-4 h-4 text-orange-500" />
-                    <span className="text-blue-600 hover:underline cursor-pointer text-xs">{attachment.name}</span>
-                  </div>
-                  <div className="col-span-3 text-muted-foreground text-xs">{attachment.dateCreated}</div>
-                  <div className="col-span-3 text-muted-foreground text-xs">{attachment.author}</div>
+              {/* Upload Area */}
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center mb-4">
+                <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-xs text-muted-foreground">Drop your files here to upload</p>
+              </div>
+
+              {/* Attachments Table */}
+              <div className="space-y-2">
+                <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground py-2 border-b">
+                  <div className="col-span-6">Name</div>
+                  <div className="col-span-3">Date Created</div>
+                  <div className="col-span-3">by</div>
                 </div>
-              ))}
+                
+                {attachments.map((attachment, index) => (
+                  <div key={index} className="grid grid-cols-12 gap-4 text-sm py-2 hover:bg-accent/50 rounded">
+                    <div className="col-span-6 flex items-center gap-2">
+                      <Paperclip className="w-4 h-4 text-orange-500" />
+                      <span className="text-blue-600 hover:underline cursor-pointer text-xs">{attachment.name}</span>
+                    </div>
+                    <div className="col-span-3 text-muted-foreground text-xs">{attachment.dateCreated}</div>
+                    <div className="col-span-3 text-muted-foreground text-xs">{attachment.author}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Activity Sidebar */}
-      <div className="w-72 border-l border-border bg-background">
-        <div className="p-4">
-          <h3 className="font-semibold mb-4 text-sm">Activity</h3>
-          
+      <div className="w-72 border-l border-border bg-background flex flex-col">
+        <div className="p-4 border-b border-border flex-shrink-0">
+          <h3 className="font-semibold text-sm">Activity</h3>
+        </div>
+        
+        {/* Scrollable Activity Content */}
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="space-y-3 mb-4">
             {activities.map((activity, index) => (
               <div key={index} className="text-xs">
@@ -169,8 +175,10 @@ const TaskDetailPage = () => {
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Message Input */}
+        {/* Message Input - Fixed at bottom */}
+        <div className="p-4 border-t border-border flex-shrink-0">
           <div className="space-y-2">
             <input 
               type="text" 
