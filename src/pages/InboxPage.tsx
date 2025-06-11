@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import Sidebar from '@/components/Sidebar';
 import EmailDetail from '@/components/EmailDetail';
@@ -27,6 +28,7 @@ const InboxPage = () => {
       isRead: false,
       isStarred: false,
       hasAttachment: true,
+      status: 'inbox',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
       content: `
         <p>Hi team,</p>
@@ -56,6 +58,7 @@ const InboxPage = () => {
       isRead: true,
       isStarred: true,
       hasAttachment: true,
+      status: 'inbox',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop&crop=face',
     },
     {
@@ -67,6 +70,7 @@ const InboxPage = () => {
       isRead: false,
       isStarred: false,
       hasAttachment: false,
+      status: 'archive',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
     },
     {
@@ -78,6 +82,7 @@ const InboxPage = () => {
       isRead: true,
       isStarred: false,
       hasAttachment: false,
+      status: 'sent',
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
     },
     {
@@ -89,6 +94,7 @@ const InboxPage = () => {
       isRead: true,
       isStarred: true,
       hasAttachment: true,
+      status: 'archive',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
     },
     {
@@ -100,6 +106,7 @@ const InboxPage = () => {
       isRead: false,
       isStarred: false,
       hasAttachment: true,
+      status: 'trash',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
     },
     {
@@ -111,6 +118,7 @@ const InboxPage = () => {
       isRead: true,
       isStarred: false,
       hasAttachment: false,
+      status: 'sent',
     },
     {
       id: '8',
@@ -121,23 +129,70 @@ const InboxPage = () => {
       isRead: false,
       isStarred: false,
       hasAttachment: false,
+      status: 'inbox',
+    },
+    {
+      id: '9',
+      sender: 'Me',
+      subject: 'Draft: Proposal for New Office Space',
+      preview: 'Working on the proposal for the downtown office expansion...',
+      time: '3:45 PM',
+      isRead: false,
+      isStarred: false,
+      hasAttachment: false,
+      status: 'drafts',
+    },
+    {
+      id: '10',
+      sender: 'Me',
+      subject: 'Draft: Follow-up on Client Meeting',
+      preview: 'Thank you for taking the time to meet with us yesterday...',
+      time: '10:30 AM',
+      isRead: false,
+      isStarred: true,
+      hasAttachment: false,
+      status: 'drafts',
     },
   ];
 
-  // Filter emails based on search query
+  // Filter emails based on active tab and search query
   const filteredEmails = useMemo(() => {
+    let tabFilteredEmails = emails;
+
+    // Filter by tab
+    switch (activeTab) {
+      case 'inbox':
+        tabFilteredEmails = emails.filter(email => email.status === 'inbox');
+        break;
+      case 'drafts':
+        tabFilteredEmails = emails.filter(email => email.status === 'drafts');
+        break;
+      case 'sent':
+        tabFilteredEmails = emails.filter(email => email.status === 'sent');
+        break;
+      case 'archive':
+        tabFilteredEmails = emails.filter(email => email.status === 'archive');
+        break;
+      case 'trash':
+        tabFilteredEmails = emails.filter(email => email.status === 'trash');
+        break;
+      default:
+        tabFilteredEmails = emails.filter(email => email.status === 'inbox');
+    }
+
+    // Filter by search query
     if (!searchQuery.trim()) {
-      return emails;
+      return tabFilteredEmails;
     }
     
     const query = searchQuery.toLowerCase();
-    return emails.filter(email => 
+    return tabFilteredEmails.filter(email => 
       email.sender.toLowerCase().includes(query) ||
       email.subject.toLowerCase().includes(query) ||
       email.preview.toLowerCase().includes(query) ||
       (email.senderEmail && email.senderEmail.toLowerCase().includes(query))
     );
-  }, [searchQuery]);
+  }, [activeTab, searchQuery]);
 
   const handleSelectEmail = (emailId: string) => {
     setSelectedEmails(prev => 
@@ -168,6 +223,13 @@ const InboxPage = () => {
     // Reset selection when searching
     setSelectedEmails([]);
     setSelectedEmail(null);
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setSelectedEmails([]);
+    setSelectedEmail(null);
+    setCurrentPage(1);
   };
 
   const currentEmail = selectedEmail ? emails.find(e => e.id === selectedEmail) : null;
@@ -209,7 +271,7 @@ const InboxPage = () => {
                   <InboxHeader 
                     unreadCount={unreadCount}
                     activeTab={activeTab}
-                    onTabChange={setActiveTab}
+                    onTabChange={handleTabChange}
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={setCurrentPage}
