@@ -86,7 +86,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
+              className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
               autoFocus
             />
             
