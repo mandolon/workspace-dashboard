@@ -11,7 +11,8 @@ import {
   ClipboardList, 
   Clock,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -31,6 +32,7 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
 
   const mainNavItems = [
     { icon: Home, label: 'Home', active: false, onClick: () => navigate('/') },
+    { icon: TrendingUp, label: 'In Progress', active: false, onClick: () => navigate('/') },
     { icon: Inbox, label: 'Inbox', active: false, onClick: () => {} },
     { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
     { icon: Users, label: 'Teams', active: false, onClick: () => {} },
