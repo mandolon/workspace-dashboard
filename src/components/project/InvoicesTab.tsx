@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Download } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const InvoicesTab = () => {
   const invoices = [
@@ -44,36 +43,34 @@ const InvoicesTab = () => {
 
   return (
     <div className="flex-1 overflow-y-auto p-4 mt-0">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Invoice</TableHead>
-            <TableHead>Phase</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Date Created</TableHead>
-            <TableHead className="w-12"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice, index) => (
-            <TableRow key={index}>
-              <TableCell className="text-blue-600 hover:underline cursor-pointer">
-                {invoice.id}
-              </TableCell>
-              <TableCell>{invoice.phase}</TableCell>
-              <TableCell>{invoice.status}</TableCell>
-              <TableCell>{invoice.amount}</TableCell>
-              <TableCell>{invoice.dateCreated}</TableCell>
-              <TableCell>
-                <button className="p-1 hover:bg-accent rounded">
-                  <Download className="w-4 h-4" />
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="space-y-0.5">
+        {/* Header Row */}
+        <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+          <div className="col-span-2">Invoice</div>
+          <div className="col-span-3">Phase</div>
+          <div className="col-span-2">Status</div>
+          <div className="col-span-2">Amount</div>
+          <div className="col-span-3">Date Created</div>
+        </div>
+        
+        {/* Invoice Rows */}
+        {invoices.map((invoice, index) => (
+          <div key={index} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
+            <div className="col-span-2">
+              <span className="text-blue-600 hover:underline">{invoice.id}</span>
+            </div>
+            <div className="col-span-3 text-muted-foreground">{invoice.phase}</div>
+            <div className="col-span-2 text-muted-foreground">{invoice.status}</div>
+            <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
+            <div className="col-span-3 flex items-center justify-between">
+              <span className="text-muted-foreground">{invoice.dateCreated}</span>
+              <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
+                <Download className="w-3 h-3 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
