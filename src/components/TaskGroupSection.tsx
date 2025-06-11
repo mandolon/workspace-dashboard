@@ -63,6 +63,18 @@ const TaskGroupSection = ({
     return colors[index];
   };
 
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate();
+      const year = date.getFullYear().toString().slice(-2);
+      return `${month} ${day}, ${year}`;
+    } catch {
+      return dateString; // fallback to original string if parsing fails
+    }
+  };
+
   return (
     <div className="space-y-2">
       {/* Group Header */}
@@ -97,7 +109,7 @@ const TaskGroupSection = ({
                 </div>
               </TableCell>
               <TableCell className="text-xs text-muted-foreground py-2">
-                {task.dateCreated}
+                {formatDate(task.dateCreated)}
               </TableCell>
               <TableCell className="py-2">
                 {task.hasAttachment && (

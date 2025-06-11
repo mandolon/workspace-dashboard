@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Edit, MoreHorizontal } from 'lucide-react';
@@ -30,6 +29,18 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
     }, 0);
     const index = Math.abs(hash) % colors.length;
     return colors[index];
+  };
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate();
+      const year = date.getFullYear().toString().slice(-2);
+      return `${month} ${day}, ${year}`;
+    } catch {
+      return dateString; // fallback to original string if parsing fails
+    }
   };
 
   // Flatten all tasks from groups into a single array
@@ -128,7 +139,7 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
               {renderStatusIcon(task.status)}
               <span className="text-blue-600 hover:underline truncate">{task.title}</span>
             </div>
-            <div className="col-span-3 text-muted-foreground">{task.dateCreated}</div>
+            <div className="col-span-3 text-muted-foreground">{formatDate(task.dateCreated)}</div>
             <div className="col-span-3 flex items-center justify-between">
               <div className="flex items-center -space-x-1">
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -52,6 +51,18 @@ const TaskCard = ({ task }: TaskCardProps) => {
     return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   };
 
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate();
+      const year = date.getFullYear().toString().slice(-2);
+      return `${month} ${day}, ${year}`;
+    } catch {
+      return dateString; // fallback to original string if parsing fails
+    }
+  };
+
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
       {/* Checkbox and Task Info */}
@@ -83,7 +94,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
       {/* Date Created */}
       <div className="col-span-2 flex items-center text-sm text-muted-foreground">
-        {task.dateCreated}
+        {formatDate(task.dateCreated)}
       </div>
 
       {/* Due Date */}
