@@ -32,7 +32,7 @@ const Dashboard = () => {
         <ResizableHandle withHandle />
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-screen pl-2">
             <DashboardHeader 
               sidebarCollapsed={sidebarCollapsed}
               setSidebarCollapsed={setSidebarCollapsed}
