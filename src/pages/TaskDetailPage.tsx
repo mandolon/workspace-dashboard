@@ -215,8 +215,19 @@ const TaskDetailPage = () => {
                     {/* Task Title */}
                     <div>
                       <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
-                      <div className="text-sm text-muted-foreground mb-2">{selectedProject}</div>
-                      <div className="flex items-center gap-2">
+                      <Select value={selectedProject} onValueChange={handleProjectChange}>
+                        <SelectTrigger className="w-auto border-none shadow-none p-0 h-auto text-sm text-muted-foreground hover:text-foreground bg-transparent">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableProjects.map((project) => (
+                            <SelectItem key={project} value={project}>
+                              {project}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex items-center gap-2 mt-2">
                         <input type="checkbox" className="w-4 h-4" />
                         <span className="text-sm text-muted-foreground">Add description</span>
                       </div>
