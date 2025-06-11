@@ -102,7 +102,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
 
   if (isCollapsed) {
     return (
-      <div className="h-screen bg-sidebar border-r border-sidebar-border flex flex-col w-16">
+      <div className="h-full bg-sidebar border-r border-sidebar-border flex flex-col min-w-0">
         <div className="p-3 border-b border-sidebar-border">
           <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
             <span className="text-white text-sm font-bold">r</span>
@@ -128,15 +128,15 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
   }
 
   return (
-    <div className="h-screen bg-sidebar border-r border-sidebar-border flex flex-col w-64">
+    <div className="h-full bg-sidebar border-r border-sidebar-border flex flex-col min-w-0">
       {/* Header */}
       <div className="px-4 py-3 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-black rounded flex items-center justify-center flex-shrink-0">
             <span className="text-white text-sm font-bold">r</span>
           </div>
-          <span className="font-medium text-sidebar-foreground text-base">rehome</span>
-          <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
+          <span className="font-medium text-sidebar-foreground text-base truncate">rehome</span>
+          <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto flex-shrink-0" />
         </div>
       </div>
 
@@ -148,11 +148,11 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             <div className="px-2 mb-2">
               <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
                 {openSections.mainNav ? (
-                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                  <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                 ) : (
-                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                 )}
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
                   Navigation
                 </span>
               </CollapsibleTrigger>
@@ -169,7 +169,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                       )}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-sm">{item.label}</span>
+                      <span className="text-sm truncate">{item.label}</span>
                     </div>
                   ))}
                 </nav>
@@ -181,13 +181,13 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
           <Collapsible open={openSections.favorites} onOpenChange={() => toggleSection('favorites')}>
             <div className="px-4 mb-2">
               <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 hover:bg-sidebar-accent/50 rounded px-2 py-1">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
                   Favorites
                 </span>
                 {openSections.favorites ? (
-                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                  <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                 ) : (
-                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -201,10 +201,10 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
           {/* Spaces Section */}
           <div className="mt-4 px-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
                 Spaces
               </span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 flex-shrink-0">
                 <MoreHorizontal className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground" />
                 <Plus className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground" />
               </div>
@@ -212,8 +212,8 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
 
             {/* Everything Item */}
             <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50 mb-1">
-              <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
-              <span className="text-sm">Everything</span>
+              <MoreHorizontal className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+              <span className="text-sm truncate">Everything</span>
             </div>
 
             {/* PinerWorks Workspace */}
@@ -224,8 +224,8 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                     <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
                       <div className="w-3 h-3 bg-purple-500 rounded-sm flex-shrink-0"></div>
                       <span className="truncate flex-1 text-sm">{workspace.name}</span>
-                      {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs">🔒</div>}
-                      <div className="flex items-center gap-1">
+                      {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs flex-shrink-0">🔒</div>}
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
                         <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
                       </div>
@@ -236,12 +236,12 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                       <div className="ml-3">
                         <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-blue-50 rounded">
                           {openSections.inProgress ? (
-                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           ) : (
-                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           )}
-                          <div className="w-3 h-3 bg-blue-500 rounded-sm"></div>
-                          <span className="text-sm font-medium">in Progress</span>
+                          <div className="w-3 h-3 bg-blue-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">in Progress</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
@@ -251,9 +251,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                                 className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer"
                               >
                                 <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                                <span className="truncate text-xs">{project}</span>
+                                <span className="truncate text-xs flex-1">{project}</span>
                                 {project === 'Ogden - Thew - 2709 T Street' && (
-                                  <span className="text-xs text-muted-foreground ml-auto">1</span>
+                                  <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
                                 )}
                               </div>
                             ))}
@@ -267,12 +267,12 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                       <div className="ml-3 mt-1">
                         <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
                           {openSections.onHold ? (
-                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           ) : (
-                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           )}
-                          <div className="w-3 h-3 bg-orange-500 rounded-sm"></div>
-                          <span className="text-sm font-medium">on Hold</span>
+                          <div className="w-3 h-3 bg-orange-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">on Hold</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
@@ -295,12 +295,12 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                       <div className="ml-3 mt-1">
                         <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
                           {openSections.completed ? (
-                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           ) : (
-                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           )}
-                          <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
-                          <span className="text-sm font-medium">completed</span>
+                          <div className="w-3 h-3 bg-green-500 rounded-sm flex-shrink-0"></div>
+                          <span className="text-sm font-medium truncate">completed</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
@@ -329,12 +329,12 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
       <div className="border-t border-sidebar-border p-4">
         <div className="flex items-center justify-between">
           <button className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-foreground">
-            <UserPlus className="w-4 h-4" />
-            <span>Invite</span>
+            <UserPlus className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Invite</span>
           </button>
           <button className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-foreground">
-            <HelpCircle className="w-4 h-4" />
-            <span>Help</span>
+            <HelpCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Help</span>
           </button>
         </div>
       </div>
