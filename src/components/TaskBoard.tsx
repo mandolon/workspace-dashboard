@@ -5,6 +5,7 @@ import TaskDialog from './TaskDialog';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const TaskBoard = () => {
   const navigate = useNavigate();
@@ -143,19 +144,21 @@ const TaskBoard = () => {
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={() => setIsTaskDialogOpen(true)} />
 
-        {/* Task Groups */}
-        <div className="p-4 space-y-4">
-          {taskGroups.map((group, groupIndex) => (
-            <TaskGroupSection
-              key={groupIndex}
-              group={group}
-              showQuickAdd={showQuickAdd}
-              onSetShowQuickAdd={setShowQuickAdd}
-              onQuickAddSave={handleQuickAddSave}
-              onTaskClick={handleTaskClick}
-            />
-          ))}
-        </div>
+        {/* Task Groups with ScrollArea */}
+        <ScrollArea className="flex-1">
+          <div className="p-4 space-y-4">
+            {taskGroups.map((group, groupIndex) => (
+              <TaskGroupSection
+                key={groupIndex}
+                group={group}
+                showQuickAdd={showQuickAdd}
+                onSetShowQuickAdd={setShowQuickAdd}
+                onQuickAddSave={handleQuickAddSave}
+                onTaskClick={handleTaskClick}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </div>
 
       <TaskDialog
