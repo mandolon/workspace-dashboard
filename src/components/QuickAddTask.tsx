@@ -116,10 +116,8 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           </div>
         </div>
 
-        {/* Date Created column */}
-        <div className="col-span-2 text-xs text-muted-foreground">
-          {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
-        </div>
+        {/* Date Created column - empty */}
+        <div className="col-span-2"></div>
 
         {/* Files column - empty */}
         <div className="col-span-1"></div>
