@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import EmailDetail from '@/components/EmailDetail';
@@ -13,6 +12,9 @@ const InboxPage = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('inbox');
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 5;
 
   const emails = [
     {
@@ -177,7 +179,14 @@ const InboxPage = () => {
                 <EmailDetail email={currentEmail} onBack={handleBackToList} />
               ) : (
                 <div className="h-full flex flex-col max-w-6xl mx-auto">
-                  <InboxHeader unreadCount={unreadCount} />
+                  <InboxHeader 
+                    unreadCount={unreadCount}
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
                   <InboxToolbar 
                     selectedEmails={selectedEmails}
                     totalEmails={emails.length}
