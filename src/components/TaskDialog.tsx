@@ -58,17 +58,17 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl bg-background border border-border shadow-lg">
-        <DialogHeader className="py-4">
-          <DialogTitle className="text-lg font-semibold">Task</DialogTitle>
+      <DialogContent className="max-w-3xl w-[900px] bg-background border border-border shadow-lg">
+        <DialogHeader className="py-3">
+          <DialogTitle className="text-base font-medium">Task</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
+        <div className="space-y-3 py-2">
           {/* Project and Status Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
               <Select value={selectedProject} onValueChange={setSelectedProject}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="h-8 text-sm">
                   <SelectValue placeholder="Select Project" />
                 </SelectTrigger>
                 <SelectContent>
@@ -80,9 +80,9 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
               </Select>
             </div>
             
-            <div className="space-y-2">
+            <div>
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="h-8 text-sm">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -95,14 +95,12 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
           </div>
 
           {/* Task Name */}
-          <div className="space-y-2">
-            <Label htmlFor="taskName" className="text-sm font-medium">Task Name</Label>
+          <div>
             <Input
-              id="taskName"
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
-              placeholder="Enter task name"
-              className="w-full"
+              placeholder="Task Name or type '/' for commands"
+              className="h-8 text-sm"
             />
           </div>
 
@@ -113,16 +111,16 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
               checked={addDescription}
               onCheckedChange={(checked) => setAddDescription(checked as boolean)}
             />
-            <Label htmlFor="addDescription" className="text-sm">Add description</Label>
+            <Label htmlFor="addDescription" className="text-sm text-muted-foreground">Add description</Label>
           </div>
 
-          {/* Assigned to, Due Date, and Button Row */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
+          {/* Bottom Row: Assignee, Due Date, and Additional Options */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
               <Select value={assignedTo} onValueChange={setAssignedTo}>
-                <SelectTrigger className="w-full">
-                  <User className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Assigned to" />
+                <SelectTrigger className="w-28 h-7 text-xs">
+                  <User className="w-3 h-3 mr-1" />
+                  <SelectValue placeholder="Assignee" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="mh">MH</SelectItem>
@@ -130,53 +128,31 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
                   <SelectItem value="mp">MP</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            
-            <div className="space-y-2">
+              
               <div className="relative">
                 <Input
                   type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full pl-10"
+                  className="w-32 h-7 text-xs pl-7"
+                  placeholder="Due date"
                 />
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Calendar className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="hasButton"
-                  checked={hasButton}
-                  onCheckedChange={(checked) => setHasButton(checked as boolean)}
-                />
-                <Label htmlFor="hasButton" className="text-sm">Button</Label>
-              </div>
-            </div>
-          </div>
 
-          {/* Attachments */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Attachments</Label>
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-              <Paperclip className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                Drop your files here to{' '}
-                <button className="text-blue-600 hover:underline">upload</button>
-              </p>
+              <button className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground">
+                <Paperclip className="w-3 h-3" />
+                <span>1</span>
+              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Create Task Button */}
-        <div className="flex justify-end pt-4 pb-4">
-          <Button 
-            onClick={handleCreateTask}
-            className="bg-gray-800 hover:bg-gray-900 text-white px-6"
-          >
-            Create Task
-          </Button>
+            <Button 
+              onClick={handleCreateTask}
+              className="h-7 px-4 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Create Task
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
