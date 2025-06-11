@@ -58,7 +58,7 @@ const ProjectPage = () => {
     }
   ];
 
-  // Task data from the overview page
+  // Task data that matches the Overview styling
   const taskGroups = [
     {
       title: "To Do",
@@ -303,7 +303,7 @@ const ProjectPage = () => {
                     </div>
                   </TabsContent>
 
-                  {/* Tasks Tab Content */}
+                  {/* Tasks Tab Content - Updated to match Overview styling */}
                   <TabsContent value="tasks" className="flex-1 overflow-y-auto p-4 mt-0">
                     <div className="space-y-8">
                       {taskGroups.map((group, index) => (
