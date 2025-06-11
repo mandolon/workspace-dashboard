@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import TaskDialog from './TaskDialog';
-import TaskDetail from './TaskDetail';
 
 const TaskBoard = () => {
+  const navigate = useNavigate();
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
@@ -109,8 +109,7 @@ const TaskBoard = () => {
   };
 
   const handleTaskClick = (task: any) => {
-    setSelectedTask(task);
-    setIsTaskDetailOpen(true);
+    navigate(`/task/${task.id}`);
   };
 
   const handleCloseTaskDetail = () => {
@@ -120,220 +119,203 @@ const TaskBoard = () => {
 
   return (
     <div className="flex-1 bg-background">
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={isTaskDetailOpen ? 70 : 100}>
-          <div className="h-full flex flex-col">
-            {/* Header */}
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-blue-500 rounded-sm"></div>
-                    <span className="font-semibold text-sm">PinerWorks</span>
-                    <span className="text-muted-foreground">/</span>
-                    <span className="font-semibold text-sm">In Progress</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span className="text-xs">Agents</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">2</span>
-                  </div>
-                  <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
-                  <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
-                  <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Sub Navigation */}
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button className="text-xs font-medium text-foreground">Overview</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground">To Do</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground">Calendar</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground">Weekly Update</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground">Board</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground">Table</button>
-                  <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
-                    <Plus className="w-3 h-3" />
-                    View
-                  </button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                    <Search className="w-3 h-3" />
-                    Search
-                  </button>
-                  <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                    <Eye className="w-3 h-3" />
-                    Hide
-                  </button>
-                  <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
-                    <Settings className="w-3 h-3" />
-                    Customize
-                  </button>
-                  <button 
-                    onClick={() => setIsTaskDialogOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
-                  >
-                    Add Task
-                    <Plus className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Filters */}
-            <div className="px-4 py-2 border-b border-border">
+      <div className="h-full flex flex-col">
+        {/* Header */}
+        <div className="border-b border-border px-4 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <button className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                  Group: Status
-                </button>
-                <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
-                  Subtasks
-                </button>
-                <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
-                  Columns
-                </button>
-                <div className="ml-auto flex items-center gap-2">
-                  <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
-                    <Filter className="w-3 h-3" />
-                    Filter
-                  </button>
-                  <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
-                    Closed
-                  </button>
-                  <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
-                    Assignee
-                  </button>
-                  <div className="relative">
-                    <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Search..." 
-                      className="pl-7 pr-3 py-1 border border-border rounded text-xs w-48"
-                    />
-                  </div>
-                </div>
+                <div className="w-4 h-4 bg-blue-500 rounded-sm"></div>
+                <span className="font-semibold text-sm">PinerWorks</span>
+                <span className="text-muted-foreground">/</span>
+                <span className="font-semibold text-sm">In Progress</span>
               </div>
             </div>
-
-            {/* Task Groups */}
-            <div className="p-4 space-y-4">
-              {taskGroups.map((group, groupIndex) => (
-                <div key={groupIndex} className="space-y-2">
-                  {/* Group Header */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <ChevronDown className="w-3 h-3 text-muted-foreground" />
-                    <div className={`px-2 py-0.5 rounded text-white text-xs font-medium ${group.color}`}>
-                      {group.title}
-                    </div>
-                  </div>
-
-                  {/* Table */}
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-b border-border">
-                        <TableHead className="text-muted-foreground font-medium text-xs py-2">Name</TableHead>
-                        <TableHead className="text-muted-foreground font-medium text-xs py-2">Date Created</TableHead>
-                        <TableHead className="text-muted-foreground font-medium text-xs py-2">Files</TableHead>
-                        <TableHead className="text-muted-foreground font-medium text-xs py-2">Assigned to</TableHead>
-                        <TableHead className="text-muted-foreground font-medium text-xs py-2">Priority</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {group.tasks.map((task) => (
-                        <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => handleTaskClick(task)}>
-                          <TableCell className="py-2">
-                            <div className="flex items-center gap-2">
-                              {renderStatusIcon(task.status)}
-                              <div>
-                                <div className="font-medium text-xs">{task.project}</div>
-                                <div className="text-xs text-muted-foreground">{task.title}</div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground py-2">
-                            {task.dateCreated}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {task.hasAttachment && (
-                              <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
-                                <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                              </div>
-                            )}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center -space-x-1">
-                                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
-                                  {task.assignee.name}
-                                </div>
-                                {task.collaborators?.map((collaborator, index) => (
-                                  <div
-                                    key={index}
-                                    className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${collaborator.avatar}`}
-                                  >
-                                    {collaborator.name}
-                                  </div>
-                                ))}
-                              </div>
-                              <button 
-                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  // Handle edit action
-                                }}
-                              >
-                                <Edit className="w-3 h-3 text-muted-foreground" />
-                              </button>
-                            </div>
-                          </TableCell>
-                          <TableCell className="py-2">
-                            <button 
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // Handle more options
-                              }}
-                            >
-                              <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
-                            </button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-
-                  {/* Add Task Button */}
-                  <button className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground">
-                    <Plus className="w-3 h-3" />
-                    <span>Add task</span>
-                  </button>
-                </div>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                <span className="text-xs">Agents</span>
+                <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">2</span>
+              </div>
+              <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
+              <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
+              <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
             </div>
           </div>
-        </ResizablePanel>
+        </div>
 
-        {isTaskDetailOpen && (
-          <>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={30} minSize={25} maxSize={50}>
-              <TaskDetail
-                isOpen={isTaskDetailOpen}
-                onClose={handleCloseTaskDetail}
-                task={selectedTask}
-              />
-            </ResizablePanel>
-          </>
-        )}
-      </ResizablePanelGroup>
+        {/* Sub Navigation */}
+        <div className="border-b border-border px-4 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button className="text-xs font-medium text-foreground">Overview</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground">To Do</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground">Calendar</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground">Weekly Update</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground">Board</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground">Table</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
+                <Plus className="w-3 h-3" />
+                View
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
+                <Search className="w-3 h-3" />
+                Search
+              </button>
+              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
+                <Eye className="w-3 h-3" />
+                Hide
+              </button>
+              <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700">
+                <Settings className="w-3 h-3" />
+                Customize
+              </button>
+              <button 
+                onClick={() => setIsTaskDialogOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
+              >
+                Add Task
+                <Plus className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="px-4 py-2 border-b border-border">
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
+              Group: Status
+            </button>
+            <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
+              Subtasks
+            </button>
+            <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
+              Columns
+            </button>
+            <div className="ml-auto flex items-center gap-2">
+              <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
+                <Filter className="w-3 h-3" />
+                Filter
+              </button>
+              <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
+                Closed
+              </button>
+              <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
+                Assignee
+              </button>
+              <div className="relative">
+                <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search..." 
+                  className="pl-7 pr-3 py-1 border border-border rounded text-xs w-48"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Task Groups */}
+        <div className="p-4 space-y-4">
+          {taskGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className="space-y-2">
+              {/* Group Header */}
+              <div className="flex items-center gap-2 mb-2">
+                <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                <div className={`px-2 py-0.5 rounded text-white text-xs font-medium ${group.color}`}>
+                  {group.title}
+                </div>
+              </div>
+
+              {/* Table */}
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b border-border">
+                    <TableHead className="text-muted-foreground font-medium text-xs py-2">Name</TableHead>
+                    <TableHead className="text-muted-foreground font-medium text-xs py-2">Date Created</TableHead>
+                    <TableHead className="text-muted-foreground font-medium text-xs py-2">Files</TableHead>
+                    <TableHead className="text-muted-foreground font-medium text-xs py-2">Assigned to</TableHead>
+                    <TableHead className="text-muted-foreground font-medium text-xs py-2">Priority</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {group.tasks.map((task) => (
+                    <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => handleTaskClick(task)}>
+                      <TableCell className="py-2">
+                        <div className="flex items-center gap-2">
+                          {renderStatusIcon(task.status)}
+                          <div>
+                            <div className="font-medium text-xs">{task.project}</div>
+                            <div className="text-xs text-muted-foreground">{task.title}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground py-2">
+                        {task.dateCreated}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        {task.hasAttachment && (
+                          <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+                            <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center -space-x-1">
+                            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
+                              {task.assignee.name}
+                            </div>
+                            {task.collaborators?.map((collaborator, index) => (
+                              <div
+                                key={index}
+                                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${collaborator.avatar}`}
+                              >
+                                {collaborator.name}
+                              </div>
+                            ))}
+                          </div>
+                          <button 
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle edit action
+                            }}
+                          >
+                            <Edit className="w-3 h-3 text-muted-foreground" />
+                          </button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <button 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle more options
+                          }}
+                        >
+                          <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {/* Add Task Button */}
+              <button className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground">
+                <Plus className="w-3 h-3" />
+                <span>Add task</span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <TaskDialog
         isOpen={isTaskDialogOpen}
