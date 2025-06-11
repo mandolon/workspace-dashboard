@@ -1,13 +1,6 @@
 
 import React from 'react';
-import { Home, MoreHorizontal } from 'lucide-react';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
+import { Home } from 'lucide-react';
 
 const DashboardPageHeader = () => {
   const tabs = [
@@ -21,13 +14,9 @@ const DashboardPageHeader = () => {
     <div className="border-b border-border">
       <div className="px-4 py-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4 text-muted-foreground" />
-              <span className="font-semibold text-sm">Home</span>
-              <span className="text-muted-foreground">/</span>
-              <span className="font-semibold text-sm">Overview</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <Home className="w-4 h-4 text-muted-foreground" />
+            <span className="font-semibold text-sm">Home</span>
           </div>
           <div className="flex items-center gap-2">
             <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
