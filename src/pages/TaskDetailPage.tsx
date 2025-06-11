@@ -21,25 +21,25 @@ const TaskDetailPage = () => {
   };
 
   // Mock task data - in a real app this would come from your data source
-  // For demo purposes, showing different task names based on taskId
+  // Updated to properly map tasks to their projects and titles
   const getTaskData = (id: string | undefined) => {
     const tasks: Record<string, any> = {
       '1': {
         id: id,
         title: "Planning set finalized, set up CD's",
-        project: getProjectData(id),
+        project: "Adams - 1063 40th Street",
         status: "REDLINE / TO DO"
       },
       '2': {
         id: id,
-        title: "Update - 12.27.23",
-        project: getProjectData(id),
+        title: "Alternate Cabin Design",
+        project: "Rathbun - USFS Cabin",
         status: "REDLINE / TO DO"
       },
       '3': {
         id: id,
         title: "Site survey completed",
-        project: getProjectData(id),
+        project: "Ogden - Thew - 2709 T Street",
         status: "IN PROGRESS"
       }
     };
@@ -47,7 +47,7 @@ const TaskDetailPage = () => {
     return tasks[id || '1'] || {
       id: id,
       title: "Planning set finalized, set up CD's",
-      project: getProjectData(id),
+      project: "Adams - 1063 40th Street",
       status: "REDLINE / TO DO"
     };
   };
