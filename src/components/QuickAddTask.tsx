@@ -102,7 +102,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - matches first column */}
-        <div className="col-span-4 flex items-center gap-2">
+        <div className="col-span-3 flex items-center gap-2">
           <TaskStatusIcon status={defaultStatus} />
           <div className="flex-1">
             <Input
@@ -123,7 +123,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         <div className="col-span-1"></div>
 
         {/* Assigned to column */}
-        <div className="col-span-4 flex items-center gap-2">
+        <div className="col-span-3 flex items-center gap-2">
           <Button
             size="sm"
             variant="ghost"
@@ -142,7 +142,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         </div>
 
         {/* Priority column */}
-        <div className="col-span-1 flex items-center gap-2">
+        <div className="col-span-3 flex items-center justify-end gap-2">
           <Button
             variant="ghost"
             size="sm"
