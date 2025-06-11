@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Search, MoreHorizontal, Mail, Calendar, Shield } from 'lucide-react';
+import { Plus, Search, MoreHorizontal, Mail, Shield } from 'lucide-react';
 
 interface TeamMember {
   id: string;
@@ -68,17 +68,6 @@ const TeamsContent = () => {
     }
   };
 
-  const getRoleIcon = (role: string) => {
-    switch (role.toLowerCase()) {
-      case 'architect':
-        return <Shield className="w-3 h-3" />;
-      case 'engineer':
-        return <Shield className="w-3 h-3" />;
-      default:
-        return <Shield className="w-3 h-3" />;
-    }
-  };
-
   return (
     <div className="flex-1 overflow-y-auto p-4 mt-0">
       {/* Header Actions */}
@@ -126,12 +115,10 @@ const TeamsContent = () => {
               <Mail className="w-3 h-3" />
               <span className="text-blue-600 hover:underline">{member.email}</span>
             </div>
-            <div className="col-span-2 flex items-center gap-1">
-              {getRoleIcon(member.role)}
+            <div className="col-span-2 flex items-center">
               <span>{member.role}</span>
             </div>
-            <div className="col-span-2 flex items-center gap-1 text-muted-foreground">
-              <Calendar className="w-3 h-3" />
+            <div className="col-span-2 flex items-center text-muted-foreground">
               <span>{member.lastActive}</span>
             </div>
             <div className="col-span-2 flex items-center justify-between">
