@@ -56,7 +56,7 @@ const InboxHeader = ({
 
   return (
     <div className="border-b border-border">
-      <div className="px-6 py-6">
+      <div className="px-6 py-4">
         <div className="flex items-center gap-3">
           {getTabIcon()}
           <h1 className="text-sm font-medium">{getTabLabel()}</h1>
