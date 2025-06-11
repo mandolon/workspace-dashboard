@@ -11,6 +11,7 @@ interface TeamMember {
 }
 
 const TeamsContent = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   const [teamMembers] = useState<TeamMember[]>([
     {
       id: '1',
@@ -54,6 +55,11 @@ const TeamsContent = () => {
     }
   ]);
 
+  const filteredMembers = teamMembers.filter(member => 
+    member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Active':
@@ -77,6 +83,8 @@ const TeamsContent = () => {
             <input 
               type="text" 
               placeholder="Search members..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-7 pr-3 py-1 border border-border rounded text-xs w-48"
             />
           </div>
@@ -99,7 +107,7 @@ const TeamsContent = () => {
         </div>
         
         {/* Member Rows */}
-        {teamMembers.map((member) => (
+        {filteredMembers.map((member) => (
           <div key={member.id} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
             <div className="col-span-3">
               <div className="flex items-center gap-2">
@@ -135,17 +143,17 @@ const TeamsContent = () => {
       <div className="mt-6 p-3 bg-accent/30 rounded border">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">
-            Total: {teamMembers.length} members
+            Total: {filteredMembers.length} of {teamMembers.length} members
           </span>
           <div className="flex items-center gap-4">
             <span className="text-green-600">
-              Active: {teamMembers.filter(m => m.status === 'Active').length}
+              Active: {filteredMembers.filter(m => m.status === 'Active').length}
             </span>
             <span className="text-yellow-600">
-              Pending: {teamMembers.filter(m => m.status === 'Pending').length}
+              Pending: {filteredMembers.filter(m => m.status === 'Pending').length}
             </span>
             <span className="text-gray-600">
-              Inactive: {teamMembers.filter(m => m.status === 'Inactive').length}
+              Inactive: {filteredMembers.filter(m => m.status === 'Inactive').length}
             </span>
           </div>
         </div>
