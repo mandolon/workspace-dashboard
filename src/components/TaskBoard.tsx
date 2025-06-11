@@ -1,9 +1,11 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import TaskDialog from './TaskDialog';
 
 const TaskBoard = () => {
+  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+
   const taskGroups = [
     {
       title: "TASK/ REDLINE",
@@ -97,6 +99,11 @@ const TaskBoard = () => {
     }
   };
 
+  const handleCreateTask = (taskData: any) => {
+    console.log('Creating task:', taskData);
+    // Here you would typically add the task to your state or send it to an API
+  };
+
   return (
     <div className="flex-1 bg-background">
       {/* Header */}
@@ -151,7 +158,10 @@ const TaskBoard = () => {
               <Settings className="w-3 h-3" />
               Customize
             </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+            <button 
+              onClick={() => setIsTaskDialogOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
+            >
               Add Task
               <Plus className="w-3 h-3" />
             </button>
@@ -279,6 +289,12 @@ const TaskBoard = () => {
           </div>
         ))}
       </div>
+
+      <TaskDialog
+        isOpen={isTaskDialogOpen}
+        onClose={() => setIsTaskDialogOpen(false)}
+        onCreateTask={handleCreateTask}
+      />
     </div>
   );
 };
