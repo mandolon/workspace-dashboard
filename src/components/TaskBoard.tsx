@@ -119,7 +119,7 @@ const TaskBoard = () => {
   };
 
   return (
-    <div className="flex-1 bg-background">
+    <div className="flex-1 bg-background pl-6">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="border-b border-border px-4 py-2">
