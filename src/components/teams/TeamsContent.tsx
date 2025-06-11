@@ -80,11 +80,11 @@ const TeamsContent = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div className="flex-1 overflow-y-auto p-4 mt-0">
       {/* Header Actions */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          <h2 className="text-sm font-medium">Team Members ({teamMembers.length})</h2>
+          <h2 className="text-xs font-medium">Team Members ({teamMembers.length})</h2>
           <div className="relative">
             <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
@@ -103,7 +103,7 @@ const TeamsContent = () => {
       {/* Table */}
       <div className="space-y-0.5">
         {/* Header Row */}
-        <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-2 border-b">
+        <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
           <div className="col-span-3">Name</div>
           <div className="col-span-3">Email</div>
           <div className="col-span-2">Role</div>
@@ -113,10 +113,10 @@ const TeamsContent = () => {
         
         {/* Member Rows */}
         {teamMembers.map((member) => (
-          <div key={member.id} className="grid grid-cols-12 gap-3 text-xs py-3 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
+          <div key={member.id} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
             <div className="col-span-3">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <span className="font-medium">{member.name}</span>
