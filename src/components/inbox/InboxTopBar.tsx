@@ -1,13 +1,22 @@
 
-import React from 'react';
-import { Menu, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, Search, Settings, HelpCircle, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface InboxTopBarProps {
   onToggleSidebar: () => void;
 }
 
 const InboxTopBar = ({ onToggleSidebar }: InboxTopBarProps) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
       <button
@@ -23,12 +32,37 @@ const InboxTopBar = ({ onToggleSidebar }: InboxTopBarProps) => {
           <input
             type="text"
             placeholder="Search mail"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
 
       <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" className="h-8 px-2">
+          <Bell className="w-4 h-4" />
+        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 px-2">
+              <Settings className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Themes</DropdownMenuItem>
+            <DropdownMenuItem>Import mail</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Keyboard shortcuts</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button variant="ghost" size="sm" className="h-8 px-2">
+          <HelpCircle className="w-4 h-4" />
+        </Button>
+
         <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
           Compose
         </Button>

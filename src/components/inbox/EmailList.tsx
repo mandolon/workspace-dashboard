@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Paperclip } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface Email {
   id: string;
@@ -14,6 +15,8 @@ interface Email {
   content?: string;
   senderEmail?: string;
   recipient?: string;
+  hasAttachment?: boolean;
+  avatar?: string;
 }
 
 interface EmailListProps {
@@ -24,6 +27,10 @@ interface EmailListProps {
 }
 
 const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: EmailListProps) => {
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
   return (
     <div className="flex-1 overflow-y-auto">
       {emails.map((email) => (
@@ -47,6 +54,13 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
               <Star className={`w-3.5 h-3.5 ${email.isStarred ? 'fill-current' : ''}`} />
             </button>
             
+            <Avatar className="w-8 h-8 flex-shrink-0">
+              <AvatarImage src={email.avatar} />
+              <AvatarFallback className="bg-blue-600 text-white text-xs">
+                {getInitials(email.sender)}
+              </AvatarFallback>
+            </Avatar>
+            
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -59,6 +73,9 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
                   <span className="text-xs text-muted-foreground truncate">
                     - {email.preview}
                   </span>
+                  {email.hasAttachment && (
+                    <Paperclip className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                  )}
                 </div>
                 <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">
                   {email.time}
