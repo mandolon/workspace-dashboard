@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Menu, Search, Star, Archive, Delete, MoreVertical, Inbox, Send, FileText, Clock } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import EmailDetail from '@/components/EmailDetail';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 const InboxPage = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
 
   const emails = [
     {
@@ -19,6 +20,24 @@ const InboxPage = () => {
       time: '2:30 PM',
       isRead: false,
       isStarred: false,
+      content: `
+        <p>Hi team,</p>
+        
+        <p>I wanted to provide an update on the current progress of the Ogden Thew Development project. We've completed the initial design phase and are moving forward with the next steps.</p>
+        
+        <p>Key accomplishments this week:</p>
+        <ul>
+          <li>Finalized schematic designs</li>
+          <li>Obtained preliminary approvals</li>
+          <li>Scheduled site visit for next week</li>
+        </ul>
+        
+        <p>Please let me know if you have any questions or concerns.</p>
+        
+        <p>Best regards,<br>John Doe</p>
+      `,
+      senderEmail: 'john.doe@company.com',
+      recipient: 'team@company.com',
     },
     {
       id: '2',
@@ -70,6 +89,16 @@ const InboxPage = () => {
     setSelectedEmails(selectedEmails.length === emails.length ? [] : emails.map(e => e.id));
   };
 
+  const handleEmailClick = (emailId: string) => {
+    setSelectedEmail(emailId);
+  };
+
+  const handleBackToList = () => {
+    setSelectedEmail(null);
+  };
+
+  const currentEmail = selectedEmail ? emails.find(e => e.id === selectedEmail) : null;
+
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
@@ -118,85 +147,89 @@ const InboxPage = () => {
             </div>
 
             <div className="flex-1 overflow-hidden">
-              <div className="h-full flex flex-col max-w-6xl mx-auto">
-                {/* Inbox Header */}
-                <div className="px-4 py-3 border-b border-border">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Inbox className="w-5 h-5" />
-                      <h1 className="text-xl font-semibold">Inbox</h1>
-                      <span className="text-sm text-muted-foreground">({emails.filter(e => !e.isRead).length} unread)</span>
+              {selectedEmail && currentEmail ? (
+                <EmailDetail email={currentEmail} onBack={handleBackToList} />
+              ) : (
+                <div className="h-full flex flex-col max-w-6xl mx-auto">
+                  {/* Inbox Header */}
+                  <div className="px-4 py-3 border-b border-border">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Inbox className="w-5 h-5" />
+                        <h1 className="text-xl font-semibold">Inbox</h1>
+                        <span className="text-sm text-muted-foreground">({emails.filter(e => !e.isRead).length} unread)</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Toolbar */}
-                <div className="px-4 py-2 border-b border-border flex items-center gap-2">
-                  <Checkbox 
-                    checked={selectedEmails.length === emails.length}
-                    onCheckedChange={handleSelectAll}
-                  />
-                  {selectedEmails.length > 0 && (
-                    <>
-                      <Button variant="ghost" size="sm">
-                        <Archive className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Delete className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Star className="w-4 h-4" />
-                      </Button>
-                    </>
-                  )}
-                </div>
+                  {/* Toolbar */}
+                  <div className="px-4 py-2 border-b border-border flex items-center gap-2">
+                    <Checkbox 
+                      checked={selectedEmails.length === emails.length}
+                      onCheckedChange={handleSelectAll}
+                    />
+                    {selectedEmails.length > 0 && (
+                      <>
+                        <Button variant="ghost" size="sm">
+                          <Archive className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Delete className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Star className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
 
-                {/* Email List */}
-                <div className="flex-1 overflow-y-auto">
-                  {emails.map((email) => (
-                    <div
-                      key={email.id}
-                      className={`px-4 py-3 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
-                        !email.isRead ? 'bg-accent/20' : ''
-                      } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
-                      onClick={() => handleSelectEmail(email.id)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Checkbox 
-                          checked={selectedEmails.includes(email.id)}
-                          onCheckedChange={() => handleSelectEmail(email.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <button 
-                          className={`p-1 hover:bg-accent rounded ${email.isStarred ? 'text-yellow-500' : 'text-muted-foreground hover:text-foreground'}`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Star className={`w-4 h-4 ${email.isStarred ? 'fill-current' : ''}`} />
-                        </button>
-                        
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3 min-w-0 flex-1">
-                              <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
-                                {email.sender}
-                              </span>
-                              <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
-                                {email.subject}
-                              </span>
-                              <span className="text-sm text-muted-foreground truncate">
-                                - {email.preview}
+                  {/* Email List */}
+                  <div className="flex-1 overflow-y-auto">
+                    {emails.map((email) => (
+                      <div
+                        key={email.id}
+                        className={`px-4 py-3 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
+                          !email.isRead ? 'bg-accent/20' : ''
+                        } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
+                        onClick={() => handleEmailClick(email.id)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Checkbox 
+                            checked={selectedEmails.includes(email.id)}
+                            onCheckedChange={() => handleSelectEmail(email.id)}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <button 
+                            className={`p-1 hover:bg-accent rounded ${email.isStarred ? 'text-yellow-500' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Star className={`w-4 h-4 ${email.isStarred ? 'fill-current' : ''}`} />
+                          </button>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                                  {email.sender}
+                                </span>
+                                <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                                  {email.subject}
+                                </span>
+                                <span className="text-sm text-muted-foreground truncate">
+                                  - {email.preview}
+                                </span>
+                              </div>
+                              <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
+                                {email.time}
                               </span>
                             </div>
-                            <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
-                              {email.time}
-                            </span>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </ResizablePanel>
