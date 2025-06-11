@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Inbox, 
@@ -25,18 +26,20 @@ interface SidebarNavigationProps {
   onToggle: () => void;
 }
 
-const mainNavItems = [
-  { icon: Home, label: 'Home', active: false },
-  { icon: Inbox, label: 'Inbox', active: false },
-  { icon: MessageSquare, label: 'Chat', active: false },
-  { icon: Users, label: 'Teams', active: false },
-  { icon: FileText, label: 'Docs', active: false },
-  { icon: FileImage, label: 'Whiteboards', active: false },
-  { icon: ClipboardList, label: 'Forms', active: false },
-  { icon: Clock, label: 'Timesheets', active: false },
-];
-
 const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationProps) => {
+  const navigate = useNavigate();
+
+  const mainNavItems = [
+    { icon: Home, label: 'Home', active: false, onClick: () => navigate('/') },
+    { icon: Inbox, label: 'Inbox', active: false, onClick: () => {} },
+    { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
+    { icon: Users, label: 'Teams', active: false, onClick: () => {} },
+    { icon: FileText, label: 'Docs', active: false, onClick: () => {} },
+    { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => {} },
+    { icon: ClipboardList, label: 'Forms', active: false, onClick: () => {} },
+    { icon: Clock, label: 'Timesheets', active: false, onClick: () => {} },
+  ];
+
   if (isCollapsed) {
     return (
       <nav className="flex-1 py-2 px-1 space-y-0">
@@ -49,6 +52,7 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
                 ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                 : "text-sidebar-foreground hover:bg-sidebar-accent/50"
             )}
+            onClick={item.onClick}
           >
             <item.icon className="w-4 h-4" />
           </div>
@@ -81,6 +85,7 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 )}
+                onClick={item.onClick}
               >
                 <item.icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm truncate">{item.label}</span>
