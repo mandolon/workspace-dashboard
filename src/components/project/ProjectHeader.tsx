@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Folder, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 interface ProjectHeaderProps {
   projectName: string;
@@ -12,7 +12,6 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Folder className="w-4 h-4 text-muted-foreground" />
             <span className="font-semibold text-sm">PinerWorks</span>
             <span className="text-muted-foreground">/</span>
             <span className="font-semibold text-sm">{projectName}</span>

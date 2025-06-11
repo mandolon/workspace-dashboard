@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Home } from 'lucide-react';
 
 interface DashboardPageHeaderProps {
   activeTab: string;
@@ -20,7 +19,6 @@ const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProp
       <div className="px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Home className="w-4 h-4 text-muted-foreground" />
             <span className="font-semibold text-sm">Home</span>
           </div>
           <div className="flex items-center gap-2">
