@@ -203,11 +203,11 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                     {/* In Progress Projects */}
                     <Collapsible open={openSections.inProgress} onOpenChange={() => toggleSection('inProgress')}>
                       <div className="ml-3">
-                        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-blue-50 rounded">
+                        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left bg-sidebar-accent text-sidebar-accent-foreground rounded">
                           {openSections.inProgress ? (
-                            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                            <ChevronDown className="w-3 h-3 flex-shrink-0" />
                           ) : (
-                            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                            <ChevronRight className="w-3 h-3 flex-shrink-0" />
                           )}
                           <span className="text-sm font-medium truncate">in Progress</span>
                         </CollapsibleTrigger>
