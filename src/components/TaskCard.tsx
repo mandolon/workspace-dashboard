@@ -50,7 +50,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div className="col-span-1 flex items-center">
         {task.hasAttachment && (
           <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
-            <Paperclip className="w-3 h-3 text-orange-600" />
+            <Paperclip className="w-3 h-3 text-orange-600" strokeWidth="2" />
           </div>
         )}
       </div>
@@ -87,7 +87,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           ))}
         </div>
         <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-          <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+          <MoreHorizontal className="w-4 h-4 text-muted-foreground" strokeWidth="2" />
         </button>
       </div>
     </div>

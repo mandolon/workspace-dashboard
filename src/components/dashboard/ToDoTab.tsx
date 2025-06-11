@@ -79,7 +79,7 @@ const ToDoTab = () => {
           className="flex-1"
         />
         <Button onClick={handleAddTodo} className="bg-foreground text-background hover:bg-foreground/90">
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4" strokeWidth="2" />
         </Button>
       </div>
 
@@ -112,7 +112,7 @@ const ToDoTab = () => {
                           : 'border-muted-foreground hover:border-foreground'
                       }`}
                     >
-                      {todo.completed && <Check className="w-2.5 h-2.5" />}
+                      {todo.completed && <Check className="w-2.5 h-2.5" strokeWidth="2" />}
                     </button>
                   </div>
                   <div className={`col-span-7 ${todo.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
@@ -124,7 +124,7 @@ const ToDoTab = () => {
                       onClick={() => handleDeleteTodo(todo.id)}
                       className="text-red-500 hover:text-red-700 p-1"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-3 h-3" strokeWidth="2" />
                     </button>
                   </div>
                 </div>
