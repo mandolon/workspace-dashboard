@@ -42,101 +42,95 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
   const senderInitials = email.sender.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="px-4 py-3 border-b border-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <h2 className="text-lg font-semibold truncate">{email.subject}</h2>
-          </div>
-          
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm">
-              <Archive className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <Delete className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <MoreVertical className="w-4 h-4" />
-            </Button>
-          </div>
+    <div className="flex flex-col h-full bg-white">
+      {/* Gmail-style toolbar */}
+      <div className="px-4 py-2 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={onBack} className="hover:bg-gray-200">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+            <Archive className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+            <Delete className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+            <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+          </Button>
+          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+            <MoreVertical className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
-      {/* Email Header Info */}
-      <div className="px-4 py-4 border-b border-border">
-        <div className="flex items-start gap-3">
-          <Avatar className="w-10 h-10">
-            <AvatarImage src="" />
-            <AvatarFallback className="bg-blue-500 text-white text-sm font-medium">
-              {senderInitials}
-            </AvatarFallback>
-          </Avatar>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium">{email.sender}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {email.senderEmail || `${email.sender.toLowerCase().replace(' ', '.')}@example.com`}
-                </p>
+      {/* Email content container with Gmail-style card */}
+      <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Subject line */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-normal text-gray-900">{email.subject}</h1>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
+            </div>
+          </div>
+
+          {/* Email card */}
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+            {/* Email header */}
+            <div className="p-6 border-b border-gray-100">
+              <div className="flex items-start gap-4">
+                <Avatar className="w-10 h-10 flex-shrink-0">
+                  <AvatarImage src="" />
+                  <AvatarFallback className="bg-blue-600 text-white text-sm font-medium">
+                    {senderInitials}
+                  </AvatarFallback>
+                </Avatar>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium text-gray-900">{email.sender}</h3>
+                      <p className="text-sm text-gray-600">
+                        to {email.recipient || 'me'}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">{email.time}</span>
+                      <Button variant="ghost" size="sm" className="hover:bg-gray-100">
+                        <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+                      </Button>
+                      <Button variant="ghost" size="sm" className="hover:bg-gray-100">
+                        <MoreVertical className="w-4 h-4 text-gray-400" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground">{email.time}</p>
-                <Button variant="ghost" size="sm">
-                  <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+            </div>
+
+            {/* Email content */}
+            <div className="p-6">
+              <div 
+                className="prose prose-gray max-w-none text-gray-900 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: emailContent }}
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className="px-6 pb-6">
+              <div className="flex items-center gap-3">
+                <Button variant="outline" className="bg-white border-gray-300 hover:bg-gray-50">
+                  <Reply className="w-4 h-4 mr-2" />
+                  Reply
+                </Button>
+                <Button variant="outline" className="bg-white border-gray-300 hover:bg-gray-50">
+                  <Forward className="w-4 h-4 mr-2" />
+                  Forward
                 </Button>
               </div>
             </div>
-            
-            <div className="mt-2 text-sm text-muted-foreground">
-              <span>to {email.recipient || 'me'}</span>
-            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Email Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-6 max-w-none">
-          <div 
-            className="prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: emailContent }}
-          />
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="px-4 py-3 border-t border-border">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Reply className="w-4 h-4 mr-2" />
-            Reply
-          </Button>
-          <Button variant="outline" size="sm">
-            <ReplyAll className="w-4 h-4 mr-2" />
-            Reply all
-          </Button>
-          <Button variant="outline" size="sm">
-            <Forward className="w-4 h-4 mr-2" />
-            Forward
-          </Button>
-          
-          <div className="flex-1" />
-          
-          <Button variant="ghost" size="sm">
-            <Printer className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm">
-            <FileDown className="w-4 h-4" />
-          </Button>
         </div>
       </div>
     </div>
