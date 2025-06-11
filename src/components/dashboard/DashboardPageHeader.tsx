@@ -5,7 +5,6 @@ import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
@@ -20,39 +19,33 @@ const DashboardPageHeader = () => {
 
   return (
     <div className="border-b border-border">
-      <div className="px-4 py-3">
+      <div className="px-4 py-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Home className="w-4 h-4 text-muted-foreground" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-sm font-medium">Home</BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-sm font-medium">Overview</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Home className="w-4 h-4 text-muted-foreground" />
+              <span className="font-semibold text-sm">Home</span>
+              <span className="text-muted-foreground">/</span>
+              <span className="font-semibold text-sm">Overview</span>
+            </div>
           </div>
-          <div className="flex items-center">
-            <button className="p-2 hover:bg-accent rounded-md transition-colors">
-              <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
-            </button>
+          <div className="flex items-center gap-2">
+            <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
+            <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
+            <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
           </div>
         </div>
       </div>
       
       <div className="px-4 py-2">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+              className={`text-xs font-medium ${
                 tab.active 
-                  ? 'text-foreground border-foreground' 
-                  : 'text-muted-foreground border-transparent hover:text-foreground'
+                  ? 'text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {tab.label}
