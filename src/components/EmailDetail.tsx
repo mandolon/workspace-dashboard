@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Print, Download } from 'lucide-react';
+import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Printer, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -132,10 +132,10 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
           <div className="flex-1" />
           
           <Button variant="ghost" size="sm">
-            <Print className="w-4 h-4" />
+            <Printer className="w-4 h-4" />
           </Button>
           <Button variant="ghost" size="sm">
-            <Download className="w-4 h-4" />
+            <FileDown className="w-4 h-4" />
           </Button>
         </div>
       </div>
