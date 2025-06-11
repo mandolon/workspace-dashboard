@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search } from 'lucide-react';
+import { Search, FileText } from 'lucide-react';
 
 interface Note {
   id: number;
@@ -63,33 +62,33 @@ const NotesTab = () => {
       </div>
 
       {/* Notes Table */}
-      <div className="rounded-lg border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/3">Name</TableHead>
-              <TableHead className="w-1/3">Date Created</TableHead>
-              <TableHead className="w-1/3">Head Text</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredNotes.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
-                  No notes found
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredNotes.map((note) => (
-                <TableRow key={note.id} className="cursor-pointer hover:bg-muted/50">
-                  <TableCell className="font-medium">{note.name}</TableCell>
-                  <TableCell>{note.dateCreated}</TableCell>
-                  <TableCell>{note.headText}</TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+      <div className="flex-1 overflow-y-auto mt-0">
+        <div className="space-y-0.5">
+          {/* Header Row */}
+          <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+            <div className="col-span-4">Name</div>
+            <div className="col-span-4">Date Created</div>
+            <div className="col-span-4">Head Text</div>
+          </div>
+          
+          {/* Note Rows */}
+          {filteredNotes.length === 0 ? (
+            <div className="text-center text-muted-foreground py-8 text-sm">
+              No notes found
+            </div>
+          ) : (
+            filteredNotes.map((note) => (
+              <div key={note.id} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30">
+                <div className="col-span-4 flex items-center gap-2">
+                  <FileText className="w-3 h-3 text-blue-500" />
+                  <span className="text-blue-600 hover:underline truncate">{note.name}</span>
+                </div>
+                <div className="col-span-4 text-muted-foreground">{note.dateCreated}</div>
+                <div className="col-span-4 text-muted-foreground">{note.headText}</div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Create New Button */}
