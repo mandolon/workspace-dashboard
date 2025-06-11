@@ -38,7 +38,7 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
         <div className={`${isMinimized ? 'h-12' : 'h-auto'} transition-all duration-200`}>
           {/* Header */}
-          <DialogHeader className="px-4 py-3 bg-gray-50 border-b flex flex-row items-center justify-between space-y-0">
+          <DialogHeader className="px-4 py-3 bg-white border-b flex flex-row items-center justify-between space-y-0">
             <DialogTitle className="text-sm font-medium">
               {replyTo ? 'Reply' : 'New Message'}
             </DialogTitle>
@@ -87,7 +87,7 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
               </div>
 
               {/* Formatting toolbar */}
-              <div className="px-4 py-2 border-b bg-gray-50">
+              <div className="px-4 py-2 border-b bg-gray-100">
                 <div className="flex items-center gap-1">
                   <select className="text-sm border-0 bg-transparent">
                     <option>Sans Serif</option>
@@ -116,7 +116,7 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
               </div>
 
               {/* Bottom toolbar */}
-              <div className="px-4 py-3 border-t bg-gray-50 flex items-center justify-between">
+              <div className="px-4 py-3 border-t bg-gray-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Button 
                     onClick={handleSend}
