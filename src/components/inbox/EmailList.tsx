@@ -1,0 +1,75 @@
+
+import React from 'react';
+import { Star } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+
+interface Email {
+  id: string;
+  sender: string;
+  subject: string;
+  preview: string;
+  time: string;
+  isRead: boolean;
+  isStarred: boolean;
+  content?: string;
+  senderEmail?: string;
+  recipient?: string;
+}
+
+interface EmailListProps {
+  emails: Email[];
+  selectedEmails: string[];
+  onSelectEmail: (emailId: string) => void;
+  onEmailClick: (emailId: string) => void;
+}
+
+const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: EmailListProps) => {
+  return (
+    <div className="flex-1 overflow-y-auto">
+      {emails.map((email) => (
+        <div
+          key={email.id}
+          className={`px-4 py-3 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
+            !email.isRead ? 'bg-accent/20' : ''
+          } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
+          onClick={() => onEmailClick(email.id)}
+        >
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              checked={selectedEmails.includes(email.id)}
+              onCheckedChange={() => onSelectEmail(email.id)}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button 
+              className={`p-1 hover:bg-accent rounded ${email.isStarred ? 'text-yellow-500' : 'text-muted-foreground hover:text-foreground'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Star className={`w-4 h-4 ${email.isStarred ? 'fill-current' : ''}`} />
+            </button>
+            
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                    {email.sender}
+                  </span>
+                  <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                    {email.subject}
+                  </span>
+                  <span className="text-sm text-muted-foreground truncate">
+                    - {email.preview}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
+                  {email.time}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default EmailList;
