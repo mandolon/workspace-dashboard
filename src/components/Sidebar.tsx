@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -313,5 +314,3 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
 };
 
 export default Sidebar;
-
-</edits_to_apply>
