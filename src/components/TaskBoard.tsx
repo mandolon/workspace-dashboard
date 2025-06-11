@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
@@ -248,8 +249,8 @@ const TaskBoard = () => {
                         <div className="flex items-center gap-2">
                           {renderStatusIcon(task.status)}
                           <div>
-                            <div className="font-medium text-xs">{task.project}</div>
-                            <div className="text-xs text-muted-foreground">{task.title}</div>
+                            <div className="font-medium text-xs">{task.title}</div>
+                            <div className="text-xs text-muted-foreground">{task.project}</div>
                           </div>
                         </div>
                       </TableCell>
