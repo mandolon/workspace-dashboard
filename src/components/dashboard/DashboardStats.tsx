@@ -36,9 +36,9 @@ const DashboardStats = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
       {stats.map((stat, index) => (
-        <Card key={index} className="p-4">
+        <Card key={index} className="p-3">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {stat.title}
@@ -46,7 +46,7 @@ const DashboardStats = () => {
             <stat.icon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent className="p-0">
-            <div className="text-2xl font-bold">{stat.value}</div>
+            <div className="text-xl font-bold">{stat.value}</div>
             <p className={`text-xs ${stat.positive ? 'text-green-600' : 'text-red-600'}`}>
               {stat.change}
             </p>

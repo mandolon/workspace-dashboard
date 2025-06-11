@@ -37,8 +37,8 @@ const Dashboard = () => {
               setSidebarCollapsed={setSidebarCollapsed}
             />
 
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full p-6">
+            <div className="flex-1 overflow-auto">
+              <div className="p-4 space-y-4">
                 <DashboardStats />
                 <DashboardContent />
               </div>
