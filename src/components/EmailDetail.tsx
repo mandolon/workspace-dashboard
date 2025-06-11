@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, Forward, MoreVertical, Send, Bold, Italic, List, ListOrdered } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -89,12 +90,12 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
       {/* Email content */}
       <div className="flex-1 overflow-y-auto bg-white p-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-6">
           {/* Subject */}
-          <h1 className="text-xl font-normal text-gray-900 mb-4">{email.subject}</h1>
+          <h1 className="text-xl font-normal text-gray-900">{email.subject}</h1>
 
           {/* Sender info */}
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3">
             <Avatar className="w-8 h-8">
               <AvatarImage src="" />
               <AvatarFallback className="bg-blue-600 text-white text-xs">
@@ -122,7 +123,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
           {/* Message content */}
           <div 
-            className="text-sm text-gray-700 leading-relaxed mb-6 [&>p]:mb-4 [&>ul]:mb-4 [&>ul]:ml-6 [&>ul]:list-disc [&>li]:mb-1"
+            className="text-sm text-gray-700 leading-relaxed [&>p]:mb-6 [&>ul]:mb-6 [&>ul]:ml-6 [&>ul]:list-disc [&>li]:mb-1"
             dangerouslySetInnerHTML={{ __html: emailContent }}
           />
 
@@ -132,7 +133,6 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
               variant="outline" 
               size="sm"
               onClick={handleReply}
-              className="mb-6"
             >
               <Reply className="w-4 h-4 mr-1" />
               Reply
@@ -141,7 +141,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
           {/* Reply form */}
           {showReplyForm && (
-            <div className="border border-gray-200 rounded-lg mb-6">
+            <div className="border border-gray-200 rounded-lg">
               <div className="p-3 border-b border-gray-200 bg-gray-50">
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">To:</span> {email.sender}
@@ -222,3 +222,4 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 };
 
 export default EmailDetail;
+
