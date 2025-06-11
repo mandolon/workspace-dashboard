@@ -10,12 +10,32 @@ const TaskDetailPage = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Mock task data - in a real app this would come from your data source
-  const task = {
-    id: taskId,
-    title: "Update - 12.27.23",
-    project: "Adams - 1063 40th Street",
-    status: "REDLINE / TO DO"
+  // For demo purposes, showing different task names based on taskId
+  const getTaskData = (id: string | undefined) => {
+    const tasks: Record<string, any> = {
+      '1': {
+        id: id,
+        title: "Planning set finalized, set up CD's",
+        project: "Adams - 1063 40th Street",
+        status: "REDLINE / TO DO"
+      },
+      '2': {
+        id: id,
+        title: "Update - 12.27.23",
+        project: "Adams - 1063 40th Street", 
+        status: "REDLINE / TO DO"
+      }
+    };
+    
+    return tasks[id || '1'] || {
+      id: id,
+      title: "Planning set finalized, set up CD's",
+      project: "Adams - 1063 40th Street",
+      status: "REDLINE / TO DO"
+    };
   };
+
+  const task = getTaskData(taskId);
 
   const attachments = [
     {
