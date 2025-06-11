@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FilesTab from './FilesTab';
 import TasksTab from './TasksTab';
 import MessagesTab from './MessagesTab';
+import InvoicesTab from './InvoicesTab';
 
 interface ProjectTabsProps {
   projectName: string;
@@ -73,8 +74,8 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
         <MessagesTab />
       </TabsContent>
 
-      <TabsContent value="invoices" className="flex-1 overflow-y-auto p-4 mt-0">
-        <div className="text-center text-muted-foreground">Invoice content coming soon...</div>
+      <TabsContent value="invoices">
+        <InvoicesTab />
       </TabsContent>
 
       <TabsContent value="links" className="flex-1 overflow-y-auto p-4 mt-0">
