@@ -1,5 +1,7 @@
+
 import React, { useState } from 'react';
 import { Plus, Search, MoreHorizontal, Mail, Shield } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TeamMember {
   id: string;
@@ -12,7 +14,7 @@ interface TeamMember {
 
 const TeamsContent = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [teamMembers] = useState<TeamMember[]>([
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([
     {
       id: '1',
       name: 'Stephanie Sharkey',
@@ -54,6 +56,16 @@ const TeamsContent = () => {
       status: 'Pending'
     }
   ]);
+
+  const roles = ['Architect', 'Engineer', 'Designer', 'Consultant', 'Manager', 'Admin'];
+
+  const handleRoleChange = (memberId: string, newRole: string) => {
+    setTeamMembers(prev => 
+      prev.map(member => 
+        member.id === memberId ? { ...member, role: newRole } : member
+      )
+    );
+  };
 
   const filteredMembers = teamMembers.filter(member => 
     member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,7 +134,18 @@ const TeamsContent = () => {
               <span className="text-blue-600 hover:underline">{member.email}</span>
             </div>
             <div className="col-span-2 flex items-center">
-              <span>{member.role}</span>
+              <Select value={member.role} onValueChange={(value) => handleRoleChange(member.id, value)}>
+                <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((role) => (
+                    <SelectItem key={role} value={role} className="text-xs">
+                      {role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="col-span-2 flex items-center text-muted-foreground">
               <span>{member.lastActive}</span>
