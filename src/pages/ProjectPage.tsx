@@ -61,8 +61,8 @@ const ProjectPage = () => {
   // Task data grouped by status with colored indicators
   const taskGroups = [
     {
-      title: "Planning set finalized, set up CD's",
-      count: 5,
+      title: "TASK/ REDLINE",
+      count: 1,
       color: "bg-red-500",
       tasks: [
         {
@@ -74,10 +74,17 @@ const ProjectPage = () => {
           assignee: { name: "MP", avatar: "bg-blue-500" },
           hasAttachment: true,
           status: "redline"
-        },
+        }
+      ]
+    },
+    {
+      title: "PROGRESS/ UPDATE",
+      count: 3,
+      color: "bg-blue-500",
+      tasks: [
         {
           id: 2,
-          title: "Planning set finalized, set up CD's",
+          title: "Update - 12.27.23",
           project: projectName,
           dateCreated: "Jan 12, 2023",
           dueDate: "June 15",
@@ -87,7 +94,7 @@ const ProjectPage = () => {
         },
         {
           id: 3,
-          title: "Planning set finalized, set up CD's",
+          title: "Update 12.9.23",
           project: projectName,
           dateCreated: "Jan 12, 2023",
           dueDate: "June 15",
@@ -97,17 +104,7 @@ const ProjectPage = () => {
         },
         {
           id: 4,
-          title: "Planning set finalized, set up CD's",
-          project: projectName,
-          dateCreated: "Jan 12, 2023",
-          dueDate: "June 15",
-          assignee: { name: "MP", avatar: "bg-green-500" },
-          hasAttachment: true,
-          status: "completed"
-        },
-        {
-          id: 5,
-          title: "Planning set finalized, set up CD's",
+          title: "Alternate Cabin Design",
           project: projectName,
           dateCreated: "Jan 12, 2023",
           dueDate: "June 15",
@@ -324,8 +321,9 @@ const ProjectPage = () => {
                           {/* Group Header */}
                           <div className="flex items-center gap-2 mb-2">
                             <ChevronDown className="w-3 h-3 text-muted-foreground" />
-                            <span className="font-medium text-sm">{group.title}</span>
-                            <span className="text-xs text-muted-foreground">({group.count})</span>
+                            <div className={`px-2 py-0.5 rounded text-white text-xs font-medium ${group.color}`}>
+                              {group.title}
+                            </div>
                           </div>
 
                           {/* Table */}
@@ -334,10 +332,9 @@ const ProjectPage = () => {
                               <TableRow className="border-b border-border">
                                 <TableHead className="text-muted-foreground font-medium text-xs py-2">Name</TableHead>
                                 <TableHead className="text-muted-foreground font-medium text-xs py-2">Date Created</TableHead>
-                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Due Date</TableHead>
                                 <TableHead className="text-muted-foreground font-medium text-xs py-2">Files</TableHead>
                                 <TableHead className="text-muted-foreground font-medium text-xs py-2">Assigned to</TableHead>
-                                <TableHead className="text-muted-foreground font-medium text-xs py-2"></TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Priority</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -355,9 +352,6 @@ const ProjectPage = () => {
                                   <TableCell className="text-xs text-muted-foreground py-2">
                                     {task.dateCreated}
                                   </TableCell>
-                                  <TableCell className="text-xs text-muted-foreground py-2">
-                                    {task.dueDate}
-                                  </TableCell>
                                   <TableCell className="py-2">
                                     {task.hasAttachment && (
                                       <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
@@ -369,8 +363,10 @@ const ProjectPage = () => {
                                   </TableCell>
                                   <TableCell className="py-2">
                                     <div className="flex items-center justify-between">
-                                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
-                                        {task.assignee.name}
+                                      <div className="flex items-center -space-x-1">
+                                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
+                                          {task.assignee.name}
+                                        </div>
                                       </div>
                                       <button 
                                         className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
