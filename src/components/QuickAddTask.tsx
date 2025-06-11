@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Users, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { TableRow, TableCell } from '@/components/ui/table';
 import TaskStatusIcon from './TaskStatusIcon';
 
 interface QuickAddTaskProps {
@@ -62,9 +61,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <>
-      {/* Project Line - Outside table */}
-      <div className="relative pl-6 mb-2">
+    <div className="px-4 py-2 hover:bg-accent/50">
+      {/* Project Line */}
+      <div className="relative mb-2">
         <button
           className="text-left text-xs text-blue-600 hover:text-blue-700"
           onClick={() => setShowProjectDropdown(!showProjectDropdown)}
@@ -73,7 +72,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         </button>
         
         {showProjectDropdown && (
-          <div className="absolute top-full left-6 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
             <div className="p-2 border-b border-border">
               <div className="relative">
                 <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
@@ -100,73 +99,72 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         )}
       </div>
 
-      {/* Task Input Row - Aligned with table structure */}
-      <TableRow className="hover:bg-accent/50">
-        <TableCell className="py-2">
-          <div className="flex items-center gap-2">
-            <TaskStatusIcon status={defaultStatus} />
-            <div className="flex-1">
-              <Input
-                placeholder="Task Name or type '/' for commands"
-                value={taskName}
-                onChange={(e) => setTaskName(e.target.value)}
-                className="text-xs font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
-                autoFocus
-              />
-              <div className="text-xs text-muted-foreground">{selectedProject || 'No Project'}</div>
-            </div>
+      {/* Task Input Row - Aligned with table columns */}
+      <div className="grid grid-cols-12 gap-4 items-center">
+        {/* Name column - matches first column */}
+        <div className="col-span-4 flex items-center gap-2">
+          <TaskStatusIcon status={defaultStatus} />
+          <div className="flex-1">
+            <Input
+              placeholder="Task Name or type '/' for commands"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              className="text-xs font-medium h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
+              autoFocus
+            />
+            <div className="text-xs text-muted-foreground">{selectedProject || 'No Project'}</div>
           </div>
-        </TableCell>
-        <TableCell className="text-xs text-muted-foreground py-2">
+        </div>
+
+        {/* Date Created column */}
+        <div className="col-span-2 text-xs text-muted-foreground">
           {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
-        </TableCell>
-        <TableCell className="py-2">
-          {/* Files column - empty for new task */}
-        </TableCell>
-        <TableCell className="py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-              >
-                Task
-              </Button>
-              
-              <Button
-                size="sm"
-                variant="ghost"
-                className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-              >
-                <Users className="w-3 h-3" />
-              </Button>
-            </div>
-          </div>
-        </TableCell>
-        <TableCell className="py-2">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onCancel}
-              className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
-            >
-              Cancel
-            </Button>
-            
-            <Button
-              size="sm"
-              onClick={handleSave}
-              className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
-              disabled={!taskName.trim()}
-            >
-              Save
-            </Button>
-          </div>
-        </TableCell>
-      </TableRow>
-    </>
+        </div>
+
+        {/* Files column - empty */}
+        <div className="col-span-1"></div>
+
+        {/* Assigned to column */}
+        <div className="col-span-4 flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+          >
+            Task
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+          >
+            <Users className="w-3 h-3" />
+          </Button>
+        </div>
+
+        {/* Priority column */}
+        <div className="col-span-1 flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </Button>
+          
+          <Button
+            size="sm"
+            onClick={handleSave}
+            className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
+            disabled={!taskName.trim()}
+          >
+            Save
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
