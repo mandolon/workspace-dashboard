@@ -21,8 +21,8 @@ const TaskDetailPage = () => {
       },
       '2': {
         id: id,
-        title: "Alternate Cabin Design", 
-        project: "Rathbun - USFS Cabin",
+        title: "Piner Haus Garage",
+        project: "Piner Haus Garage",
         status: "REDLINE / TO DO"
       }
     };
