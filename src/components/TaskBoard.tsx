@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
@@ -119,7 +118,7 @@ const TaskBoard = () => {
   };
 
   return (
-    <div className="flex-1 bg-background pl-6">
+    <div className="flex-1 bg-background pl-3">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="border-b border-border px-4 py-2">
