@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -90,20 +91,7 @@ const TaskGroupSection = ({
         <TableHeader>
           <TableRow className="border-b border-border">
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[45%]">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">
-              <div className="flex items-center gap-1">
-                Files
-                <button 
-                  className="p-0.5 hover:bg-accent rounded"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Handle file attachment
-                  }}
-                >
-                  <Plus className="w-3 h-3" strokeWidth="2" />
-                </button>
-              </div>
-            </TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">Files</TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Date Created</TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Due Date</TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[9%]">Assignee</TableHead>
@@ -122,13 +110,24 @@ const TaskGroupSection = ({
                 </div>
               </TableCell>
               <TableCell className="py-2 w-[10%]">
-                {task.hasAttachment && (
-                  <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
-                    <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                )}
+                <div className="flex items-center gap-1">
+                  {task.hasAttachment && (
+                    <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                  )}
+                  <button 
+                    className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Handle file attachment
+                    }}
+                  >
+                    <Plus className="w-3 h-3" strokeWidth="2" />
+                  </button>
+                </div>
               </TableCell>
               <TableCell className="text-xs text-muted-foreground py-2 w-[18%]">
                 {formatDate(task.dateCreated)}
@@ -191,3 +190,4 @@ const TaskGroupSection = ({
 };
 
 export default TaskGroupSection;
+
