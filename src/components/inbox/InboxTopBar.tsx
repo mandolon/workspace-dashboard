@@ -12,11 +12,11 @@ import {
 
 interface InboxTopBarProps {
   onToggleSidebar: () => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
-const InboxTopBar = ({ onToggleSidebar }: InboxTopBarProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
-
+const InboxTopBar = ({ onToggleSidebar, searchQuery, onSearchChange }: InboxTopBarProps) => {
   return (
     <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
       <button
@@ -33,7 +33,7 @@ const InboxTopBar = ({ onToggleSidebar }: InboxTopBarProps) => {
             type="text"
             placeholder="Search mail"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => onSearchChange(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>

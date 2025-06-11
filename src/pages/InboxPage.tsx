@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Sidebar from '@/components/Sidebar';
 import EmailDetail from '@/components/EmailDetail';
 import InboxTopBar from '@/components/inbox/InboxTopBar';
@@ -14,6 +14,7 @@ const InboxPage = () => {
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('inbox');
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const totalPages = 5;
 
   const emails = [
@@ -123,6 +124,21 @@ const InboxPage = () => {
     },
   ];
 
+  // Filter emails based on search query
+  const filteredEmails = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return emails;
+    }
+    
+    const query = searchQuery.toLowerCase();
+    return emails.filter(email => 
+      email.sender.toLowerCase().includes(query) ||
+      email.subject.toLowerCase().includes(query) ||
+      email.preview.toLowerCase().includes(query) ||
+      (email.senderEmail && email.senderEmail.toLowerCase().includes(query))
+    );
+  }, [searchQuery]);
+
   const handleSelectEmail = (emailId: string) => {
     setSelectedEmails(prev => 
       prev.includes(emailId) 
@@ -132,7 +148,7 @@ const InboxPage = () => {
   };
 
   const handleSelectAll = () => {
-    setSelectedEmails(selectedEmails.length === emails.length ? [] : emails.map(e => e.id));
+    setSelectedEmails(selectedEmails.length === filteredEmails.length ? [] : filteredEmails.map(e => e.id));
   };
 
   const handleEmailClick = (emailId: string) => {
@@ -147,8 +163,15 @@ const InboxPage = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    // Reset selection when searching
+    setSelectedEmails([]);
+    setSelectedEmail(null);
+  };
+
   const currentEmail = selectedEmail ? emails.find(e => e.id === selectedEmail) : null;
-  const unreadCount = emails.filter(e => !e.isRead).length;
+  const unreadCount = filteredEmails.filter(e => !e.isRead).length;
 
   return (
     <div className="min-h-screen w-full bg-background flex">
@@ -172,7 +195,11 @@ const InboxPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <InboxTopBar onToggleSidebar={handleToggleSidebar} />
+            <InboxTopBar 
+              onToggleSidebar={handleToggleSidebar} 
+              searchQuery={searchQuery}
+              onSearchChange={handleSearchChange}
+            />
 
             <div className="flex-1 overflow-hidden">
               {selectedEmail && currentEmail ? (
@@ -189,11 +216,11 @@ const InboxPage = () => {
                   />
                   <InboxToolbar 
                     selectedEmails={selectedEmails}
-                    totalEmails={emails.length}
+                    totalEmails={filteredEmails.length}
                     onSelectAll={handleSelectAll}
                   />
                   <EmailList 
-                    emails={emails}
+                    emails={filteredEmails}
                     selectedEmails={selectedEmails}
                     onSelectEmail={handleSelectEmail}
                     onEmailClick={handleEmailClick}
