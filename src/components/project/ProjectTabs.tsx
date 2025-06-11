@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -5,6 +6,7 @@ import FilesTab from './FilesTab';
 import TasksTab from './TasksTab';
 import MessagesTab from './MessagesTab';
 import InvoicesTab from './InvoicesTab';
+import ClientTab from './ClientTab';
 
 interface ProjectTabsProps {
   projectName: string;
@@ -78,8 +80,8 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
           <div className="text-center text-muted-foreground">Links content coming soon...</div>
         </TabsContent>
 
-        <TabsContent value="client" className="flex-1 overflow-y-auto p-4 mt-0">
-          <div className="text-center text-muted-foreground">Client content coming soon...</div>
+        <TabsContent value="client" className="mt-0 h-full overflow-y-auto">
+          <ClientTab />
         </TabsContent>
 
         <TabsContent value="chat" className="mt-0 h-full">
