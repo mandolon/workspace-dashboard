@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -16,7 +17,8 @@ import {
   ChevronDown,
   ChevronRight,
   UserPlus,
-  HelpCircle
+  HelpCircle,
+  Folder
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -189,6 +191,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                 {workspaces.map((workspace, index) => (
                   <div key={index}>
                     <div className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50">
+                      <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                       <span className="truncate flex-1 text-sm">{workspace.name}</span>
                       {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs flex-shrink-0">🔒</div>}
                       <div className="flex items-center gap-1 flex-shrink-0">
