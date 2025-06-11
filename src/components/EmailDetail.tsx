@@ -73,20 +73,20 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
       {/* Email content container with white background */}
       <div className="flex-1 overflow-y-auto bg-white p-6">
-        {/* Inbox label moved above subject */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
-        </div>
-
-        {/* Subject line */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-normal text-gray-900">{email.subject}</h1>
-        </div>
-
         {/* Email card */}
         <div className="bg-white rounded-lg shadow-sm">
-          {/* Email header */}
+          {/* Email header with inbox label and subject */}
           <div className="p-6 border-b border-gray-100">
+            {/* Inbox label */}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
+            </div>
+
+            {/* Subject line */}
+            <div className="mb-6">
+              <h1 className="text-2xl font-normal text-gray-900">{email.subject}</h1>
+            </div>
+
             <div className="flex items-start gap-4">
               <Avatar className="w-10 h-10 flex-shrink-0">
                 <AvatarImage src="" />
