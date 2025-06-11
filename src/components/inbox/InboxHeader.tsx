@@ -40,7 +40,7 @@ const InboxHeader = ({
     <div className="border-b border-border">
       <div className="px-6 py-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-sm font-medium">{getTabLabel()}</h1>
+          <h1 className="text-base font-medium">{getTabLabel()}</h1>
           {activeTab === 'inbox' && unreadCount > 0 && (
             <span className="text-xs text-muted-foreground">({unreadCount} unread)</span>
           )}

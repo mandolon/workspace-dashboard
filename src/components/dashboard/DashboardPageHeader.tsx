@@ -19,7 +19,7 @@ const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProp
       <div className="px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-sm">Home</span>
+            <span className="font-semibold text-base">Home</span>
           </div>
           <div className="flex items-center gap-2">
             <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>

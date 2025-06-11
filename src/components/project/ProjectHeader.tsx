@@ -12,9 +12,9 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-sm">PinerWorks</span>
+            <span className="font-semibold text-base">PinerWorks</span>
             <span className="text-muted-foreground">/</span>
-            <span className="font-semibold text-sm">{projectName}</span>
+            <span className="font-semibold text-base">{projectName}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
