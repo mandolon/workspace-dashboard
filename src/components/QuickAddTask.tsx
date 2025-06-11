@@ -64,7 +64,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       {/* Project Selector - Outside the border */}
       <div className="relative mb-1 pl-6">
         <button
-          className="text-left text-xs text-muted-foreground hover:text-foreground"
+          className="text-left text-xs text-blue-600 hover:text-blue-700"
           onClick={() => setShowProjectDropdown(!showProjectDropdown)}
         >
           {selectedProject || 'Select Project...'}
@@ -130,7 +130,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               variant="ghost"
               size="sm"
               onClick={onCancel}
-              className="text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground"
+              className="text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground mr-1"
             >
               Cancel
             </Button>
