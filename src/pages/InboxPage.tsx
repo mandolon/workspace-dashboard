@@ -205,7 +205,7 @@ const InboxPage = () => {
               {selectedEmail && currentEmail ? (
                 <EmailDetail email={currentEmail} onBack={handleBackToList} />
               ) : (
-                <div className="h-full flex flex-col max-w-6xl mx-auto">
+                <div className="h-full flex flex-col max-w-6xl mx-auto px-6">
                   <InboxHeader 
                     unreadCount={unreadCount}
                     activeTab={activeTab}

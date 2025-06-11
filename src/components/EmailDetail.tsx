@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Printer, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -52,7 +51,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Gmail-style toolbar */}
-      <div className="px-4 py-2 border-b border-gray-200 bg-gray-50">
+      <div className="px-6 py-2 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={onBack} className="hover:bg-gray-200">
             <ArrowLeft className="w-4 h-4" />
@@ -73,7 +72,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
       </div>
 
       {/* Email content container with white background */}
-      <div className="flex-1 overflow-y-auto bg-white p-4">
+      <div className="flex-1 overflow-y-auto bg-white p-6">
         {/* Inbox label moved above subject */}
         <div className="flex items-center gap-2 mb-2">
           <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
@@ -160,4 +159,3 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 };
 
 export default EmailDetail;
-

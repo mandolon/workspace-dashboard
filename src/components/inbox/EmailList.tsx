@@ -36,7 +36,7 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
       {emails.map((email) => (
         <div
           key={email.id}
-          className={`px-4 py-2.5 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
+          className={`px-6 py-2.5 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
             !email.isRead ? 'bg-accent/20' : 'bg-white'
           } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
           onClick={() => onEmailClick(email.id)}
