@@ -29,7 +29,7 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
       {emails.map((email) => (
         <div
           key={email.id}
-          className={`px-4 py-3 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
+          className={`px-4 py-2.5 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
             !email.isRead ? 'bg-accent/20' : ''
           } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
           onClick={() => onEmailClick(email.id)}
@@ -44,23 +44,23 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
               className={`p-1 hover:bg-accent rounded ${email.isStarred ? 'text-yellow-500' : 'text-muted-foreground hover:text-foreground'}`}
               onClick={(e) => e.stopPropagation()}
             >
-              <Star className={`w-4 h-4 ${email.isStarred ? 'fill-current' : ''}`} />
+              <Star className={`w-3.5 h-3.5 ${email.isStarred ? 'fill-current' : ''}`} />
             </button>
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className={`text-xs truncate ${!email.isRead ? 'font-medium' : 'font-normal'}`}>
                     {email.sender}
                   </span>
-                  <span className={`text-sm truncate ${!email.isRead ? 'font-semibold' : 'font-normal'}`}>
+                  <span className={`text-xs truncate ${!email.isRead ? 'font-medium' : 'font-normal'}`}>
                     {email.subject}
                   </span>
-                  <span className="text-sm text-muted-foreground truncate">
+                  <span className="text-xs text-muted-foreground truncate">
                     - {email.preview}
                   </span>
                 </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
+                <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">
                   {email.time}
                 </span>
               </div>
