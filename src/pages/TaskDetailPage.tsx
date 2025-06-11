@@ -9,8 +9,7 @@ const TaskDetailPage = () => {
   const { taskId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Mock task data - using only ID 1 and 2
-  // ID "1" = Task Titles, ID "2" = Project Names
+  // Updated task data to match TaskBoard.tsx
   const getTaskData = (id: string | undefined) => {
     console.log('TaskDetailPage - taskId from URL:', id);
     
@@ -18,13 +17,25 @@ const TaskDetailPage = () => {
       '1': {
         id: id,
         title: "Planning set finalized, set up CD's",
-        project: "Adams - 1063 40th Street",
+        project: "Piner Haus Garage",
         status: "REDLINE / TO DO"
       },
       '2': {
         id: id,
-        title: "Piner Haus Garage",
-        project: "Piner Haus Garage",
+        title: "Update - 12.27.23",
+        project: "Rathbun - USFS Cabin",
+        status: "REDLINE / TO DO"
+      },
+      '3': {
+        id: id,
+        title: "Update 12.9.23",
+        project: "Ogden - Thew - 2709 T Street",
+        status: "REDLINE / TO DO"
+      },
+      '4': {
+        id: id,
+        title: "Alternate Cabin Design",
+        project: "Rathbun - USFS Cabin",
         status: "REDLINE / TO DO"
       }
     };
@@ -32,7 +43,7 @@ const TaskDetailPage = () => {
     const selectedTask = tasks[id || '1'] || {
       id: id,
       title: "Planning set finalized, set up CD's",
-      project: "Adams - 1063 40th Street",
+      project: "Piner Haus Garage",
       status: "REDLINE / TO DO"
     };
     
