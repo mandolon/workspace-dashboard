@@ -37,11 +37,11 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
         <div
           key={email.id}
           className={`px-4 py-2.5 border-b border-border hover:bg-accent/50 cursor-pointer transition-colors ${
-            !email.isRead ? 'bg-accent/20' : ''
+            !email.isRead ? 'bg-accent/20' : 'bg-white'
           } ${selectedEmails.includes(email.id) ? 'bg-blue-50' : ''}`}
           onClick={() => onEmailClick(email.id)}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 text-left">
             <Checkbox 
               checked={selectedEmails.includes(email.id)}
               onCheckedChange={() => onSelectEmail(email.id)}
@@ -61,9 +61,9 @@ const EmailList = ({ emails, selectedEmails, onSelectEmail, onEmailClick }: Emai
               </AvatarFallback>
             </Avatar>
             
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 text-left">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
+                <div className="flex items-center gap-2 min-w-0 flex-1 text-left">
                   <span className={`text-xs truncate ${!email.isRead ? 'font-medium' : 'font-normal'}`}>
                     {email.sender}
                   </span>
