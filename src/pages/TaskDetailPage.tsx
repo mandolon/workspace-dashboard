@@ -9,20 +9,17 @@ const TaskDetailPage = () => {
   const { taskId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Mock project data - in a real app this would come from your data source
+  // Mock project data - simplified to 2 categories
   const getProjectData = (id: string | undefined) => {
     const projects: Record<string, string> = {
-      '1': "Adams - 1063 40th Street",
-      '2': "Rathbun - USFS Cabin", 
-      '3': "Ogden - Thew - 2709 T Street",
-      '4': "Piner Haus Garage"
+      '1': "Task Title Category",
+      '2': "Project Name Category"
     };
     
-    return projects[id || '1'] || "Adams - 1063 40th Street";
+    return projects[id || '1'] || "Task Title Category";
   };
 
-  // Mock task data - in a real app this would come from your data source
-  // Updated to properly map tasks to their projects and titles
+  // Mock task data - now using only ID 1 and 2
   const getTaskData = (id: string | undefined) => {
     const tasks: Record<string, any> = {
       '1': {
@@ -35,18 +32,6 @@ const TaskDetailPage = () => {
         id: id,
         title: "Alternate Cabin Design",
         project: "Rathbun - USFS Cabin",
-        status: "REDLINE / TO DO"
-      },
-      '3': {
-        id: id,
-        title: "Site survey completed",
-        project: "Ogden - Thew - 2709 T Street",
-        status: "IN PROGRESS"
-      },
-      '4': {
-        id: id,
-        title: "Garage Foundation Review",
-        project: "Piner Haus Garage",
         status: "REDLINE / TO DO"
       }
     };
