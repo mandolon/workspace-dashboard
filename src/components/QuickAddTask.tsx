@@ -60,14 +60,14 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <div className="border border-border rounded-md p-3 bg-background space-y-3">
+    <div className="border border-border rounded-md p-2 bg-background space-y-2">
       {/* Task Name Input */}
       <div>
         <Input
           placeholder="Task Name"
           value={taskName}
           onChange={(e) => setTaskName(e.target.value)}
-          className="text-sm"
+          className="text-sm h-8 border-0 shadow-none focus-visible:ring-0 px-2"
           autoFocus
         />
       </div>
@@ -75,7 +75,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       {/* Project Selector */}
       <div className="relative">
         <button
-          className="w-full text-left px-3 py-2 border border-border rounded-md text-sm text-blue-600 hover:bg-accent"
+          className="w-full text-left px-2 py-1 text-sm text-blue-600 hover:bg-accent rounded-sm"
           onClick={() => setShowProjectDropdown(!showProjectDropdown)}
         >
           {selectedProject || 'Select Project...'}
@@ -90,15 +90,15 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
                   placeholder="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-7 text-xs h-8"
+                  className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
                 />
               </div>
             </div>
-            <div className="max-h-40 overflow-y-auto">
+            <div className="max-h-32 overflow-y-auto">
               {filteredProjects.map((project, index) => (
                 <button
                   key={index}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
+                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
                   onClick={() => handleProjectSelect(project)}
                 >
                   {project}
@@ -110,10 +110,11 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 pt-1">
         <Button
           size="sm"
-          className="flex items-center gap-1 text-xs px-3 py-1"
+          variant="ghost"
+          className="flex items-center gap-1 text-xs px-2 py-1 h-7 text-muted-foreground hover:text-foreground"
         >
           <Users className="w-3 h-3" />
           Assign
@@ -122,10 +123,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         <div className="flex-1"></div>
         
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={onCancel}
-          className="text-xs px-3 py-1"
+          className="text-xs px-2 py-1 h-7 text-muted-foreground hover:text-foreground"
         >
           Cancel
         </Button>
@@ -133,7 +134,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         <Button
           size="sm"
           onClick={handleSave}
-          className="text-xs px-3 py-1"
+          className="text-xs px-3 py-1 h-7"
           disabled={!taskName.trim()}
         >
           Save
