@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Home, 
@@ -209,7 +208,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                           ) : (
                             <ChevronRight className="w-3 h-3 flex-shrink-0" />
                           )}
-                          <span className="text-sm font-medium truncate">in Progress</span>
+                          <span className="text-sm truncate">in Progress</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
@@ -239,7 +238,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                           ) : (
                             <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           )}
-                          <span className="text-sm font-medium truncate">on Hold</span>
+                          <span className="text-sm truncate">on Hold</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
@@ -266,7 +265,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                           ) : (
                             <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                           )}
-                          <span className="text-sm font-medium truncate">completed</span>
+                          <span className="text-sm truncate">completed</span>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <div className="ml-5 mt-1 space-y-1">
