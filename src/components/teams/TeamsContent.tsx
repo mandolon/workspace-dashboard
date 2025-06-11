@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Search, MoreHorizontal, Mail, Shield } from 'lucide-react';
 
@@ -73,7 +72,6 @@ const TeamsContent = () => {
       {/* Header Actions */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <h2 className="text-xs font-medium">Team Members ({teamMembers.length})</h2>
           <div className="relative">
             <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
