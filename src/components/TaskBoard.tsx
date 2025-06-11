@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskDialog from './TaskDialog';
+import TaskDetail from './TaskDetail';
 
 const TaskBoard = () => {
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
 
   const taskGroups = [
     {
@@ -102,6 +105,16 @@ const TaskBoard = () => {
   const handleCreateTask = (taskData: any) => {
     console.log('Creating task:', taskData);
     // Here you would typically add the task to your state or send it to an API
+  };
+
+  const handleTaskClick = (task: any) => {
+    setSelectedTask(task);
+    setIsTaskDetailOpen(true);
+  };
+
+  const handleCloseTaskDetail = () => {
+    setIsTaskDetailOpen(false);
+    setSelectedTask(null);
   };
 
   return (
@@ -229,7 +242,7 @@ const TaskBoard = () => {
               </TableHeader>
               <TableBody>
                 {group.tasks.map((task) => (
-                  <TableRow key={task.id} className="hover:bg-accent/50 group">
+                  <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => handleTaskClick(task)}>
                     <TableCell className="py-2">
                       <div className="flex items-center gap-2">
                         {renderStatusIcon(task.status)}
@@ -266,13 +279,25 @@ const TaskBoard = () => {
                             </div>
                           ))}
                         </div>
-                        <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
+                        <button 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle edit action
+                          }}
+                        >
                           <Edit className="w-3 h-3 text-muted-foreground" />
                         </button>
                       </div>
                     </TableCell>
                     <TableCell className="py-2">
-                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle more options
+                        }}
+                      >
                         <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
                       </button>
                     </TableCell>
@@ -294,6 +319,12 @@ const TaskBoard = () => {
         isOpen={isTaskDialogOpen}
         onClose={() => setIsTaskDialogOpen(false)}
         onCreateTask={handleCreateTask}
+      />
+
+      <TaskDetail
+        isOpen={isTaskDetailOpen}
+        onClose={handleCloseTaskDetail}
+        task={selectedTask}
       />
     </div>
   );
