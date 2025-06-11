@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit, Folder } from 'lucide-react';
+import { Plus, Filter, Search, Eye, Users, Settings, ChevronDown, MoreHorizontal, Edit } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskDialog from './TaskDialog';
 
@@ -176,10 +175,7 @@ const TaskBoard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Folder className="w-4 h-4 text-muted-foreground" />
-                <span className="font-semibold text-sm">PinerWorks</span>
-                <span className="text-muted-foreground">/</span>
-                <span className="font-semibold text-sm">In Progress</span>
+                <span className="font-semibold text-base">Tasks</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
