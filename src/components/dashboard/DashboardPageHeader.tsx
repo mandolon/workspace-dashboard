@@ -10,7 +10,7 @@ interface DashboardPageHeaderProps {
 const DashboardPageHeader = ({ activeTab, onTabChange }: DashboardPageHeaderProps) => {
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'tasks', label: 'Tasks' },
+    { id: 'tasks', label: 'To Do' },
     { id: 'notes', label: 'Notes' },
     { id: 'calendar', label: 'Calendar' },
   ];

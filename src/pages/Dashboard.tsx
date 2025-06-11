@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
@@ -8,6 +9,7 @@ import DashboardStats from '@/components/dashboard/DashboardStats';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import NotesTab from '@/components/dashboard/NotesTab';
 import CalendarTab from '@/components/dashboard/CalendarTab';
+import ToDoTab from '@/components/dashboard/ToDoTab';
 
 const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
@@ -25,11 +27,7 @@ const Dashboard = () => {
       case 'notes':
         return <NotesTab />;
       case 'tasks':
-        return (
-          <div className="p-4">
-            <p className="text-muted-foreground">Tasks tab content coming soon...</p>
-          </div>
-        );
+        return <ToDoTab />;
       case 'calendar':
         return <CalendarTab />;
       default:
