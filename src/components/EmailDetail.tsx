@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, ReplyAll, Forward, MoreVertical, Printer, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -73,12 +74,14 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
       {/* Email content container with white background */}
       <div className="flex-1 overflow-y-auto bg-white p-4">
+        {/* Inbox label moved above subject */}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
+        </div>
+
         {/* Subject line */}
         <div className="mb-6">
           <h1 className="text-2xl font-normal text-gray-900">{email.subject}</h1>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded">Inbox</span>
-          </div>
         </div>
 
         {/* Email card */}
@@ -157,3 +160,4 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 };
 
 export default EmailDetail;
+
