@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -10,6 +9,17 @@ const TaskDetailPage = () => {
   const { taskId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Mock project data - in a real app this would come from your data source
+  const getProjectData = (id: string | undefined) => {
+    const projects: Record<string, string> = {
+      '1': "Adams - 1063 40th Street",
+      '2': "Rathbun - USFS Cabin", 
+      '3': "Ogden - Thew - 2709 T Street"
+    };
+    
+    return projects[id || '1'] || "Adams - 1063 40th Street";
+  };
+
   // Mock task data - in a real app this would come from your data source
   // For demo purposes, showing different task names based on taskId
   const getTaskData = (id: string | undefined) => {
@@ -17,19 +27,19 @@ const TaskDetailPage = () => {
       '1': {
         id: id,
         title: "Planning set finalized, set up CD's",
-        project: "Adams - 1063 40th Street",
+        project: getProjectData(id),
         status: "REDLINE / TO DO"
       },
       '2': {
         id: id,
         title: "Update - 12.27.23",
-        project: "Johnson - 2847 Pine Avenue",
+        project: getProjectData(id),
         status: "REDLINE / TO DO"
       },
       '3': {
         id: id,
         title: "Site survey completed",
-        project: "Smith - 456 Oak Boulevard",
+        project: getProjectData(id),
         status: "IN PROGRESS"
       }
     };
@@ -37,7 +47,7 @@ const TaskDetailPage = () => {
     return tasks[id || '1'] || {
       id: id,
       title: "Planning set finalized, set up CD's",
-      project: "Adams - 1063 40th Street",
+      project: getProjectData(id),
       status: "REDLINE / TO DO"
     };
   };
@@ -174,6 +184,7 @@ const TaskDetailPage = () => {
                     {/* Task Title */}
                     <div>
                       <h1 className="text-xl font-semibold mb-2">{task.title}</h1>
+                      <div className="text-sm text-muted-foreground mb-2">{task.project}</div>
                       <div className="flex items-center gap-2">
                         <input type="checkbox" className="w-4 h-4" />
                         <span className="text-sm text-muted-foreground">Add description</span>
