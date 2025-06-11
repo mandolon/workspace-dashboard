@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -31,12 +30,12 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
 
   const mainNavItems = [
     { icon: Home, label: 'Home', active: false, onClick: () => navigate('/') },
+    { icon: ClipboardList, label: 'Tasks', active: false, onClick: () => navigate('/tasks') },
     { icon: Inbox, label: 'Inbox', active: false, onClick: () => navigate('/inbox') },
     { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
     { icon: Users, label: 'Teams', active: false, onClick: () => {} },
     { icon: FileText, label: 'Docs', active: false, onClick: () => {} },
     { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => {} },
-    { icon: ClipboardList, label: 'Forms', active: false, onClick: () => {} },
     { icon: Clock, label: 'Timesheets', active: false, onClick: () => {} },
   ];
 
