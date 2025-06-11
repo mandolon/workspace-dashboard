@@ -8,7 +8,7 @@ const TaskBoardHeader = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-base">Tasks</span>
+            <span className="font-semibold text-base">Task Board</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
