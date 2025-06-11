@@ -72,7 +72,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1 font-medium"
               onClick={() => setShowProjectDropdown(!showProjectDropdown)}
             >
-              Select List...
+              {selectedProject || 'Select List...'}
             </button>
             <Input
               placeholder="Task Name or type '/' for commands"
@@ -81,9 +81,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground"
               autoFocus
             />
-            {selectedProject && (
-              <div className="text-xs text-muted-foreground">{selectedProject}</div>
-            )}
             
             {showProjectDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
