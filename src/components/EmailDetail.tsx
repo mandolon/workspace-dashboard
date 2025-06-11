@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ArrowLeft, Star, Archive, Delete, Reply, Forward, MoreVertical, Send } from 'lucide-react';
+import { ArrowLeft, Star, Archive, Delete, Reply, Forward, MoreVertical, Send, Bold, Italic, List, ListOrdered } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
@@ -59,6 +58,11 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
     setReplyMessage('');
   };
 
+  const handleFormatting = (format: string) => {
+    // In a real implementation, this would apply formatting to selected text
+    console.log('Applying format:', format);
+  };
+
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Minimal toolbar */}
@@ -88,7 +92,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
           {/* Subject */}
           <h1 className="text-xl font-normal text-gray-900 mb-4">{email.subject}</h1>
 
-          {/* Sender info - simplified */}
+          {/* Sender info */}
           <div className="flex items-center gap-3 mb-6">
             <Avatar className="w-8 h-8">
               <AvatarImage src="" />
@@ -121,28 +125,64 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
             dangerouslySetInnerHTML={{ __html: emailContent }}
           />
 
-          {/* Simple action buttons */}
-          <div className="flex items-center gap-2 mb-6">
+          {/* Reply button */}
+          {!showReplyForm && (
             <Button 
               variant="outline" 
               size="sm"
               onClick={handleReply}
+              className="mb-6"
             >
               <Reply className="w-4 h-4 mr-1" />
               Reply
             </Button>
-            <Button variant="outline" size="sm">
-              <Forward className="w-4 h-4 mr-1" />
-              Forward
-            </Button>
-          </div>
+          )}
 
-          {/* Simple reply form */}
+          {/* Reply form */}
           {showReplyForm && (
-            <div className="border border-gray-200 rounded-lg">
+            <div className="border border-gray-200 rounded-lg mb-6">
               <div className="p-3 border-b border-gray-200 bg-gray-50">
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">To:</span> {email.sender}
+                </div>
+              </div>
+
+              {/* Formatting toolbar */}
+              <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                    onClick={() => handleFormatting('bold')}
+                  >
+                    <Bold className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                    onClick={() => handleFormatting('italic')}
+                  >
+                    <Italic className="w-4 h-4" />
+                  </Button>
+                  <div className="w-px h-4 bg-gray-300 mx-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                    onClick={() => handleFormatting('bulletList')}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                    onClick={() => handleFormatting('numberedList')}
+                  >
+                    <ListOrdered className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
               
