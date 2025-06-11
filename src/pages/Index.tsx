@@ -9,8 +9,8 @@ const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-background">
-      <ResizablePanelGroup direction="horizontal">
+    <div className="min-h-screen w-full bg-background flex">
+      <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
           defaultSize={20} 
           minSize={15} 
@@ -19,16 +19,19 @@ const Index = () => {
           collapsible={true}
           onCollapse={() => setSidebarCollapsed(true)}
           onExpand={() => setSidebarCollapsed(false)}
+          className="min-h-screen"
         >
-          <Sidebar isCollapsed={sidebarCollapsed} />
+          <div className="h-screen overflow-hidden">
+            <Sidebar isCollapsed={sidebarCollapsed} />
+          </div>
         </ResizablePanel>
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={80}>
-          <div className="flex flex-col h-full">
+        <ResizablePanel defaultSize={80} className="min-h-screen">
+          <div className="flex flex-col h-screen">
             {/* Top Bar */}
-            <div className="h-14 border-b border-border flex items-center px-4">
+            <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
               <button
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                 className="p-2 hover:bg-accent rounded-md transition-colors"
@@ -56,7 +59,9 @@ const Index = () => {
               </div>
             </div>
 
-            <TaskBoard />
+            <div className="flex-1 overflow-hidden">
+              <TaskBoard />
+            </div>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
