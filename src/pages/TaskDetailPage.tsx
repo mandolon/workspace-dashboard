@@ -12,6 +12,8 @@ const TaskDetailPage = () => {
   // Mock task data - using only ID 1 and 2
   // ID "1" = Task Titles, ID "2" = Project Names
   const getTaskData = (id: string | undefined) => {
+    console.log('TaskDetailPage - taskId from URL:', id);
+    
     const tasks: Record<string, any> = {
       '1': {
         id: id,
@@ -27,12 +29,15 @@ const TaskDetailPage = () => {
       }
     };
     
-    return tasks[id || '1'] || {
+    const selectedTask = tasks[id || '1'] || {
       id: id,
       title: "Planning set finalized, set up CD's",
       project: "Adams - 1063 40th Street",
       status: "REDLINE / TO DO"
     };
+    
+    console.log('TaskDetailPage - selected task:', selectedTask);
+    return selectedTask;
   };
 
   const task = getTaskData(taskId);
