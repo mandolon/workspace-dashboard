@@ -61,13 +61,19 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <div className="px-4 py-2 hover:bg-accent/50">
+    <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - matches first column */}
         <div className="col-span-3 flex items-center gap-2">
           <TaskStatusIcon status={defaultStatus} />
           <div className="flex-1 relative">
+            <button
+              className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1 font-medium"
+              onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+            >
+              Select List...
+            </button>
             <Input
               placeholder="Task Name or type '/' for commands"
               value={taskName}
@@ -77,14 +83,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             />
             {selectedProject && (
               <div className="text-xs text-muted-foreground">{selectedProject}</div>
-            )}
-            {!selectedProject && (
-              <button
-                className="text-left text-xs text-muted-foreground hover:text-foreground"
-                onClick={() => setShowProjectDropdown(!showProjectDropdown)}
-              >
-                Select List...
-              </button>
             )}
             
             {showProjectDropdown && (
