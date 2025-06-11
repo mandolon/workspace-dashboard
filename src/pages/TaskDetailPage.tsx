@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, Paperclip, Send, Menu } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -22,8 +23,14 @@ const TaskDetailPage = () => {
       '2': {
         id: id,
         title: "Update - 12.27.23",
-        project: "Adams - 1063 40th Street", 
+        project: "Johnson - 2847 Pine Avenue",
         status: "REDLINE / TO DO"
+      },
+      '3': {
+        id: id,
+        title: "Site survey completed",
+        project: "Smith - 456 Oak Boulevard",
+        status: "IN PROGRESS"
       }
     };
     
