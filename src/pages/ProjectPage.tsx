@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Menu, FileText, Calendar, MessageSquare, ExternalLink, Users, Folder } from 'lucide-react';
+import { ArrowLeft, Menu, FileText, Calendar, MessageSquare, ExternalLink, Users, Folder, ChevronDown, Plus, MoreHorizontal, Edit } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import TaskGroup from '@/components/TaskGroup';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
@@ -58,88 +58,101 @@ const ProjectPage = () => {
     }
   ];
 
-  // Task data that matches the Overview styling
+  // Task data grouped by status with colored indicators
   const taskGroups = [
     {
-      title: "To Do",
-      count: 7,
-      color: "bg-gray-400",
+      title: "Planning set finalized, set up CD's",
+      count: 5,
+      color: "bg-red-500",
       tasks: [
         {
           id: 1,
-          title: "Review building permits",
+          title: "Planning set finalized, set up CD's",
           project: projectName,
-          estimatedCompletion: "2 days",
-          dateCreated: "Jul 15, 2024",
-          dueDate: "Jul 30, 2024",
-          assignee: {
-            name: "MP",
-            avatar: "bg-blue-500"
-          },
-          hasAttachment: true
+          dateCreated: "Jan 12, 2023",
+          dueDate: "June 15",
+          assignee: { name: "MP", avatar: "bg-blue-500" },
+          hasAttachment: true,
+          status: "redline"
         },
         {
           id: 2,
-          title: "Schedule site inspection",
+          title: "Planning set finalized, set up CD's",
           project: projectName,
-          estimatedCompletion: "1 day",
-          dateCreated: "Jul 16, 2024",
-          dueDate: "Jul 25, 2024",
-          assignee: {
-            name: "AL",
-            avatar: "bg-green-500"
-          },
-          hasAttachment: false
-        }
-      ]
-    },
-    {
-      title: "In Progress",
-      count: 3,
-      color: "bg-blue-500",
-      tasks: [
+          dateCreated: "Jan 12, 2023",
+          dueDate: "June 15",
+          assignee: { name: "MP", avatar: "bg-blue-500" },
+          hasAttachment: true,
+          status: "progress"
+        },
         {
           id: 3,
-          title: "Coordinate with city planning",
+          title: "Planning set finalized, set up CD's",
           project: projectName,
-          estimatedCompletion: "3 days",
-          dateCreated: "Jul 10, 2024",
-          dueDate: "Jul 28, 2024",
-          assignee: {
-            name: "MP",
-            avatar: "bg-blue-500"
-          },
+          dateCreated: "Jan 12, 2023",
+          dueDate: "June 15",
+          assignee: { name: "MP", avatar: "bg-blue-500" },
           hasAttachment: true,
-          collaborators: [
-            {
-              name: "AL",
-              avatar: "bg-green-500"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      title: "Done",
-      count: 12,
-      color: "bg-green-500",
-      tasks: [
+          status: "progress"
+        },
         {
           id: 4,
-          title: "Initial client consultation",
+          title: "Planning set finalized, set up CD's",
           project: projectName,
-          estimatedCompletion: "Completed",
-          dateCreated: "Jul 1, 2024",
-          dueDate: "Jul 5, 2024",
-          assignee: {
-            name: "MP",
-            avatar: "bg-blue-500"
-          },
-          hasAttachment: false
+          dateCreated: "Jan 12, 2023",
+          dueDate: "June 15",
+          assignee: { name: "MP", avatar: "bg-green-500" },
+          hasAttachment: true,
+          status: "completed"
+        },
+        {
+          id: 5,
+          title: "Planning set finalized, set up CD's",
+          project: projectName,
+          dateCreated: "Jan 12, 2023",
+          dueDate: "June 15",
+          assignee: { name: "MP", avatar: "bg-green-500" },
+          hasAttachment: true,
+          status: "completed"
         }
       ]
     }
   ];
+
+  const renderStatusIcon = (status: string) => {
+    const baseClasses = "w-4 h-4 rounded-full border-2 flex items-center justify-center";
+    
+    switch (status) {
+      case 'redline':
+        return (
+          <div className={`${baseClasses} border-red-500 bg-red-500`}>
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+          </div>
+        );
+      case 'progress':
+        return (
+          <div className={`${baseClasses} border-blue-500 bg-blue-500`}>
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+          </div>
+        );
+      case 'completed':
+        return (
+          <div className={`${baseClasses} border-green-500 bg-green-500`}>
+            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      default:
+        return (
+          <div className={`${baseClasses} border-gray-300`}></div>
+        );
+    }
+  };
+
+  const handleTaskClick = (task: any) => {
+    navigate(`/task/${task.id}`);
+  };
 
   const getFileIcon = (type: string) => {
     switch (type) {
@@ -303,17 +316,95 @@ const ProjectPage = () => {
                     </div>
                   </TabsContent>
 
-                  {/* Tasks Tab Content - Updated to match Overview styling */}
+                  {/* Tasks Tab Content - Grouped by status with colored circles */}
                   <TabsContent value="tasks" className="flex-1 overflow-y-auto p-4 mt-0">
-                    <div className="space-y-8">
-                      {taskGroups.map((group, index) => (
-                        <TaskGroup
-                          key={index}
-                          title={group.title}
-                          count={group.count}
-                          color={group.color}
-                          tasks={group.tasks}
-                        />
+                    <div className="space-y-4">
+                      {taskGroups.map((group, groupIndex) => (
+                        <div key={groupIndex} className="space-y-2">
+                          {/* Group Header */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                            <span className="font-medium text-sm">{group.title}</span>
+                            <span className="text-xs text-muted-foreground">({group.count})</span>
+                          </div>
+
+                          {/* Table */}
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-b border-border">
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Name</TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Date Created</TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Due Date</TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Files</TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2">Assigned to</TableHead>
+                                <TableHead className="text-muted-foreground font-medium text-xs py-2"></TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {group.tasks.map((task) => (
+                                <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => handleTaskClick(task)}>
+                                  <TableCell className="py-2">
+                                    <div className="flex items-center gap-2">
+                                      {renderStatusIcon(task.status)}
+                                      <div>
+                                        <div className="font-medium text-xs">{task.title}</div>
+                                        <div className="text-xs text-muted-foreground">{task.project}</div>
+                                      </div>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="text-xs text-muted-foreground py-2">
+                                    {task.dateCreated}
+                                  </TableCell>
+                                  <TableCell className="text-xs text-muted-foreground py-2">
+                                    {task.dueDate}
+                                  </TableCell>
+                                  <TableCell className="py-2">
+                                    {task.hasAttachment && (
+                                      <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                      </div>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="py-2">
+                                    <div className="flex items-center justify-between">
+                                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${task.assignee.avatar}`}>
+                                        {task.assignee.name}
+                                      </div>
+                                      <button 
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          // Handle edit action
+                                        }}
+                                      >
+                                        <Edit className="w-3 h-3 text-muted-foreground" />
+                                      </button>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="py-2">
+                                    <button 
+                                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        // Handle more options
+                                      }}
+                                    >
+                                      <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+                                    </button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+
+                          {/* Add Task Button */}
+                          <button className="flex items-center gap-1 px-3 py-1 text-xs text-muted-foreground hover:text-foreground">
+                            <Plus className="w-3 h-3" />
+                            <span>Add task</span>
+                          </button>
+                        </div>
                       ))}
                     </div>
                   </TabsContent>
