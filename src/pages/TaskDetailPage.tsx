@@ -229,12 +229,11 @@ const TaskDetailPage = () => {
                         </SelectContent>
                       </Select>
                       <div className="mt-2">
-                        <input 
-                          type="text" 
+                        <textarea 
                           placeholder="Add description"
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
-                          className="w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          className="w-full min-h-[120px] border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-vertical"
                         />
                       </div>
                     </div>
@@ -345,3 +344,5 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
+
+</edits_to_apply>
