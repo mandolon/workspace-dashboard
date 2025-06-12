@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getClientData, updateClientData } from '@/data/projectClientData';
@@ -55,6 +56,13 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   const handleSave = () => {
     if (!projectId) return;
     
@@ -92,33 +100,38 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       label: 'Project ID',
       value: formData.projectId,
       readOnly: true,
-      span: 'full' as const
+      span: 'full' as const,
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Primary First Name',
       value: formData.firstName,
       onChange: (value: string) => handleInputChange('firstName', value),
-      span: 'half' as const
+      span: 'half' as const,
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Secondary First Name',
       value: formData.secondaryFirstName,
       onChange: (value: string) => handleInputChange('secondaryFirstName', value),
       placeholder: 'Optional',
-      span: 'half' as const
+      span: 'half' as const,
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Primary Last Name',
       value: formData.lastName,
       onChange: (value: string) => handleInputChange('lastName', value),
-      span: 'half' as const
+      span: 'half' as const,
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Secondary Last Name',
       value: formData.secondaryLastName,
       onChange: (value: string) => handleInputChange('secondaryLastName', value),
       placeholder: 'Optional',
-      span: 'half' as const
+      span: 'half' as const,
+      onKeyDown: handleKeyDown
     }
   ];
 
@@ -126,17 +139,20 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     {
       label: 'Address',
       value: formData.projectAddress,
-      onChange: (value: string) => handleInputChange('projectAddress', value)
+      onChange: (value: string) => handleInputChange('projectAddress', value),
+      onKeyDown: handleKeyDown
     },
     {
       label: 'City',
       value: formData.city,
-      onChange: (value: string) => handleInputChange('city', value)
+      onChange: (value: string) => handleInputChange('city', value),
+      onKeyDown: handleKeyDown
     },
     {
       label: 'State',
       value: formData.state,
-      onChange: (value: string) => handleInputChange('state', value)
+      onChange: (value: string) => handleInputChange('state', value),
+      onKeyDown: handleKeyDown
     }
   ];
 
@@ -144,17 +160,20 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     {
       label: 'Address',
       value: formData.billingAddress,
-      onChange: (value: string) => handleInputChange('billingAddress', value)
+      onChange: (value: string) => handleInputChange('billingAddress', value),
+      onKeyDown: handleKeyDown
     },
     {
       label: 'City',
       value: formData.billingCity,
-      onChange: (value: string) => handleInputChange('billingCity', value)
+      onChange: (value: string) => handleInputChange('billingCity', value),
+      onKeyDown: handleKeyDown
     },
     {
       label: 'State',
       value: formData.billingState,
-      onChange: (value: string) => handleInputChange('billingState', value)
+      onChange: (value: string) => handleInputChange('billingState', value),
+      onKeyDown: handleKeyDown
     }
   ];
 

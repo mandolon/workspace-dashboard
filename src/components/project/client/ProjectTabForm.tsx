@@ -28,6 +28,13 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   const handleSave = () => {
     toast({
       title: "Changes saved",
@@ -43,21 +50,24 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       value: formData.projectName,
       onChange: (value: string) => handleInputChange('projectName', value),
       type: 'textarea' as const,
-      placeholder: 'Enter project name...'
+      placeholder: 'Enter project name...',
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Project Scope',
       value: formData.projectScope,
       onChange: (value: string) => handleInputChange('projectScope', value),
       type: 'textarea' as const,
-      placeholder: 'Describe the project scope...'
+      placeholder: 'Describe the project scope...',
+      onKeyDown: handleKeyDown
     },
     {
       label: 'Project Notes',
       value: formData.projectNotes,
       onChange: (value: string) => handleInputChange('projectNotes', value),
       type: 'textarea' as const,
-      placeholder: 'Add any additional project notes...'
+      placeholder: 'Add any additional project notes...',
+      onKeyDown: handleKeyDown
     }
   ];
 
