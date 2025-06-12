@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { MapPin, Calendar } from 'lucide-react';
 
-// Client data mapping for all projects
+// Client data mapping for all projects - using LastName - Address format
 const projectClientData: Record<string, any> = {
   'adams-1063-40th-street': {
     firstName: 'Robert', lastName: 'Adams', projectAddress: '1063 40th Street',
@@ -19,15 +19,15 @@ const projectClientData: Record<string, any> = {
     firstName: 'Margaret', lastName: 'Ogden-Thew', projectAddress: '2709 T Street',
     city: 'Sacramento', state: 'CA', clientId: 'OGDEN-001'
   },
-  '1524-tiverton': {
+  'henderson-1524-tiverton': {
     firstName: 'James', lastName: 'Henderson', projectAddress: '1524 Tiverton',
     city: 'Sacramento', state: 'CA', clientId: 'HEND-001'
   },
-  '2015-10th-street': {
+  'peterson-2015-10th-street': {
     firstName: 'Linda', lastName: 'Peterson', projectAddress: '2015 10th Street',
     city: 'Sacramento', state: 'CA', clientId: 'PETE-001'
   },
-  '2200-i-street': {
+  'johnson-2200-i-street': {
     firstName: 'Michael', lastName: 'Johnson', projectAddress: '2200 I Street',
     city: 'Sacramento', state: 'CA', clientId: 'JOHN-001'
   },
@@ -67,7 +67,7 @@ const projectClientData: Record<string, any> = {
     firstName: 'Thomas', lastName: 'McLeod-Joffe', projectAddress: '2436 59th Street',
     city: 'Sacramento', state: 'CA', clientId: 'MCLE-001'
   },
-  'piner-haus-garage': {
+  'piner-piner-haus-garage': {
     firstName: 'Richard', lastName: 'Piner', projectAddress: 'Piner Haus Garage',
     city: 'Sacramento', state: 'CA', clientId: 'PINE-001'
   },
@@ -146,12 +146,17 @@ const ClientTab = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Generate project display name in "LastName - Address" format
+  const getProjectDisplayName = () => {
+    return `${formData.lastName} - ${formData.projectAddress}`;
+  };
+
   return (
     <div className="flex-1 overflow-y-auto p-3 mt-0">
       {/* Header with client name and project address */}
       <div className="border-b border-border pb-3 mb-3">
         <h1 className="text-lg font-semibold text-foreground">
-          {formData.firstName} {formData.lastName}
+          {getProjectDisplayName()}
         </h1>
         <div className="flex items-center gap-2 text-muted-foreground mt-0.5">
           <MapPin className="w-3 h-3" />
