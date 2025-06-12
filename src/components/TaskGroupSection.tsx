@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X } from 'lucide-react';
+import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import TaskStatusIcon from './TaskStatusIcon';
 import QuickAddTask from './QuickAddTask';
 
@@ -13,7 +14,7 @@ interface Task {
   estimatedCompletion: string;
   dateCreated: string;
   dueDate: string;
-  assignee: { name: string; avatar: string };
+  assignee: { name: string; avatar: string } | null;
   hasAttachment: boolean;
   collaborators?: Array<{ name: string; avatar: string }>;
   status: string;
@@ -44,6 +45,16 @@ const TaskGroupSection = ({
 }: TaskGroupSectionProps) => {
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState('');
+  const [tasks, setTasks] = useState<Task[]>(group.tasks);
+
+  // Available people to assign
+  const availablePeople = [
+    { name: "MP", avatar: "bg-blue-500" },
+    { name: "JD", avatar: "bg-green-500" },
+    { name: "SK", avatar: "bg-purple-500" },
+    { name: "AL", avatar: "bg-orange-500" },
+    { name: "RT", avatar: "bg-red-500" }
+  ];
 
   const getRandomColor = (name: string) => {
     const colors = [
@@ -113,14 +124,54 @@ const TaskGroupSection = ({
 
   const handleRemoveAssignee = (taskId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(`Removing assignee from task ${taskId}`);
-    // Here you would typically call an update function to remove the assignee
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { ...task, assignee: null }
+          : task
+      )
+    );
+    console.log(`Removed assignee from task ${taskId}`);
   };
 
   const handleRemoveCollaborator = (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(`Removing collaborator ${collaboratorIndex} from task ${taskId}`);
-    // Here you would typically call an update function to remove the collaborator
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { 
+              ...task, 
+              collaborators: task.collaborators?.filter((_, index) => index !== collaboratorIndex) || []
+            }
+          : task
+      )
+    );
+    console.log(`Removed collaborator ${collaboratorIndex} from task ${taskId}`);
+  };
+
+  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string }) => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { ...task, assignee: person }
+          : task
+      )
+    );
+    console.log(`Assigned ${person.name} to task ${taskId}`);
+  };
+
+  const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string }) => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { 
+              ...task, 
+              collaborators: [...(task.collaborators || []), person]
+            }
+          : task
+      )
+    );
+    console.log(`Added ${person.name} as collaborator to task ${taskId}`);
   };
 
   return (
@@ -144,7 +195,7 @@ const TaskGroupSection = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {group.tasks.map((task) => (
+          {tasks.map((task) => (
             <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => onTaskClick(task)}>
               <TableCell className="py-2 w-[55%]">
                 <div className="flex items-center gap-2">
@@ -223,17 +274,45 @@ const TaskGroupSection = ({
               </TableCell>
               <TableCell className="py-2 w-[10%]">
                 <div className="flex items-center -space-x-1">
-                  <div className="relative group/avatar">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                      {task.assignee.name}
+                  {task.assignee ? (
+                    <div className="relative group/avatar">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                        {task.assignee.name}
+                      </div>
+                      <button
+                        onClick={(e) => handleRemoveAssignee(task.id, e)}
+                        className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600"
+                      >
+                        <X className="w-2 h-2" strokeWidth="2" />
+                      </button>
                     </div>
-                    <button
-                      onClick={(e) => handleRemoveAssignee(task.id, e)}
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600"
-                    >
-                      <X className="w-2 h-2" strokeWidth="2" />
-                    </button>
-                  </div>
+                  ) : (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-5 h-5 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
+                        >
+                          <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-48 bg-popover">
+                        {availablePeople.map((person) => (
+                          <DropdownMenuItem
+                            key={person.name}
+                            onClick={() => handleAssignPerson(task.id, person)}
+                            className="flex items-center gap-2 cursor-pointer"
+                          >
+                            <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(person.name)}`}>
+                              {person.name}
+                            </div>
+                            <span>{person.name}</span>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                  
                   {task.collaborators?.map((collaborator, index) => (
                     <div key={index} className="relative group/collaborator">
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}>
@@ -247,6 +326,38 @@ const TaskGroupSection = ({
                       </button>
                     </div>
                   ))}
+                  
+                  {task.assignee && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-5 h-5 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors ml-1"
+                        >
+                          <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-48 bg-popover">
+                        {availablePeople
+                          .filter(person => 
+                            person.name !== task.assignee?.name && 
+                            !task.collaborators?.some(collab => collab.name === person.name)
+                          )
+                          .map((person) => (
+                            <DropdownMenuItem
+                              key={person.name}
+                              onClick={() => handleAddCollaborator(task.id, person)}
+                              className="flex items-center gap-2 cursor-pointer"
+                            >
+                              <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(person.name)}`}>
+                                {person.name}
+                              </div>
+                              <span>Add {person.name} as collaborator</span>
+                            </DropdownMenuItem>
+                          ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
