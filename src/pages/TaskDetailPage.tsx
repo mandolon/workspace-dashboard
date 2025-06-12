@@ -44,7 +44,7 @@ const TaskDetailPage = () => {
   };
 
   return (
-    <AppLayout showHeader={false}>
+    <AppLayout>
       <div className="h-full flex flex-col">
         <div className="flex-1 min-h-0">
           <TaskDetail 

@@ -1,4 +1,3 @@
-
 import React, { ReactNode, useRef, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
 import { useSidebarContext } from '@/contexts/SidebarContext';
@@ -9,13 +8,9 @@ import PageHeader from '@/components/shared/PageHeader';
 interface AppLayoutProps {
   children: ReactNode;
   showHeader?: boolean;
-  headerProps?: {
-    showBackButton?: boolean;
-    onBack?: () => void;
-  };
 }
 
-const AppLayout = ({ children, showHeader = true, headerProps }: AppLayoutProps) => {
+const AppLayout = ({ children, showHeader = true }: AppLayoutProps) => {
   const { isCollapsed, isHidden, toggleSidebar, setSidebarHidden } = useSidebarContext();
   const sidebarPanelRef = useRef<ImperativePanelHandle>(null);
   const wasHiddenRef = useRef(isHidden);
@@ -51,12 +46,7 @@ const AppLayout = ({ children, showHeader = true, headerProps }: AppLayoutProps)
       <div className="min-h-screen w-full bg-background flex">
         {/* Main Content when sidebar is hidden */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          {shouldShowHeader && (
-            <PageHeader 
-              onToggleSidebar={toggleSidebar} 
-              {...headerProps}
-            />
-          )}
+          {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
           <div className="flex-1 overflow-hidden">
             {children}
           </div>
@@ -76,12 +66,7 @@ const AppLayout = ({ children, showHeader = true, headerProps }: AppLayoutProps)
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          {shouldShowHeader && (
-            <PageHeader 
-              onToggleSidebar={toggleSidebar} 
-              {...headerProps}
-            />
-          )}
+          {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
           <div className="flex-1 overflow-hidden">
             {children}
           </div>
@@ -122,12 +107,7 @@ const AppLayout = ({ children, showHeader = true, headerProps }: AppLayoutProps)
         {/* Main Content Panel */}
         <Panel minSize={60} className="h-screen overflow-hidden">
           <div className="flex-1 flex flex-col h-screen overflow-hidden">
-            {shouldShowHeader && (
-              <PageHeader 
-                onToggleSidebar={toggleSidebar} 
-                {...headerProps}
-              />
-            )}
+            {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
             <div className="flex-1 overflow-hidden">
               {children}
             </div>

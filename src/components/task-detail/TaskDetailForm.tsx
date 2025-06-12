@@ -1,29 +1,19 @@
 
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
 
 interface TaskDetailFormProps {
   task: {
     project: string;
     title: string;
   };
-  onBack?: () => void;
 }
 
-const TaskDetailForm = ({ task, onBack }: TaskDetailFormProps) => {
+const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   return (
     <div className="space-y-6">
       {/* Project and Status Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="p-1.5 hover:bg-accent rounded-md transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-          )}
           <span className="text-sm text-muted-foreground">📊 {task.project}</span>
           <span className="text-sm text-muted-foreground">•</span>
           <span className="text-sm text-muted-foreground">2717 58th Street</span>
