@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Users, Search } from 'lucide-react';
+import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import TaskStatusIcon from './TaskStatusIcon';
 
 interface QuickAddTaskProps {
@@ -72,7 +73,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - made wider */}
-        <div className="col-span-5 flex items-center gap-2">
+        <div className="col-span-6 flex items-center gap-2">
           <TaskStatusIcon status={defaultStatus} />
           <div className="flex-1 relative">
             <button
@@ -119,50 +120,57 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           </div>
         </div>
 
-        {/* Date Created column - made smaller */}
-        <div className="col-span-1"></div>
+        {/* Empty space columns */}
+        <div className="col-span-2"></div>
 
-        {/* Files column - empty */}
-        <div className="col-span-1"></div>
+        {/* Action buttons group */}
+        <div className="col-span-4 flex items-center justify-end gap-2">
+          {/* File attachment and assign buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Handle file attachment
+              }}
+            >
+              <Paperclip className="w-3 h-3" />
+            </Button>
+            
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+            >
+              <Users className="w-3 h-3" />
+            </Button>
+          </div>
 
-        {/* Assigned to column */}
-        <div className="col-span-2 flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-          >
-            Task
-          </Button>
-          
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-          >
-            <Users className="w-3 h-3" />
-          </Button>
-        </div>
+          {/* Separator */}
+          <Separator orientation="vertical" className="h-4" />
 
-        {/* Action buttons */}
-        <div className="col-span-3 flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onCancel}
-            className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
-          >
-            Cancel
-          </Button>
-          
-          <Button
-            size="sm"
-            onClick={handleSave}
-            className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
-            disabled={!taskName.trim()}
-          >
-            Save
-          </Button>
+          {/* Cancel and Save buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onCancel}
+              className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </Button>
+            
+            <Button
+              size="sm"
+              onClick={handleSave}
+              className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
+              disabled={!taskName.trim()}
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </div>
     </div>
