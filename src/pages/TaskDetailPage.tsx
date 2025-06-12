@@ -45,7 +45,7 @@ const TaskDetailPage = () => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout showHeader={false}>
       <div className="h-full flex flex-col">
         <div className="flex-shrink-0 p-4 border-b border-border">
           <button 
