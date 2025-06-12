@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -182,40 +183,47 @@ const ClientTab = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 mt-0">
-      <ClientTabHeader
-        projectDisplayName={getProjectDisplayName(projectId)}
-        projectAddress={formData.projectAddress}
-        startDate={formData.startDate}
-        duration={formData.duration}
-        status={formData.status}
-        onStatusChange={(value) => handleInputChange('status', value)}
-      />
-
-      {/* Information Sections */}
-      <div className="space-y-3">
-        <InformationSection
-          title="Client Information"
-          fields={clientInformationFields}
+    <div className="h-full flex flex-col">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 p-3">
+        <ClientTabHeader
+          projectDisplayName={getProjectDisplayName(projectId)}
+          projectAddress={formData.projectAddress}
+          startDate={formData.startDate}
+          duration={formData.duration}
+          status={formData.status}
+          onStatusChange={(value) => handleInputChange('status', value)}
         />
+      </div>
 
-        <InformationSection
-          title="Project Address"
-          fields={projectAddressFields}
-        />
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-3">
+        <div className="space-y-3">
+          <InformationSection
+            title="Client Information"
+            fields={clientInformationFields}
+          />
 
-        <InformationSection
-          title="Billing Address"
-          fields={billingAddressFields}
-        />
+          <InformationSection
+            title="Project Address"
+            fields={projectAddressFields}
+          />
 
-        <InformationSection
-          title="Project Information"
-          fields={projectInformationFields}
-        />
+          <InformationSection
+            title="Billing Address"
+            fields={billingAddressFields}
+          />
 
-        {/* Save Button */}
-        <div className="flex justify-end pt-3">
+          <InformationSection
+            title="Project Information"
+            fields={projectInformationFields}
+          />
+        </div>
+      </div>
+
+      {/* Fixed Save Button */}
+      <div className="flex-shrink-0 p-3 border-t border-border bg-background">
+        <div className="flex justify-end">
           <Button size="sm" className="text-xs" onClick={handleSave}>
             Save Changes
           </Button>
