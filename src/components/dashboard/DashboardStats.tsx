@@ -1,55 +1,29 @@
 
 import React from 'react';
-import { DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 const DashboardStats = () => {
   const stats = [
-    {
-      title: "November Revenue",
-      value: "$2,131.86",
-      change: "+20% from last month",
-      icon: DollarSign,
-      positive: true
-    },
-    {
-      title: "Subscriptions",
-      value: "$7,411.30",
-      change: "+10% from last month",
-      icon: Users,
-      positive: true
-    },
-    {
-      title: "Sales",
-      value: "$9,896.66",
-      change: "+19% from last month",
-      icon: ShoppingCart,
-      positive: true
-    },
-    {
-      title: "Active Now",
-      value: "$7,940.85",
-      change: "+201 since last hour",
-      icon: TrendingUp,
-      positive: true
-    }
+    { label: 'Total Projects', value: '24', change: '+12%' },
+    { label: 'Active Tasks', value: '156', change: '+8%' },
+    { label: 'Completed This Month', value: '89', change: '+23%' },
+    { label: 'Team Members', value: '12', change: '+2%' },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
       {stats.map((stat, index) => (
-        <Card key={index} className="p-3">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {stat.title}
-            </CardTitle>
-            <stat.icon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="text-xl font-bold">{stat.value}</div>
-            <p className={`text-xs ${stat.positive ? 'text-green-600' : 'text-red-600'}`}>
-              {stat.change}
-            </p>
+        <Card key={index} className="border border-border">
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
+                <p className="text-lg font-bold">{stat.value}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-xs text-green-600 font-medium">{stat.change}</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       ))}

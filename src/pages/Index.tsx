@@ -17,7 +17,7 @@ const Index = () => {
         <DashboardPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex-1 overflow-hidden">
           {activeTab === 'overview' && (
-            <div className="p-4">
+            <div className="p-3">
               <DashboardContent />
             </div>
           )}

@@ -1,125 +1,124 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowUpRight, FileText } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import DashboardStats from './DashboardStats';
 
 const DashboardContent = () => {
-  const openInvoices = [
-    {
-      customer: "Stephanie Sharkey",
-      email: "steph56@gmail.com",
-      amount: "$2,708.37"
-    },
-    {
-      customer: "Joshua Jones",
-      email: "j.jones@aol.com",
-      amount: "$3,091.05"
-    },
-    {
-      customer: "Rhonda Rhodes",
-      email: "r.rhodes@outlook.com",
-      amount: "$1,422.04"
-    },
-    {
-      customer: "James Hall",
-      email: "j.hall367@outlook.com",
-      amount: "$7,063.79"
-    },
-    {
-      customer: "Corina McCoy",
-      email: "mc.coy@aol.com",
-      amount: "$7,610.79"
-    }
+  const monthlyData = [
+    { name: 'Jan', projects: 4, tasks: 24 },
+    { name: 'Feb', projects: 3, tasks: 18 },
+    { name: 'Mar', projects: 6, tasks: 32 },
+    { name: 'Apr', projects: 8, tasks: 45 },
+    { name: 'May', projects: 5, tasks: 28 },
+    { name: 'Jun', projects: 7, tasks: 38 },
   ];
 
-  const recentFiles = [
-    {
-      name: "Annotated_112 Fake Street.pdf",
-      amount: "$6,828.59",
-      type: "pdf"
-    },
-    {
-      name: "Annotated_1921 25th Street.pdf",
-      amount: "$7,534.46",
-      type: "pdf"
-    },
-    {
-      name: "Lorri Warf",
-      amount: "$6,549.79",
-      type: "contact"
-    },
-    {
-      name: "Chris Glasser",
-      amount: "$7,417.03",
-      type: "contact"
-    },
-    {
-      name: "Rodger Struck",
-      amount: "$5,618.41",
-      type: "contact"
-    }
+  const projectStatusData = [
+    { name: 'In Progress', value: 12, color: '#3b82f6' },
+    { name: 'On Hold', value: 3, color: '#f59e0b' },
+    { name: 'Completed', value: 9, color: '#10b981' },
+  ];
+
+  const recentActivities = [
+    { action: 'Project "Piner Haus Garage" updated', time: '2 hours ago', user: 'Matthew P.' },
+    { action: 'New task assigned to Armando L.', time: '4 hours ago', user: 'System' },
+    { action: 'Invoice #RH15465 sent to client', time: '6 hours ago', user: 'Kenneth A.' },
+    { action: 'Team meeting scheduled for tomorrow', time: '1 day ago', user: 'Matthew P.' },
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-      {/* Open Invoices */}
-      <Card className="p-3">
-        <CardHeader className="flex flex-row items-center justify-between p-3 pb-2">
-          <div>
-            <CardTitle className="text-lg font-semibold">Open Invoices</CardTitle>
-            <p className="text-sm text-muted-foreground">Recent transactions from your store.</p>
-          </div>
-          <Button variant="default" size="sm" className="bg-black text-white hover:bg-gray-800">
-            View All <ArrowUpRight className="w-4 h-4 ml-1" />
-          </Button>
-        </CardHeader>
-        <CardContent className="p-3 pt-0">
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-4 text-sm font-medium text-muted-foreground border-b pb-2">
-              <div>Customer</div>
-              <div className="text-right">Amount</div>
-            </div>
-            {openInvoices.map((invoice, index) => (
-              <div key={index} className="grid grid-cols-2 gap-4 text-sm py-1.5">
-                <div>
-                  <div className="font-medium">{invoice.customer}</div>
-                  <div className="text-muted-foreground text-xs">{invoice.email}</div>
-                </div>
-                <div className="text-right font-medium">{invoice.amount}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-4">
+      <DashboardStats />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Monthly Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 pt-0">
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" fontSize={10} />
+                <YAxis fontSize={10} />
+                <Tooltip />
+                <Bar dataKey="projects" fill="#3b82f6" />
+                <Bar dataKey="tasks" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-      {/* Recent Files */}
-      <Card className="p-3">
-        <CardHeader className="p-3 pb-2">
-          <CardTitle className="text-lg font-semibold">Recent Files</CardTitle>
-        </CardHeader>
-        <CardContent className="p-3 pt-0">
-          <div className="space-y-2">
-            {recentFiles.map((file, index) => (
-              <div key={index} className="flex items-center justify-between py-1.5">
-                <div className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded flex items-center justify-center ${
-                    file.type === 'pdf' ? 'bg-red-100' : 'bg-pink-100'
-                  }`}>
-                    {file.type === 'pdf' ? (
-                      <FileText className="w-3 h-3 text-red-600" />
-                    ) : (
-                      <div className="w-3 h-3 bg-pink-600 rounded"></div>
-                    )}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Project Status</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 pt-0">
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie
+                  data={projectStatusData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={40}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {projectStatusData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 pt-0">
+            <div className="space-y-2">
+              {recentActivities.map((activity, index) => (
+                <div key={index} className="flex justify-between items-start p-2 bg-muted/50 rounded text-xs">
+                  <div>
+                    <p className="font-medium">{activity.action}</p>
+                    <p className="text-muted-foreground text-xs">{activity.user}</p>
                   </div>
-                  <span className="text-sm font-medium">{file.name}</span>
+                  <span className="text-muted-foreground text-xs whitespace-nowrap">{activity.time}</span>
                 </div>
-                <span className="text-sm font-medium">{file.amount}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 pt-0">
+            <div className="space-y-2">
+              <button className="w-full text-left p-2 bg-blue-50 hover:bg-blue-100 rounded text-xs font-medium text-blue-700">
+                Create New Project
+              </button>
+              <button className="w-full text-left p-2 bg-green-50 hover:bg-green-100 rounded text-xs font-medium text-green-700">
+                Add Task
+              </button>
+              <button className="w-full text-left p-2 bg-purple-50 hover:bg-purple-100 rounded text-xs font-medium text-purple-700">
+                Generate Invoice
+              </button>
+              <button className="w-full text-left p-2 bg-orange-50 hover:bg-orange-100 rounded text-xs font-medium text-orange-700">
+                Schedule Meeting
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
