@@ -3,21 +3,7 @@ import React from 'react';
 import { Star, Paperclip } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-interface Email {
-  id: string;
-  sender: string;
-  subject: string;
-  preview: string;
-  time: string;
-  isRead: boolean;
-  isStarred: boolean;
-  content?: string;
-  senderEmail?: string;
-  recipient?: string;
-  hasAttachment?: boolean;
-  avatar?: string;
-}
+import { Email } from '@/types/email';
 
 interface EmailListProps {
   emails: Email[];
