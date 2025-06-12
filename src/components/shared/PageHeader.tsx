@@ -16,7 +16,7 @@ const PageHeader = ({
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="p-2 hover:bg-accent rounded-md transition-colors lg:hidden"
+              className="p-2 hover:bg-accent rounded-md transition-colors"
             >
               <Menu className="w-4 h-4" />
             </button>
