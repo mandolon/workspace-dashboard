@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Plus, Search, MoreHorizontal, Mail, Shield } from 'lucide-react';
+import { Plus, Search, MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TeamMember {
@@ -81,7 +82,6 @@ const TeamsContent = () => {
       'bg-teal-500',
       'bg-cyan-500'
     ];
-    // Use the member ID to consistently assign the same color
     const index = parseInt(id) % colors.length;
     return colors[index];
   };
