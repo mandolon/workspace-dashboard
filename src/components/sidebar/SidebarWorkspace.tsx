@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -83,32 +82,30 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
         </div>
       </div>
 
-      <div className="ml-2">
-        <SidebarProjectSection
-          title="in Progress"
-          projects={inProgressProjects}
-          isOpen={openSections.inProgress}
-          onToggle={() => toggleSection('inProgress')}
-          isActive={true}
-          refreshTrigger={refreshTrigger}
-        />
+      <SidebarProjectSection
+        title="in Progress"
+        projects={inProgressProjects}
+        isOpen={openSections.inProgress}
+        onToggle={() => toggleSection('inProgress')}
+        isActive={true}
+        refreshTrigger={refreshTrigger}
+      />
 
-        <SidebarProjectSection
-          title="on Hold"
-          projects={onHoldProjects}
-          isOpen={openSections.onHold}
-          onToggle={() => toggleSection('onHold')}
-          refreshTrigger={refreshTrigger}
-        />
+      <SidebarProjectSection
+        title="on Hold"
+        projects={onHoldProjects}
+        isOpen={openSections.onHold}
+        onToggle={() => toggleSection('onHold')}
+        refreshTrigger={refreshTrigger}
+      />
 
-        <SidebarProjectSection
-          title="Completed"
-          projects={completedProjects}
-          isOpen={openSections.completed}
-          onToggle={() => toggleSection('completed')}
-          refreshTrigger={refreshTrigger}
-        />
-      </div>
+      <SidebarProjectSection
+        title="Completed"
+        projects={completedProjects}
+        isOpen={openSections.completed}
+        onToggle={() => toggleSection('completed')}
+        refreshTrigger={refreshTrigger}
+      />
     </div>
   );
 };

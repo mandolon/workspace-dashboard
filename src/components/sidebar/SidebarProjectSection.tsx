@@ -101,7 +101,7 @@ const SidebarProjectSection = ({
 
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <div className="ml-3 mt-1">
+      <div className="ml-5 mt-1">
         <CollapsibleTrigger className={cn(
           "flex items-center gap-2 px-2 py-1.5 w-full text-left rounded",
           isActive 
