@@ -19,7 +19,7 @@ interface InvoiceRowProps {
 
 const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
   return (
-    <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
+    <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group px-4">
       <div className="col-span-2 text-muted-foreground">{invoice.lastName}</div>
       <div className="col-span-3 text-muted-foreground">{invoice.projectAddress}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.status}</div>
