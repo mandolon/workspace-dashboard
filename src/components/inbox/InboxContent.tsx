@@ -40,11 +40,15 @@ const InboxContent = ({
   onPageChange,
 }: InboxContentProps) => {
   if (selectedEmail && currentEmail) {
-    return <EmailDetail email={currentEmail} onBack={onBackToList} />;
+    return (
+      <div className="h-full">
+        <EmailDetail email={currentEmail} onBack={onBackToList} />
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="h-full flex flex-col">
       <InboxHeader 
         unreadCount={unreadCount}
         activeTab={activeTab}
@@ -64,7 +68,7 @@ const InboxContent = ({
         onSelectEmail={onSelectEmail}
         onEmailClick={onEmailClick}
       />
-    </>
+    </div>
   );
 };
 
