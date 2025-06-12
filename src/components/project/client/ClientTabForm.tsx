@@ -93,7 +93,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
 
   const clientInformationFields = [
     {
-      label: 'Client ID',
+      label: 'Project ID',
       value: formData.clientId,
       readOnly: true,
       span: 'full' as const
