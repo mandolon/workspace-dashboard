@@ -10,35 +10,75 @@ interface TaskDetailFormProps {
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   return (
-    <div className="p-4 border-b border-border">
-      <div className="text-sm text-muted-foreground mb-1">{task.project}</div>
-      <h2 className="text-lg font-semibold mb-4">{task.title}</h2>
-      
-      <div className="flex items-center gap-2 mb-4">
+    <div className="space-y-6">
+      {/* Project and Status Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">📊 {task.project}</span>
+          <span className="text-sm text-muted-foreground">•</span>
+          <span className="text-sm text-muted-foreground">2717 58th Street</span>
+        </div>
+        <div className="bg-red-500 text-white px-3 py-1 rounded text-sm font-medium">
+          REDLINE / TO DO
+        </div>
+      </div>
+
+      {/* Task Title */}
+      <div>
+        <h1 className="text-2xl font-semibold mb-4">Task Name</h1>
+        <div className="text-lg text-muted-foreground mb-6">{task.title}</div>
+      </div>
+
+      {/* Add Description */}
+      <div className="flex items-center gap-2 mb-8">
         <input type="checkbox" className="w-4 h-4" />
         <span className="text-sm text-muted-foreground">Add description</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <div>
-          <label className="text-muted-foreground">Created by</label>
-          <select className="w-full border border-border rounded px-2 py-1 mt-1">
+      {/* Form Fields */}
+      <div className="grid grid-cols-4 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm text-muted-foreground flex items-center gap-2">
+            <span>👤</span>
+            Created by
+          </label>
+          <select className="w-full border border-border rounded px-3 py-2 text-sm bg-background">
             <option>Select User</option>
           </select>
         </div>
-        <div>
-          <label className="text-muted-foreground">Date Created</label>
-          <input type="date" className="w-full border border-border rounded px-2 py-1 mt-1" />
+
+        <div className="space-y-2">
+          <label className="text-sm text-muted-foreground flex items-center gap-2">
+            <span>📅</span>
+            Date Created
+          </label>
+          <input 
+            type="text" 
+            value="Jan 6, 4 Weeks"
+            className="w-full border border-border rounded px-3 py-2 text-sm bg-background" 
+            readOnly
+          />
         </div>
-        <div>
-          <label className="text-muted-foreground">Assigned to</label>
-          <select className="w-full border border-border rounded px-2 py-1 mt-1">
+
+        <div className="space-y-2">
+          <label className="text-sm text-muted-foreground flex items-center gap-2">
+            <span>👥</span>
+            Assigned to
+          </label>
+          <select className="w-full border border-border rounded px-3 py-2 text-sm bg-background">
             <option>Select User</option>
           </select>
         </div>
-        <div>
-          <label className="text-muted-foreground">Mark Complete</label>
-          <input type="date" className="w-full border border-border rounded px-2 py-1 mt-1" />
+
+        <div className="space-y-2">
+          <label className="text-sm text-muted-foreground flex items-center gap-2">
+            <span>✅</span>
+            Marked Complete
+          </label>
+          <input 
+            type="date" 
+            className="w-full border border-border rounded px-3 py-2 text-sm bg-background" 
+          />
         </div>
       </div>
     </div>

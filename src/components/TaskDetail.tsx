@@ -31,13 +31,22 @@ const TaskDetail = ({ isOpen, onClose, task }: TaskDetailProps) => {
   if (!task || !isOpen) return null;
 
   return (
-    <div className="h-full bg-background border-l border-border flex flex-col">
+    <div className="h-full bg-background flex flex-col max-w-none">
       <TaskDetailHeader task={task} onClose={onClose} />
 
-      <div className="flex-1 overflow-y-auto min-h-0">
-        <TaskDetailForm task={task} />
-        <TaskDetailAttachments />
-        <TaskDetailActivity />
+      <div className="flex-1 flex overflow-hidden">
+        {/* Main Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto p-6 space-y-8">
+            <TaskDetailForm task={task} />
+            <TaskDetailAttachments />
+          </div>
+        </div>
+
+        {/* Activity Sidebar */}
+        <div className="w-80 border-l border-border flex-shrink-0">
+          <TaskDetailActivity />
+        </div>
       </div>
     </div>
   );
