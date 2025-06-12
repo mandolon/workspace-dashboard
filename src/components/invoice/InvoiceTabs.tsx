@@ -57,6 +57,7 @@ const InvoiceTabs = ({
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
             showStatus={true}
+            showEditIcon={true}
           />
         </TabsContent>
 
@@ -66,6 +67,7 @@ const InvoiceTabs = ({
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
             showStatus={false}
+            showEditIcon={false}
           />
         </TabsContent>
 
@@ -75,6 +77,7 @@ const InvoiceTabs = ({
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
             showStatus={false}
+            showEditIcon={false}
           />
         </TabsContent>
 

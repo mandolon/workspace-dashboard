@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit } from 'lucide-react';
+import { Edit, Download } from 'lucide-react';
 
 interface Invoice {
   id: string;
@@ -16,9 +16,10 @@ interface InvoiceRowProps {
   onOpenPDF: (invoiceId: string, e: React.MouseEvent) => void;
   onDownloadPDF: (invoiceId: string, e: React.MouseEvent) => void;
   showStatus?: boolean;
+  showEditIcon?: boolean;
 }
 
-const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false }: InvoiceRowProps) => {
+const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, showEditIcon = false }: InvoiceRowProps) => {
   const calculateOverdueDays = (dateCreated: string) => {
     const created = new Date(dateCreated);
     const today = new Date();
@@ -55,7 +56,11 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false }: I
           onClick={(e) => onDownloadPDF(invoice.id, e)}
           className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
         >
-          <Edit className="w-3 h-3 text-muted-foreground" />
+          {showEditIcon ? (
+            <Edit className="w-3 h-3 text-muted-foreground" />
+          ) : (
+            <Download className="w-3 h-3 text-muted-foreground" />
+          )}
         </button>
       </div>
     </div>
