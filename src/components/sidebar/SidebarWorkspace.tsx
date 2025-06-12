@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -87,7 +88,6 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
         projects={inProgressProjects}
         isOpen={openSections.inProgress}
         onToggle={() => toggleSection('inProgress')}
-        isActive={true}
         refreshTrigger={refreshTrigger}
       />
 

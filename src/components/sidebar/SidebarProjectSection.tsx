@@ -1,9 +1,7 @@
-
-
 import React, { useRef, useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, MoreHorizontal, Edit, Copy, Archive, Trash2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Collapsible,
   CollapsibleContent,
@@ -39,22 +37,28 @@ const SidebarProjectSection = ({
   refreshTrigger 
 }: SidebarProjectSectionProps) => {
   const navigate = useNavigate();
+  const { projectId } = useParams();
   const [projectDisplayNames, setProjectDisplayNames] = useState<Record<string, string>>({});
 
   // Update project display names when refresh trigger changes
   useEffect(() => {
     const updatedNames: Record<string, string> = {};
     projects.forEach(project => {
-      const projectId = project.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      updatedNames[project] = getProjectDisplayName(projectId) || project;
+      const projectIdFromName = project.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      updatedNames[project] = getProjectDisplayName(projectIdFromName) || project;
     });
     setProjectDisplayNames(updatedNames);
   }, [projects, refreshTrigger]);
 
   const handleProjectClick = (projectName: string) => {
     // Convert project name to URL-friendly format
-    const projectId = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    navigate(`/project/${projectId}`);
+    const projectIdFromName = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    navigate(`/project/${projectIdFromName}`);
+  };
+
+  const isProjectActive = (projectName: string) => {
+    const projectIdFromName = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return projectId === projectIdFromName;
   };
 
   const handleMenuAction = (action: string, projectName: string) => {
@@ -106,9 +110,7 @@ const SidebarProjectSection = ({
       <div className="ml-2 mt-1">
         <CollapsibleTrigger className={cn(
           "flex items-center gap-2 px-2 py-1.5 w-full text-left rounded",
-          isActive 
-            ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-            : "hover:bg-sidebar-accent/50"
+          "hover:bg-sidebar-accent/50"
         )}>
           {isOpen ? (
             <ChevronDown className="w-3 h-3 flex-shrink-0" />
@@ -122,13 +124,19 @@ const SidebarProjectSection = ({
             {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
               const displayName = projectDisplayNames[project] || project;
+              const isCurrentProject = isProjectActive(project);
               
               return (
                 <ContextMenu key={index}>
                   <ContextMenuTrigger asChild>
                     <div
                       ref={contextMenuRef}
-                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group"
+                      className={cn(
+                        "flex items-center gap-2 px-2 py-1 text-sm rounded cursor-pointer group",
+                        isCurrentProject 
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                          : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+                      )}
                       onClick={() => handleProjectClick(project)}
                     >
                       <div className="w-1.5 h-1.5 bg-muted-foreground rounded-sm flex-shrink-0"></div>
@@ -201,4 +209,3 @@ const SidebarProjectSection = ({
 };
 
 export default SidebarProjectSection;
-
