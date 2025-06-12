@@ -7,7 +7,7 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Dashboard = () => {
-  console.log('Dashboard component is rendering');
+  console.log('Dashboard component is rendering - should be visible now');
   const [activeTab, setActiveTab] = useState('overview');
 
   const handleTabChange = (tab: string) => {
@@ -17,6 +17,7 @@ const Dashboard = () => {
   
   return (
     <div className="min-h-screen w-full bg-background flex">
+      <div className="bg-red-500 p-4">DEBUG: This should be visible as a red box</div>
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
           defaultSize={15} 
@@ -34,9 +35,11 @@ const Dashboard = () => {
         <ResizableHandle withHandle />
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-screen bg-white">
+            <div className="bg-blue-500 p-4 text-white">DEBUG: Header area</div>
+            
             {/* Top Bar */}
-            <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
+            <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0 bg-gray-100">
               <button className="p-2 hover:bg-accent rounded-md transition-colors">
                 <Menu className="w-4 h-4" />
               </button>
@@ -62,11 +65,15 @@ const Dashboard = () => {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden bg-green-200">
               <div className="h-full flex flex-col">
+                <div className="bg-yellow-200 p-2">DEBUG: Before DashboardPageHeader</div>
                 <DashboardPageHeader activeTab={activeTab} onTabChange={handleTabChange} />
-                <div className="flex-1 p-4 overflow-y-auto">
+                <div className="bg-purple-200 p-2">DEBUG: After DashboardPageHeader</div>
+                <div className="flex-1 p-4 overflow-y-auto bg-orange-200">
+                  <div className="bg-pink-200 p-4">DEBUG: Before DashboardContent</div>
                   <DashboardContent />
+                  <div className="bg-cyan-200 p-4">DEBUG: After DashboardContent</div>
                 </div>
               </div>
             </div>
