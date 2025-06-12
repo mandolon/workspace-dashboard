@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { getProjectDisplayName } from '@/data/projectClientData';
 import ClientTabHeader from './ClientTabHeader';
 
@@ -37,12 +37,13 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
 
       {/* Scrollable Content */}
       <div className="flex-1 min-h-0">
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-full w-full">
           <div className="p-4 pb-0">
             <div className="space-y-4 max-w-4xl mx-auto">
               {children}
             </div>
           </div>
+          <ScrollBar orientation="vertical" />
         </ScrollArea>
       </div>
 
