@@ -37,13 +37,16 @@ const ProjectPage = () => {
           minSize={sidebarCollapsed ? 4 : 15} 
           maxSize={sidebarCollapsed ? 4 : 35}
           className="min-h-screen"
+          collapsible={true}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
         >
           <div className="h-screen overflow-hidden">
             <Sidebar isCollapsed={sidebarCollapsed} />
           </div>
         </ResizablePanel>
         
-        <ResizableHandle withHandle />
+        <ResizableHandle />
         
         <ResizablePanel defaultSize={sidebarCollapsed ? 96 : 85} className="min-h-screen">
           <div className="flex flex-col h-screen">
