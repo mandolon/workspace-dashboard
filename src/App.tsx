@@ -15,6 +15,7 @@ import InvoicePage from "./pages/InvoicePage";
 import NotFound from "./pages/NotFound";
 import TasksPage from "./pages/TasksPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 
 const queryClient = new QueryClient();
 
@@ -33,22 +34,24 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <SidebarProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <LocationLogger />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/project/:projectId" element={<ProjectPage />} />
-              <Route path="/task/:taskId" element={<TaskDetailPage />} />
-              <Route path="/inbox" element={<InboxPage />} />
-              <Route path="/teams" element={<TeamsPage />} />
-              <Route path="/invoices" element={<InvoicePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <ProjectDataProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <LocationLogger />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/tasks" element={<TasksPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/project/:projectId" element={<ProjectPage />} />
+                <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/teams" element={<TeamsPage />} />
+                <Route path="/invoices" element={<InvoicePage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </ProjectDataProvider>
         </SidebarProvider>
       </TooltipProvider>
     </QueryClientProvider>

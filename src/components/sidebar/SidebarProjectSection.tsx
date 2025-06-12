@@ -1,5 +1,4 @@
-
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, MoreHorizontal, Edit, Copy, Archive, Trash2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +17,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { getProjectDisplayName } from '@/data/projectClientData';
 
 interface SidebarProjectSectionProps {
   title: string;
@@ -25,6 +25,7 @@ interface SidebarProjectSectionProps {
   isOpen: boolean;
   onToggle: () => void;
   isActive?: boolean;
+  refreshTrigger?: number;
 }
 
 const SidebarProjectSection = ({ 
@@ -32,9 +33,21 @@ const SidebarProjectSection = ({
   projects, 
   isOpen, 
   onToggle, 
-  isActive = false 
+  isActive = false,
+  refreshTrigger 
 }: SidebarProjectSectionProps) => {
   const navigate = useNavigate();
+  const [projectDisplayNames, setProjectDisplayNames] = useState<Record<string, string>>({});
+
+  // Update project display names when refresh trigger changes
+  useEffect(() => {
+    const updatedNames: Record<string, string> = {};
+    projects.forEach(project => {
+      const projectId = project.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      updatedNames[project] = getProjectDisplayName(projectId) || project;
+    });
+    setProjectDisplayNames(updatedNames);
+  }, [projects, refreshTrigger]);
 
   const handleProjectClick = (projectName: string) => {
     // Convert project name to URL-friendly format
@@ -106,6 +119,7 @@ const SidebarProjectSection = ({
           <div className="ml-0 mt-1 space-y-1">
             {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
+              const displayName = projectDisplayNames[project] || project;
               
               return (
                 <ContextMenu key={index}>
@@ -116,7 +130,7 @@ const SidebarProjectSection = ({
                       onClick={() => handleProjectClick(project)}
                     >
                       <div className="w-1.5 h-1.5 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                      <span className="truncate text-xs flex-1">{project}</span>
+                      <span className="truncate text-xs flex-1">{displayName}</span>
                       {project === 'Ogden - Thew - 2709 T Street' && (
                         <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
                       )}

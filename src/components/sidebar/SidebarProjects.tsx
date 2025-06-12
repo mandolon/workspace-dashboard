@@ -11,13 +11,14 @@ import SidebarWorkspace from './SidebarWorkspace';
 interface SidebarProjectsProps {
   isOpen: boolean;
   onToggle: () => void;
+  refreshTrigger?: number;
 }
 
 const workspaces = [
   { name: 'PinerWorks', active: true, locked: true },
 ];
 
-const SidebarProjects = ({ isOpen, onToggle }: SidebarProjectsProps) => {
+const SidebarProjects = ({ isOpen, onToggle, refreshTrigger }: SidebarProjectsProps) => {
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
       <div className="mt-4 px-2">
@@ -39,7 +40,7 @@ const SidebarProjects = ({ isOpen, onToggle }: SidebarProjectsProps) => {
           <div className="px-2 mt-2">
             <div className="space-y-1">
               {workspaces.map((workspace, index) => (
-                <SidebarWorkspace key={index} workspace={workspace} />
+                <SidebarWorkspace key={index} workspace={workspace} refreshTrigger={refreshTrigger} />
               ))}
             </div>
           </div>

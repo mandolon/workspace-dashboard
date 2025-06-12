@@ -5,12 +5,14 @@ import SidebarHeader from './sidebar/SidebarHeader';
 import SidebarNavigation from './sidebar/SidebarNavigation';
 import SidebarProjects from './sidebar/SidebarProjects';
 import SidebarFooter from './sidebar/SidebarFooter';
+import { useProjectData } from '@/contexts/ProjectDataContext';
 
 interface SidebarProps {
   isCollapsed: boolean;
 }
 
 const Sidebar = ({ isCollapsed }: SidebarProps) => {
+  const { refreshTrigger } = useProjectData();
   const [openSections, setOpenSections] = useState({
     mainNav: true,
     projects: true
@@ -49,6 +51,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             <SidebarProjects 
               isOpen={openSections.projects}
               onToggle={() => toggleSection('projects')}
+              refreshTrigger={refreshTrigger}
             />
           </div>
         </ScrollArea>
