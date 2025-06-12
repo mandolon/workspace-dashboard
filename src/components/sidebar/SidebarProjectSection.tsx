@@ -42,8 +42,7 @@ const SidebarProjectSection = ({
     navigate(`/project/${projectId}`);
   };
 
-  const handleMenuAction = (action: string, projectName: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleMenuAction = (action: string, projectName: string) => {
     console.log(`${action} for project: ${projectName}`);
     
     switch (action) {
@@ -69,6 +68,11 @@ const SidebarProjectSection = ({
         // Handle move to completed
         break;
     }
+  };
+
+  const handleMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
   };
 
   return (
@@ -101,17 +105,19 @@ const SidebarProjectSection = ({
                     {project === 'Ogden - Thew - 2709 T Street' && (
                       <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
                     )}
-                    <MoreHorizontal 
-                      className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" 
-                      onClick={(e) => e.stopPropagation()}
-                    />
+                    <button
+                      onClick={handleMoreClick}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 p-0.5 hover:bg-sidebar-accent rounded"
+                    >
+                      <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+                    </button>
                   </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent className="w-56">
-                  <ContextMenuItem onClick={(e) => handleMenuAction('rename', project, e)}>
+                  <ContextMenuItem onClick={() => handleMenuAction('rename', project)}>
                     Rename
                   </ContextMenuItem>
-                  <ContextMenuItem onClick={(e) => handleMenuAction('duplicate', project, e)}>
+                  <ContextMenuItem onClick={() => handleMenuAction('duplicate', project)}>
                     Duplicate
                   </ContextMenuItem>
                   <ContextMenuSeparator />
@@ -119,29 +125,29 @@ const SidebarProjectSection = ({
                     <ContextMenuSubTrigger>Move to</ContextMenuSubTrigger>
                     <ContextMenuSubContent>
                       {title !== 'in Progress' && (
-                        <ContextMenuItem onClick={(e) => handleMenuAction('move-to-progress', project, e)}>
+                        <ContextMenuItem onClick={() => handleMenuAction('move-to-progress', project)}>
                           In Progress
                         </ContextMenuItem>
                       )}
                       {title !== 'on Hold' && (
-                        <ContextMenuItem onClick={(e) => handleMenuAction('move-to-hold', project, e)}>
+                        <ContextMenuItem onClick={() => handleMenuAction('move-to-hold', project)}>
                           On Hold
                         </ContextMenuItem>
                       )}
                       {title !== 'completed' && (
-                        <ContextMenuItem onClick={(e) => handleMenuAction('move-to-completed', project, e)}>
+                        <ContextMenuItem onClick={() => handleMenuAction('move-to-completed', project)}>
                           Completed
                         </ContextMenuItem>
                       )}
                     </ContextMenuSubContent>
                   </ContextMenuSub>
                   <ContextMenuSeparator />
-                  <ContextMenuItem onClick={(e) => handleMenuAction('archive', project, e)}>
+                  <ContextMenuItem onClick={() => handleMenuAction('archive', project)}>
                     Archive
                   </ContextMenuItem>
                   <ContextMenuItem 
                     className="text-red-600 focus:text-red-600" 
-                    onClick={(e) => handleMenuAction('delete', project, e)}
+                    onClick={() => handleMenuAction('delete', project)}
                   >
                     Delete
                   </ContextMenuItem>
