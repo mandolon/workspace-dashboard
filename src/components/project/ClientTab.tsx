@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,8 @@ const ClientTab = () => {
     return {
       firstName: clientData.firstName,
       lastName: clientData.lastName,
+      secondaryFirstName: clientData.secondaryFirstName || '',
+      secondaryLastName: clientData.secondaryLastName || '',
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
@@ -37,6 +38,8 @@ const ClientTab = () => {
       ...prev,
       firstName: clientData.firstName,
       lastName: clientData.lastName,
+      secondaryFirstName: clientData.secondaryFirstName || '',
+      secondaryLastName: clientData.secondaryLastName || '',
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
@@ -51,7 +54,7 @@ const ClientTab = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const clientInformationFields = [
+  const primaryClientFields = [
     {
       label: 'Client ID',
       value: formData.clientId,
@@ -66,6 +69,21 @@ const ClientTab = () => {
       label: 'Last Name',
       value: formData.lastName,
       onChange: (value: string) => handleInputChange('lastName', value)
+    }
+  ];
+
+  const secondaryClientFields = [
+    {
+      label: 'First Name',
+      value: formData.secondaryFirstName,
+      onChange: (value: string) => handleInputChange('secondaryFirstName', value),
+      placeholder: 'Optional secondary client first name'
+    },
+    {
+      label: 'Last Name',
+      value: formData.secondaryLastName,
+      onChange: (value: string) => handleInputChange('secondaryLastName', value),
+      placeholder: 'Optional secondary client last name'
     }
   ];
 
@@ -143,8 +161,13 @@ const ClientTab = () => {
       {/* Information Sections */}
       <div className="space-y-3">
         <InformationSection
-          title="Client Information"
-          fields={clientInformationFields}
+          title="Primary Client Information"
+          fields={primaryClientFields}
+        />
+
+        <InformationSection
+          title="Secondary Client Information"
+          fields={secondaryClientFields}
         />
 
         <InformationSection
