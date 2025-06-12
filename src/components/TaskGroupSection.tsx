@@ -213,29 +213,18 @@ const TaskGroupSection = ({
                 {task.dueDate}
               </TableCell>
               <TableCell className="py-2 w-[9%]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center -space-x-1">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                      {task.assignee.name}
-                    </div>
-                    {task.collaborators?.map((collaborator, index) => (
-                      <div
-                        key={index}
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}
-                      >
-                        {collaborator.name}
-                      </div>
-                    ))}
+                <div className="flex items-center -space-x-1">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                    {task.assignee.name}
                   </div>
-                  <button 
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Handle edit action
-                    }}
-                  >
-                    <Edit className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
-                  </button>
+                  {task.collaborators?.map((collaborator, index) => (
+                    <div
+                      key={index}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}
+                    >
+                      {collaborator.name}
+                    </div>
+                  ))}
                 </div>
               </TableCell>
             </TableRow>
