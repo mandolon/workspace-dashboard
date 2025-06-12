@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -53,6 +52,7 @@ const TaskGroupSection = ({
   const [tasks, setTasks] = useState<Task[]>(group.tasks);
   const [isExpanded, setIsExpanded] = useState(true);
   const { toast } = useToast();
+  const quickAddRef = useRef<HTMLDivElement>(null);
 
   // Available people to assign with full names
   const availablePeople = [
@@ -249,6 +249,23 @@ const TaskGroupSection = ({
     
     console.log(`Undid completion for task ${taskId}, restored to ${previousStatus}`);
   };
+
+  // Handle click outside to cancel quick add
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showQuickAdd === group.status && quickAddRef.current && !quickAddRef.current.contains(event.target as Node)) {
+        onSetShowQuickAdd(null);
+      }
+    };
+
+    if (showQuickAdd === group.status) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showQuickAdd, group.status, onSetShowQuickAdd]);
 
   // Filter out archived tasks from display
   const visibleTasks = tasks.filter(task => !task.archived);
@@ -464,11 +481,13 @@ const TaskGroupSection = ({
 
           {/* Quick Add Task or Add Task Button */}
           {showQuickAdd === group.status ? (
-            <QuickAddTask
-              onSave={onQuickAddSave}
-              onCancel={() => onSetShowQuickAdd(null)}
-              defaultStatus={group.status}
-            />
+            <div ref={quickAddRef}>
+              <QuickAddTask
+                onSave={onQuickAddSave}
+                onCancel={() => onSetShowQuickAdd(null)}
+                defaultStatus={group.status}
+              />
+            </div>
           ) : (
             <div className="px-4 py-2 pl-8">
               <button 
