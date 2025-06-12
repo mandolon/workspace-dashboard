@@ -173,6 +173,17 @@ const TaskGroupSection = ({
     console.log(`Added ${person.fullName || person.name} as collaborator to task ${taskId}`);
   };
 
+  const handleTaskStatusClick = (taskId: number) => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { ...task, status: task.status === 'completed' ? 'progress' : 'completed' }
+          : task
+      )
+    );
+    console.log(`Toggled task ${taskId} completion status`);
+  };
+
   return (
     <div className="space-y-2">
       {/* Group Header */}
@@ -201,7 +212,10 @@ const TaskGroupSection = ({
                   className="flex items-center gap-2 cursor-pointer" 
                   onClick={() => onTaskClick(task)}
                 >
-                  <TaskStatusIcon status={task.status} />
+                  <TaskStatusIcon 
+                    status={task.status} 
+                    onClick={() => handleTaskStatusClick(task.id)}
+                  />
                   <div className="flex-1">
                     {editingTaskId === task.id ? (
                       <div className="flex items-center gap-1">
