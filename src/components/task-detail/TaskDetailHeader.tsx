@@ -11,7 +11,7 @@ interface TaskDetailHeaderProps {
 
 const TaskDetailHeader = ({ task, onClose }: TaskDetailHeaderProps) => {
   return (
-    <div className="border-b border-border p-4">
+    <div className="border-b border-border p-4 flex-shrink-0">
       <div className="flex items-center gap-2 mb-2">
         <button onClick={onClose} className="p-1 hover:bg-accent rounded">
           <ArrowLeft className="w-4 h-4" />
