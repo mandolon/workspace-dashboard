@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -19,9 +20,12 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         </div>
       </div>
 
-      {/* Task Title - Display the actual task title with larger text */}
-      <div>
-        <h1 className="text-lg font-semibold mb-3">{task.title}</h1>
+      {/* Task Title with Status Badge - centered alignment */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">{task.title}</h1>
+        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+          REDLINE / TO DO
+        </div>
       </div>
 
       {/* Description */}
