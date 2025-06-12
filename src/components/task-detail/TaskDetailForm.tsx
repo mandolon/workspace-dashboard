@@ -10,7 +10,7 @@ interface TaskDetailFormProps {
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Project and Status Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -23,20 +23,19 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         </div>
       </div>
 
-      {/* Task Title */}
+      {/* Task Title - Display the actual task title */}
       <div>
-        <h1 className="text-lg font-semibold mb-2">Task Name</h1>
-        <div className="text-sm text-muted-foreground mb-4">{task.title}</div>
+        <h1 className="text-base font-semibold mb-3">{task.title}</h1>
       </div>
 
       {/* Add Description */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3">
         <input type="checkbox" className="w-3 h-3" />
         <span className="text-xs text-muted-foreground">Add description</span>
       </div>
 
       {/* Form Fields */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-3">
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground flex items-center gap-1">
             <span>👤</span>
