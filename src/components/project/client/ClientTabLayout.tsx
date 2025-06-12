@@ -27,8 +27,6 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
         <ScrollArea className="h-full">
           <div className="p-4 space-y-4 max-w-4xl mx-auto">
             {children}
-            {/* Add some padding at the bottom to ensure last item is visible */}
-            <div className="h-20" />
           </div>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
