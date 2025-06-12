@@ -45,14 +45,13 @@ const Dashboard = () => {
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
             <PageHeader 
-              title="Dashboard"
               onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
             />
 
-            <div className="flex-1 bg-background pl-2">
-              <div className="h-full flex flex-col">
+            <div className="flex-1 bg-background p-4">
+              <div className="h-full flex flex-col max-w-6xl mx-auto">
                 <DashboardPageHeader activeTab={activeTab} onTabChange={handleTabChange} />
-                <div className="flex-1 p-4 overflow-y-auto">
+                <div className="flex-1 pt-4 overflow-y-auto">
                   <DashboardContent />
                 </div>
               </div>

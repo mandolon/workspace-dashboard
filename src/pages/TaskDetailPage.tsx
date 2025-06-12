@@ -47,16 +47,6 @@ const TaskDetailPage = () => {
     }
   };
 
-  const backButton = (
-    <button 
-      onClick={handleBack}
-      className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
-    >
-      <ArrowLeft className="w-4 h-4" />
-      <span>{returnToName || 'Back to Tasks'}</span>
-    </button>
-  );
-
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
@@ -80,13 +70,20 @@ const TaskDetailPage = () => {
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
             <PageHeader 
-              title="Task Detail"
               onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-              actions={backButton}
             />
 
-            <div className="flex-1 bg-background pl-2">
-              <div className="h-full flex flex-col">
+            <div className="flex-1 bg-background p-4">
+              <div className="h-full flex flex-col max-w-6xl mx-auto">
+                <div className="mb-4">
+                  <button 
+                    onClick={handleBack}
+                    className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{returnToName || 'Back to Tasks'}</span>
+                  </button>
+                </div>
                 <TaskDetail 
                   isOpen={true} 
                   onClose={handleBack}

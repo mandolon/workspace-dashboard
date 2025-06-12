@@ -6,6 +6,7 @@ import InboxHeader from '@/components/inbox/InboxHeader';
 import InboxTabs from '@/components/inbox/InboxTabs';
 import InboxToolbar from '@/components/inbox/InboxToolbar';
 import EmailList from '@/components/inbox/EmailList';
+import PageHeader from '@/components/shared/PageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const InboxPage = () => {
@@ -256,18 +257,16 @@ const InboxPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-base">Inbox</span>
-              </div>
-            </div>
+            <PageHeader 
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+            />
 
-            <div className="flex-1 bg-background pl-2">
-              <div className="h-full flex flex-col">
+            <div className="flex-1 bg-background p-4">
+              <div className="h-full flex flex-col max-w-6xl mx-auto">
                 {selectedEmail && currentEmail ? (
                   <EmailDetail email={currentEmail} onBack={handleBackToList} />
                 ) : (
-                  <div className="h-full flex flex-col max-w-6xl mx-auto px-6">
+                  <>
                     <InboxHeader 
                       unreadCount={unreadCount}
                       activeTab={activeTab}
@@ -287,7 +286,7 @@ const InboxPage = () => {
                       onSelectEmail={handleSelectEmail}
                       onEmailClick={handleEmailClick}
                     />
-                  </div>
+                  </>
                 )}
               </div>
             </div>
