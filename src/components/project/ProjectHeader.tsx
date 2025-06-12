@@ -13,7 +13,7 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
   const clientData = getClientData(projectId);
 
   return (
-    <div className="border-b border-border px-4 py-2">
+    <div className="px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="pb-3 mb-3">
