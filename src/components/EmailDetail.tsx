@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Archive, Delete, Reply, Forward, MoreVertical, Send, Bold, Italic, List, ListOrdered } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -66,33 +65,33 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="h-full flex flex-col bg-background">
       {/* Minimal toolbar */}
-      <div className="px-6 py-2 border-b border-gray-200 bg-gray-50">
+      <div className="px-6 py-3 border-b border-border bg-muted/50">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={onBack} className="hover:bg-gray-200">
+          <Button variant="ghost" size="sm" onClick={onBack} className="hover:bg-accent">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+          <Button variant="ghost" size="sm" className="hover:bg-accent">
             <Archive className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+          <Button variant="ghost" size="sm" className="hover:bg-accent">
             <Delete className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+          <Button variant="ghost" size="sm" className="hover:bg-accent">
             <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
           </Button>
-          <Button variant="ghost" size="sm" className="hover:bg-gray-200">
+          <Button variant="ghost" size="sm" className="hover:bg-accent">
             <MoreVertical className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
       {/* Email content */}
-      <div className="flex-1 overflow-y-auto bg-white p-6">
+      <div className="flex-1 overflow-y-auto bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Subject */}
-          <h1 className="text-xl font-normal text-gray-900">{email.subject}</h1>
+          <h1 className="text-xl font-normal text-foreground">{email.subject}</h1>
 
           {/* Sender info */}
           <div className="flex items-center gap-3">
@@ -105,25 +104,25 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
             
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">{email.sender}</span>
-                <span className="text-sm text-gray-500">&lt;{email.senderEmail || `${email.sender.toLowerCase().replace(' ', '.')}@company.com`}&gt;</span>
+                <span className="text-sm font-medium text-foreground">{email.sender}</span>
+                <span className="text-sm text-muted-foreground">&lt;{email.senderEmail || `${email.sender.toLowerCase().replace(' ', '.')}@company.com`}&gt;</span>
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 to me • {email.time}
               </div>
             </div>
 
-            <Button variant="ghost" size="sm" className="hover:bg-gray-100">
-              <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+            <Button variant="ghost" size="sm" className="hover:bg-accent">
+              <Star className={`w-4 h-4 ${email.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
             </Button>
-            <Button variant="ghost" size="sm" className="hover:bg-gray-100">
-              <MoreVertical className="w-4 h-4 text-gray-400" />
+            <Button variant="ghost" size="sm" className="hover:bg-accent">
+              <MoreVertical className="w-4 h-4 text-muted-foreground" />
             </Button>
           </div>
 
           {/* Message content */}
           <div 
-            className="text-sm text-gray-700 leading-relaxed [&>p]:mb-6 [&>ul]:mb-6 [&>ul]:ml-6 [&>ul]:list-disc [&>li]:mb-1"
+            className="text-sm text-foreground leading-relaxed [&>p]:mb-6 [&>ul]:mb-6 [&>ul]:ml-6 [&>ul]:list-disc [&>li]:mb-1"
             dangerouslySetInnerHTML={{ __html: emailContent }}
           />
 
@@ -141,15 +140,15 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 
           {/* Reply form */}
           {showReplyForm && (
-            <div className="border border-gray-200 rounded-lg">
-              <div className="p-3 border-b border-gray-200 bg-gray-50">
-                <div className="text-sm text-gray-600">
+            <div className="border border-border rounded-lg">
+              <div className="p-3 border-b border-border bg-muted/50">
+                <div className="text-sm text-muted-foreground">
                   <span className="font-medium">To:</span> {email.sender}
                 </div>
               </div>
 
               {/* Formatting toolbar */}
-              <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+              <div className="px-3 py-2 border-b border-border bg-muted/50">
                 <div className="flex items-center gap-1">
                   <Button
                     variant="ghost"
@@ -167,7 +166,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
                   >
                     <Italic className="w-4 h-4" />
                   </Button>
-                  <div className="w-px h-4 bg-gray-300 mx-1" />
+                  <div className="w-px h-4 bg-border mx-1" />
                   <Button
                     variant="ghost"
                     size="sm"
@@ -196,7 +195,7 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
                 />
               </div>
 
-              <div className="p-3 border-t border-gray-200 bg-gray-50 flex items-center gap-2">
+              <div className="p-3 border-t border-border bg-muted/50 flex items-center gap-2">
                 <Button 
                   onClick={handleSendReply}
                   size="sm"
@@ -222,4 +221,3 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
 };
 
 export default EmailDetail;
-
