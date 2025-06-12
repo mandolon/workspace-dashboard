@@ -12,6 +12,7 @@ import TaskDetailPage from "./pages/TaskDetailPage";
 import InboxPage from "./pages/InboxPage";
 import TeamsPage from "./pages/TeamsPage";
 import InvoicePage from "./pages/InvoicePage";
+import TimesheetsPage from "./pages/TimesheetsPage";
 import NotFound from "./pages/NotFound";
 import TasksPage from "./pages/TasksPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
@@ -48,6 +49,7 @@ const App = () => {
                 <Route path="/inbox" element={<InboxPage />} />
                 <Route path="/teams" element={<TeamsPage />} />
                 <Route path="/invoices" element={<InvoicePage />} />
+                <Route path="/timesheets" element={<TimesheetsPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
