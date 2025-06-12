@@ -5,11 +5,13 @@ import TaskDialog from './TaskDialog';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
+import TaskDetail from './TaskDetail';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const TaskBoard = () => {
   const navigate = useNavigate();
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
   const [customTasks, setCustomTasks] = useState<any[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
@@ -135,7 +137,11 @@ const TaskBoard = () => {
   };
 
   const handleTaskClick = (task: any) => {
-    navigate(`/task/${task.id}`);
+    setSelectedTask(task);
+  };
+
+  const handleCloseTaskDetail = () => {
+    setSelectedTask(null);
   };
 
   const handleTaskArchive = (taskId: number) => {
@@ -150,6 +156,11 @@ const TaskBoard = () => {
       // Remove from custom tasks if it exists there
       setCustomTasks(prev => prev.filter(task => task.id !== taskId));
       
+      // Close task detail if the archived task was selected
+      if (selectedTask?.id === taskId) {
+        setSelectedTask(null);
+      }
+      
       console.log(`Task ${taskId} archived and moved to project folder`);
     }
   };
@@ -157,8 +168,9 @@ const TaskBoard = () => {
   const taskGroups = getTaskGroups();
 
   return (
-    <div className="flex-1 bg-background pl-2">
-      <div className="h-full flex flex-col">
+    <div className="flex-1 bg-background pl-2 flex">
+      {/* Main task board */}
+      <div className={`${selectedTask ? 'flex-1' : 'w-full'} flex flex-col`}>
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={() => setIsTaskDialogOpen(true)} />
 
@@ -179,6 +191,17 @@ const TaskBoard = () => {
           </div>
         </ScrollArea>
       </div>
+
+      {/* Task detail panel */}
+      {selectedTask && (
+        <div className="w-96 flex-shrink-0">
+          <TaskDetail 
+            isOpen={true} 
+            onClose={handleCloseTaskDetail}
+            task={selectedTask} 
+          />
+        </div>
+      )}
 
       <TaskDialog
         isOpen={isTaskDialogOpen}
