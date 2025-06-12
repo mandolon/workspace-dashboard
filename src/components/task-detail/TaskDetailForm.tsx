@@ -15,7 +15,6 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
       {/* Project and Status Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">📊 {task.project}</span>
           <span className="text-xs text-muted-foreground">•</span>
           <span className="text-xs text-muted-foreground">2717 58th Street</span>
         </div>
@@ -24,9 +23,9 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         </div>
       </div>
 
-      {/* Task Title - Display the actual task title */}
+      {/* Task Title - Display the actual task title with larger text */}
       <div>
-        <h1 className="text-base font-semibold mb-3">{task.title}</h1>
+        <h1 className="text-lg font-semibold mb-3">{task.title}</h1>
       </div>
 
       {/* Description */}
