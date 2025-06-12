@@ -15,26 +15,30 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/tasks" element={<Index />} />
-          <Route path="/inbox" element={<InboxPage />} />
-          <Route path="/teams" element={<TeamsPage />} />
-          <Route path="/invoices" element={<InvoicePage />} />
-          <Route path="/task/:taskId" element={<TaskDetailPage />} />
-          <Route path="/project/:projectId" element={<ProjectPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App component is rendering');
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/tasks" element={<Index />} />
+            <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/invoices" element={<InvoicePage />} />
+            <Route path="/task/:taskId" element={<TaskDetailPage />} />
+            <Route path="/project/:projectId" element={<ProjectPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -2,44 +2,13 @@
 import React from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
-import DashboardStats from '@/components/dashboard/DashboardStats';
 import DashboardContent from '@/components/dashboard/DashboardContent';
-import NotesTab from '@/components/dashboard/NotesTab';
-import CalendarTab from '@/components/dashboard/CalendarTab';
-import ToDoTab from '@/components/dashboard/ToDoTab';
+import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Dashboard = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState('overview');
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return (
-          <>
-            <DashboardStats />
-            <DashboardContent />
-          </>
-        );
-      case 'notes':
-        return <NotesTab />;
-      case 'tasks':
-        return <ToDoTab />;
-      case 'calendar':
-        return <CalendarTab />;
-      default:
-        return (
-          <>
-            <DashboardStats />
-            <DashboardContent />
-          </>
-        );
-    }
-  };
-
+  console.log('Dashboard component is rendering');
+  
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
@@ -49,37 +18,51 @@ const Dashboard = () => {
           maxSize={35}
           collapsedSize={4}
           collapsible={true}
-          onCollapse={() => setSidebarCollapsed(true)}
-          onExpand={() => setSidebarCollapsed(false)}
           className="min-h-screen"
         >
           <div className="h-screen overflow-hidden">
-            <Sidebar isCollapsed={sidebarCollapsed} />
+            <Sidebar isCollapsed={false} />
           </div>
         </ResizablePanel>
         
         <ResizableHandle withHandle />
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
-          <div className="flex flex-col h-screen pl-2">
-            <DashboardHeader 
-              sidebarCollapsed={sidebarCollapsed}
-              setSidebarCollapsed={setSidebarCollapsed}
-            />
-
-            <DashboardPageHeader 
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-
-            <div className="flex-1 overflow-auto">
-              {activeTab === 'overview' ? (
-                <div className="p-4 space-y-4">
-                  {renderTabContent()}
+          <div className="flex flex-col h-screen">
+            {/* Top Bar */}
+            <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
+              <button className="p-2 hover:bg-accent rounded-md transition-colors">
+                <Menu className="w-4 h-4" />
+              </button>
+              
+              <div className="flex-1 flex items-center justify-center">
+                <div className="relative max-w-md w-full">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full px-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
                 </div>
-              ) : (
-                renderTabContent()
-              )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
+                  New
+                </button>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
+                  Upgrade
+                </button>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full flex flex-col">
+                <DashboardPageHeader />
+                <div className="flex-1 p-4 overflow-y-auto">
+                  <DashboardContent />
+                </div>
+              </div>
             </div>
           </div>
         </ResizablePanel>
