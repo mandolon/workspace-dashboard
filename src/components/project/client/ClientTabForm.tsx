@@ -22,7 +22,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
-      projectId: clientData.clientId,
+      projectId: clientData.projectId,
       billingAddress: clientData.projectAddress,
       billingCity: clientData.city,
       billingState: clientData.state,
@@ -47,7 +47,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
-      projectId: clientData.clientId,
+      projectId: clientData.projectId,
       billingAddress: clientData.projectAddress,
       billingCity: clientData.city,
       billingState: clientData.state,
@@ -69,7 +69,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: formData.projectAddress,
       city: formData.city,
       state: formData.state,
-      clientId: formData.projectId,
+      projectId: formData.projectId,
     };
     
     updateClientData(projectId, updatedClientData);
