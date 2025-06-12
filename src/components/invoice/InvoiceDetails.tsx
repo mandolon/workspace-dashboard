@@ -17,7 +17,26 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
 
   const currentDate = getCurrentDate();
 
-  // All projects from the sidebar
+  // This would ideally come from a shared context or props
+  // For now, using the client data structure from ClientTab
+  const getProjectFromClientData = () => {
+    // This represents the client data that would come from the Client tab
+    const clientData = {
+      firstName: 'Celine',
+      lastName: 'Donaldson', 
+      projectAddress: '2717 58th Street'
+    };
+    
+    return `${clientData.lastName} - ${clientData.projectAddress}`;
+  };
+
+  const createProjectId = (lastName: string, address: string) => {
+    const lastNamePart = lastName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const addressPart = address.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return `${lastNamePart}-${addressPart}`;
+  };
+
+  // All projects from the sidebar - these should eventually be generated from client data
   const allProjects = [
     'Adams - 1063 40th Street',
     'Ogden - Thew - 2709 T Street',
@@ -84,13 +103,11 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
     'Zhechev - 3120 I Street'
   ];
 
-  const createProjectId = (projectName: string) => {
+  const generateProjectId = (projectName: string) => {
     // For projects that follow "LastName - Address" format
     if (projectName.includes(' - ')) {
       const [lastName, address] = projectName.split(' - ');
-      const lastNamePart = lastName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const addressPart = address.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      return `${lastNamePart}-${addressPart}`;
+      return createProjectId(lastName, address);
     }
     // For projects that are just addresses (like "1524 Tiverton")
     return projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -113,7 +130,7 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
           </SelectTrigger>
           <SelectContent>
             {allProjects.map((project, index) => (
-              <SelectItem key={index} value={createProjectId(project)}>
+              <SelectItem key={index} value={generateProjectId(project)}>
                 {project}
               </SelectItem>
             ))}
