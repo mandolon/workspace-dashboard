@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { getClientData } from '@/data/projectClientData';
 import InformationSection from './InformationSection';
 
 interface ProjectTabFormProps {
@@ -9,6 +11,8 @@ interface ProjectTabFormProps {
 
 const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   const { toast } = useToast();
+  const { projectId } = useParams();
+  const clientData = getClientData(projectId);
 
   const [formData, setFormData] = useState({
     projectName: '',
@@ -16,7 +20,8 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     projectNotes: '',
     status: 'in-progress',
     startDate: '5/8/23',
-    duration: '5 Weeks'
+    duration: '5 Weeks',
+    projectAddress: clientData.projectAddress
   });
 
   const handleInputChange = (field: string, value: string) => {
