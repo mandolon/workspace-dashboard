@@ -38,8 +38,8 @@ const TeamsPage = () => {
               showAgents={true}
             />
 
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full flex flex-col max-w-5xl mx-auto">
+            <div className="flex-1 bg-background pl-2">
+              <div className="h-full flex flex-col">
                 <TeamsHeader />
                 <TeamsContent />
               </div>

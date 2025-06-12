@@ -73,13 +73,14 @@ const TaskDetailPage = () => {
               }
             />
 
-            {/* Task Detail Content */}
-            <div className="flex-1 overflow-hidden">
-              <TaskDetail 
-                isOpen={true} 
-                onClose={handleBack}
-                task={task} 
-              />
+            <div className="flex-1 bg-background pl-2">
+              <div className="h-full flex flex-col">
+                <TaskDetail 
+                  isOpen={true} 
+                  onClose={handleBack}
+                  task={task} 
+                />
+              </div>
             </div>
           </div>
         </ResizablePanel>

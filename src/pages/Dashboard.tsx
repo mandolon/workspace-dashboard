@@ -46,8 +46,7 @@ const Dashboard = () => {
               showAgents={true}
             />
 
-            {/* Main Content */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">
                 <DashboardPageHeader activeTab={activeTab} onTabChange={handleTabChange} />
                 <div className="flex-1 p-4 overflow-y-auto">

@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import Sidebar from '@/components/Sidebar';
 import EmailDetail from '@/components/EmailDetail';
@@ -263,32 +262,34 @@ const InboxPage = () => {
               onSearchChange={handleSearchChange}
             />
 
-            <div className="flex-1 overflow-hidden">
-              {selectedEmail && currentEmail ? (
-                <EmailDetail email={currentEmail} onBack={handleBackToList} />
-              ) : (
-                <div className="h-full flex flex-col max-w-6xl mx-auto px-6">
-                  <InboxHeader 
-                    unreadCount={unreadCount}
-                    activeTab={activeTab}
-                    onTabChange={handleTabChange}
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                  />
-                  <InboxToolbar 
-                    selectedEmails={selectedEmails}
-                    totalEmails={filteredEmails.length}
-                    onSelectAll={handleSelectAll}
-                  />
-                  <EmailList 
-                    emails={filteredEmails}
-                    selectedEmails={selectedEmails}
-                    onSelectEmail={handleSelectEmail}
-                    onEmailClick={handleEmailClick}
-                  />
-                </div>
-              )}
+            <div className="flex-1 bg-background pl-2">
+              <div className="h-full flex flex-col">
+                {selectedEmail && currentEmail ? (
+                  <EmailDetail email={currentEmail} onBack={handleBackToList} />
+                ) : (
+                  <div className="h-full flex flex-col max-w-6xl mx-auto px-6">
+                    <InboxHeader 
+                      unreadCount={unreadCount}
+                      activeTab={activeTab}
+                      onTabChange={handleTabChange}
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                    />
+                    <InboxToolbar 
+                      selectedEmails={selectedEmails}
+                      totalEmails={filteredEmails.length}
+                      onSelectAll={handleSelectAll}
+                    />
+                    <EmailList 
+                      emails={filteredEmails}
+                      selectedEmails={selectedEmails}
+                      onSelectEmail={handleSelectEmail}
+                      onEmailClick={handleEmailClick}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </ResizablePanel>

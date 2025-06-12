@@ -52,8 +52,8 @@ const ProjectPage = () => {
               showAgents={true}
             />
 
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full flex flex-col max-w-5xl mx-auto">
+            <div className="flex-1 bg-background pl-2">
+              <div className="h-full flex flex-col">
                 <ProjectHeader projectName={projectName} />
                 <ProjectTabs projectName={projectName} />
               </div>
