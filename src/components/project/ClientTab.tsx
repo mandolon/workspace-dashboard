@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { getClientData, getProjectDisplayName } from '@/data/projectClientData';
+import { getClientData, getProjectDisplayName, updateClientData } from '@/data/projectClientData';
+import { useToast } from '@/hooks/use-toast';
 import ClientTabHeader from './client/ClientTabHeader';
 import InformationSection from './client/InformationSection';
 
 const ClientTab = () => {
   const { projectId } = useParams();
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState(() => {
     const clientData = getClientData(projectId);
@@ -52,6 +54,36 @@ const ClientTab = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    if (!projectId) return;
+    
+    const updatedClientData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      secondaryFirstName: formData.secondaryFirstName,
+      secondaryLastName: formData.secondaryLastName,
+      projectAddress: formData.projectAddress,
+      city: formData.city,
+      state: formData.state,
+      clientId: formData.clientId,
+    };
+    
+    updateClientData(projectId, updatedClientData);
+    
+    // Update billing address to match project address
+    setFormData(prev => ({
+      ...prev,
+      billingAddress: formData.projectAddress,
+      billingCity: formData.city,
+      billingState: formData.state,
+    }));
+    
+    toast({
+      title: "Changes saved",
+      description: "Client information has been updated successfully.",
+    });
   };
 
   const clientInformationFields = [
@@ -184,7 +216,9 @@ const ClientTab = () => {
 
         {/* Save Button */}
         <div className="flex justify-end pt-3">
-          <Button size="sm" className="text-xs">Save Changes</Button>
+          <Button size="sm" className="text-xs" onClick={handleSave}>
+            Save Changes
+          </Button>
         </div>
       </div>
     </div>

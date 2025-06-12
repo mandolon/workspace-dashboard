@@ -1,4 +1,3 @@
-
 // Client data mapping for all projects - using LastName • Address format
 export const projectClientData: Record<string, any> = {
   'adams-1063-40th-street': {
@@ -107,6 +106,15 @@ export const getClientData = (projectId?: string) => {
     firstName: 'John', lastName: 'Doe', projectAddress: 'Unknown Address',
     city: 'Sacramento', state: 'CA', clientId: '00000'
   };
+};
+
+export const updateClientData = (projectId: string, updatedData: any) => {
+  if (projectId && projectClientData[projectId]) {
+    projectClientData[projectId] = {
+      ...projectClientData[projectId],
+      ...updatedData
+    };
+  }
 };
 
 export const getProjectDisplayName = (projectId?: string) => {
