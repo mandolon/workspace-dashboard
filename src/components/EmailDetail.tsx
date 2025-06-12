@@ -88,8 +88,8 @@ const EmailDetail = ({ email, onBack }: EmailDetailProps) => {
       </div>
 
       {/* Email content */}
-      <div className="flex-1 overflow-y-auto bg-background p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex-1 overflow-y-auto bg-background px-6 py-6">
+        <div className="space-y-6">
           {/* Subject */}
           <h1 className="text-xl font-normal text-foreground">{email.subject}</h1>
 
