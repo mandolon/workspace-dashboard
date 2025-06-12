@@ -103,7 +103,7 @@ const SidebarProjectSection = ({
           <span className="text-sm truncate">{title}</span>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="ml-5 mt-1 space-y-1">
+          <div className="ml-0 mt-1 space-y-1">
             {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
               
@@ -112,10 +112,10 @@ const SidebarProjectSection = ({
                   <ContextMenuTrigger asChild>
                     <div
                       ref={contextMenuRef}
-                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group"
+                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group ml-5"
                       onClick={() => handleProjectClick(project)}
                     >
-                      <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-sm flex-shrink-0"></div>
                       <span className="truncate text-xs flex-1">{project}</span>
                       {project === 'Ogden - Thew - 2709 T Street' && (
                         <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
