@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -77,7 +78,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - made wider */}
-        <div className="col-span-6 flex items-center gap-2">
+        <div className="col-span-6 flex items-center gap-2 pl-4">
           <TaskStatusIcon status={defaultStatus} onClick={handleStatusIconClick} />
           <div className="flex-1 relative">
             <button
