@@ -16,7 +16,7 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {/* Removed the hardcoded span and using project data */}
+            <span className="font-semibold text-base">{getProjectDisplayName(projectId)}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
