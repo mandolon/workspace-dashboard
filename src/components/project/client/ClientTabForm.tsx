@@ -26,9 +26,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       billingAddress: clientData.projectAddress,
       billingCity: clientData.city,
       billingState: clientData.state,
-      projectName: '',
-      projectScope: '',
-      projectNotes: '',
       status: 'in-progress',
       startDate: '5/8/23',
       duration: '5 Weeks'
@@ -161,30 +158,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     }
   ];
 
-  const projectInformationFields = [
-    {
-      label: 'Project Name',
-      value: formData.projectName,
-      onChange: (value: string) => handleInputChange('projectName', value),
-      type: 'textarea' as const,
-      placeholder: 'Enter project name...'
-    },
-    {
-      label: 'Project Scope',
-      value: formData.projectScope,
-      onChange: (value: string) => handleInputChange('projectScope', value),
-      type: 'textarea' as const,
-      placeholder: 'Describe the project scope...'
-    },
-    {
-      label: 'Project Notes',
-      value: formData.projectNotes,
-      onChange: (value: string) => handleInputChange('projectNotes', value),
-      type: 'textarea' as const,
-      placeholder: 'Add any additional project notes...'
-    }
-  ];
-
   return {
     formData,
     handleSave,
@@ -192,7 +165,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     clientInformationFields,
     projectAddressFields,
     billingAddressFields,
-    projectInformationFields,
     sections: (
       <>
         <InformationSection
@@ -208,11 +180,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
         <InformationSection
           title="Billing Address"
           fields={billingAddressFields}
-        />
-
-        <InformationSection
-          title="Project Information"
-          fields={projectInformationFields}
         />
       </>
     )

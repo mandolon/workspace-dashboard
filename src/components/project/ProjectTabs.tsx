@@ -1,13 +1,14 @@
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
+import { FileText, Calendar, MessageSquare, ExternalLink, Users, Settings } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FilesTab from './FilesTab';
 import TasksTab from './TasksTab';
 import MessagesTab from './MessagesTab';
 import InvoicesTab from './InvoicesTab';
 import ClientTab from './ClientTab';
+import ProjectTab from './ProjectTab';
 
 interface ProjectTabsProps {
   projectName: string;
@@ -52,6 +53,13 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
             Links
           </TabsTrigger>
           <TabsTrigger 
+            value="project" 
+            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+          >
+            <Settings className="w-3 h-3" />
+            Project
+          </TabsTrigger>
+          <TabsTrigger 
             value="client" 
             className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
           >
@@ -84,6 +92,10 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
 
         <TabsContent value="links" className="mt-0 h-full">
           <div className="text-center text-muted-foreground">Links content coming soon...</div>
+        </TabsContent>
+
+        <TabsContent value="project" className="mt-0 h-full">
+          <ProjectTab />
         </TabsContent>
 
         <TabsContent value="client" className="mt-0 h-full">
