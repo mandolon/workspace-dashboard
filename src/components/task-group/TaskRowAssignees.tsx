@@ -3,12 +3,7 @@ import React from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople } from '@/utils/taskUtils';
-
-interface Task {
-  id: number;
-  assignee: { name: string; avatar: string; fullName?: string } | null;
-  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
-}
+import { Task } from '@/types/task';
 
 interface TaskRowAssigneesProps {
   task: Task;

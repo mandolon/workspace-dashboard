@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Plus, Edit, Check, X } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -6,20 +5,7 @@ import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import TaskRowAssignees from './TaskRowAssignees';
 import { formatDate } from '@/utils/taskUtils';
-
-interface Task {
-  id: number;
-  title: string;
-  project: string;
-  estimatedCompletion: string;
-  dateCreated: string;
-  dueDate: string;
-  assignee: { name: string; avatar: string; fullName?: string } | null;
-  hasAttachment: boolean;
-  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
-  status: string;
-  archived?: boolean;
-}
+import { Task } from '@/types/task';
 
 interface TaskRowProps {
   task: Task;

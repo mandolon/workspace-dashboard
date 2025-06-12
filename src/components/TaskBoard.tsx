@@ -6,118 +6,51 @@ import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { getTasksByStatus, addTask } from '@/data/taskData';
+import { Task, TaskGroup } from '@/types/task';
 
 const TaskBoard = () => {
   const navigate = useNavigate();
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  const [customTasks, setCustomTasks] = useState<any[]>([]);
-  const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
+  const [customTasks, setCustomTasks] = useState<Task[]>([]);
+  const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
 
-  const defaultTaskGroups = [
-    {
-      title: "TASK/ REDLINE",
-      count: 1,
-      color: "bg-red-500",
-      status: "redline",
-      tasks: [
-        {
-          id: 1,
-          title: "Planning set finalized, set up CD's",
-          project: "Piner Haus Garage",
-          estimatedCompletion: "—",
-          dateCreated: "8/10/22",
-          dueDate: "—",
-          assignee: { name: "MH", avatar: "bg-purple-500" },
-          hasAttachment: true,
-          status: "redline"
-        }
-      ]
-    },
-    {
-      title: "PROGRESS/ UPDATE",
-      count: 3,
-      color: "bg-blue-500",
-      status: "progress",
-      tasks: [
-        {
-          id: 2,
-          title: "Update - 12.27.23",
-          project: "Rathbun - USFS Cabin",
-          estimatedCompletion: "—",
-          dateCreated: "12/27/23",
-          dueDate: "—",
-          assignee: { name: "AL", avatar: "bg-gray-600" },
-          hasAttachment: true,
-          collaborators: [{ name: "MP", avatar: "bg-green-500" }],
-          status: "progress"
-        },
-        {
-          id: 3,
-          title: "Update 12.9.23",
-          project: "Ogden - Thew - 2709 T Street",
-          estimatedCompletion: "—",
-          dateCreated: "12/9/23",
-          dueDate: "—",
-          assignee: { name: "AL", avatar: "bg-gray-600" },
-          hasAttachment: true,
-          status: "progress"
-        },
-        {
-          id: 4,
-          title: "Alternate Cabin Design",
-          project: "Rathbun - USFS Cabin",
-          estimatedCompletion: "—",
-          dateCreated: "9/13/23",
-          dueDate: "9/22/23, 5...",
-          assignee: { name: "AL", avatar: "bg-gray-600" },
-          hasAttachment: false,
-          status: "progress"
-        }
-      ]
-    }
-  ];
+  // Get task groups using centralized data
+  const getTaskGroups = (): TaskGroup[] => {
+    const redlineTasks = [...getTasksByStatus('redline'), ...customTasks.filter(task => task.status === 'redline' && !task.archived)];
+    const progressTasks = [...getTasksByStatus('progress'), ...customTasks.filter(task => task.status === 'progress' && !task.archived)];
+    const completedTasks = [...getTasksByStatus('completed'), ...customTasks.filter(task => task.status === 'completed' && !task.archived)];
 
-  // Combine default tasks with custom tasks and group by status, excluding archived tasks
-  const getTaskGroups = () => {
-    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks]
-      .filter(task => !task.archived); // Filter out archived tasks
-    
-    const groupedTasks = {
-      redline: allTasks.filter(task => task.status === 'redline'),
-      progress: allTasks.filter(task => task.status === 'progress'),
-      completed: allTasks.filter(task => task.status === 'completed')
-    };
+    const taskGroups: TaskGroup[] = [];
 
-    const taskGroups = [];
-
-    if (groupedTasks.redline.length > 0) {
+    if (redlineTasks.length > 0) {
       taskGroups.push({
         title: "TASK/ REDLINE",
-        count: groupedTasks.redline.length,
+        count: redlineTasks.length,
         color: "bg-red-500",
         status: "redline",
-        tasks: groupedTasks.redline
+        tasks: redlineTasks
       });
     }
 
-    if (groupedTasks.progress.length > 0) {
+    if (progressTasks.length > 0) {
       taskGroups.push({
         title: "PROGRESS/ UPDATE",
-        count: groupedTasks.progress.length,
+        count: progressTasks.length,
         color: "bg-blue-500",
         status: "progress",
-        tasks: groupedTasks.progress
+        tasks: progressTasks
       });
     }
 
-    if (groupedTasks.completed.length > 0) {
+    if (completedTasks.length > 0) {
       taskGroups.push({
         title: "COMPLETED",
-        count: groupedTasks.completed.length,
+        count: completedTasks.length,
         color: "bg-green-500",
         status: "completed",
-        tasks: groupedTasks.completed
+        tasks: completedTasks
       });
     }
 
@@ -126,7 +59,13 @@ const TaskBoard = () => {
 
   const handleCreateTask = (taskData: any) => {
     console.log('Creating task:', taskData);
-    setCustomTasks(prev => [taskData, ...prev]);
+    const newTask: Task = {
+      ...taskData,
+      id: Date.now(),
+      projectId: taskData.projectId || 'unknown-project',
+      project: taskData.project || 'Unknown Project'
+    };
+    setCustomTasks(prev => [newTask, ...prev]);
   };
 
   const handleQuickAddSave = (taskData: any) => {
@@ -134,20 +73,19 @@ const TaskBoard = () => {
     setShowQuickAdd(null);
   };
 
-  const handleTaskClick = (task: any) => {
+  const handleTaskClick = (task: Task) => {
     navigate(`/task/${task.id}`);
   };
 
   const handleTaskArchive = (taskId: number) => {
-    // Find the task in either default tasks or custom tasks
-    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks];
-    const taskToArchive = allTasks.find(task => task.id === taskId);
+    // Find the task in custom tasks
+    const taskToArchive = customTasks.find(task => task.id === taskId);
     
     if (taskToArchive) {
       // Add to archived tasks
       setArchivedTasks(prev => [...prev, { ...taskToArchive, archived: true }]);
       
-      // Remove from custom tasks if it exists there
+      // Remove from custom tasks
       setCustomTasks(prev => prev.filter(task => task.id !== taskId));
       
       console.log(`Task ${taskId} archived and moved to project folder`);

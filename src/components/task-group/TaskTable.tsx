@@ -2,20 +2,7 @@
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
-
-interface Task {
-  id: number;
-  title: string;
-  project: string;
-  estimatedCompletion: string;
-  dateCreated: string;
-  dueDate: string;
-  assignee: { name: string; avatar: string; fullName?: string } | null;
-  hasAttachment: boolean;
-  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
-  status: string;
-  archived?: boolean;
-}
+import { Task } from '@/types/task';
 
 interface TaskTableProps {
   tasks: Task[];

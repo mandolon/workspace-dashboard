@@ -2,20 +2,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-
-interface Task {
-  id: number;
-  title: string;
-  project: string;
-  estimatedCompletion: string;
-  dateCreated: string;
-  dueDate: string;
-  assignee: { name: string; avatar: string; fullName?: string } | null;
-  hasAttachment: boolean;
-  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
-  status: string;
-  archived?: boolean;
-}
+import { Task } from '@/types/task';
 
 export const useTaskManagement = (initialTasks: Task[], onTaskArchive?: (taskId: number) => void) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
