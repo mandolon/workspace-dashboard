@@ -9,7 +9,7 @@ interface SidebarHeaderProps {
 const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
   if (isCollapsed) {
     return (
-      <div className="p-3 border-b border-sidebar-border">
+      <div className="p-2 border-b border-sidebar-border flex justify-center">
         <div className="w-6 h-6 bg-black rounded flex items-center justify-center">
           <span className="text-white text-xs font-bold">AL</span>
         </div>
