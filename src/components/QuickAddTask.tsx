@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Users, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -70,8 +71,8 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Name column - matches first column */}
-        <div className="col-span-3 flex items-center gap-2">
+        {/* Name column - made wider */}
+        <div className="col-span-5 flex items-center gap-2">
           <TaskStatusIcon status={defaultStatus} />
           <div className="flex-1 relative">
             <button
@@ -118,14 +119,14 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           </div>
         </div>
 
-        {/* Date Created column - empty */}
-        <div className="col-span-2"></div>
+        {/* Date Created column - made smaller */}
+        <div className="col-span-1"></div>
 
         {/* Files column - empty */}
         <div className="col-span-1"></div>
 
         {/* Assigned to column */}
-        <div className="col-span-3 flex items-center gap-2">
+        <div className="col-span-2 flex items-center gap-2">
           <Button
             size="sm"
             variant="ghost"
@@ -143,7 +144,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           </Button>
         </div>
 
-        {/* Priority column */}
+        {/* Action buttons */}
         <div className="col-span-3 flex items-center justify-end gap-2">
           <Button
             variant="ghost"
