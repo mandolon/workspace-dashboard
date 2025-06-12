@@ -42,12 +42,12 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
 
   if (isCollapsed) {
     return (
-      <nav className="flex-1 py-1 px-1 space-y-0">
+      <nav className="flex-1 py-2 px-1 space-y-0">
         {mainNavItems.map((item, index) => (
           <div
             key={index}
             className={cn(
-              "flex items-center justify-center p-1.5 rounded text-sm cursor-pointer transition-colors my-0.5",
+              "flex items-center justify-center p-2 rounded text-sm cursor-pointer transition-colors my-0.5",
               item.active 
                 ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                 : "text-sidebar-foreground hover:bg-sidebar-accent/50"
@@ -63,8 +63,8 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
 
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <div className="px-2 mb-1">
-        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1 w-full text-left hover:bg-sidebar-accent/50 rounded">
+      <div className="px-2 mb-2">
+        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
           {isOpen ? (
             <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
           ) : (
@@ -75,12 +75,12 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
           </span>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <nav className="space-y-0 mt-1">
+          <nav className="space-y-0 mt-2">
             {mainNavItems.map((item, index) => (
               <div
                 key={index}
                 className={cn(
-                  "flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer transition-colors my-0.5",
+                  "flex items-center gap-3 px-3 py-2 rounded text-sm cursor-pointer transition-colors my-0.5",
                   item.active 
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
