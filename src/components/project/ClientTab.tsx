@@ -183,9 +183,9 @@ const ClientTab = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-background">
       {/* Fixed Header */}
-      <div className="flex-shrink-0 p-3">
+      <div className="flex-shrink-0 p-4 border-b border-border">
         <ClientTabHeader
           projectDisplayName={getProjectDisplayName(projectId)}
           projectAddress={formData.projectAddress}
@@ -197,8 +197,8 @@ const ClientTab = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-3">
-        <div className="space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 pb-0">
+        <div className="space-y-4 max-w-4xl mx-auto">
           <InformationSection
             title="Client Information"
             fields={clientInformationFields}
@@ -221,10 +221,10 @@ const ClientTab = () => {
         </div>
       </div>
 
-      {/* Fixed Save Button */}
-      <div className="flex-shrink-0 p-3 border-t border-border bg-background">
-        <div className="flex justify-end">
-          <Button size="sm" className="text-xs" onClick={handleSave}>
+      {/* Fixed Save Button - Always Visible */}
+      <div className="flex-shrink-0 p-4 border-t border-border bg-background/95 backdrop-blur-sm">
+        <div className="max-w-4xl mx-auto flex justify-end">
+          <Button onClick={handleSave} className="px-6 py-2">
             Save Changes
           </Button>
         </div>
