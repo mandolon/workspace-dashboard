@@ -57,10 +57,13 @@ const TaskDetailPage = () => {
         <ResizablePanel 
           key={sidebarCollapsed ? 'collapsed' : 'expanded'}
           defaultSize={sidebarCollapsed ? 4 : 15} 
-          minSize={sidebarCollapsed ? 4 : 15} 
-          maxSize={sidebarCollapsed ? 4 : 35}
+          minSize={4} 
+          maxSize={35}
           className="min-h-screen"
           collapsible={true}
+          collapsedSize={4}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
         >
           <div className="h-screen overflow-hidden">
             <Sidebar isCollapsed={sidebarCollapsed} />
