@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -68,13 +67,18 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     setSearchTerm('');
   };
 
+  const handleStatusIconClick = () => {
+    // Do nothing for quick add - the status is set and not changeable during quick add
+    console.log('Status icon clicked in quick add');
+  };
+
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Name column - made wider */}
         <div className="col-span-6 flex items-center gap-2">
-          <TaskStatusIcon status={defaultStatus} />
+          <TaskStatusIcon status={defaultStatus} onClick={handleStatusIconClick} />
           <div className="flex-1 relative">
             <button
               className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1"
