@@ -104,7 +104,7 @@ const SidebarProjectSection = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="ml-5 mt-1 space-y-1">
-            {projects.slice(0, 4).map((project, index) => {
+            {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
               
               return (
