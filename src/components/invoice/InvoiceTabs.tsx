@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FileText, Plus, Settings, Download, CheckCircle, Clock, Send } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -67,6 +66,25 @@ const InvoiceTabs = ({
     }
   ];
 
+  const handleOpenPDF = (invoiceId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Open PDF in new tab - replace with actual PDF URL
+    window.open(`/invoices/${invoiceId}.pdf`, '_blank');
+    console.log(`Opening PDF for invoice ${invoiceId}`);
+  };
+
+  const handleDownloadPDF = (invoiceId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Download PDF - replace with actual download logic
+    const link = document.createElement('a');
+    link.href = `/invoices/${invoiceId}.pdf`;
+    link.download = `invoice-${invoiceId}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    console.log(`Downloading PDF for invoice ${invoiceId}`);
+  };
+
   const renderInvoiceTable = (filteredInvoices: typeof invoices) => (
     <div className="flex-1 overflow-y-auto p-4 mt-0">
       <div className="space-y-0.5">
@@ -89,8 +107,16 @@ const InvoiceTabs = ({
             <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
             <div className="col-span-2 text-muted-foreground">{invoice.dateCreated}</div>
             <div className="col-span-1 flex items-center justify-between">
-              <span className="text-blue-600 hover:underline">{invoice.id}</span>
-              <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
+              <button 
+                onClick={(e) => handleOpenPDF(invoice.id, e)}
+                className="text-blue-600 hover:underline cursor-pointer"
+              >
+                {invoice.id}
+              </button>
+              <button 
+                onClick={(e) => handleDownloadPDF(invoice.id, e)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+              >
                 <Download className="w-3 h-3 text-muted-foreground" />
               </button>
             </div>
