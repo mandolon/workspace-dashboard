@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { getProjectDisplayName } from '@/data/projectClientData';
-import ClientTabHeader from './ClientTabHeader';
 
 interface ClientTabLayoutProps {
   formData: {
@@ -23,18 +22,6 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
 
   return (
     <div className="h-full flex flex-col">
-      {/* Fixed Header */}
-      <div className="flex-shrink-0 p-4 border-b border-border">
-        <ClientTabHeader
-          projectDisplayName={getProjectDisplayName(projectId)}
-          projectAddress={formData.projectAddress}
-          startDate={formData.startDate}
-          duration={formData.duration}
-          status={formData.status}
-          onStatusChange={onStatusChange}
-        />
-      </div>
-
       {/* Scrollable Content */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
