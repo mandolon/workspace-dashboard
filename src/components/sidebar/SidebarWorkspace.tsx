@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -52,7 +51,29 @@ const SidebarWorkspace = ({ workspace }: SidebarWorkspaceProps) => {
     'Rathbun - USFS Cabin',
     'Vasquez -Gutierrez - 2508 55th Street',
     'Wilcox - 1808 U Street',
-    '14401 Grand Island Road'
+    '14401 Grand Island Road',
+    'Asani - 1915 F Street',
+    'Basques - 1414 H Street',
+    'Benke - 3001 22nd Street',
+    'Cheng - 14 Maple Circle',
+    'Cordano - 2626 I Street',
+    'Donatelle - 820 53rd Street',
+    'Donaldson - 2717 58th Street',
+    'Gabel - 1601 B Street',
+    'Graves - 4121 A Street',
+    'Hoefs - 1701 35th Street',
+    'Kristoff - 5527 H Street',
+    'Krueger - 1911 Eastshore Road',
+    'Madrigal - 1700 E Street',
+    'McLeod-Joffe - 924 J Street',
+    'Mishad - 2009 K Street',
+    'Montoya - 4004 T Street',
+    'Ptak - 11004 Mead Court',
+    'Saldana - Wilkinson - 2600 K Street',
+    'Saribay - 1500 S Street',
+    'Scott - Fetkenhour - 14705 Grapevine Ave',
+    'Speck - 2126 P Street',
+    'Takamatsu - 1501 Q Street'
   ];
 
   const onHoldProjects = [
