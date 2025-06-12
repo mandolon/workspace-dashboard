@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,8 +20,6 @@ import TasksPage from "./pages/TasksPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 
-const queryClient = new QueryClient();
-
 const LocationLogger = () => {
   const location = useLocation();
   
@@ -32,6 +31,16 @@ const LocationLogger = () => {
 };
 
 const App = () => {
+  // Create QueryClient inside the component to ensure proper React context
+  const [queryClient] = React.useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        refetchOnWindowFocus: false,
+      },
+    },
+  }));
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
