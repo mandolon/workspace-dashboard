@@ -31,10 +31,10 @@ const TaskDetail = ({ isOpen, onClose, task }: TaskDetailProps) => {
   if (!task || !isOpen) return null;
 
   return (
-    <div className="h-full bg-background border-l border-border flex flex-col overflow-hidden">
+    <div className="h-full bg-background border-l border-border flex flex-col">
       <TaskDetailHeader task={task} onClose={onClose} />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-h-0">
         <TaskDetailForm task={task} />
         <TaskDetailAttachments />
         <TaskDetailActivity />

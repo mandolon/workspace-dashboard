@@ -46,17 +46,17 @@ const TaskDetailPage = () => {
 
   return (
     <AppLayout>
-      <div className="flex-1 bg-background p-4">
-        <div className="h-full flex flex-col max-w-6xl mx-auto">
-          <div className="mb-4">
-            <button 
-              onClick={handleBack}
-              className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>{returnToName || 'Back to Tasks'}</span>
-            </button>
-          </div>
+      <div className="h-full flex flex-col">
+        <div className="flex-shrink-0 p-4 border-b border-border">
+          <button 
+            onClick={handleBack}
+            className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>{returnToName || 'Back to Tasks'}</span>
+          </button>
+        </div>
+        <div className="flex-1 min-h-0">
           <TaskDetail 
             isOpen={true} 
             onClose={handleBack}
