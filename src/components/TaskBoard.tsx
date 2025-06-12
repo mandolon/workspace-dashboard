@@ -11,6 +11,7 @@ const TaskBoard = () => {
   const navigate = useNavigate();
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [customTasks, setCustomTasks] = useState<any[]>([]);
+  const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
 
   const defaultTaskGroups = [
@@ -77,9 +78,10 @@ const TaskBoard = () => {
     }
   ];
 
-  // Combine default tasks with custom tasks and group by status
+  // Combine default tasks with custom tasks and group by status, excluding archived tasks
   const getTaskGroups = () => {
-    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks];
+    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks]
+      .filter(task => !task.archived); // Filter out archived tasks
     
     const groupedTasks = {
       redline: allTasks.filter(task => task.status === 'redline'),
@@ -136,6 +138,22 @@ const TaskBoard = () => {
     navigate(`/task/${task.id}`);
   };
 
+  const handleTaskArchive = (taskId: number) => {
+    // Find the task in either default tasks or custom tasks
+    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks];
+    const taskToArchive = allTasks.find(task => task.id === taskId);
+    
+    if (taskToArchive) {
+      // Add to archived tasks
+      setArchivedTasks(prev => [...prev, { ...taskToArchive, archived: true }]);
+      
+      // Remove from custom tasks if it exists there
+      setCustomTasks(prev => prev.filter(task => task.id !== taskId));
+      
+      console.log(`Task ${taskId} archived and moved to project folder`);
+    }
+  };
+
   const taskGroups = getTaskGroups();
 
   return (
@@ -155,6 +173,7 @@ const TaskBoard = () => {
                 onSetShowQuickAdd={setShowQuickAdd}
                 onQuickAddSave={handleQuickAddSave}
                 onTaskClick={handleTaskClick}
+                onTaskArchive={handleTaskArchive}
               />
             ))}
           </div>

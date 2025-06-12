@@ -17,6 +17,7 @@ interface Task {
   hasAttachment: boolean;
   collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
   status: string;
+  archived?: boolean;
 }
 
 interface TaskGroup {
@@ -33,6 +34,7 @@ interface TaskGroupSectionProps {
   onSetShowQuickAdd: (status: string | null) => void;
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
+  onTaskArchive?: (taskId: number) => void;
 }
 
 const TaskGroupSection = ({ 
@@ -40,7 +42,8 @@ const TaskGroupSection = ({
   showQuickAdd, 
   onSetShowQuickAdd, 
   onQuickAddSave, 
-  onTaskClick 
+  onTaskClick,
+  onTaskArchive
 }: TaskGroupSectionProps) => {
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState('');
@@ -174,15 +177,38 @@ const TaskGroupSection = ({
   };
 
   const handleTaskStatusClick = (taskId: number) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { ...task, status: task.status === 'completed' ? 'progress' : 'completed' }
-          : task
-      )
-    );
-    console.log(`Toggled task ${taskId} completion status`);
+    const task = tasks.find(t => t.id === taskId);
+    if (task && task.status !== 'completed') {
+      // Mark as completed and archive
+      setTasks(prevTasks => 
+        prevTasks.map(task => 
+          task.id === taskId 
+            ? { ...task, status: 'completed', archived: true }
+            : task
+        )
+      );
+      
+      // Notify parent component to archive the task
+      if (onTaskArchive) {
+        onTaskArchive(taskId);
+      }
+      
+      console.log(`Completed and archived task ${taskId}`);
+    } else if (task && task.status === 'completed') {
+      // Unarchive and set back to progress
+      setTasks(prevTasks => 
+        prevTasks.map(task => 
+          task.id === taskId 
+            ? { ...task, status: 'progress', archived: false }
+            : task
+        )
+      );
+      console.log(`Unarchived task ${taskId}`);
+    }
   };
+
+  // Filter out archived tasks from display
+  const visibleTasks = tasks.filter(task => !task.archived);
 
   return (
     <div className="space-y-2">
@@ -205,7 +231,7 @@ const TaskGroupSection = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map((task) => (
+          {visibleTasks.map((task) => (
             <TableRow key={task.id} className="hover:bg-accent/50 group">
               <TableCell className="py-2 w-[55%]">
                 <div 
