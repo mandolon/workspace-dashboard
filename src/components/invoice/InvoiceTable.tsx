@@ -30,8 +30,8 @@ const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF }: InvoiceTableProps)
         <div className="col-span-1">Invoice</div>
       </div>
       
-      {/* Invoice Rows - no extra padding wrapper */}
-      <div className="space-y-0.5 pb-4">
+      {/* Invoice Rows - no padding wrapper */}
+      <div className="space-y-0.5">
         {invoices.map((invoice, index) => (
           <InvoiceRow
             key={index}
