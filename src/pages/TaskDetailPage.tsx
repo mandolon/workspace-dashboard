@@ -62,9 +62,10 @@ const TaskDetailPage = () => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout showHeader={false}>
       <div className="h-full flex flex-col">
-        <div className="flex-1 min-h-0">
+        {/* Add proper spacing to align with hamburger menu */}
+        <div className="flex-1 min-h-0 pl-4 pr-4">
           <TaskDetail 
             isOpen={true} 
             onClose={handleBack}
