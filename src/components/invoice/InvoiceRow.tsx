@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Edit, Download } from 'lucide-react';
+import { MoreHorizontal, Download } from 'lucide-react';
 
 interface Invoice {
   id: string;
@@ -57,7 +56,7 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, sho
           className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
         >
           {showEditIcon ? (
-            <Edit className="w-3 h-3 text-muted-foreground" />
+            <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
           ) : (
             <Download className="w-3 h-3 text-muted-foreground" />
           )}
