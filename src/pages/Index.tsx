@@ -23,8 +23,6 @@ const Index = () => {
           maxSize={sidebarCollapsed ? 4 : 35}
           className="min-h-screen"
           collapsible={true}
-          onCollapse={() => setSidebarCollapsed(true)}
-          onExpand={() => setSidebarCollapsed(false)}
         >
           <div className="h-screen overflow-hidden">
             <Sidebar isCollapsed={sidebarCollapsed} />
