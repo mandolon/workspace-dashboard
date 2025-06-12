@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
@@ -68,7 +69,7 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
       </div>
 
       {/* Tab Contents */}
-      <div className="px-4 pt-3 flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden">
         <TabsContent value="files" className="mt-0 h-full">
           <FilesTab />
         </TabsContent>
@@ -81,11 +82,11 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
           <InvoicesTab />
         </TabsContent>
 
-        <TabsContent value="links" className="flex-1 overflow-y-auto p-4 mt-0">
+        <TabsContent value="links" className="mt-0 h-full">
           <div className="text-center text-muted-foreground">Links content coming soon...</div>
         </TabsContent>
 
-        <TabsContent value="client" className="mt-0 h-full overflow-y-auto">
+        <TabsContent value="client" className="mt-0 h-full">
           <ClientTab />
         </TabsContent>
 

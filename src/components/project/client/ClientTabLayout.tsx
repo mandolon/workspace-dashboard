@@ -22,7 +22,7 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
   const { projectId } = useParams();
 
   return (
-    <div className="h-full flex flex-col bg-background">
+    <div className="h-full flex flex-col">
       {/* Fixed Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
         <ClientTabHeader
@@ -36,12 +36,12 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
           <div className="p-4 space-y-4 max-w-4xl mx-auto">
             {children}
             {/* Add some padding at the bottom to ensure last item is visible */}
-            <div className="h-4" />
+            <div className="h-20" />
           </div>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
