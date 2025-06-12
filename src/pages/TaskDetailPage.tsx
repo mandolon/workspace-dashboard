@@ -18,7 +18,7 @@ const TaskDetailPage = () => {
 
   // Mock task data - in a real app this would come from an API or context
   const task = {
-    id: taskId || "1",
+    id: parseInt(taskId || "1", 10),
     title: "Planning set finalized, set up CD's",
     project: "Piner Haus Garage",
     estimatedCompletion: "—",
