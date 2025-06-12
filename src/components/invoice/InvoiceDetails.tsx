@@ -7,13 +7,23 @@ interface InvoiceDetailsProps {
 }
 
 const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
+  const getCurrentDate = () => {
+    return new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const currentDate = getCurrentDate();
+
   return (
     <div className="bg-card border rounded-lg p-4">
       <div className="flex justify-between items-start mb-3">
         <h2 className="text-sm font-medium">Invoice</h2>
         <div className="text-right">
           <div className="text-xs font-medium">#RH25000355</div>
-          <div className="text-xs text-muted-foreground mt-1">Feb 2, 2023</div>
+          <div className="text-xs text-muted-foreground mt-1">{currentDate}</div>
         </div>
       </div>
       
@@ -32,8 +42,8 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-xs text-muted-foreground">Date</span>
-            <span className="text-xs font-medium">Feb 2, 2023</span>
+            <span className="text-xs text-muted-foreground">Invoice Date</span>
+            <span className="text-xs font-medium">{currentDate}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-xs text-muted-foreground">Submitted to:</span>
