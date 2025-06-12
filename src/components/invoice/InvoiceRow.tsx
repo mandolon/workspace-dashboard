@@ -25,7 +25,7 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
       <div className="col-span-2 text-muted-foreground">{invoice.status}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.dateCreated}</div>
-      <div className="col-span-1 flex items-center justify-between">
+      <div className="col-span-1 flex items-center justify-between pr-2">
         <button 
           onClick={(e) => onOpenPDF(invoice.id, e)}
           className="text-blue-600 hover:underline cursor-pointer"
