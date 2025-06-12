@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users, Settings } from 'lucide-react';
@@ -26,51 +27,51 @@ const ProjectTabs = ({ projectName, onDataChange }: ProjectTabsProps) => {
         <TabsList className="h-auto p-0 bg-transparent">
           <TabsTrigger 
             value="files" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <FileText className="w-3 h-3" />
+            <FileText className="w-4 h-4" />
             Files
           </TabsTrigger>
           <TabsTrigger 
             value="tasks" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <Calendar className="w-3 h-3" />
+            <Calendar className="w-4 h-4" />
             Tasks
           </TabsTrigger>
           <TabsTrigger 
             value="invoices" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <FileText className="w-3 h-3" />
+            <FileText className="w-4 h-4" />
             Invoices
           </TabsTrigger>
           <TabsTrigger 
             value="links" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-4 h-4" />
             Links
           </TabsTrigger>
           <TabsTrigger 
             value="project" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <Settings className="w-3 h-3" />
+            <Settings className="w-4 h-4" />
             Project
           </TabsTrigger>
           <TabsTrigger 
             value="client" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <Users className="w-3 h-3" />
+            <Users className="w-4 h-4" />
             Client
           </TabsTrigger>
           <TabsTrigger 
             value="chat" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
+            className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent hover:text-foreground transition-colors"
           >
-            <MessageSquare className="w-3 h-3" />
+            <MessageSquare className="w-4 h-4" />
             Chat
           </TabsTrigger>
         </TabsList>
