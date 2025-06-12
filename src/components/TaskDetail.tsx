@@ -37,14 +37,14 @@ const TaskDetail = ({ isOpen, onClose, task }: TaskDetailProps) => {
       <div className="flex-1 flex overflow-hidden">
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-6 space-y-8">
+          <div className="max-w-4xl mx-auto p-3 space-y-4">
             <TaskDetailForm task={task} />
             <TaskDetailAttachments />
           </div>
         </div>
 
         {/* Activity Sidebar */}
-        <div className="w-80 border-l border-border flex-shrink-0">
+        <div className="w-72 border-l border-border flex-shrink-0">
           <TaskDetailActivity />
         </div>
       </div>
