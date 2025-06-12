@@ -15,7 +15,16 @@ const Dashboard = () => {
     console.log('🔥 Current URL:', window.location.href);
     console.log('🔥 Current pathname:', window.location.pathname);
     document.title = 'Dashboard';
+    
+    // Cleanup function to detect when component unmounts
+    return () => {
+      console.log('🔥 Dashboard component is UNMOUNTING - this tells us why it disappears');
+    };
   }, []);
+
+  useEffect(() => {
+    console.log('🔥 Dashboard activeTab changed to:', activeTab);
+  }, [activeTab]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -54,6 +63,9 @@ const Dashboard = () => {
                     type="text"
                     placeholder="Search..."
                     className="w-full px-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    onChange={(e) => {
+                      console.log('🔥 Search input changed:', e.target.value);
+                    }}
                   />
                 </div>
               </div>
