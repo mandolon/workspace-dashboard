@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Edit, MoreHorizontal } from 'lucide-react';
 
 interface TasksTabProps {
@@ -8,6 +9,7 @@ interface TasksTabProps {
 
 const TasksTab = ({ projectName }: TasksTabProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getRandomColor = (name: string) => {
     const colors = [
@@ -115,7 +117,13 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
   };
 
   const handleTaskClick = (task: any) => {
-    navigate(`/task/${task.id}`);
+    // Navigate to task detail with state indicating we came from a project
+    navigate(`/task/${task.id}`, {
+      state: {
+        returnTo: location.pathname,
+        returnToName: `${projectName} - Tasks`
+      }
+    });
   };
 
   return (
