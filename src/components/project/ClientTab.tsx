@@ -67,11 +67,6 @@ const ClientTab = () => {
         <div>
           <h3 className="text-xs font-medium text-foreground mb-2">Client Information</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
-              <div className="col-span-3">Field</div>
-              <div className="col-span-9">Value</div>
-            </div>
-            
             <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">First Name</div>
               <div className="col-span-9">
@@ -100,11 +95,6 @@ const ClientTab = () => {
         <div>
           <h3 className="text-xs font-medium text-foreground mb-2">Project Address</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
-              <div className="col-span-3">Field</div>
-              <div className="col-span-9">Value</div>
-            </div>
-            
             <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Address</div>
               <div className="col-span-9">
@@ -144,11 +134,6 @@ const ClientTab = () => {
         <div>
           <h3 className="text-xs font-medium text-foreground mb-2">Billing Address</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
-              <div className="col-span-3">Field</div>
-              <div className="col-span-9">Value</div>
-            </div>
-            
             <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Address</div>
               <div className="col-span-9">
@@ -188,11 +173,6 @@ const ClientTab = () => {
         <div>
           <h3 className="text-xs font-medium text-foreground mb-2">Project Information</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
-              <div className="col-span-3">Field</div>
-              <div className="col-span-9">Value</div>
-            </div>
-            
             <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Project Name</div>
               <div className="col-span-9">
