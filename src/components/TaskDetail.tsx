@@ -43,8 +43,8 @@ const TaskDetail = ({ isOpen, onClose, task }: TaskDetailProps) => {
           </div>
         </div>
 
-        {/* Activity Sidebar - made wider from w-72 to w-80 */}
-        <div className="w-80 border-l border-border flex-shrink-0">
+        {/* Activity Sidebar - made wider to w-100 */}
+        <div className="w-[400px] border-l border-border flex-shrink-0">
           <TaskDetailActivity />
         </div>
       </div>
