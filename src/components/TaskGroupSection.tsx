@@ -1,8 +1,7 @@
-
-
-import React from 'react';
-import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 import TaskStatusIcon from './TaskStatusIcon';
 import QuickAddTask from './QuickAddTask';
 
@@ -42,6 +41,9 @@ const TaskGroupSection = ({
   onQuickAddSave, 
   onTaskClick 
 }: TaskGroupSectionProps) => {
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editingValue, setEditingValue] = useState('');
+
   const getRandomColor = (name: string) => {
     const colors = [
       'bg-red-500',
@@ -76,6 +78,32 @@ const TaskGroupSection = ({
     }
   };
 
+  const handleTaskNameClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingTaskId(task.id);
+    setEditingValue(task.title);
+  };
+
+  const handleSaveEdit = (taskId: number) => {
+    // Here you would typically call an update function
+    console.log(`Updating task ${taskId} with new title: ${editingValue}`);
+    setEditingTaskId(null);
+    setEditingValue('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTaskId(null);
+    setEditingValue('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, taskId: number) => {
+    if (e.key === 'Enter') {
+      handleSaveEdit(taskId);
+    } else if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
+  };
+
   return (
     <div className="space-y-2">
       {/* Group Header */}
@@ -103,9 +131,47 @@ const TaskGroupSection = ({
               <TableCell className="py-2 w-[45%]">
                 <div className="flex items-center gap-2">
                   <TaskStatusIcon status={task.status} />
-                  <div>
-                    <div className="font-medium text-xs">{task.title}</div>
-                    <div className="text-xs text-muted-foreground">{task.project}</div>
+                  <div className="flex-1">
+                    {editingTaskId === task.id ? (
+                      <div className="flex items-center gap-1">
+                        <Input
+                          value={editingValue}
+                          onChange={(e) => setEditingValue(e.target.value)}
+                          onKeyDown={(e) => handleKeyDown(e, task.id)}
+                          className="text-xs h-6 px-1 py-0 border border-border"
+                          autoFocus
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSaveEdit(task.id);
+                          }}
+                          className="p-0.5 text-green-600 hover:text-green-700"
+                        >
+                          <Check className="w-3 h-3" strokeWidth="2" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancelEdit();
+                          }}
+                          className="p-0.5 text-red-600 hover:text-red-700"
+                        >
+                          <X className="w-3 h-3" strokeWidth="2" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <div 
+                          className="font-medium text-xs cursor-text hover:bg-accent/30 rounded px-1 py-0.5 -mx-1"
+                          onClick={(e) => handleTaskNameClick(task, e)}
+                        >
+                          {task.title}
+                        </div>
+                        <div className="text-xs text-muted-foreground">{task.project}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </TableCell>
@@ -190,4 +256,3 @@ const TaskGroupSection = ({
 };
 
 export default TaskGroupSection;
-
