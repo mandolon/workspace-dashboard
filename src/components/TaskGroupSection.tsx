@@ -279,16 +279,16 @@ const TaskGroupSection = ({
           <Table>
             <TableHeader>
               <TableRow className="border-b border-border">
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[40%]">Name</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[20%]">Date Created</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[15%]">Files</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%]">Name</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
                 <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {visibleTasks.map((task) => (
                 <TableRow key={task.id} className="hover:bg-accent/50 group">
-                  <TableCell className="py-2 w-[40%]">
+                  <TableCell className="py-2 w-[50%]">
                     <div 
                       className="flex items-center gap-2 cursor-pointer" 
                       onClick={() => onTaskClick(task)}
@@ -346,10 +346,10 @@ const TaskGroupSection = ({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs text-muted-foreground py-2 w-[20%]">
+                  <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
                     {formatDate(task.dateCreated)}
                   </TableCell>
-                  <TableCell className="py-2 w-[15%]">
+                  <TableCell className="py-2 w-[8%]">
                     <div className="flex items-center gap-1">
                       {task.hasAttachment && (
                         <div className="w-3 h-3 bg-gray-100 rounded flex items-center justify-center">
