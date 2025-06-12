@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -289,7 +290,7 @@ const TaskGroupSection = ({
                 <TableRow key={task.id} className="hover:bg-accent/50 group">
                   <TableCell className="py-2 w-[50%]">
                     <div 
-                      className="flex items-center gap-2 cursor-pointer" 
+                      className="flex items-center gap-2 cursor-pointer pl-4" 
                       onClick={() => onTaskClick(task)}
                     >
                       <TaskStatusIcon 
