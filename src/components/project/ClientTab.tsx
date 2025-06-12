@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,23 +9,138 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { MapPin, Calendar } from 'lucide-react';
 
+// Client data mapping for all projects
+const projectClientData: Record<string, any> = {
+  'adams-1063-40th-street': {
+    firstName: 'Robert', lastName: 'Adams', projectAddress: '1063 40th Street',
+    city: 'Sacramento', state: 'CA', clientId: 'ADAMS-001'
+  },
+  'ogden-thew-2709-t-street': {
+    firstName: 'Margaret', lastName: 'Ogden-Thew', projectAddress: '2709 T Street',
+    city: 'Sacramento', state: 'CA', clientId: 'OGDEN-001'
+  },
+  '1524-tiverton': {
+    firstName: 'James', lastName: 'Henderson', projectAddress: '1524 Tiverton',
+    city: 'Sacramento', state: 'CA', clientId: 'HEND-001'
+  },
+  '2015-10th-street': {
+    firstName: 'Linda', lastName: 'Peterson', projectAddress: '2015 10th Street',
+    city: 'Sacramento', state: 'CA', clientId: 'PETE-001'
+  },
+  '2200-i-street': {
+    firstName: 'Michael', lastName: 'Johnson', projectAddress: '2200 I Street',
+    city: 'Sacramento', state: 'CA', clientId: 'JOHN-001'
+  },
+  'adamo-6605-s-land-park-dr': {
+    firstName: 'Anthony', lastName: 'Adamo', projectAddress: '6605 S. Land Park Dr.',
+    city: 'Sacramento', state: 'CA', clientId: 'ADAM-001'
+  },
+  'mcvarish-salmina-6251-el-dorado-street': {
+    firstName: 'Patricia', lastName: 'McVarish-Salmina', projectAddress: '6251 El Dorado Street',
+    city: 'Sacramento', state: 'CA', clientId: 'MCVA-001'
+  },
+  'andre-2119-h-street': {
+    firstName: 'David', lastName: 'Andre', projectAddress: '2119 H Street',
+    city: 'Sacramento', state: 'CA', clientId: 'ANDR-001'
+  },
+  'fleming-veisze-1111-33rd-street': {
+    firstName: 'Sarah', lastName: 'Fleming-Veisze', projectAddress: '1111 33rd Street',
+    city: 'Sacramento', state: 'CA', clientId: 'FLEM-001'
+  },
+  'ganson-2125-i-street': {
+    firstName: 'William', lastName: 'Ganson', projectAddress: '2125 I Street',
+    city: 'Sacramento', state: 'CA', clientId: 'GANS-001'
+  },
+  'decarlo-1141-swanston-dr': {
+    firstName: 'Maria', lastName: 'DeCarlo', projectAddress: '1141 Swanston Dr',
+    city: 'Sacramento', state: 'CA', clientId: 'DECA-001'
+  },
+  'green-920-u-street': {
+    firstName: 'Christopher', lastName: 'Green', projectAddress: '920 U Street',
+    city: 'Sacramento', state: 'CA', clientId: 'GREE-001'
+  },
+  'kubein-plymouth-project': {
+    firstName: 'Jennifer', lastName: 'Kubein', projectAddress: 'Plymouth Project',
+    city: 'Sacramento', state: 'CA', clientId: 'KUBE-001'
+  },
+  'mcleod-joffe-2436-59th-street': {
+    firstName: 'Thomas', lastName: 'McLeod-Joffe', projectAddress: '2436 59th Street',
+    city: 'Sacramento', state: 'CA', clientId: 'MCLE-001'
+  },
+  'piner-haus-garage': {
+    firstName: 'Richard', lastName: 'Piner', projectAddress: 'Piner Haus Garage',
+    city: 'Sacramento', state: 'CA', clientId: 'PINE-001'
+  },
+  'rathbun-usfs-cabin': {
+    firstName: 'Barbara', lastName: 'Rathbun', projectAddress: 'USFS Cabin',
+    city: 'Sacramento', state: 'CA', clientId: 'RATH-001'
+  },
+  'vasquez-gutierrez-2508-55th-street': {
+    firstName: 'Carlos', lastName: 'Vasquez-Gutierrez', projectAddress: '2508 55th Street',
+    city: 'Sacramento', state: 'CA', clientId: 'VASQ-001'
+  },
+  'wilcox-1808-u-street': {
+    firstName: 'Nancy', lastName: 'Wilcox', projectAddress: '1808 U Street',
+    city: 'Sacramento', state: 'CA', clientId: 'WILC-001'
+  },
+  'donaldson-2717-58th-street': {
+    firstName: 'Celine', lastName: 'Donaldson', projectAddress: '2717 58th Street',
+    city: 'Sacramento', state: 'CA', clientId: 'DONA-001'
+  }
+};
+
 const ClientTab = () => {
-  const [formData, setFormData] = useState({
-    firstName: 'Celine',
-    lastName: 'Donaldson',
-    projectAddress: '2717 58th Street',
-    city: 'Sacramento',
-    state: 'CA',
-    billingAddress: '2717 58th Street',
-    billingCity: 'Sacramento',
-    billingState: 'CA',
-    projectName: '',
-    projectScope: '',
-    projectNotes: '',
-    status: 'in-progress',
-    startDate: '5/8/23',
-    duration: '5 Weeks'
+  const { projectId } = useParams();
+  
+  // Get client data based on current project ID
+  const getClientData = () => {
+    if (projectId && projectClientData[projectId]) {
+      return projectClientData[projectId];
+    }
+    // Default fallback
+    return {
+      firstName: 'John', lastName: 'Doe', projectAddress: 'Unknown Address',
+      city: 'Sacramento', state: 'CA', clientId: 'UNKN-001'
+    };
+  };
+
+  const [formData, setFormData] = useState(() => {
+    const clientData = getClientData();
+    return {
+      firstName: clientData.firstName,
+      lastName: clientData.lastName,
+      projectAddress: clientData.projectAddress,
+      city: clientData.city,
+      state: clientData.state,
+      clientId: clientData.clientId,
+      billingAddress: clientData.projectAddress,
+      billingCity: clientData.city,
+      billingState: clientData.state,
+      projectName: '',
+      projectScope: '',
+      projectNotes: '',
+      status: 'in-progress',
+      startDate: '5/8/23',
+      duration: '5 Weeks'
+    };
   });
+
+  // Update form data when project changes
+  useEffect(() => {
+    const clientData = getClientData();
+    setFormData(prev => ({
+      ...prev,
+      firstName: clientData.firstName,
+      lastName: clientData.lastName,
+      projectAddress: clientData.projectAddress,
+      city: clientData.city,
+      state: clientData.state,
+      clientId: clientData.clientId,
+      billingAddress: clientData.projectAddress,
+      billingCity: clientData.city,
+      billingState: clientData.state,
+    }));
+  }, [projectId]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -67,6 +183,17 @@ const ClientTab = () => {
         <div>
           <h3 className="text-xs font-medium text-foreground mb-2">Client Information</h3>
           <div className="space-y-0.5">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
+              <div className="col-span-3 text-muted-foreground">Client ID</div>
+              <div className="col-span-9">
+                <Input
+                  value={formData.clientId}
+                  onChange={(e) => handleInputChange('clientId', e.target.value)}
+                  className="h-6 text-xs"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">First Name</div>
               <div className="col-span-9">
