@@ -15,46 +15,43 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
   const weekEnd = endOfWeek(selectedWeek, { weekStartsOn: 1 });
 
   return (
-    <div className="bg-background">
-      <div className="px-2 py-1">
+    <div className="border-b border-border">
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg font-semibold">Timesheets</h1>
+          <Button onClick={onAddTimeEntry} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Add Time Entry
+          </Button>
+        </div>
+        
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold">Timesheets</h1>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => onWeekChange(subWeeks(selectedWeek, 1))}
-                className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
-              >
-                <ChevronLeft className="w-3 h-3" />
-              </button>
-              <div className="flex items-center gap-2 px-2 py-1 bg-muted rounded text-xs">
-                <Calendar className="w-3 h-3 text-muted-foreground" />
-                <span className="font-medium">
-                  {format(weekStart, 'MMM d')} - {format(weekEnd, 'MMM d, yyyy')}
-                </span>
-              </div>
-              <button
-                onClick={() => onWeekChange(addWeeks(selectedWeek, 1))}
-                className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
-              >
-                <ChevronRight className="w-3 h-3" />
-              </button>
-              <button
-                onClick={() => onWeekChange(new Date())}
-                className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
-              >
-                Today
-              </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => onWeekChange(subWeeks(selectedWeek, 1))}
+              className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+            >
+              <ChevronLeft className="w-3 h-3" />
+            </button>
+            <div className="flex items-center gap-2 px-2 py-1 bg-muted rounded text-xs">
+              <Calendar className="w-3 h-3 text-muted-foreground" />
+              <span className="font-medium">
+                {format(weekStart, 'MMM d')} - {format(weekEnd, 'MMM d, yyyy')}
+              </span>
             </div>
+            <button
+              onClick={() => onWeekChange(addWeeks(selectedWeek, 1))}
+              className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+            >
+              <ChevronRight className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => onWeekChange(new Date())}
+              className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors ml-2"
+            >
+              Today
+            </button>
           </div>
-          
-          <button 
-            onClick={onAddTimeEntry}
-            className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
-          >
-            <Plus className="w-3 h-3" strokeWidth="2" />
-            <span>Add Time Entry</span>
-          </button>
         </div>
       </div>
     </div>
