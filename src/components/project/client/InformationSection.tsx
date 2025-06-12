@@ -22,11 +22,11 @@ interface InformationSectionProps {
 const InformationSection = ({ title, fields }: InformationSectionProps) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="text-base font-medium text-gray-900">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {fields.map((field, index) => (
           <div key={index} className={field.span === 'full' ? 'md:col-span-2' : ''}>
-            <label className="block text-sm font-medium text-foreground mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               {field.label}
             </label>
             {field.type === 'textarea' ? (
