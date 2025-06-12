@@ -16,7 +16,7 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
     <div className="border-b border-border px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="border-b border-border pb-3 mb-3">
+          <div className="pb-3 mb-3">
             <h1 className="text-lg font-semibold text-foreground">
               {getProjectDisplayName(projectId)}
             </h1>
