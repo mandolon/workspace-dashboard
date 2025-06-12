@@ -154,7 +154,7 @@ const SidebarProjectSection = ({
                             On Hold
                           </ContextMenuItem>
                         )}
-                        {title !== 'completed' && (
+                        {title !== 'Completed' && (
                           <ContextMenuItem onClick={() => handleMenuAction('move-to-completed', project)}>
                             Completed
                           </ContextMenuItem>

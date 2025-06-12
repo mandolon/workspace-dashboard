@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -96,7 +97,7 @@ const SidebarWorkspace = ({ workspace }: SidebarWorkspaceProps) => {
       />
 
       <SidebarProjectSection
-        title="completed"
+        title="Completed"
         projects={completedProjects}
         isOpen={openSections.completed}
         onToggle={() => toggleSection('completed')}
