@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users, Settings } from 'lucide-react';
@@ -12,9 +11,10 @@ import ProjectTab from './ProjectTab';
 
 interface ProjectTabsProps {
   projectName: string;
+  onDataChange?: () => void;
 }
 
-const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
+const ProjectTabs = ({ projectName, onDataChange }: ProjectTabsProps) => {
   const location = useLocation();
   
   // Check if we're returning from a task detail with a specific tab
@@ -99,7 +99,7 @@ const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
         </TabsContent>
 
         <TabsContent value="client" className="mt-0 h-full">
-          <ClientTab />
+          <ClientTab onDataChange={onDataChange} />
         </TabsContent>
 
         <TabsContent value="chat" className="mt-0 h-full">

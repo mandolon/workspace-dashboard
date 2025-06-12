@@ -3,8 +3,18 @@ import React from 'react';
 import ClientTabForm from './client/ClientTabForm';
 import ClientTabLayout from './client/ClientTabLayout';
 
-const ClientTab = () => {
-  const form = ClientTabForm({ onSave: () => {} });
+interface ClientTabProps {
+  onDataChange?: () => void;
+}
+
+const ClientTab = ({ onDataChange }: ClientTabProps) => {
+  const form = ClientTabForm({ 
+    onSave: () => {
+      if (onDataChange) {
+        onDataChange();
+      }
+    }
+  });
 
   return (
     <ClientTabLayout
