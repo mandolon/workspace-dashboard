@@ -2,6 +2,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { getProjectDisplayName } from '@/data/projectClientData';
 import ClientTabHeader from './ClientTabHeader';
 
@@ -21,7 +22,7 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
   const { projectId } = useParams();
 
   return (
-    <div className="min-h-full flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Fixed Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
         <ClientTabHeader
@@ -34,14 +35,19 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
         />
       </div>
 
-      {/* Content */}
-      <div className="flex-1">
-        <div className="p-4 space-y-4 max-w-4xl mx-auto">
-          {children}
-        </div>
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-4 space-y-4 max-w-4xl mx-auto">
+            {children}
+            {/* Add some padding at the bottom to ensure last item is visible */}
+            <div className="h-20" />
+          </div>
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
       </div>
 
-      {/* Fixed Save Button */}
+      {/* Fixed Save Button - Always Visible */}
       <div className="flex-shrink-0 p-4 border-t border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto flex justify-end">
           <Button onClick={onSave} className="px-6 py-2">
