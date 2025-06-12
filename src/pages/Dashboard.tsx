@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
@@ -9,11 +10,14 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 const Dashboard = () => {
   console.log('🔥 Dashboard component rendering');
   const [activeTab, setActiveTab] = useState('overview');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('🔥 Dashboard useEffect running - component mounted');
     console.log('🔥 Current URL:', window.location.href);
     console.log('🔥 Current pathname:', window.location.pathname);
+    console.log('🔥 Location object:', location);
     document.title = 'Dashboard';
     
     // Cleanup function to detect when component unmounts
@@ -26,9 +30,20 @@ const Dashboard = () => {
     console.log('🔥 Dashboard activeTab changed to:', activeTab);
   }, [activeTab]);
 
+  useEffect(() => {
+    console.log('🔥 Location changed in Dashboard:', location.pathname);
+    console.log('🔥 Full location object:', location);
+  }, [location]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     console.log(`Tab changed to: ${tab}`);
+  };
+
+  const handleSearchChange = (value: string) => {
+    console.log('🔥 Search input changed:', value);
+    console.log('🔥 Current location after search change:', location.pathname);
+    console.log('🔥 Window location after search change:', window.location.pathname);
   };
   
   return (
@@ -63,9 +78,7 @@ const Dashboard = () => {
                     type="text"
                     placeholder="Search..."
                     className="w-full px-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    onChange={(e) => {
-                      console.log('🔥 Search input changed:', e.target.value);
-                    }}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                   />
                 </div>
               </div>
