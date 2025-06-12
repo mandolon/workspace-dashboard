@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import DashboardContent from '@/components/dashboard/DashboardContent';
@@ -8,6 +8,12 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 
 const Dashboard = () => {
   console.log('Dashboard component is rendering');
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    console.log(`Tab changed to: ${tab}`);
+  };
   
   return (
     <div className="min-h-screen w-full bg-background flex">
@@ -58,7 +64,7 @@ const Dashboard = () => {
             {/* Main Content */}
             <div className="flex-1 overflow-hidden">
               <div className="h-full flex flex-col">
-                <DashboardPageHeader />
+                <DashboardPageHeader activeTab={activeTab} onTabChange={handleTabChange} />
                 <div className="flex-1 p-4 overflow-y-auto">
                   <DashboardContent />
                 </div>
