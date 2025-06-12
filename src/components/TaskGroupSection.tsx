@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -110,6 +111,18 @@ const TaskGroupSection = ({
     }
   };
 
+  const handleRemoveAssignee = (taskId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log(`Removing assignee from task ${taskId}`);
+    // Here you would typically call an update function to remove the assignee
+  };
+
+  const handleRemoveCollaborator = (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log(`Removing collaborator ${collaboratorIndex} from task ${taskId}`);
+    // Here you would typically call an update function to remove the collaborator
+  };
+
   return (
     <div className="space-y-2">
       {/* Group Header */}
@@ -210,15 +223,28 @@ const TaskGroupSection = ({
               </TableCell>
               <TableCell className="py-2 w-[10%]">
                 <div className="flex items-center -space-x-1">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                    {task.assignee.name}
+                  <div className="relative group/avatar">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                      {task.assignee.name}
+                    </div>
+                    <button
+                      onClick={(e) => handleRemoveAssignee(task.id, e)}
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <X className="w-2 h-2" strokeWidth="2" />
+                    </button>
                   </div>
                   {task.collaborators?.map((collaborator, index) => (
-                    <div
-                      key={index}
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}
-                    >
-                      {collaborator.name}
+                    <div key={index} className="relative group/collaborator">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${getRandomColor(collaborator.name)}`}>
+                        {collaborator.name}
+                      </div>
+                      <button
+                        onClick={(e) => handleRemoveCollaborator(task.id, index, e)}
+                        className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/collaborator:opacity-100 transition-opacity hover:bg-red-600"
+                      >
+                        <X className="w-2 h-2" strokeWidth="2" />
+                      </button>
                     </div>
                   ))}
                 </div>
