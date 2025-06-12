@@ -256,11 +256,11 @@ const InboxPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <InboxTopBar 
-              onToggleSidebar={handleToggleSidebar} 
-              searchQuery={searchQuery}
-              onSearchChange={handleSearchChange}
-            />
+            <div className="border-b border-border px-4 py-2">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-base">Inbox</span>
+              </div>
+            </div>
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">

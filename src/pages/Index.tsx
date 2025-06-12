@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import TaskBoard from '@/components/TaskBoard';
-import PageHeader from '@/components/shared/PageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -31,12 +30,6 @@ const Index = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <PageHeader 
-              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
-              title="Task Board"
-              showAgents={true}
-            />
-
             <div className="flex-1 overflow-hidden">
               <TaskBoard />
             </div>

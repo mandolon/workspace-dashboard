@@ -4,7 +4,6 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TaskDetail from '@/components/TaskDetail';
-import PageHeader from '@/components/shared/PageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const TaskDetailPage = () => {
@@ -59,10 +58,11 @@ const TaskDetailPage = () => {
         
         <ResizablePanel defaultSize={85}>
           <div className="h-screen overflow-hidden flex flex-col">
-            <PageHeader 
-              title="Task Detail"
-              showAgents={true}
-              actions={
+            <div className="border-b border-border px-4 py-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-base">Task Detail</span>
+                </div>
                 <button 
                   onClick={handleBack}
                   className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
@@ -70,8 +70,8 @@ const TaskDetailPage = () => {
                   <ArrowLeft className="w-4 h-4" />
                   <span>{returnToName || 'Back to Tasks'}</span>
                 </button>
-              }
-            />
+              </div>
+            </div>
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">

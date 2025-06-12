@@ -1,16 +1,13 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, MoreHorizontal, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { MoreHorizontal, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import PageHeader from '@/components/shared/PageHeader';
 import Sidebar from '@/components/Sidebar';
 
 const InvoicePage = () => {
-  const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [lineItems, setLineItems] = useState([
     { phase: '', workDescription: '', amount: '' }
@@ -57,11 +54,11 @@ const InvoicePage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <PageHeader 
-              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
-              title="Billing / Invoice"
-              showAgents={true}
-              actions={
+            <div className="border-b border-border px-4 py-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-base">Billing / Invoice</span>
+                </div>
                 <div className="flex items-center gap-2">
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                     + New Task
@@ -70,8 +67,8 @@ const InvoicePage = () => {
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
                 </div>
-              }
-            />
+              </div>
+            </div>
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">
