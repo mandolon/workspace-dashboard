@@ -35,7 +35,8 @@ export const useTaskGroups = () => {
           dueDate: "—",
           assignee: { name: "MH", avatar: "bg-purple-500" },
           hasAttachment: true,
-          status: "redline"
+          status: "redline",
+          archived: false
         }
       ]
     },
@@ -55,7 +56,8 @@ export const useTaskGroups = () => {
           assignee: { name: "AL", avatar: "bg-gray-600" },
           hasAttachment: true,
           collaborators: [{ name: "MP", avatar: "bg-green-500" }],
-          status: "progress"
+          status: "progress",
+          archived: false
         },
         {
           id: 3,
@@ -66,7 +68,8 @@ export const useTaskGroups = () => {
           dueDate: "—",
           assignee: { name: "AL", avatar: "bg-gray-600" },
           hasAttachment: true,
-          status: "progress"
+          status: "progress",
+          archived: false
         },
         {
           id: 4,
@@ -77,7 +80,8 @@ export const useTaskGroups = () => {
           dueDate: "9/22/23, 5...",
           assignee: { name: "AL", avatar: "bg-gray-600" },
           hasAttachment: false,
-          status: "progress"
+          status: "progress",
+          archived: false
         }
       ]
     }
