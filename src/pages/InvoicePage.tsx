@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import PageHeader from '@/components/shared/PageHeader';
 import Sidebar from '@/components/Sidebar';
 
 const InvoicePage = () => {
@@ -32,6 +33,17 @@ const InvoicePage = () => {
   const processingFee = subtotal * 0.035;
   const total = subtotal + processingFee;
 
+  const invoiceActions = (
+    <div className="flex items-center gap-2">
+      <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        + New Task
+      </Button>
+      <button className="p-2 hover:bg-accent rounded">
+        <MoreHorizontal className="w-4 h-4" />
+      </button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
@@ -54,21 +66,12 @@ const InvoicePage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-base">Billing / Invoice</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    + New Task
-                  </Button>
-                  <button className="p-2 hover:bg-accent rounded">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <PageHeader 
+              title="Billing / Invoice"
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+              showAgents={false}
+              actions={invoiceActions}
+            />
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">

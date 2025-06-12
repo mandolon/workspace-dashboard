@@ -1,15 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TaskDetail from '@/components/TaskDetail';
+import PageHeader from '@/components/shared/PageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   console.log('TaskDetailPage - taskId from URL:', taskId);
 
@@ -45,33 +47,43 @@ const TaskDetailPage = () => {
     }
   };
 
+  const backButton = (
+    <button 
+      onClick={handleBack}
+      className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
+    >
+      <ArrowLeft className="w-4 h-4" />
+      <span>{returnToName || 'Back to Tasks'}</span>
+    </button>
+  );
+
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
-        <ResizablePanel defaultSize={15} minSize={15} maxSize={35}>
+        <ResizablePanel 
+          defaultSize={15} 
+          minSize={15} 
+          maxSize={35}
+          collapsedSize={4}
+          collapsible={true}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
+          className="min-h-screen"
+        >
           <div className="h-screen overflow-hidden">
-            <Sidebar isCollapsed={false} />
+            <Sidebar isCollapsed={sidebarCollapsed} />
           </div>
         </ResizablePanel>
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={85}>
-          <div className="h-screen overflow-hidden flex flex-col">
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-base">Task Detail</span>
-                </div>
-                <button 
-                  onClick={handleBack}
-                  className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>{returnToName || 'Back to Tasks'}</span>
-                </button>
-              </div>
-            </div>
+        <ResizablePanel defaultSize={85} className="min-h-screen">
+          <div className="flex flex-col h-screen">
+            <PageHeader 
+              title="Task Detail"
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+              actions={backButton}
+            />
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">

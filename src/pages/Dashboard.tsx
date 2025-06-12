@@ -4,10 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
+import PageHeader from '@/components/shared/PageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -29,10 +31,12 @@ const Dashboard = () => {
           maxSize={35}
           collapsedSize={4}
           collapsible={true}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
           className="min-h-screen"
         >
           <div className="h-screen overflow-hidden">
-            <Sidebar isCollapsed={false} />
+            <Sidebar isCollapsed={sidebarCollapsed} />
           </div>
         </ResizablePanel>
         
@@ -40,11 +44,10 @@ const Dashboard = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <div className="border-b border-border px-4 py-2">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-base">Dashboard</span>
-              </div>
-            </div>
+            <PageHeader 
+              title="Dashboard"
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+            />
 
             <div className="flex-1 bg-background pl-2">
               <div className="h-full flex flex-col">
