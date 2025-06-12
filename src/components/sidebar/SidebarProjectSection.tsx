@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, MoreHorizontal, Edit, Copy, Archive, Trash2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -102,7 +103,7 @@ const SidebarProjectSection = ({
 
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <div className="ml-5 mt-1">
+      <div className="ml-2 mt-1">
         <CollapsibleTrigger className={cn(
           "flex items-center gap-2 px-2 py-1.5 w-full text-left rounded",
           isActive 
@@ -200,3 +201,4 @@ const SidebarProjectSection = ({
 };
 
 export default SidebarProjectSection;
+
