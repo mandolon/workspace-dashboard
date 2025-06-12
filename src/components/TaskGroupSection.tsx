@@ -1,11 +1,23 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import TaskGroupHeader from './task-group/TaskGroupHeader';
 import TaskTable from './task-group/TaskTable';
 import AddTaskButton from './task-group/AddTaskButton';
 import QuickAddTask from './QuickAddTask';
 import { useTaskManagement } from '@/hooks/useTaskManagement.tsx';
-import { Task } from '@/data/taskData';
+
+interface Task {
+  id: number;
+  title: string;
+  project: string;
+  estimatedCompletion: string;
+  dateCreated: string;
+  dueDate: string;
+  assignee: { name: string; avatar: string; fullName?: string } | null;
+  hasAttachment: boolean;
+  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
+  status: string;
+  archived?: boolean;
+}
 
 interface TaskGroup {
   title: string;

@@ -6,24 +6,82 @@ import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { defaultTasks, Task } from '@/data/taskData';
-import { getProjectDisplayName } from '@/data/projectClientData';
 
 const TaskBoard = () => {
   const navigate = useNavigate();
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  const [customTasks, setCustomTasks] = useState<Task[]>([]);
-  const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
+  const [customTasks, setCustomTasks] = useState<any[]>([]);
+  const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
+
+  const defaultTaskGroups = [
+    {
+      title: "TASK/ REDLINE",
+      count: 1,
+      color: "bg-red-500",
+      status: "redline",
+      tasks: [
+        {
+          id: 1,
+          title: "Planning set finalized, set up CD's",
+          project: "Piner Haus Garage",
+          estimatedCompletion: "—",
+          dateCreated: "8/10/22",
+          dueDate: "—",
+          assignee: { name: "MH", avatar: "bg-purple-500" },
+          hasAttachment: true,
+          status: "redline"
+        }
+      ]
+    },
+    {
+      title: "PROGRESS/ UPDATE",
+      count: 3,
+      color: "bg-blue-500",
+      status: "progress",
+      tasks: [
+        {
+          id: 2,
+          title: "Update - 12.27.23",
+          project: "Rathbun - USFS Cabin",
+          estimatedCompletion: "—",
+          dateCreated: "12/27/23",
+          dueDate: "—",
+          assignee: { name: "AL", avatar: "bg-gray-600" },
+          hasAttachment: true,
+          collaborators: [{ name: "MP", avatar: "bg-green-500" }],
+          status: "progress"
+        },
+        {
+          id: 3,
+          title: "Update 12.9.23",
+          project: "Ogden - Thew - 2709 T Street",
+          estimatedCompletion: "—",
+          dateCreated: "12/9/23",
+          dueDate: "—",
+          assignee: { name: "AL", avatar: "bg-gray-600" },
+          hasAttachment: true,
+          status: "progress"
+        },
+        {
+          id: 4,
+          title: "Alternate Cabin Design",
+          project: "Rathbun - USFS Cabin",
+          estimatedCompletion: "—",
+          dateCreated: "9/13/23",
+          dueDate: "9/22/23, 5...",
+          assignee: { name: "AL", avatar: "bg-gray-600" },
+          hasAttachment: false,
+          status: "progress"
+        }
+      ]
+    }
+  ];
 
   // Combine default tasks with custom tasks and group by status, excluding archived tasks
   const getTaskGroups = () => {
-    const allTasks = [...defaultTasks, ...customTasks]
-      .filter(task => !task.archived)
-      .map(task => ({
-        ...task,
-        project: getProjectDisplayName(task.projectId)
-      }));
+    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks]
+      .filter(task => !task.archived); // Filter out archived tasks
     
     const groupedTasks = {
       redline: allTasks.filter(task => task.status === 'redline'),
@@ -68,23 +126,7 @@ const TaskBoard = () => {
 
   const handleCreateTask = (taskData: any) => {
     console.log('Creating task:', taskData);
-    
-    // Create new task with proper structure
-    const newTask: Task = {
-      id: Date.now(),
-      title: taskData.title,
-      projectId: taskData.projectId || 'unknown',
-      estimatedCompletion: taskData.estimatedCompletion || '—',
-      dateCreated: taskData.dateCreated,
-      dueDate: taskData.dueDate || '—',
-      assignee: taskData.assignee,
-      hasAttachment: taskData.hasAttachment || false,
-      collaborators: taskData.collaborators || [],
-      status: taskData.status,
-      archived: false
-    };
-    
-    setCustomTasks(prev => [newTask, ...prev]);
+    setCustomTasks(prev => [taskData, ...prev]);
   };
 
   const handleQuickAddSave = (taskData: any) => {
@@ -98,7 +140,7 @@ const TaskBoard = () => {
 
   const handleTaskArchive = (taskId: number) => {
     // Find the task in either default tasks or custom tasks
-    const allTasks = [...defaultTasks, ...customTasks];
+    const allTasks = [...defaultTaskGroups.flatMap(group => group.tasks), ...customTasks];
     const taskToArchive = allTasks.find(task => task.id === taskId);
     
     if (taskToArchive) {
