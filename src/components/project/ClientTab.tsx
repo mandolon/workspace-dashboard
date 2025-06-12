@@ -54,36 +54,38 @@ const ClientTab = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const primaryClientFields = [
+  const clientInformationFields = [
     {
       label: 'Client ID',
       value: formData.clientId,
-      readOnly: true
+      readOnly: true,
+      span: 'full' as const
     },
     {
-      label: 'First Name',
+      label: 'Primary First Name',
       value: formData.firstName,
-      onChange: (value: string) => handleInputChange('firstName', value)
+      onChange: (value: string) => handleInputChange('firstName', value),
+      span: 'half' as const
     },
     {
-      label: 'Last Name',
-      value: formData.lastName,
-      onChange: (value: string) => handleInputChange('lastName', value)
-    }
-  ];
-
-  const secondaryClientFields = [
-    {
-      label: 'First Name',
+      label: 'Secondary First Name',
       value: formData.secondaryFirstName,
       onChange: (value: string) => handleInputChange('secondaryFirstName', value),
-      placeholder: 'Optional secondary client first name'
+      placeholder: 'Optional',
+      span: 'half' as const
     },
     {
-      label: 'Last Name',
+      label: 'Primary Last Name',
+      value: formData.lastName,
+      onChange: (value: string) => handleInputChange('lastName', value),
+      span: 'half' as const
+    },
+    {
+      label: 'Secondary Last Name',
       value: formData.secondaryLastName,
       onChange: (value: string) => handleInputChange('secondaryLastName', value),
-      placeholder: 'Optional secondary client last name'
+      placeholder: 'Optional',
+      span: 'half' as const
     }
   ];
 
@@ -161,13 +163,8 @@ const ClientTab = () => {
       {/* Information Sections */}
       <div className="space-y-3">
         <InformationSection
-          title="Primary Client Information"
-          fields={primaryClientFields}
-        />
-
-        <InformationSection
-          title="Secondary Client Information"
-          fields={secondaryClientFields}
+          title="Client Information"
+          fields={clientInformationFields}
         />
 
         <InformationSection
