@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ProjectPage from "./pages/ProjectPage";
+import TaskDetailPage from "./pages/TaskDetailPage";
 import InboxPage from "./pages/InboxPage";
 import TeamsPage from "./pages/TeamsPage";
 import InvoicePage from "./pages/InvoicePage";
@@ -45,6 +46,7 @@ const App = () => {
                 <Route path="/tasks" element={<TasksPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/project/:projectId" element={<ProjectPage />} />
+                <Route path="/task/:taskId" element={<TaskDetailPage />} />
                 <Route path="/inbox" element={<InboxPage />} />
                 <Route path="/teams" element={<TeamsPage />} />
                 <Route path="/invoices" element={<InvoicePage />} />

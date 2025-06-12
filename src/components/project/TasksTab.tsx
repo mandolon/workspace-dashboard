@@ -1,13 +1,16 @@
 
 import React from 'react';
-import { Edit } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Edit, MoreHorizontal } from 'lucide-react';
 
 interface TasksTabProps {
   projectName: string;
-  onTaskClick?: (task: any) => void;
 }
 
-const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
+const TasksTab = ({ projectName }: TasksTabProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const getRandomColor = (name: string) => {
     const colors = [
       'bg-red-500',
@@ -47,7 +50,6 @@ const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
     {
       id: 1,
       title: "Planning set finalized, set up CD's",
-      project: projectName,
       dateCreated: "Jan 12, 2023",
       dueDate: "June 15",
       assignee: { name: "MP", avatar: "bg-blue-500" },
@@ -57,7 +59,6 @@ const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
     {
       id: 2,
       title: "Update - 12.27.23",
-      project: projectName,
       dateCreated: "Jan 12, 2023",
       dueDate: "June 15",
       assignee: { name: "MP", avatar: "bg-blue-500" },
@@ -67,7 +68,6 @@ const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
     {
       id: 3,
       title: "Update 12.9.23",
-      project: projectName,
       dateCreated: "Jan 12, 2023",
       dueDate: "June 15",
       assignee: { name: "MP", avatar: "bg-blue-500" },
@@ -77,7 +77,6 @@ const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
     {
       id: 4,
       title: "Alternate Cabin Design",
-      project: projectName,
       dateCreated: "Jan 12, 2023",
       dueDate: "June 15",
       assignee: { name: "MP", avatar: "bg-green-500" },
@@ -118,9 +117,14 @@ const TasksTab = ({ projectName, onTaskClick }: TasksTabProps) => {
   };
 
   const handleTaskClick = (task: any) => {
-    if (onTaskClick) {
-      onTaskClick(task);
-    }
+    // Navigate to task detail with state indicating we came from a project's tasks tab
+    navigate(`/task/${task.id}`, {
+      state: {
+        returnTo: location.pathname,
+        returnToName: `${projectName} - Tasks`,
+        returnToTab: 'tasks' // Add the tab information
+      }
+    });
   };
 
   return (
