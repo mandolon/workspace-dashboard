@@ -84,6 +84,12 @@ const TaskGroupSection = ({
     setEditingValue(task.title);
   };
 
+  const handleEditClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingTaskId(task.id);
+    setEditingValue(task.title);
+  };
+
   const handleSaveEdit = (taskId: number) => {
     // Here you would typically call an update function
     console.log(`Updating task ${taskId} with new title: ${editingValue}`);
@@ -163,11 +169,16 @@ const TaskGroupSection = ({
                       </div>
                     ) : (
                       <div>
-                        <div 
-                          className="font-medium text-xs cursor-text hover:bg-accent/30 rounded px-1 py-0.5 -mx-1"
-                          onClick={(e) => handleTaskNameClick(task, e)}
-                        >
-                          {task.title}
+                        <div className="flex items-center gap-1 group/title">
+                          <div className="font-medium text-xs">
+                            {task.title}
+                          </div>
+                          <button
+                            onClick={(e) => handleEditClick(task, e)}
+                            className="opacity-0 group-hover/title:opacity-100 p-0.5 hover:bg-accent rounded transition-opacity"
+                          >
+                            <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
+                          </button>
                         </div>
                         <div className="text-xs text-muted-foreground">{task.project}</div>
                       </div>
