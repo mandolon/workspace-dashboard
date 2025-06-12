@@ -16,7 +16,7 @@ const ProjectTab = () => {
     <div className="h-full flex flex-col">
       {/* Project Actions Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
-        <div className="max-w-4xl mx-auto flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2">
           {/* Right side - Agents and Actions */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
@@ -34,10 +34,8 @@ const ProjectTab = () => {
       {/* Scrollable Content */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="p-4 space-y-4 max-w-4xl mx-auto">
+          <div className="p-4 space-y-4">
             {form.sections}
-            {/* Add some padding at the bottom to ensure last item is visible */}
-            <div className="h-20" />
           </div>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
@@ -45,7 +43,7 @@ const ProjectTab = () => {
 
       {/* Fixed Save Button - Always Visible */}
       <div className="flex-shrink-0 p-4 border-t border-border bg-background/95 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto flex justify-end">
+        <div className="flex justify-end">
           <Button onClick={form.handleSave} className="px-6 py-2">
             Save Changes
           </Button>
