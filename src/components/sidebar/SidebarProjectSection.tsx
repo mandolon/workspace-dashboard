@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { ChevronDown, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, ChevronRight, MoreHorizontal, Edit, Copy, Archive, Trash2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -130,14 +130,19 @@ const SidebarProjectSection = ({
                   </ContextMenuTrigger>
                   <ContextMenuContent className="w-56">
                     <ContextMenuItem onClick={() => handleMenuAction('rename', project)}>
+                      <Edit className="w-4 h-4 mr-2" />
                       Rename
                     </ContextMenuItem>
                     <ContextMenuItem onClick={() => handleMenuAction('duplicate', project)}>
+                      <Copy className="w-4 h-4 mr-2" />
                       Duplicate
                     </ContextMenuItem>
                     <ContextMenuSeparator />
                     <ContextMenuSub>
-                      <ContextMenuSubTrigger>Move to</ContextMenuSubTrigger>
+                      <ContextMenuSubTrigger>
+                        <ArrowRight className="w-4 h-4 mr-2" />
+                        Move to
+                      </ContextMenuSubTrigger>
                       <ContextMenuSubContent>
                         {title !== 'in Progress' && (
                           <ContextMenuItem onClick={() => handleMenuAction('move-to-progress', project)}>
@@ -158,12 +163,14 @@ const SidebarProjectSection = ({
                     </ContextMenuSub>
                     <ContextMenuSeparator />
                     <ContextMenuItem onClick={() => handleMenuAction('archive', project)}>
+                      <Archive className="w-4 h-4 mr-2" />
                       Archive
                     </ContextMenuItem>
                     <ContextMenuItem 
                       className="text-red-600 focus:text-red-600" 
                       onClick={() => handleMenuAction('delete', project)}
                     >
+                      <Trash2 className="w-4 h-4 mr-2" />
                       Delete
                     </ContextMenuItem>
                   </ContextMenuContent>
