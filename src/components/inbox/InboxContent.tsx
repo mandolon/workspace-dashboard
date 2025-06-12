@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
 import InboxHeader from './InboxHeader';
 import InboxToolbar from './InboxToolbar';
@@ -23,7 +23,7 @@ interface InboxContentProps {
   onPageChange: (page: number) => void;
 }
 
-const InboxContent = ({
+const InboxContent = React.memo(({
   selectedEmails,
   selectedEmail,
   activeTab,
@@ -39,12 +39,19 @@ const InboxContent = ({
   onTabChange,
   onPageChange,
 }: InboxContentProps) => {
-  if (selectedEmail && currentEmail) {
-    return (
-      <div className="h-full">
-        <EmailDetail email={currentEmail} onBack={onBackToList} />
-      </div>
-    );
+  const emailDetailContent = useMemo(() => {
+    if (selectedEmail && currentEmail) {
+      return (
+        <div className="h-full">
+          <EmailDetail email={currentEmail} onBack={onBackToList} />
+        </div>
+      );
+    }
+    return null;
+  }, [selectedEmail, currentEmail, onBackToList]);
+
+  if (emailDetailContent) {
+    return emailDetailContent;
   }
 
   return (
@@ -70,6 +77,8 @@ const InboxContent = ({
       />
     </div>
   );
-};
+});
+
+InboxContent.displayName = 'InboxContent';
 
 export default InboxContent;
