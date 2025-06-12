@@ -38,10 +38,13 @@ const WhiteboardsHeader = ({
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-semibold">Recents</h1>
-          <Button onClick={handleCreateWhiteboard} className="gap-2">
-            <Plus className="w-4 h-4" />
-            Create New Whiteboard
-          </Button>
+          <button 
+            onClick={handleCreateWhiteboard}
+            className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+          >
+            <Plus className="w-3 h-3" strokeWidth="2" />
+            <span>Create New Whiteboard</span>
+          </button>
         </div>
         
         <div className="flex items-center justify-between">

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Plus, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 
 interface TimesheetsHeaderProps {
@@ -19,10 +18,13 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-semibold">Timesheets</h1>
-          <Button onClick={onAddTimeEntry} className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Time Entry
-          </Button>
+          <button 
+            onClick={onAddTimeEntry}
+            className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+          >
+            <Plus className="w-3 h-3" strokeWidth="2" />
+            <span>Add Time Entry</span>
+          </button>
         </div>
         
         <div className="flex items-center justify-between">
