@@ -69,7 +69,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: formData.projectAddress,
       city: formData.city,
       state: formData.state,
-      clientId: formData.clientId,
     };
     
     updateClientData(projectId, updatedClientData);
