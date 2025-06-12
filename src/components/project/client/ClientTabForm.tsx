@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getClientData, updateClientData } from '@/data/projectClientData';
@@ -23,7 +22,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
-      clientId: clientData.clientId,
+      projectId: projectId || '',
       billingAddress: clientData.projectAddress,
       billingCity: clientData.city,
       billingState: clientData.state,
@@ -48,7 +47,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       projectAddress: clientData.projectAddress,
       city: clientData.city,
       state: clientData.state,
-      clientId: clientData.clientId,
+      projectId: projectId || '',
       billingAddress: clientData.projectAddress,
       billingCity: clientData.city,
       billingState: clientData.state,
@@ -93,8 +92,8 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
 
   const clientInformationFields = [
     {
-      label: 'Client ID',
-      value: formData.clientId,
+      label: 'Project ID',
+      value: formData.projectId,
       readOnly: true,
       span: 'full' as const
     },
