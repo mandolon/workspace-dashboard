@@ -1,20 +1,29 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getProjectDisplayName, getClientData } from '@/data/projectClientData';
 
-const ProjectHeader = () => {
+interface ProjectHeaderProps {
+  refreshTrigger?: number;
+}
+
+const ProjectHeader = ({ refreshTrigger }: ProjectHeaderProps) => {
   const { projectId } = useParams();
-  const clientData = getClientData(projectId);
+  const [displayName, setDisplayName] = useState('');
+
+  // Update display name when project changes or when data is refreshed
+  useEffect(() => {
+    setDisplayName(getProjectDisplayName(projectId));
+  }, [projectId, refreshTrigger]);
 
   return (
     <div className="border-b border-border px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-base">{getProjectDisplayName(projectId)}</span>
+            <span className="font-semibold text-base">{displayName}</span>
           </div>
         </div>
         
