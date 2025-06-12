@@ -299,7 +299,7 @@ const TaskGroupSection = ({
                           <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-48 bg-popover">
+                      <DropdownMenuContent className="w-40 bg-popover">
                         {availablePeople.map((person) => (
                           <DropdownMenuItem
                             key={person.name}
@@ -340,7 +340,7 @@ const TaskGroupSection = ({
                           <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-48 bg-popover">
+                      <DropdownMenuContent className="w-40 bg-popover">
                         {availablePeople
                           .filter(person => 
                             person.name !== task.assignee?.name && 
@@ -355,7 +355,7 @@ const TaskGroupSection = ({
                               <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(person.name)}`}>
                                 {person.name}
                               </div>
-                              <span>Add {person.name} as collaborator</span>
+                              <span>{person.name}</span>
                             </DropdownMenuItem>
                           ))}
                       </DropdownMenuContent>
