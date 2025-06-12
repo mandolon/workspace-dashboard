@@ -470,7 +470,7 @@ const TaskGroupSection = ({
               defaultStatus={group.status}
             />
           ) : (
-            <div className="px-4 py-2">
+            <div className="px-4 py-2 pl-8">
               <button 
                 onClick={() => onSetShowQuickAdd(group.status)}
                 className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
