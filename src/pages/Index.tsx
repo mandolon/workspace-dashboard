@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TaskBoard from '@/components/TaskBoard';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -64,6 +66,7 @@ const Index = () => {
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
+      <Toaster />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import TaskStatusIcon from './TaskStatusIcon';
 import QuickAddTask from './QuickAddTask';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 interface Task {
   id: number;
@@ -50,6 +51,7 @@ const TaskGroupSection = ({
   const [editingValue, setEditingValue] = useState('');
   const [tasks, setTasks] = useState<Task[]>(group.tasks);
   const [isExpanded, setIsExpanded] = useState(true);
+  const { toast } = useToast();
 
   // Available people to assign with full names
   const availablePeople = [
@@ -181,6 +183,9 @@ const TaskGroupSection = ({
   const handleTaskStatusClick = (taskId: number) => {
     const task = tasks.find(t => t.id === taskId);
     if (task && task.status !== 'completed') {
+      // Store previous status for undo functionality
+      const previousStatus = task.status;
+      
       // Mark as completed and archive
       setTasks(prevTasks => 
         prevTasks.map(task => 
@@ -195,6 +200,22 @@ const TaskGroupSection = ({
         onTaskArchive(taskId);
       }
       
+      // Show undo toast
+      toast({
+        title: "Task completed",
+        description: `"${task.title}" has been marked as completed.`,
+        action: (
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => handleUndoComplete(taskId, previousStatus)}
+          >
+            Undo
+          </Button>
+        ),
+        duration: 5000,
+      });
+      
       console.log(`Completed and archived task ${taskId}`);
     } else if (task && task.status === 'completed') {
       // Unarchive and set back to progress
@@ -207,6 +228,25 @@ const TaskGroupSection = ({
       );
       console.log(`Unarchived task ${taskId}`);
     }
+  };
+
+  const handleUndoComplete = (taskId: number, previousStatus: string) => {
+    // Restore the task to its previous status
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId 
+          ? { ...task, status: previousStatus, archived: false }
+          : task
+      )
+    );
+    
+    toast({
+      title: "Task restored",
+      description: "Task has been restored to its previous status.",
+      duration: 3000,
+    });
+    
+    console.log(`Undid completion for task ${taskId}, restored to ${previousStatus}`);
   };
 
   // Filter out archived tasks from display
@@ -238,16 +278,16 @@ const TaskGroupSection = ({
           <Table>
             <TableHeader>
               <TableRow className="border-b border-border">
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[45%]">Name</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[35%]">Name</TableHead>
                 <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assignee</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[22%]">Date Created</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Date Created</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[22%]">Files</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {visibleTasks.map((task) => (
                 <TableRow key={task.id} className="hover:bg-accent/50 group">
-                  <TableCell className="py-2 w-[45%]">
+                  <TableCell className="py-2 w-[35%]">
                     <div 
                       className="flex items-center gap-2 cursor-pointer" 
                       onClick={() => onTaskClick(task)}
@@ -393,11 +433,14 @@ const TaskGroupSection = ({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="py-2 w-[8%]">
+                  <TableCell className="text-xs text-muted-foreground py-2 w-[18%]">
+                    {formatDate(task.dateCreated)}
+                  </TableCell>
+                  <TableCell className="py-2 w-[22%]">
                     <div className="flex items-center gap-1">
                       {task.hasAttachment && (
-                        <div className="w-4 h-4 bg-gray-100 rounded flex items-center justify-center">
-                          <svg className="w-2.5 h-2.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <div className="w-3 h-3 bg-gray-100 rounded flex items-center justify-center">
+                          <svg className="w-2 h-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         </div>
@@ -409,12 +452,9 @@ const TaskGroupSection = ({
                           // Handle file attachment
                         }}
                       >
-                        <Plus className="w-2.5 h-2.5" strokeWidth="2" />
+                        <Plus className="w-2 h-2" strokeWidth="2" />
                       </button>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground py-2 w-[22%]">
-                    {formatDate(task.dateCreated)}
                   </TableCell>
                 </TableRow>
               ))}
