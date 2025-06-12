@@ -9,17 +9,17 @@ import { Toaster } from '@/components/ui/toaster';
 const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  const handleToggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
   return (
     <div className="min-h-screen w-full bg-background flex">
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel 
-          defaultSize={15} 
-          minSize={15} 
-          maxSize={35}
-          collapsedSize={4}
-          collapsible={true}
-          onCollapse={() => setSidebarCollapsed(true)}
-          onExpand={() => setSidebarCollapsed(false)}
+          defaultSize={sidebarCollapsed ? 4 : 15} 
+          minSize={4} 
+          maxSize={sidebarCollapsed ? 4 : 35}
           className="min-h-screen"
         >
           <div className="h-screen overflow-hidden">
@@ -29,10 +29,10 @@ const Index = () => {
         
         <ResizableHandle withHandle />
         
-        <ResizablePanel defaultSize={85} className="min-h-screen">
+        <ResizablePanel defaultSize={sidebarCollapsed ? 96 : 85} className="min-h-screen">
           <div className="flex flex-col h-screen">
             <PageHeader 
-              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+              onToggleSidebar={handleToggleSidebar}
             />
             <div className="flex-1 overflow-hidden">
               <TaskBoard />

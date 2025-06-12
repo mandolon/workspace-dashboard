@@ -24,15 +24,19 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
   };
 
   return (
-    <div className="h-full bg-sidebar border-r border-sidebar-border flex flex-col min-w-0">
+    <div className={`h-full bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-200 ${
+      isCollapsed ? 'w-16' : 'min-w-0'
+    }`}>
       <SidebarHeader isCollapsed={isCollapsed} />
 
       {isCollapsed ? (
-        <SidebarNavigation 
-          isCollapsed={true}
-          isOpen={openSections.mainNav}
-          onToggle={() => toggleSection('mainNav')}
-        />
+        <div className="flex-1 py-2 px-1">
+          <SidebarNavigation 
+            isCollapsed={true}
+            isOpen={openSections.mainNav}
+            onToggle={() => toggleSection('mainNav')}
+          />
+        </div>
       ) : (
         <ScrollArea className="flex-1">
           <div className="py-2">
