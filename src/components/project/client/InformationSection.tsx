@@ -31,6 +31,9 @@ const InformationSection = ({ title, fields }: InformationSectionProps) => {
             const currentField = field;
             const nextFieldData = nextField;
             
+            // Skip the next field in the next iteration
+            fields.splice(index + 1, 1);
+            
             return (
               <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
                 {/* First half field */}
@@ -80,9 +83,6 @@ const InformationSection = ({ title, fields }: InformationSectionProps) => {
                 </div>
               </div>
             );
-          } else if (isHalfSpan && !isNextHalfSpan) {
-            // Skip this field as it was already rendered with the previous one
-            return null;
           } else {
             // Render full-span field normally
             return (
