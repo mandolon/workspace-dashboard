@@ -84,6 +84,18 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
     'Zhechev - 3120 I Street'
   ];
 
+  const createProjectId = (projectName: string) => {
+    // For projects that follow "LastName - Address" format
+    if (projectName.includes(' - ')) {
+      const [lastName, address] = projectName.split(' - ');
+      const lastNamePart = lastName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const addressPart = address.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      return `${lastNamePart}-${addressPart}`;
+    }
+    // For projects that are just addresses (like "1524 Tiverton")
+    return projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  };
+
   return (
     <div className="bg-card border rounded-lg p-4">
       <div className="flex justify-between items-start mb-3">
@@ -101,7 +113,7 @@ const InvoiceDetails = ({ total }: InvoiceDetailsProps) => {
           </SelectTrigger>
           <SelectContent>
             {allProjects.map((project, index) => (
-              <SelectItem key={index} value={project.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
+              <SelectItem key={index} value={createProjectId(project)}>
                 {project}
               </SelectItem>
             ))}
