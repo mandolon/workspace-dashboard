@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, MoreHorizontal, Edit, Copy, Archive, Trash2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -116,7 +117,7 @@ const SidebarProjectSection = ({
           <span className="text-sm truncate">{title}</span>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="ml-4 mt-1 space-y-1">
+          <div className="ml-2 mt-1 space-y-1">
             {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
               const displayName = projectDisplayNames[project] || project;
