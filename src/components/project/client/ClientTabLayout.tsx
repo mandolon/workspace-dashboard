@@ -36,12 +36,12 @@ const ClientTabLayout = ({ formData, onStatusChange, onSave, children }: ClientT
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 min-h-0">
-        <ScrollArea className="h-full w-full">
-          <div className="p-4 pb-0">
-            <div className="space-y-4 max-w-4xl mx-auto">
-              {children}
-            </div>
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-4 space-y-4 max-w-4xl mx-auto">
+            {children}
+            {/* Add some padding at the bottom to ensure last item is visible */}
+            <div className="h-4" />
           </div>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
