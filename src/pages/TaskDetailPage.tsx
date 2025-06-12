@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import TaskDetail from '@/components/TaskDetail';
 
@@ -47,15 +46,6 @@ const TaskDetailPage = () => {
   return (
     <AppLayout>
       <div className="h-full flex flex-col">
-        <div className="flex-shrink-0 p-4 border-b border-border">
-          <button 
-            onClick={handleBack}
-            className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>{returnToName || 'Back to Tasks'}</span>
-          </button>
-        </div>
         <div className="flex-1 min-h-0">
           <TaskDetail 
             isOpen={true} 
