@@ -7,6 +7,7 @@ import TeamsHeader from '@/components/teams/TeamsHeader';
 import TeamsContent from '@/components/teams/TeamsContent';
 
 const TeamsPage = () => {
+  console.log('TeamsPage component is rendering');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (

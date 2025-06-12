@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Search, MoreHorizontal, Mail, Shield } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,6 +12,8 @@ interface TeamMember {
 }
 
 const TeamsContent = () => {
+  console.log('TeamsContent component is rendering');
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([
     {
