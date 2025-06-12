@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FileText, Plus, Settings, Download, CheckCircle, Clock, Send } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,6 +26,7 @@ const InvoiceTabs = ({
   const invoices = [
     {
       id: "RH15465",
+      lastName: "Johnson",
       projectAddress: "123 Oak Street",
       status: "Paid",
       amount: "$304.65",
@@ -34,6 +34,7 @@ const InvoiceTabs = ({
     },
     {
       id: "RH65842",
+      lastName: "Smith",
       projectAddress: "456 Maple Avenue",
       status: "Sent",
       amount: "$450.00",
@@ -41,6 +42,7 @@ const InvoiceTabs = ({
     },
     {
       id: "RH78123",
+      lastName: "Williams",
       projectAddress: "789 Pine Road",
       status: "Unpaid",
       amount: "$750.25",
@@ -48,6 +50,7 @@ const InvoiceTabs = ({
     },
     {
       id: "RH89456",
+      lastName: "Brown",
       projectAddress: "321 Elm Drive",
       status: "Paid",
       amount: "$525.80",
@@ -55,6 +58,7 @@ const InvoiceTabs = ({
     },
     {
       id: "RH91234",
+      lastName: "Davis",
       projectAddress: "654 Cedar Lane",
       status: "Sent",
       amount: "$200.00",
@@ -67,24 +71,24 @@ const InvoiceTabs = ({
       <div className="space-y-0.5">
         {/* Header Row */}
         <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
-          <div className="col-span-2">Invoice</div>
+          <div className="col-span-2">Last Name</div>
           <div className="col-span-3">Project Address</div>
           <div className="col-span-2">Status</div>
           <div className="col-span-2">Amount</div>
-          <div className="col-span-3">Date Created</div>
+          <div className="col-span-2">Date Created</div>
+          <div className="col-span-1">Invoice</div>
         </div>
         
         {/* Invoice Rows */}
         {filteredInvoices.map((invoice, index) => (
           <div key={index} className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
-            <div className="col-span-2">
-              <span className="text-blue-600 hover:underline">{invoice.id}</span>
-            </div>
+            <div className="col-span-2 text-muted-foreground">{invoice.lastName}</div>
             <div className="col-span-3 text-muted-foreground">{invoice.projectAddress}</div>
             <div className="col-span-2 text-muted-foreground">{invoice.status}</div>
             <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
-            <div className="col-span-3 flex items-center justify-between">
-              <span className="text-muted-foreground">{invoice.dateCreated}</span>
+            <div className="col-span-2 text-muted-foreground">{invoice.dateCreated}</div>
+            <div className="col-span-1 flex items-center justify-between">
+              <span className="text-blue-600 hover:underline">{invoice.id}</span>
               <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
                 <Download className="w-3 h-3 text-muted-foreground" />
               </button>
