@@ -14,7 +14,7 @@ const TaskDetailPage = () => {
   console.log('TaskDetailPage - taskId from URL:', taskId);
 
   // Get navigation state passed from previous page
-  const { returnTo, returnToName } = location.state || {};
+  const { returnTo, returnToName, returnToTab } = location.state || {};
 
   // Mock task data - in a real app this would come from an API or context
   const task = {
@@ -33,8 +33,12 @@ const TaskDetailPage = () => {
 
   const handleBack = () => {
     if (returnTo) {
-      // Navigate back to the specific page we came from
-      navigate(returnTo);
+      // Navigate back to the specific page we came from, preserving the tab state
+      navigate(returnTo, {
+        state: {
+          returnToTab: returnToTab
+        }
+      });
     } else {
       // Fallback to tasks page if no return path is specified
       navigate('/tasks');
