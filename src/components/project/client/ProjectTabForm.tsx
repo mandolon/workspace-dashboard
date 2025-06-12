@@ -15,6 +15,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   const clientData = getClientData(projectId);
 
   const [formData, setFormData] = useState({
+    projectId: clientData.projectId,
     projectName: '',
     projectScope: '',
     projectNotes: '',
@@ -45,6 +46,13 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   };
 
   const projectInformationFields = [
+    {
+      label: 'Project ID',
+      value: formData.projectId,
+      readOnly: true,
+      span: 'full' as const,
+      onKeyDown: handleKeyDown
+    },
     {
       label: 'Project Name',
       value: formData.projectName,
