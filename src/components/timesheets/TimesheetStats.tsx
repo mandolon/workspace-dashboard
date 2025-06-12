@@ -20,14 +20,14 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
   const completionPercentage = Math.round((stats.totalHours / stats.targetHours) * 100);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs font-medium">Total Hours</CardTitle>
-          <Clock className="w-4 h-4 text-muted-foreground" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
+          <CardTitle className="text-xs font-medium text-muted-foreground">Total Hours</CardTitle>
+          <Clock className="w-3 h-3 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{stats.totalHours}h</div>
+        <CardContent className="px-3 pb-3">
+          <div className="text-lg font-bold">{stats.totalHours}h</div>
           <p className="text-xs text-muted-foreground">
             {completionPercentage}% of target
           </p>
@@ -35,12 +35,12 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs font-medium">Target Hours</CardTitle>
-          <Target className="w-4 h-4 text-muted-foreground" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
+          <CardTitle className="text-xs font-medium text-muted-foreground">Target Hours</CardTitle>
+          <Target className="w-3 h-3 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{stats.targetHours}h</div>
+        <CardContent className="px-3 pb-3">
+          <div className="text-lg font-bold">{stats.targetHours}h</div>
           <p className="text-xs text-muted-foreground">
             Weekly goal
           </p>
@@ -48,12 +48,12 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs font-medium">Billable Hours</CardTitle>
-          <TrendingUp className="w-4 h-4 text-muted-foreground" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
+          <CardTitle className="text-xs font-medium text-muted-foreground">Billable Hours</CardTitle>
+          <TrendingUp className="w-3 h-3 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{stats.billableHours}h</div>
+        <CardContent className="px-3 pb-3">
+          <div className="text-lg font-bold">{stats.billableHours}h</div>
           <p className="text-xs text-muted-foreground">
             {Math.round((stats.billableHours / stats.totalHours) * 100)}% billable
           </p>
@@ -61,12 +61,12 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs font-medium">Projects</CardTitle>
-          <Calendar className="w-4 h-4 text-muted-foreground" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
+          <CardTitle className="text-xs font-medium text-muted-foreground">Projects</CardTitle>
+          <Calendar className="w-3 h-3 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{stats.projectCount}</div>
+        <CardContent className="px-3 pb-3">
+          <div className="text-lg font-bold">{stats.projectCount}</div>
           <p className="text-xs text-muted-foreground">
             Active this week
           </p>

@@ -25,7 +25,7 @@ const TimesheetsPage = () => {
           onAddTimeEntry={() => setIsAddDialogOpen(true)}
         />
         
-        <div className="flex-1 overflow-hidden p-6 space-y-6">
+        <div className="flex-1 overflow-hidden p-4 space-y-4">
           <TimesheetStats selectedWeek={selectedWeek} refreshTrigger={refreshTrigger} />
           <TimesheetTable selectedWeek={selectedWeek} refreshTrigger={refreshTrigger} />
         </div>

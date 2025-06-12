@@ -16,11 +16,11 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
 
   return (
     <div className="border-b border-border bg-background">
-      <div className="px-6 py-4">
+      <div className="px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold">Timesheets</h1>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold">Timesheets</h1>
+            <div className="flex items-center gap-1">
               <Button
                 variant="outline"
                 size="sm"
@@ -28,9 +28,9 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs font-medium">
+              <div className="flex items-center gap-2 px-2 py-1 bg-muted rounded text-xs">
+                <Calendar className="w-3 h-3 text-muted-foreground" />
+                <span className="font-medium">
                   {format(weekStart, 'MMM d')} - {format(weekEnd, 'MMM d, yyyy')}
                 </span>
               </div>
@@ -51,8 +51,8 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
             </div>
           </div>
           
-          <Button onClick={onAddTimeEntry}>
-            <Plus className="w-4 h-4 mr-2" />
+          <Button onClick={onAddTimeEntry} size="sm">
+            <Plus className="w-4 h-4 mr-1" />
             Add Time Entry
           </Button>
         </div>

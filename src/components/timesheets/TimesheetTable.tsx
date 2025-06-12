@@ -76,17 +76,17 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-2 pt-3 px-3">
         <CardTitle className="text-sm font-semibold">Time Entries</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-3 pb-3">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px] text-xs font-medium text-muted-foreground">Project</TableHead>
-              <TableHead className="w-[180px] text-xs font-medium text-muted-foreground">Task</TableHead>
+              <TableHead className="w-[180px] text-xs font-medium text-muted-foreground h-8">Project</TableHead>
+              <TableHead className="w-[160px] text-xs font-medium text-muted-foreground h-8">Task</TableHead>
               {weekDays.map((day, index) => (
-                <TableHead key={index} className="text-center w-[80px]">
+                <TableHead key={index} className="text-center w-[70px] h-8">
                   <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground font-medium">
                       {format(day, 'EEE')}
@@ -97,41 +97,41 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
                   </div>
                 </TableHead>
               ))}
-              <TableHead className="text-center w-[80px] text-xs font-medium text-muted-foreground">Total</TableHead>
-              <TableHead className="w-[120px] text-xs font-medium text-muted-foreground">Actions</TableHead>
+              <TableHead className="text-center w-[70px] text-xs font-medium text-muted-foreground h-8">Total</TableHead>
+              <TableHead className="w-[100px] text-xs font-medium text-muted-foreground h-8">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {timeEntries.map((entry) => (
               <TableRow key={entry.id}>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium py-2">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${entry.billable ? 'bg-green-500' : 'bg-gray-400'}`} />
                     <span className="text-xs truncate">{entry.project}</span>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-2">
                   <span className="text-xs text-muted-foreground">{entry.task}</span>
                 </TableCell>
                 {weekDays.map((_, dayIndex) => (
-                  <TableCell key={dayIndex} className="text-center">
+                  <TableCell key={dayIndex} className="text-center py-2">
                     <span className="text-xs">
                       {getDayValue(entry, dayIndex) > 0 ? `${getDayValue(entry, dayIndex)}h` : '-'}
                     </span>
                   </TableCell>
                 ))}
-                <TableCell className="text-center font-medium">
+                <TableCell className="text-center font-medium py-2">
                   <span className="text-xs">{getTotalForEntry(entry)}h</span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-2">
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                       <Play className="w-3 h-3" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                       <Edit className="w-3 h-3" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                       <Trash2 className="w-3 h-3" />
                     </Button>
                   </div>
