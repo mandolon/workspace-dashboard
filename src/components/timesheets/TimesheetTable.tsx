@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -125,9 +124,6 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
                 </TableCell>
                 <TableCell className="py-2">
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      <Play className="w-3 h-3" />
-                    </Button>
                     <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                       <Edit className="w-3 h-3" />
                     </Button>
