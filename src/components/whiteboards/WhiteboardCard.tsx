@@ -8,6 +8,7 @@ interface Whiteboard {
   type: string;
   lastModified: string;
   thumbnail: string;
+  projectName: string;
 }
 
 interface WhiteboardCardProps {
@@ -23,6 +24,9 @@ const WhiteboardCard = ({ whiteboard }: WhiteboardCardProps) => {
       <div className="space-y-1">
         <div className="text-sm font-medium truncate group-hover:text-primary transition-colors">
           {whiteboard.title}
+        </div>
+        <div className="text-xs text-muted-foreground truncate">
+          {whiteboard.projectName}
         </div>
         <div className="text-xs text-muted-foreground">
           {whiteboard.lastModified}

@@ -7,7 +7,7 @@ interface WhiteboardsGridProps {
 }
 
 const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
-  // Mock data for whiteboards
+  // Mock data for whiteboards with project associations
   const whiteboards = [
     {
       id: '1',
@@ -15,6 +15,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '2 hours ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Adams • 1063 40th Street',
     },
     {
       id: '2',
@@ -22,6 +23,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '1 day ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Ogden-Thew • 2709 T Street',
     },
     {
       id: '3',
@@ -29,6 +31,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '3 days ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Henderson • 1524 Tiverton',
     },
     {
       id: '4',
@@ -36,6 +39,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '1 week ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Peterson • 2015 10th Street',
     },
     {
       id: '5',
@@ -43,6 +47,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '2 weeks ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Johnson • 2200 I Street',
     },
     {
       id: '6',
@@ -50,6 +55,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
       type: 'pdf',
       lastModified: '1 month ago',
       thumbnail: '/placeholder.svg',
+      projectName: 'Adamo • 6605 S. Land Park Dr.',
     },
   ];
 
@@ -62,6 +68,7 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
               <div className="w-8 h-8 bg-muted rounded flex-shrink-0" />
               <div className="flex-1">
                 <div className="font-medium text-sm">{whiteboard.title}</div>
+                <div className="text-xs text-muted-foreground">{whiteboard.projectName}</div>
                 <div className="text-xs text-muted-foreground">{whiteboard.lastModified}</div>
               </div>
             </div>
