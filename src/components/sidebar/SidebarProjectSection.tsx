@@ -112,7 +112,7 @@ const SidebarProjectSection = ({
                   <ContextMenuTrigger asChild>
                     <div
                       ref={contextMenuRef}
-                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group ml-5"
+                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group"
                       onClick={() => handleProjectClick(project)}
                     >
                       <div className="w-1.5 h-1.5 bg-muted-foreground rounded-sm flex-shrink-0"></div>
