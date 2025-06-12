@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -17,9 +16,6 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">•</span>
           <span className="text-xs text-muted-foreground">2717 58th Street</span>
-        </div>
-        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
-          REDLINE / TO DO
         </div>
       </div>
 
