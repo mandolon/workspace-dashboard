@@ -4,13 +4,11 @@ import { Users } from 'lucide-react';
 
 const InvoiceHeader = () => {
   return (
-    <div className="border-b border-border px-4 py-2">
+    <div className="border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-base">PinerWorks</span>
-            <span className="text-muted-foreground">/</span>
-            <span className="font-semibold text-base">Billing / Invoice</span>
+            <span className="font-semibold text-lg">Billing & Invoice</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
