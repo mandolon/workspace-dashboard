@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Textarea } from '@/components/ui/textarea';
 
 interface TaskDetailFormProps {
   task: {
@@ -28,10 +29,13 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         <h1 className="text-base font-semibold mb-3">{task.title}</h1>
       </div>
 
-      {/* Add Description */}
-      <div className="flex items-center gap-2 mb-3">
-        <input type="checkbox" className="w-3 h-3" />
-        <span className="text-xs text-muted-foreground">Add description</span>
+      {/* Description */}
+      <div className="space-y-2">
+        <label className="text-xs text-muted-foreground">Description</label>
+        <Textarea 
+          placeholder="Add description..."
+          className="min-h-[80px] text-xs"
+        />
       </div>
 
       {/* Form Fields */}
