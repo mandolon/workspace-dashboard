@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, Calculator, MessageSquare, Settings } from 'lucide-react';
+import { FileText, Plus, Settings } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import InvoiceDetails from './InvoiceDetails';
 import InvoiceLineItems from './InvoiceLineItems';
@@ -25,22 +25,22 @@ const InvoiceTabs = ({
   total 
 }: InvoiceTabsProps) => {
   return (
-    <Tabs defaultValue="invoice" className="flex-1 flex flex-col">
+    <Tabs defaultValue="invoices" className="flex-1 flex flex-col">
       <div className="border-b border-border px-4 flex-shrink-0">
         <TabsList className="h-auto p-0 bg-transparent">
           <TabsTrigger 
-            value="invoice" 
+            value="invoices" 
             className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
           >
             <FileText className="w-3 h-3" />
-            Invoice
+            Invoices
           </TabsTrigger>
           <TabsTrigger 
-            value="history" 
+            value="new-invoice" 
             className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
           >
-            <Calculator className="w-3 h-3" />
-            History
+            <Plus className="w-3 h-3" />
+            New Invoice
           </TabsTrigger>
           <TabsTrigger 
             value="settings" 
@@ -49,19 +49,16 @@ const InvoiceTabs = ({
             <Settings className="w-3 h-3" />
             Settings
           </TabsTrigger>
-          <TabsTrigger 
-            value="chat" 
-            className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
-          >
-            <MessageSquare className="w-3 h-3" />
-            Chat
-          </TabsTrigger>
         </TabsList>
       </div>
 
       {/* Tab Contents */}
       <div className="px-4 pt-3 flex-1 overflow-hidden">
-        <TabsContent value="invoice" className="mt-0 h-full">
+        <TabsContent value="invoices" className="mt-0 h-full">
+          <div className="text-center text-muted-foreground">Invoice list coming soon...</div>
+        </TabsContent>
+
+        <TabsContent value="new-invoice" className="mt-0 h-full">
           <div className="space-y-6">
             <InvoiceDetails total={total} />
 
@@ -82,16 +79,8 @@ const InvoiceTabs = ({
           </div>
         </TabsContent>
 
-        <TabsContent value="history" className="mt-0 h-full">
-          <div className="text-center text-muted-foreground">Invoice history coming soon...</div>
-        </TabsContent>
-
         <TabsContent value="settings" className="mt-0 h-full">
           <div className="text-center text-muted-foreground">Invoice settings coming soon...</div>
-        </TabsContent>
-
-        <TabsContent value="chat" className="mt-0 h-full">
-          <div className="text-center text-muted-foreground">Chat functionality coming soon...</div>
         </TabsContent>
       </div>
     </Tabs>
