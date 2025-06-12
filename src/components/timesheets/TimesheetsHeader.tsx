@@ -51,10 +51,13 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
             </div>
           </div>
           
-          <Button onClick={onAddTimeEntry} size="sm">
-            <Plus className="w-4 h-4 mr-1" />
-            Add Time Entry
-          </Button>
+          <button 
+            onClick={onAddTimeEntry}
+            className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-accent/50 transition-colors"
+          >
+            <Plus className="w-3 h-3" strokeWidth="2" />
+            <span>Add Time Entry</span>
+          </button>
         </div>
       </div>
     </div>
