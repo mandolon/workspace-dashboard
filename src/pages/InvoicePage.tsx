@@ -4,10 +4,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import PageHeader from '@/components/shared/PageHeader';
 import Sidebar from '@/components/Sidebar';
 import InvoiceHeader from '@/components/invoice/InvoiceHeader';
-import InvoiceDetails from '@/components/invoice/InvoiceDetails';
-import InvoiceLineItems from '@/components/invoice/InvoiceLineItems';
-import InvoiceTotals from '@/components/invoice/InvoiceTotals';
-import InvoiceSendButton from '@/components/invoice/InvoiceSendButton';
+import InvoiceTabs from '@/components/invoice/InvoiceTabs';
 
 const InvoicePage = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -63,25 +60,14 @@ const InvoicePage = () => {
             <div className="flex-1 bg-background p-4">
               <div className="h-full flex flex-col max-w-6xl mx-auto">
                 <InvoiceHeader />
-
-                <div className="space-y-6">
-                  <InvoiceDetails total={total} />
-
-                  <div className="bg-card border rounded-lg p-6">
-                    <InvoiceLineItems
-                      lineItems={lineItems}
-                      onAddLineItem={addLineItem}
-                      onUpdateLineItem={updateLineItem}
-                    />
-                    <InvoiceTotals
-                      subtotal={subtotal}
-                      processingFee={processingFee}
-                      total={total}
-                    />
-                  </div>
-
-                  <InvoiceSendButton />
-                </div>
+                <InvoiceTabs
+                  lineItems={lineItems}
+                  onAddLineItem={addLineItem}
+                  onUpdateLineItem={updateLineItem}
+                  subtotal={subtotal}
+                  processingFee={processingFee}
+                  total={total}
+                />
               </div>
             </div>
           </div>
