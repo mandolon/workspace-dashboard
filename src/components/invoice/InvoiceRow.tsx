@@ -18,11 +18,27 @@ interface InvoiceRowProps {
 }
 
 const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
+  const calculateOverdueDays = (dateCreated: string) => {
+    const created = new Date(dateCreated);
+    const today = new Date();
+    const diffTime = today.getTime() - created.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Assuming invoices are due 30 days after creation
+    const overdueDays = diffDays - 30;
+    
+    if (overdueDays <= 0) {
+      return "Not overdue";
+    }
+    
+    return `${overdueDays} days`;
+  };
+
   return (
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group px-4">
       <div className="col-span-2 text-muted-foreground">{invoice.lastName}</div>
       <div className="col-span-3 text-muted-foreground">{invoice.projectAddress}</div>
-      <div className="col-span-2 text-muted-foreground">{invoice.status}</div>
+      <div className="col-span-2 text-muted-foreground">{calculateOverdueDays(invoice.dateCreated)}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.dateCreated}</div>
       <div className="col-span-1 flex items-center justify-between pr-2">
