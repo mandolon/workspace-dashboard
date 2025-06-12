@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Home, 
@@ -26,19 +26,37 @@ interface SidebarNavigationProps {
   onToggle: () => void;
 }
 
-const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationProps) => {
+const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: SidebarNavigationProps) => {
   const navigate = useNavigate();
 
-  const mainNavItems = [
-    { icon: Home, label: 'Home', active: false, onClick: () => navigate('/') },
-    { icon: ClipboardList, label: 'Tasks', active: false, onClick: () => navigate('/tasks') },
-    { icon: Inbox, label: 'Inbox', active: false, onClick: () => navigate('/inbox') },
-    { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
-    { icon: Users, label: 'Teams', active: false, onClick: () => navigate('/teams') },
-    { icon: Receipt, label: 'Invoices', active: false, onClick: () => navigate('/invoices') },
-    { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => navigate('/whiteboards') },
-    { icon: Clock, label: 'Timesheets', active: false, onClick: () => navigate('/timesheets') },
-  ];
+  const handleNavigateHome = useCallback(() => navigate('/'), [navigate]);
+  const handleNavigateTasks = useCallback(() => navigate('/tasks'), [navigate]);
+  const handleNavigateInbox = useCallback(() => navigate('/inbox'), [navigate]);
+  const handleNavigateChat = useCallback(() => {}, []);
+  const handleNavigateTeams = useCallback(() => navigate('/teams'), [navigate]);
+  const handleNavigateInvoices = useCallback(() => navigate('/invoices'), [navigate]);
+  const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
+  const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
+
+  const mainNavItems = useMemo(() => [
+    { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
+    { icon: ClipboardList, label: 'Tasks', active: false, onClick: handleNavigateTasks },
+    { icon: Inbox, label: 'Inbox', active: false, onClick: handleNavigateInbox },
+    { icon: MessageSquare, label: 'Chat', active: false, onClick: handleNavigateChat },
+    { icon: Users, label: 'Teams', active: false, onClick: handleNavigateTeams },
+    { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
+    { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
+    { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
+  ], [
+    handleNavigateHome,
+    handleNavigateTasks,
+    handleNavigateInbox,
+    handleNavigateChat,
+    handleNavigateTeams,
+    handleNavigateInvoices,
+    handleNavigateWhiteboards,
+    handleNavigateTimesheets
+  ]);
 
   if (isCollapsed) {
     return (
@@ -96,6 +114,8 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
       </div>
     </Collapsible>
   );
-};
+});
+
+SidebarNavigation.displayName = 'SidebarNavigation';
 
 export default SidebarNavigation;

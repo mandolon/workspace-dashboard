@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useMemo, useCallback } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SidebarProjectSection from './SidebarProjectSection';
@@ -14,7 +15,7 @@ interface SidebarWorkspaceProps {
   refreshTrigger?: number;
 }
 
-const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) => {
+const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorkspaceProps) => {
   const navigate = useNavigate();
   const [openSections, setOpenSections] = useState({
     inProgress: true,
@@ -22,18 +23,18 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
     completed: false,
   });
 
-  const toggleSection = (section: keyof typeof openSections) => {
+  const toggleSection = useCallback((section: keyof typeof openSections) => {
     setOpenSections(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
-  };
+  }, []);
 
-  const handleWorkspaceClick = () => {
+  const handleWorkspaceClick = useCallback(() => {
     navigate('/');
-  };
+  }, [navigate]);
 
-  const inProgressProjects = [
+  const inProgressProjects = useMemo(() => [
     'Adams - 1063 40th Street',
     'Ogden - Thew - 2709 T Street',
     'Henderson - 1524 Tiverton',
@@ -54,18 +55,22 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
     'Wilcox - 1808 U Street',
     'Donaldson - 2717 58th Street',
     'Unknown - 14401 Grand Island Road'
-  ];
+  ], []);
 
-  const onHoldProjects = [
+  const onHoldProjects = useMemo(() => [
     'Project Alpha',
     'Project Beta'
-  ];
+  ], []);
 
-  const completedProjects = [
+  const completedProjects = useMemo(() => [
     'Finished Project 1',
     'Finished Project 2',
     'Finished Project 3'
-  ];
+  ], []);
+
+  const toggleInProgress = useCallback(() => toggleSection('inProgress'), [toggleSection]);
+  const toggleOnHold = useCallback(() => toggleSection('onHold'), [toggleSection]);
+  const toggleCompleted = useCallback(() => toggleSection('completed'), [toggleSection]);
 
   return (
     <div>
@@ -86,7 +91,7 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
         title="in Progress"
         projects={inProgressProjects}
         isOpen={openSections.inProgress}
-        onToggle={() => toggleSection('inProgress')}
+        onToggle={toggleInProgress}
         refreshTrigger={refreshTrigger}
       />
 
@@ -94,7 +99,7 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
         title="on Hold"
         projects={onHoldProjects}
         isOpen={openSections.onHold}
-        onToggle={() => toggleSection('onHold')}
+        onToggle={toggleOnHold}
         refreshTrigger={refreshTrigger}
       />
 
@@ -102,11 +107,13 @@ const SidebarWorkspace = ({ workspace, refreshTrigger }: SidebarWorkspaceProps) 
         title="Completed"
         projects={completedProjects}
         isOpen={openSections.completed}
-        onToggle={() => toggleSection('completed')}
+        onToggle={toggleCompleted}
         refreshTrigger={refreshTrigger}
       />
     </div>
   );
-};
+});
+
+SidebarWorkspace.displayName = 'SidebarWorkspace';
 
 export default SidebarWorkspace;

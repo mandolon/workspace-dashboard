@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ interface SidebarProjectSectionProps {
   refreshTrigger?: number;
 }
 
-const SidebarProjectSection = ({ 
+const SidebarProjectSection = React.memo(({ 
   title, 
   projects, 
   isOpen, 
@@ -41,13 +41,13 @@ const SidebarProjectSection = ({
     setProjectDisplayNames(updatedNames);
   }, [projects, refreshTrigger]);
 
-  const handleProjectClick = (projectName: string) => {
+  const handleProjectClick = useCallback((projectName: string) => {
     // Convert project name to URL-friendly format
     const projectIdFromName = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     navigate(`/project/${projectIdFromName}`);
-  };
+  }, [navigate]);
 
-  const handleMenuAction = (action: string, projectName: string) => {
+  const handleMenuAction = useCallback((action: string, projectName: string) => {
     console.log(`${action} for project: ${projectName}`);
     
     switch (action) {
@@ -73,7 +73,24 @@ const SidebarProjectSection = ({
         // Handle move to completed
         break;
     }
-  };
+  }, []);
+
+  const projectItems = useMemo(() => 
+    projects.map((project, index) => {
+      const displayName = projectDisplayNames[project] || project;
+      
+      return (
+        <ProjectItem
+          key={index}
+          project={project}
+          displayName={displayName}
+          currentSection={title}
+          onProjectClick={handleProjectClick}
+          onMenuAction={handleMenuAction}
+        />
+      );
+    }), [projects, projectDisplayNames, title, handleProjectClick, handleMenuAction]
+  );
 
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
@@ -91,25 +108,14 @@ const SidebarProjectSection = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="ml-2 mt-1 space-y-1">
-            {projects.map((project, index) => {
-              const displayName = projectDisplayNames[project] || project;
-              
-              return (
-                <ProjectItem
-                  key={index}
-                  project={project}
-                  displayName={displayName}
-                  currentSection={title}
-                  onProjectClick={handleProjectClick}
-                  onMenuAction={handleMenuAction}
-                />
-              );
-            })}
+            {projectItems}
           </div>
         </CollapsibleContent>
       </div>
     </Collapsible>
   );
-};
+});
+
+SidebarProjectSection.displayName = 'SidebarProjectSection';
 
 export default SidebarProjectSection;
