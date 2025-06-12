@@ -5,6 +5,7 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import NotesTab from '@/components/dashboard/NotesTab';
 import CalendarTab from '@/components/dashboard/CalendarTab';
+import ToDoTab from '@/components/dashboard/ToDoTab';
 import { useState } from 'react';
 
 const Index = () => {
@@ -20,7 +21,7 @@ const Index = () => {
               <DashboardContent />
             </div>
           )}
-          {activeTab === 'tasks' && <div className="p-4">To Do content coming soon</div>}
+          {activeTab === 'tasks' && <ToDoTab />}
           {activeTab === 'notes' && <NotesTab />}
           {activeTab === 'calendar' && <CalendarTab />}
         </div>
