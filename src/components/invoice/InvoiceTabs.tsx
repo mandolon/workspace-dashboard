@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText, Plus, Settings, Download, CheckCircle, Clock, Send } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -30,7 +31,7 @@ const InvoiceTabs = ({
       projectAddress: "123 Oak Street",
       status: "Paid",
       amount: "$304.65",
-      dateCreated: "Jan 12, 2023, 8:00 AM"
+      dateCreated: "Jan 12, 2023"
     },
     {
       id: "RH65842",
@@ -38,7 +39,7 @@ const InvoiceTabs = ({
       projectAddress: "456 Maple Avenue",
       status: "Sent",
       amount: "$450.00",
-      dateCreated: "Jan 15, 2023, 2:30 PM"
+      dateCreated: "Jan 15, 2023"
     },
     {
       id: "RH78123",
@@ -46,7 +47,7 @@ const InvoiceTabs = ({
       projectAddress: "789 Pine Road",
       status: "Unpaid",
       amount: "$750.25",
-      dateCreated: "Jan 20, 2023, 10:15 AM"
+      dateCreated: "Jan 20, 2023"
     },
     {
       id: "RH89456",
@@ -54,7 +55,7 @@ const InvoiceTabs = ({
       projectAddress: "321 Elm Drive",
       status: "Paid",
       amount: "$525.80",
-      dateCreated: "Jan 25, 2023, 4:45 PM"
+      dateCreated: "Jan 25, 2023"
     },
     {
       id: "RH91234",
@@ -62,7 +63,7 @@ const InvoiceTabs = ({
       projectAddress: "654 Cedar Lane",
       status: "Sent",
       amount: "$200.00",
-      dateCreated: "Jan 30, 2023, 9:00 AM"
+      dateCreated: "Jan 30, 2023"
     }
   ];
 
