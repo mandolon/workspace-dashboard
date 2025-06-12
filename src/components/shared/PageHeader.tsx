@@ -1,76 +1,55 @@
 
 import React from 'react';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Users } from 'lucide-react';
 
 interface PageHeaderProps {
   onToggleSidebar?: () => void;
-  searchPlaceholder?: string;
-  searchValue?: string;
-  onSearchChange?: (value: string) => void;
-  showSearch?: boolean;
+  title?: string;
+  agentCount?: number;
+  showAgents?: boolean;
   actions?: React.ReactNode;
-  children?: React.ReactNode;
 }
 
 const PageHeader = ({ 
-  onToggleSidebar, 
-  searchPlaceholder = "Search...",
-  searchValue = "",
-  onSearchChange,
-  showSearch = true,
-  actions,
-  children
+  onToggleSidebar,
+  title = "Task Board",
+  agentCount = 2,
+  showAgents = true,
+  actions
 }: PageHeaderProps) => {
   return (
-    <div className="h-14 border-b border-border flex items-center px-4 flex-shrink-0">
-      {onToggleSidebar && (
-        <button
-          onClick={onToggleSidebar}
-          className="p-2 hover:bg-accent rounded-md transition-colors"
-        >
-          <Menu className="w-4 h-4" />
-        </button>
-      )}
-      
-      {showSearch && (
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative max-w-md w-full">
-            {onSearchChange ? (
-              <>
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  value={searchValue}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-              </>
-            ) : (
-              <input
-                type="text"
-                placeholder={searchPlaceholder}
-                className="w-full px-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            )}
+    <div className="border-b border-border px-4 py-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {onToggleSidebar && (
+            <button
+              onClick={onToggleSidebar}
+              className="p-2 hover:bg-accent rounded-md transition-colors lg:hidden"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+          )}
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-base">{title}</span>
           </div>
         </div>
-      )}
-
-      {!showSearch && <div className="flex-1" />}
-
-      {actions || (
         <div className="flex items-center gap-2">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
-            New
-          </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium">
-            Upgrade
-          </button>
+          {showAgents && (
+            <div className="flex items-center gap-1">
+              <Users className="w-4 h-4" />
+              <span className="text-xs">Agents</span>
+              <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">{agentCount}</span>
+            </div>
+          )}
+          {actions || (
+            <>
+              <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
+              <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
+              <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
+            </>
+          )}
         </div>
-      )}
-
-      {children}
+      </div>
     </div>
   );
 };

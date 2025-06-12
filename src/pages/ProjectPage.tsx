@@ -46,7 +46,11 @@ const ProjectPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <PageHeader onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
+            <PageHeader 
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+              title={projectName}
+              showAgents={true}
+            />
 
             <div className="flex-1 overflow-hidden">
               <div className="h-full flex flex-col max-w-5xl mx-auto">

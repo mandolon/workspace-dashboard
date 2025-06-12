@@ -20,10 +20,6 @@ const Dashboard = () => {
     setActiveTab(tab);
     console.log(`Tab changed to: ${tab}`);
   };
-
-  const handleSearchChange = (value: string) => {
-    // Handle search functionality here if needed
-  };
   
   return (
     <div className="min-h-screen w-full bg-background flex">
@@ -45,7 +41,10 @@ const Dashboard = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <PageHeader onSearchChange={handleSearchChange} />
+            <PageHeader 
+              title="Dashboard"
+              showAgents={true}
+            />
 
             {/* Main Content */}
             <div className="flex-1 overflow-hidden">

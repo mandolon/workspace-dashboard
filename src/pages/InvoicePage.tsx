@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import PageHeader from '@/components/shared/PageHeader';
 import Sidebar from '@/components/Sidebar';
 
 const InvoicePage = () => {
@@ -45,15 +46,10 @@ const InvoicePage = () => {
         
         <ResizablePanel defaultSize={80}>
           <div className="flex flex-col h-full min-w-0">
-            {/* Header */}
-            <div className="border-b border-border px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button onClick={() => navigate(-1)} className="p-1 hover:bg-accent rounded">
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                  <h1 className="text-xl font-semibold">Billing / Invoice</h1>
-                </div>
+            <PageHeader 
+              title="Billing / Invoice"
+              showAgents={true}
+              actions={
                 <div className="flex items-center gap-2">
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                     + New Task
@@ -62,8 +58,8 @@ const InvoicePage = () => {
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-            </div>
+              }
+            />
 
             {/* Content */}
             <div className="flex-1 p-6 overflow-y-auto">
