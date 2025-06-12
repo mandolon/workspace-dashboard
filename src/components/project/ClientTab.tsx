@@ -146,9 +146,9 @@ const ClientTab = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Generate project display name in "LastName - Address" format
+  // Generate project display name in "LastName • Address" format
   const getProjectDisplayName = () => {
-    return `${formData.lastName} - ${formData.projectAddress}`;
+    return `${formData.lastName} • ${formData.projectAddress}`;
   };
 
   return (

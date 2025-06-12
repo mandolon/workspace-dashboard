@@ -102,10 +102,10 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
     };
   };
 
-  // Generate project display name in "LastName - Address" format
+  // Generate project display name in "LastName • Address" format
   const getProjectDisplayName = () => {
     const clientData = getClientData();
-    return `${clientData.lastName} - ${clientData.projectAddress}`;
+    return `${clientData.lastName} • ${clientData.projectAddress}`;
   };
 
   return (
