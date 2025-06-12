@@ -68,7 +68,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       >
         {/* Resizable Sidebar Panel */}
         <Panel 
-          defaultSize={20} 
+          defaultSize={25} 
           minSize={8}
           maxSize={40}
           className="h-screen overflow-hidden"
