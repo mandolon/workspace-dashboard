@@ -3,14 +3,11 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getProjectDisplayName } from '@/data/projectClientData';
+import { getProjectDisplayName, getClientData } from '@/data/projectClientData';
 
-interface ProjectHeaderProps {
-  projectName: string;
-}
-
-const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
+const ProjectHeader = () => {
   const { projectId } = useParams();
+  const clientData = getClientData(projectId);
 
   return (
     <div className="border-b border-border px-4 py-2">
