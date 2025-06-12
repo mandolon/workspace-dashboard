@@ -8,26 +8,13 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Dashboard = () => {
-  console.log('🔥 Dashboard component rendering at:', new Date().toISOString());
   const [activeTab, setActiveTab] = useState('overview');
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('🔥 Dashboard mounted - pathname:', location.pathname);
-    console.log('🔥 Dashboard mounted - full location:', location);
     document.title = 'Dashboard';
-    
-    return () => {
-      console.log('🔥 Dashboard unmounting at:', new Date().toISOString());
-      console.log('🔥 Dashboard unmounting - pathname was:', location.pathname);
-    };
   }, []);
-
-  useEffect(() => {
-    console.log('🔥 Location changed in Dashboard:', location.pathname);
-    console.log('🔥 Full location on change:', location);
-  }, [location]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
