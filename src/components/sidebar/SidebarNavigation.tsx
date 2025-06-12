@@ -36,7 +36,7 @@ const SidebarNavigation = ({ isCollapsed, isOpen, onToggle }: SidebarNavigationP
     { icon: MessageSquare, label: 'Chat', active: false, onClick: () => {} },
     { icon: Users, label: 'Teams', active: false, onClick: () => navigate('/teams') },
     { icon: Receipt, label: 'Invoices', active: false, onClick: () => navigate('/invoices') },
-    { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => {} },
+    { icon: FileImage, label: 'Whiteboards', active: false, onClick: () => navigate('/whiteboards') },
     { icon: Clock, label: 'Timesheets', active: false, onClick: () => navigate('/timesheets') },
   ];
 
