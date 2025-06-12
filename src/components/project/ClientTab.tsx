@@ -31,26 +31,26 @@ const ClientTab = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 mt-0">
+    <div className="flex-1 overflow-y-auto p-3 mt-0">
       {/* Header with client name and project address */}
-      <div className="border-b border-border pb-6 mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">
+      <div className="border-b border-border pb-3 mb-3">
+        <h1 className="text-lg font-semibold text-foreground">
           {formData.firstName} {formData.lastName}
         </h1>
-        <div className="flex items-center gap-2 text-muted-foreground mt-1">
-          <MapPin className="w-4 h-4" />
-          <span>{formData.projectAddress}</span>
+        <div className="flex items-center gap-2 text-muted-foreground mt-0.5">
+          <MapPin className="w-3 h-3" />
+          <span className="text-xs">{formData.projectAddress}</span>
         </div>
       </div>
 
       {/* Status and Date Info */}
-      <div className="flex justify-end items-center gap-4 mb-6">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="w-4 h-4" />
+      <div className="flex justify-end items-center gap-3 mb-3">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Calendar className="w-3 h-3" />
           <span>{formData.startDate}, {formData.duration}</span>
         </div>
         <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-32 h-7 text-xs">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -63,33 +63,33 @@ const ClientTab = () => {
       </div>
 
       {/* Client Information Table */}
-      <div className="space-y-6">
+      <div className="space-y-3">
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Client Information</h3>
+          <h3 className="text-xs font-medium text-foreground mb-2">Client Information</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
               <div className="col-span-3">Field</div>
               <div className="col-span-9">Value</div>
             </div>
             
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">First Name</div>
               <div className="col-span-9">
                 <Input
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Last Name</div>
               <div className="col-span-9">
                 <Input
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
@@ -98,42 +98,42 @@ const ClientTab = () => {
 
         {/* Project Address Table */}
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Project Address</h3>
+          <h3 className="text-xs font-medium text-foreground mb-2">Project Address</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
               <div className="col-span-3">Field</div>
               <div className="col-span-9">Value</div>
             </div>
             
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Address</div>
               <div className="col-span-9">
                 <Input
                   value={formData.projectAddress}
                   onChange={(e) => handleInputChange('projectAddress', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">City</div>
               <div className="col-span-9">
                 <Input
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">State</div>
               <div className="col-span-9">
                 <Input
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
@@ -142,42 +142,42 @@ const ClientTab = () => {
 
         {/* Billing Address Table */}
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Billing Address</h3>
+          <h3 className="text-xs font-medium text-foreground mb-2">Billing Address</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
               <div className="col-span-3">Field</div>
               <div className="col-span-9">Value</div>
             </div>
             
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Address</div>
               <div className="col-span-9">
                 <Input
                   value={formData.billingAddress}
                   onChange={(e) => handleInputChange('billingAddress', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">City</div>
               <div className="col-span-9">
                 <Input
                   value={formData.billingCity}
                   onChange={(e) => handleInputChange('billingCity', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">State</div>
               <div className="col-span-9">
                 <Input
                   value={formData.billingState}
                   onChange={(e) => handleInputChange('billingState', e.target.value)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </div>
             </div>
@@ -186,44 +186,44 @@ const ClientTab = () => {
 
         {/* Project Information Table */}
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Project Information</h3>
+          <h3 className="text-xs font-medium text-foreground mb-2">Project Information</h3>
           <div className="space-y-0.5">
-            <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground py-1 border-b">
               <div className="col-span-3">Field</div>
               <div className="col-span-9">Value</div>
             </div>
             
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Project Name</div>
               <div className="col-span-9">
                 <Textarea
                   value={formData.projectName}
                   onChange={(e) => handleInputChange('projectName', e.target.value)}
-                  className="min-h-[60px] text-xs resize-none"
+                  className="min-h-[40px] text-xs resize-none"
                   placeholder="Enter project name..."
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Project Scope</div>
               <div className="col-span-9">
                 <Textarea
                   value={formData.projectScope}
                   onChange={(e) => handleInputChange('projectScope', e.target.value)}
-                  className="min-h-[60px] text-xs resize-none"
+                  className="min-h-[40px] text-xs resize-none"
                   placeholder="Describe the project scope..."
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30">
+            <div className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30">
               <div className="col-span-3 text-muted-foreground">Project Notes</div>
               <div className="col-span-9">
                 <Textarea
                   value={formData.projectNotes}
                   onChange={(e) => handleInputChange('projectNotes', e.target.value)}
-                  className="min-h-[80px] text-xs resize-none"
+                  className="min-h-[50px] text-xs resize-none"
                   placeholder="Add any additional project notes..."
                 />
               </div>
@@ -232,8 +232,8 @@ const ClientTab = () => {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end pt-6">
-          <Button size="sm">Save Changes</Button>
+        <div className="flex justify-end pt-3">
+          <Button size="sm" className="text-xs">Save Changes</Button>
         </div>
       </div>
     </div>
