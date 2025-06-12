@@ -1,5 +1,6 @@
 import React from 'react';
-import { MoreHorizontal, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
+import InvoiceActionsMenu from './InvoiceActionsMenu';
 
 interface Invoice {
   id: string;
@@ -35,6 +36,16 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, sho
     return `${overdueDays} days`;
   };
 
+  const handleMove = (invoiceId: string) => {
+    console.log(`Moving invoice ${invoiceId}`);
+    // Add move logic here
+  };
+
+  const handleDelete = (invoiceId: string) => {
+    console.log(`Deleting invoice ${invoiceId}`);
+    // Add delete logic here
+  };
+
   return (
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group px-4">
       <div className="col-span-2 text-muted-foreground">{invoice.lastName}</div>
@@ -51,16 +62,20 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, sho
         >
           {invoice.id}
         </button>
-        <button 
-          onClick={(e) => onDownloadPDF(invoice.id, e)}
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
-        >
-          {showEditIcon ? (
-            <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
-          ) : (
+        {showEditIcon ? (
+          <InvoiceActionsMenu 
+            invoiceId={invoice.id}
+            onMove={handleMove}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <button 
+            onClick={(e) => onDownloadPDF(invoice.id, e)}
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+          >
             <Download className="w-3 h-3 text-muted-foreground" />
-          )}
-        </button>
+          </button>
+        )}
       </div>
     </div>
   );
