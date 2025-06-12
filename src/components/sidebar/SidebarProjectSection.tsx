@@ -116,7 +116,7 @@ const SidebarProjectSection = ({
           <span className="text-sm truncate">{title}</span>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="ml-0 mt-1 space-y-1">
+          <div className="ml-4 mt-1 space-y-1">
             {projects.map((project, index) => {
               const contextMenuRef = useRef<HTMLDivElement>(null);
               const displayName = projectDisplayNames[project] || project;
