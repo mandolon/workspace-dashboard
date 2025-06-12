@@ -1,6 +1,5 @@
-
-import React, { ReactNode } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import React, { ReactNode, useRef, useEffect } from 'react';
+import { Panel, PanelGroup, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import Sidebar from '@/components/Sidebar';
 import PageHeader from '@/components/shared/PageHeader';
@@ -11,6 +10,18 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   const { isCollapsed, isHidden, toggleSidebar, setSidebarHidden } = useSidebarContext();
+  const sidebarPanelRef = useRef<ImperativePanelHandle>(null);
+  const wasHiddenRef = useRef(isHidden);
+
+  // Track when sidebar transitions from hidden to visible
+  useEffect(() => {
+    if (wasHiddenRef.current && !isHidden && !isCollapsed && sidebarPanelRef.current) {
+      // Sidebar was restored from hidden state, resize to 20%
+      console.log('Restoring sidebar to 20% width');
+      sidebarPanelRef.current.resize(20);
+    }
+    wasHiddenRef.current = isHidden;
+  }, [isHidden, isCollapsed]);
 
   const handleResize = (sizes: number[]) => {
     const sidebarSize = sizes[0];
@@ -68,6 +79,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       >
         {/* Resizable Sidebar Panel */}
         <Panel 
+          ref={sidebarPanelRef}
           defaultSize={20} 
           minSize={8}
           maxSize={40}
