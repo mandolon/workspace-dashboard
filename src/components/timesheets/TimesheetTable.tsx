@@ -84,7 +84,7 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
           <TableHeader>
             <TableRow className="border-0 hover:bg-transparent">
               <TableHead className="w-[180px] text-xs font-medium text-muted-foreground h-8">Project</TableHead>
-              <TableHead className="w-[160px] text-xs font-medium text-muted-foreground h-8">Task</TableHead>
+              <TableHead className="w-[160px] text-xs font-medium text-muted-foreground h-8">Phase</TableHead>
               {weekDays.map((day, index) => (
                 <TableHead key={index} className="text-center w-[70px] h-8">
                   <div className="flex flex-col">
