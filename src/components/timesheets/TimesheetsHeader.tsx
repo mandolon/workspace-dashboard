@@ -19,7 +19,7 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-semibold">Timesheets</h1>
+            <h1 className="text-xl font-semibold">Timesheets</h1>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -30,7 +30,7 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
               </Button>
               <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium">
+                <span className="text-xs font-medium">
                   {format(weekStart, 'MMM d')} - {format(weekEnd, 'MMM d, yyyy')}
                 </span>
               </div>

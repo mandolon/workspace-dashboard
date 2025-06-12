@@ -23,11 +23,11 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Hours</CardTitle>
+          <CardTitle className="text-xs font-medium">Total Hours</CardTitle>
           <Clock className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.totalHours}h</div>
+          <div className="text-xl font-bold">{stats.totalHours}h</div>
           <p className="text-xs text-muted-foreground">
             {completionPercentage}% of target
           </p>
@@ -36,11 +36,11 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Target Hours</CardTitle>
+          <CardTitle className="text-xs font-medium">Target Hours</CardTitle>
           <Target className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.targetHours}h</div>
+          <div className="text-xl font-bold">{stats.targetHours}h</div>
           <p className="text-xs text-muted-foreground">
             Weekly goal
           </p>
@@ -49,11 +49,11 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Billable Hours</CardTitle>
+          <CardTitle className="text-xs font-medium">Billable Hours</CardTitle>
           <TrendingUp className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.billableHours}h</div>
+          <div className="text-xl font-bold">{stats.billableHours}h</div>
           <p className="text-xs text-muted-foreground">
             {Math.round((stats.billableHours / stats.totalHours) * 100)}% billable
           </p>
@@ -62,11 +62,11 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Projects</CardTitle>
+          <CardTitle className="text-xs font-medium">Projects</CardTitle>
           <Calendar className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.projectCount}</div>
+          <div className="text-xl font-bold">{stats.projectCount}</div>
           <p className="text-xs text-muted-foreground">
             Active this week
           </p>

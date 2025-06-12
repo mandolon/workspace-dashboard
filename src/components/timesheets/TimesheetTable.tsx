@@ -77,28 +77,28 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Time Entries</CardTitle>
+        <CardTitle className="text-sm font-semibold">Time Entries</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">Project</TableHead>
-              <TableHead className="w-[180px]">Task</TableHead>
+              <TableHead className="w-[200px] text-xs font-medium text-muted-foreground">Project</TableHead>
+              <TableHead className="w-[180px] text-xs font-medium text-muted-foreground">Task</TableHead>
               {weekDays.map((day, index) => (
                 <TableHead key={index} className="text-center w-[80px]">
                   <div className="flex flex-col">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground font-medium">
                       {format(day, 'EEE')}
                     </span>
-                    <span className="text-xs">
+                    <span className="text-xs text-muted-foreground">
                       {format(day, 'M/d')}
                     </span>
                   </div>
                 </TableHead>
               ))}
-              <TableHead className="text-center w-[80px]">Total</TableHead>
-              <TableHead className="w-[120px]">Actions</TableHead>
+              <TableHead className="text-center w-[80px] text-xs font-medium text-muted-foreground">Total</TableHead>
+              <TableHead className="w-[120px] text-xs font-medium text-muted-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -107,21 +107,21 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${entry.billable ? 'bg-green-500' : 'bg-gray-400'}`} />
-                    <span className="text-sm truncate">{entry.project}</span>
+                    <span className="text-xs truncate">{entry.project}</span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm text-muted-foreground">{entry.task}</span>
+                  <span className="text-xs text-muted-foreground">{entry.task}</span>
                 </TableCell>
                 {weekDays.map((_, dayIndex) => (
                   <TableCell key={dayIndex} className="text-center">
-                    <span className="text-sm">
+                    <span className="text-xs">
                       {getDayValue(entry, dayIndex) > 0 ? `${getDayValue(entry, dayIndex)}h` : '-'}
                     </span>
                   </TableCell>
                 ))}
                 <TableCell className="text-center font-medium">
-                  {getTotalForEntry(entry)}h
+                  <span className="text-xs">{getTotalForEntry(entry)}h</span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
