@@ -8,63 +8,13 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Dashboard = () => {
-  console.log('🔥 Dashboard component rendering');
   const [activeTab, setActiveTab] = useState('overview');
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('🔥 Dashboard useEffect running - component mounted');
-    console.log('🔥 Current URL:', window.location.href);
-    console.log('🔥 Current pathname:', window.location.pathname);
-    console.log('🔥 Location object:', location);
     document.title = 'Dashboard';
-    
-    // Set up a timer to log every second for debugging
-    const debugTimer = setInterval(() => {
-      console.log('🔥 Dashboard still alive at:', new Date().toISOString());
-      console.log('🔥 Current location at timer:', window.location.pathname);
-    }, 1000);
-    
-    // Listen for any navigation events
-    const handlePopState = (event: PopStateEvent) => {
-      console.log('🔥 PopState event detected:', event);
-      console.log('🔥 New pathname after popstate:', window.location.pathname);
-    };
-    
-    const handleHashChange = () => {
-      console.log('🔥 Hash change detected:', window.location.hash);
-    };
-    
-    const handleBeforeUnload = () => {
-      console.log('🔥 Page is about to unload');
-    };
-    
-    window.addEventListener('popstate', handlePopState);
-    window.addEventListener('hashchange', handleHashChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    // Cleanup function to detect when component unmounts
-    return () => {
-      console.log('🔥 Dashboard component is UNMOUNTING - this tells us why it disappears');
-      console.log('🔥 Unmounting at URL:', window.location.pathname);
-      console.log('🔥 Unmounting at time:', new Date().toISOString());
-      clearInterval(debugTimer);
-      window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('hashchange', handleHashChange);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
   }, []);
-
-  useEffect(() => {
-    console.log('🔥 Dashboard activeTab changed to:', activeTab);
-  }, [activeTab]);
-
-  useEffect(() => {
-    console.log('🔥 Location changed in Dashboard:', location.pathname);
-    console.log('🔥 Full location object:', location);
-    console.log('🔥 Location change timestamp:', new Date().toISOString());
-  }, [location]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -72,9 +22,7 @@ const Dashboard = () => {
   };
 
   const handleSearchChange = (value: string) => {
-    console.log('🔥 Search input changed:', value);
-    console.log('🔥 Current location after search change:', location.pathname);
-    console.log('🔥 Window location after search change:', window.location.pathname);
+    // Handle search functionality here if needed
   };
   
   return (
