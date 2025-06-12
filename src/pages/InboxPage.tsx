@@ -1,16 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import Sidebar from '@/components/Sidebar';
+import AppLayout from '@/components/layout/AppLayout';
 import EmailDetail from '@/components/EmailDetail';
-import InboxTopBar from '@/components/inbox/InboxTopBar';
 import InboxHeader from '@/components/inbox/InboxHeader';
-import InboxTabs from '@/components/inbox/InboxTabs';
 import InboxToolbar from '@/components/inbox/InboxToolbar';
 import EmailList from '@/components/inbox/EmailList';
-import PageHeader from '@/components/shared/PageHeader';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const InboxPage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('inbox');
@@ -155,7 +150,6 @@ const InboxPage = () => {
     },
   ];
 
-  // Filter emails based on active tab and search query
   const filteredEmails = useMemo(() => {
     let tabFilteredEmails = emails;
 
@@ -214,10 +208,6 @@ const InboxPage = () => {
     setSelectedEmail(null);
   };
 
-  const handleToggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     // Reset selection when searching
@@ -236,64 +226,37 @@ const InboxPage = () => {
   const unreadCount = filteredEmails.filter(e => !e.isRead).length;
 
   return (
-    <div className="min-h-screen w-full bg-background flex">
-      <ResizablePanelGroup direction="horizontal" className="min-h-screen">
-        <ResizablePanel 
-          defaultSize={15} 
-          minSize={15} 
-          maxSize={35}
-          collapsedSize={4}
-          collapsible={true}
-          onCollapse={() => setSidebarCollapsed(true)}
-          onExpand={() => setSidebarCollapsed(false)}
-          className="min-h-screen"
-        >
-          <div className="h-screen overflow-hidden">
-            <Sidebar isCollapsed={sidebarCollapsed} />
-          </div>
-        </ResizablePanel>
-        
-        <ResizableHandle withHandle />
-        
-        <ResizablePanel defaultSize={85} className="min-h-screen">
-          <div className="flex flex-col h-screen">
-            <PageHeader 
-              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-            />
-
-            <div className="flex-1 bg-background p-4">
-              <div className="h-full flex flex-col max-w-6xl mx-auto">
-                {selectedEmail && currentEmail ? (
-                  <EmailDetail email={currentEmail} onBack={handleBackToList} />
-                ) : (
-                  <>
-                    <InboxHeader 
-                      unreadCount={unreadCount}
-                      activeTab={activeTab}
-                      onTabChange={handleTabChange}
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={setCurrentPage}
-                    />
-                    <InboxToolbar 
-                      selectedEmails={selectedEmails}
-                      totalEmails={filteredEmails.length}
-                      onSelectAll={handleSelectAll}
-                    />
-                    <EmailList 
-                      emails={filteredEmails}
-                      selectedEmails={selectedEmails}
-                      onSelectEmail={handleSelectEmail}
-                      onEmailClick={handleEmailClick}
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+    <AppLayout>
+      <div className="flex-1 bg-background pl-2">
+        <div className="h-full flex flex-col">
+          {selectedEmail && currentEmail ? (
+            <EmailDetail email={currentEmail} onBack={handleBackToList} />
+          ) : (
+            <>
+              <InboxHeader 
+                unreadCount={unreadCount}
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+              <InboxToolbar 
+                selectedEmails={selectedEmails}
+                totalEmails={filteredEmails.length}
+                onSelectAll={handleSelectAll}
+              />
+              <EmailList 
+                emails={filteredEmails}
+                selectedEmails={selectedEmails}
+                onSelectEmail={handleSelectEmail}
+                onEmailClick={handleEmailClick}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </AppLayout>
   );
 };
 
