@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { ChevronDown, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -70,9 +70,20 @@ const SidebarProjectSection = ({
     }
   };
 
-  const handleMoreClick = (e: React.MouseEvent) => {
+  const handleMoreClick = (e: React.MouseEvent, contextMenuRef: React.RefObject<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
+    
+    // Simulate a right-click to open the context menu
+    if (contextMenuRef.current) {
+      const rightClickEvent = new MouseEvent('contextmenu', {
+        bubbles: true,
+        cancelable: true,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      });
+      contextMenuRef.current.dispatchEvent(rightClickEvent);
+    }
   };
 
   return (
@@ -93,67 +104,72 @@ const SidebarProjectSection = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="ml-5 mt-1 space-y-1">
-            {projects.slice(0, 4).map((project, index) => (
-              <ContextMenu key={index}>
-                <ContextMenuTrigger asChild>
-                  <div
-                    className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group"
-                    onClick={() => handleProjectClick(project)}
-                  >
-                    <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
-                    <span className="truncate text-xs flex-1">{project}</span>
-                    {project === 'Ogden - Thew - 2709 T Street' && (
-                      <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
-                    )}
-                    <button
-                      onClick={handleMoreClick}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 p-0.5 hover:bg-sidebar-accent rounded"
+            {projects.slice(0, 4).map((project, index) => {
+              const contextMenuRef = useRef<HTMLDivElement>(null);
+              
+              return (
+                <ContextMenu key={index}>
+                  <ContextMenuTrigger asChild>
+                    <div
+                      ref={contextMenuRef}
+                      className="flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground hover:bg-sidebar-accent/50 rounded cursor-pointer group"
+                      onClick={() => handleProjectClick(project)}
                     >
-                      <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
-                    </button>
-                  </div>
-                </ContextMenuTrigger>
-                <ContextMenuContent className="w-56">
-                  <ContextMenuItem onClick={() => handleMenuAction('rename', project)}>
-                    Rename
-                  </ContextMenuItem>
-                  <ContextMenuItem onClick={() => handleMenuAction('duplicate', project)}>
-                    Duplicate
-                  </ContextMenuItem>
-                  <ContextMenuSeparator />
-                  <ContextMenuSub>
-                    <ContextMenuSubTrigger>Move to</ContextMenuSubTrigger>
-                    <ContextMenuSubContent>
-                      {title !== 'in Progress' && (
-                        <ContextMenuItem onClick={() => handleMenuAction('move-to-progress', project)}>
-                          In Progress
-                        </ContextMenuItem>
+                      <div className="w-2 h-2 bg-muted-foreground rounded-sm flex-shrink-0"></div>
+                      <span className="truncate text-xs flex-1">{project}</span>
+                      {project === 'Ogden - Thew - 2709 T Street' && (
+                        <span className="text-xs text-muted-foreground flex-shrink-0">1</span>
                       )}
-                      {title !== 'on Hold' && (
-                        <ContextMenuItem onClick={() => handleMenuAction('move-to-hold', project)}>
-                          On Hold
-                        </ContextMenuItem>
-                      )}
-                      {title !== 'completed' && (
-                        <ContextMenuItem onClick={() => handleMenuAction('move-to-completed', project)}>
-                          Completed
-                        </ContextMenuItem>
-                      )}
-                    </ContextMenuSubContent>
-                  </ContextMenuSub>
-                  <ContextMenuSeparator />
-                  <ContextMenuItem onClick={() => handleMenuAction('archive', project)}>
-                    Archive
-                  </ContextMenuItem>
-                  <ContextMenuItem 
-                    className="text-red-600 focus:text-red-600" 
-                    onClick={() => handleMenuAction('delete', project)}
-                  >
-                    Delete
-                  </ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            ))}
+                      <button
+                        onClick={(e) => handleMoreClick(e, contextMenuRef)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 p-0.5 hover:bg-sidebar-accent rounded"
+                      >
+                        <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+                      </button>
+                    </div>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-56">
+                    <ContextMenuItem onClick={() => handleMenuAction('rename', project)}>
+                      Rename
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleMenuAction('duplicate', project)}>
+                      Duplicate
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuSub>
+                      <ContextMenuSubTrigger>Move to</ContextMenuSubTrigger>
+                      <ContextMenuSubContent>
+                        {title !== 'in Progress' && (
+                          <ContextMenuItem onClick={() => handleMenuAction('move-to-progress', project)}>
+                            In Progress
+                          </ContextMenuItem>
+                        )}
+                        {title !== 'on Hold' && (
+                          <ContextMenuItem onClick={() => handleMenuAction('move-to-hold', project)}>
+                            On Hold
+                          </ContextMenuItem>
+                        )}
+                        {title !== 'completed' && (
+                          <ContextMenuItem onClick={() => handleMenuAction('move-to-completed', project)}>
+                            Completed
+                          </ContextMenuItem>
+                        )}
+                      </ContextMenuSubContent>
+                    </ContextMenuSub>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem onClick={() => handleMenuAction('archive', project)}>
+                      Archive
+                    </ContextMenuItem>
+                    <ContextMenuItem 
+                      className="text-red-600 focus:text-red-600" 
+                      onClick={() => handleMenuAction('delete', project)}
+                    >
+                      Delete
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+              );
+            })}
           </div>
         </CollapsibleContent>
       </div>
