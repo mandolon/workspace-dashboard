@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { FileText, Calendar, MessageSquare, ExternalLink, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FilesTab from './FilesTab';
@@ -13,8 +13,13 @@ interface ProjectTabsProps {
 }
 
 const ProjectTabs = ({ projectName }: ProjectTabsProps) => {
+  const location = useLocation();
+  
+  // Check if we're returning from a task detail with a specific tab
+  const defaultTab = location.state?.returnToTab || 'files';
+
   return (
-    <Tabs defaultValue="files" className="flex-1 flex flex-col">
+    <Tabs defaultValue={defaultTab} className="flex-1 flex flex-col">
       <div className="border-b border-border px-4 flex-shrink-0">
         <TabsList className="h-auto p-0 bg-transparent">
           <TabsTrigger 

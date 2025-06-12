@@ -117,11 +117,12 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
   };
 
   const handleTaskClick = (task: any) => {
-    // Navigate to task detail with state indicating we came from a project
+    // Navigate to task detail with state indicating we came from a project's tasks tab
     navigate(`/task/${task.id}`, {
       state: {
         returnTo: location.pathname,
-        returnToName: `${projectName} - Tasks`
+        returnToName: `${projectName} - Tasks`,
+        returnToTab: 'tasks' // Add the tab information
       }
     });
   };
