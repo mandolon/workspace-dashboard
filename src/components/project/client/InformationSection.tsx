@@ -22,7 +22,7 @@ interface InformationSectionProps {
 const InformationSection = ({ title, fields }: InformationSectionProps) => {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-gray-900">{title}</h3>
+      <h3 className="text-xs font-medium text-gray-900">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {fields.map((field, index) => (
           <div key={index} className={field.span === 'full' ? 'md:col-span-2' : ''}>
@@ -36,7 +36,7 @@ const InformationSection = ({ title, fields }: InformationSectionProps) => {
                 placeholder={field.placeholder}
                 readOnly={field.readOnly}
                 onKeyDown={field.onKeyDown}
-                className="min-h-[60px] text-sm"
+                className="min-h-[60px] text-xs"
               />
             ) : (
               <Input
@@ -45,7 +45,7 @@ const InformationSection = ({ title, fields }: InformationSectionProps) => {
                 placeholder={field.placeholder}
                 readOnly={field.readOnly}
                 onKeyDown={field.onKeyDown}
-                className="h-8 text-sm"
+                className="h-8 text-xs"
               />
             )}
           </div>
