@@ -56,6 +56,7 @@ const InvoiceTabs = ({
             invoices={invoicesData}
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
+            showStatus={true}
           />
         </TabsContent>
 
@@ -64,6 +65,7 @@ const InvoiceTabs = ({
             invoices={invoicesData.filter(invoice => invoice.status === "Paid")}
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
+            showStatus={false}
           />
         </TabsContent>
 
@@ -72,6 +74,7 @@ const InvoiceTabs = ({
             invoices={invoicesData.filter(invoice => invoice.status === "Unpaid")}
             onOpenPDF={handleOpenPDF}
             onDownloadPDF={handleDownloadPDF}
+            showStatus={false}
           />
         </TabsContent>
 

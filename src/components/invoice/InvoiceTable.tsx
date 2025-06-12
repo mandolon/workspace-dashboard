@@ -15,9 +15,10 @@ interface InvoiceTableProps {
   invoices: Invoice[];
   onOpenPDF: (invoiceId: string, e: React.MouseEvent) => void;
   onDownloadPDF: (invoiceId: string, e: React.MouseEvent) => void;
+  showStatus?: boolean;
 }
 
-const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF }: InvoiceTableProps) => {
+const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF, showStatus = false }: InvoiceTableProps) => {
   return (
     <div className="flex-1 overflow-y-auto">
       {/* Header Row - positioned at the top border */}
@@ -26,7 +27,7 @@ const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF }: InvoiceTableProps)
         <div className="col-span-3">Project Address</div>
         <div className="col-span-2">Amount</div>
         <div className="col-span-2">Date Created</div>
-        <div className="col-span-2">Overdue</div>
+        <div className="col-span-2">{showStatus ? 'Status' : 'Overdue'}</div>
         <div className="col-span-1">Invoice</div>
       </div>
       
@@ -38,6 +39,7 @@ const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF }: InvoiceTableProps)
             invoice={invoice}
             onOpenPDF={onOpenPDF}
             onDownloadPDF={onDownloadPDF}
+            showStatus={showStatus}
           />
         ))}
         {invoices.length === 0 && (

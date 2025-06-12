@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Download } from 'lucide-react';
+import { Edit } from 'lucide-react';
 
 interface Invoice {
   id: string;
@@ -15,9 +15,10 @@ interface InvoiceRowProps {
   invoice: Invoice;
   onOpenPDF: (invoiceId: string, e: React.MouseEvent) => void;
   onDownloadPDF: (invoiceId: string, e: React.MouseEvent) => void;
+  showStatus?: boolean;
 }
 
-const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
+const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false }: InvoiceRowProps) => {
   const calculateOverdueDays = (dateCreated: string) => {
     const created = new Date(dateCreated);
     const today = new Date();
@@ -40,7 +41,9 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
       <div className="col-span-3 text-muted-foreground">{invoice.projectAddress}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.dateCreated}</div>
-      <div className="col-span-2 text-muted-foreground">{calculateOverdueDays(invoice.dateCreated)}</div>
+      <div className="col-span-2 text-muted-foreground">
+        {showStatus ? invoice.status : calculateOverdueDays(invoice.dateCreated)}
+      </div>
       <div className="col-span-1 flex items-center justify-between pr-2">
         <button 
           onClick={(e) => onOpenPDF(invoice.id, e)}
@@ -52,7 +55,7 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF }: InvoiceRowProps) => {
           onClick={(e) => onDownloadPDF(invoice.id, e)}
           className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
         >
-          <Download className="w-3 h-3 text-muted-foreground" />
+          <Edit className="w-3 h-3 text-muted-foreground" />
         </button>
       </div>
     </div>
