@@ -196,9 +196,12 @@ const TaskGroupSection = ({
         </TableHeader>
         <TableBody>
           {tasks.map((task) => (
-            <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => onTaskClick(task)}>
+            <TableRow key={task.id} className="hover:bg-accent/50 group">
               <TableCell className="py-2 w-[55%]">
-                <div className="flex items-center gap-2">
+                <div 
+                  className="flex items-center gap-2 cursor-pointer" 
+                  onClick={() => onTaskClick(task)}
+                >
                   <TaskStatusIcon status={task.status} />
                   <div className="flex-1">
                     {editingTaskId === task.id ? (
