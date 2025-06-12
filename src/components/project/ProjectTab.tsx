@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Users, Calendar } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getClientData } from '@/data/projectClientData';
 import ProjectTabForm from './client/ProjectTabForm';
 
@@ -17,26 +16,7 @@ const ProjectTab = () => {
     <div className="h-full flex flex-col">
       {/* Project Actions Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
-          {/* Left side - Status and Date Info */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Calendar className="w-3 h-3" />
-              <span>5/8/23, 5 Weeks</span>
-            </div>
-            <Select value="in-progress" onValueChange={() => {}}>
-              <SelectTrigger className="w-32 h-7 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="complete">Complete</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="on-hold">On Hold</SelectItem>
-                <SelectItem value="not-started">Not Started</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+        <div className="max-w-4xl mx-auto flex items-center justify-end gap-2">
           {/* Right side - Agents and Actions */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
