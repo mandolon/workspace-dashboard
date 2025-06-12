@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { projectClientData, getProjectDisplayName } from '@/data/projectClientData';
 
 interface AddTimeEntryDialogProps {
   isOpen: boolean;
@@ -27,13 +28,10 @@ const AddTimeEntryDialog = ({ isOpen, onClose, onSave }: AddTimeEntryDialogProps
   const [description, setDescription] = useState('');
   const [billable, setBillable] = useState(true);
 
-  const projects = [
-    'Ogden • Thew • 2709 T Street',
-    'Acme Corp Headquarters',
-    'Modern Office Complex',
-    'Residential Tower Project',
-    'Internal - Training'
-  ];
+  // Get all projects from the project data
+  const projects = Object.keys(projectClientData).map(projectId => 
+    getProjectDisplayName(projectId)
+  );
 
   const handleSave = () => {
     // Here you would typically save the time entry
@@ -111,12 +109,12 @@ const AddTimeEntryDialog = ({ isOpen, onClose, onSave }: AddTimeEntryDialogProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="task">Task</Label>
+            <Label htmlFor="task">Phase</Label>
             <Input
               id="task"
               value={task}
               onChange={(e) => setTask(e.target.value)}
-              placeholder="Enter task name"
+              placeholder="Enter phase name"
             />
           </div>
 
