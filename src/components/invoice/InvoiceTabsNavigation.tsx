@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, Plus, Settings, CheckCircle, Clock, Send } from 'lucide-react';
+import { FileText, Plus, Settings, CheckCircle, Clock } from 'lucide-react';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const InvoiceTabsNavigation = () => {
@@ -27,13 +27,6 @@ const InvoiceTabsNavigation = () => {
         >
           <Clock className="w-3 h-3" />
           Unpaid
-        </TabsTrigger>
-        <TabsTrigger 
-          value="sent" 
-          className="flex items-center gap-1.5 px-2 py-2 text-xs font-medium data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent"
-        >
-          <Send className="w-3 h-3" />
-          Sent
         </TabsTrigger>
         <TabsTrigger 
           value="new-invoice" 

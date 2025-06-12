@@ -75,19 +75,11 @@ const InvoiceTabs = ({
           />
         </TabsContent>
 
-        <TabsContent value="sent" className="mt-0 h-full">
-          <InvoiceTable
-            invoices={invoicesData.filter(invoice => invoice.status === "Sent")}
-            onOpenPDF={handleOpenPDF}
-            onDownloadPDF={handleDownloadPDF}
-          />
-        </TabsContent>
-
-        <TabsContent value="new-invoice" className="mt-0 h-full">
-          <div className="space-y-6">
+        <TabsContent value="new-invoice" className="mt-0 h-full overflow-y-auto">
+          <div className="space-y-4 pb-4">
             <InvoiceDetails total={total} />
 
-            <div className="bg-card border rounded-lg p-6">
+            <div className="bg-card border rounded-lg p-4">
               <InvoiceLineItems
                 lineItems={lineItems}
                 onAddLineItem={onAddLineItem}
@@ -105,7 +97,7 @@ const InvoiceTabs = ({
         </TabsContent>
 
         <TabsContent value="settings" className="mt-0 h-full">
-          <div className="text-center text-muted-foreground">Invoice settings coming soon...</div>
+          <div className="text-center text-muted-foreground text-xs">Invoice settings coming soon...</div>
         </TabsContent>
       </div>
     </Tabs>
