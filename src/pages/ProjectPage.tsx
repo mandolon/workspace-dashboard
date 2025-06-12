@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import ProjectTopBar from '@/components/project/ProjectTopBar';
+import PageHeader from '@/components/shared/PageHeader';
 import ProjectHeader from '@/components/project/ProjectHeader';
 import ProjectTabs from '@/components/project/ProjectTabs';
 
@@ -46,10 +46,7 @@ const ProjectPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <ProjectTopBar 
-              sidebarCollapsed={sidebarCollapsed}
-              setSidebarCollapsed={setSidebarCollapsed}
-            />
+            <PageHeader onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
 
             <div className="flex-1 overflow-hidden">
               <div className="h-full flex flex-col max-w-5xl mx-auto">

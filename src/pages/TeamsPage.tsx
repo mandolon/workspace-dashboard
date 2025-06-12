@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import TeamsTopBar from '@/components/teams/TeamsTopBar';
+import PageHeader from '@/components/shared/PageHeader';
 import TeamsHeader from '@/components/teams/TeamsHeader';
 import TeamsContent from '@/components/teams/TeamsContent';
 
@@ -32,10 +32,7 @@ const TeamsPage = () => {
         
         <ResizablePanel defaultSize={85} className="min-h-screen">
           <div className="flex flex-col h-screen">
-            <TeamsTopBar 
-              sidebarCollapsed={sidebarCollapsed}
-              setSidebarCollapsed={setSidebarCollapsed}
-            />
+            <PageHeader onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
 
             <div className="flex-1 overflow-hidden">
               <div className="h-full flex flex-col max-w-5xl mx-auto">
