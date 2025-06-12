@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Grid, List, ChevronDown } from 'lucide-react';
+import { Grid, List, ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -28,10 +28,21 @@ const WhiteboardsHeader = ({
     { id: 'shared-projects', label: 'Shared projects', active: false },
   ];
 
+  const handleCreateWhiteboard = () => {
+    console.log('Create new whiteboard');
+    // TODO: Implement create whiteboard functionality
+  };
+
   return (
     <div className="border-b border-border">
       <div className="px-6 py-4">
-        <h1 className="text-lg font-semibold mb-4">Recents</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg font-semibold">Recents</h1>
+          <Button onClick={handleCreateWhiteboard} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Create New Whiteboard
+          </Button>
+        </div>
         
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
