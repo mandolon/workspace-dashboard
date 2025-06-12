@@ -124,17 +124,16 @@ const TaskGroupSection = ({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[45%]">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">Files</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Date Created</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Due Date</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[9%]">Assignee</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[55%]">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[12%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[23%]">Date Created</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[10%]">Assignee</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {group.tasks.map((task) => (
             <TableRow key={task.id} className="hover:bg-accent/50 group cursor-pointer" onClick={() => onTaskClick(task)}>
-              <TableCell className="py-2 w-[45%]">
+              <TableCell className="py-2 w-[55%]">
                 <div className="flex items-center gap-2">
                   <TaskStatusIcon status={task.status} />
                   <div className="flex-1">
@@ -186,7 +185,7 @@ const TaskGroupSection = ({
                   </div>
                 </div>
               </TableCell>
-              <TableCell className="py-2 w-[10%]">
+              <TableCell className="py-2 w-[12%]">
                 <div className="flex items-center gap-1">
                   {task.hasAttachment && (
                     <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
@@ -206,13 +205,10 @@ const TaskGroupSection = ({
                   </button>
                 </div>
               </TableCell>
-              <TableCell className="text-xs text-muted-foreground py-2 w-[18%]">
+              <TableCell className="text-xs text-muted-foreground py-2 w-[23%]">
                 {formatDate(task.dateCreated)}
               </TableCell>
-              <TableCell className="text-xs text-muted-foreground py-2 w-[18%]">
-                {task.dueDate}
-              </TableCell>
-              <TableCell className="py-2 w-[9%]">
+              <TableCell className="py-2 w-[10%]">
                 <div className="flex items-center -space-x-1">
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
                     {task.assignee.name}
