@@ -21,6 +21,10 @@ export const getRandomColor = (name: string) => {
   return colors[index];
 };
 
+export const getInitials = (name: string) => {
+  return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+};
+
 export const formatDate = (dateString: string) => {
   try {
     const date = new Date(dateString);

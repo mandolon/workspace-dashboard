@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Plus, Search, MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getRandomColor } from '@/utils/taskUtils';
 
 interface TeamMember {
   id: string;
@@ -67,23 +68,6 @@ const TeamsContent = () => {
         member.id === memberId ? { ...member, role: newRole } : member
       )
     );
-  };
-
-  const getRandomColor = (id: string) => {
-    const colors = [
-      'bg-red-500',
-      'bg-blue-500', 
-      'bg-green-500',
-      'bg-yellow-500',
-      'bg-purple-500',
-      'bg-pink-500',
-      'bg-indigo-500',
-      'bg-orange-500',
-      'bg-teal-500',
-      'bg-cyan-500'
-    ];
-    const index = parseInt(id) % colors.length;
-    return colors[index];
   };
 
   const filteredMembers = teamMembers.filter(member => 
