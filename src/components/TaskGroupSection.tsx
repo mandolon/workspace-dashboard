@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -278,16 +279,16 @@ const TaskGroupSection = ({
           <Table>
             <TableHeader>
               <TableRow className="border-b border-border">
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[35%]">Name</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assignee</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[18%]">Date Created</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[22%]">Files</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[40%]">Name</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[20%]">Date Created</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[15%]">Files</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {visibleTasks.map((task) => (
                 <TableRow key={task.id} className="hover:bg-accent/50 group">
-                  <TableCell className="py-2 w-[35%]">
+                  <TableCell className="py-2 w-[40%]">
                     <div 
                       className="flex items-center gap-2 cursor-pointer" 
                       onClick={() => onTaskClick(task)}
@@ -343,6 +344,29 @@ const TaskGroupSection = ({
                           </div>
                         )}
                       </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground py-2 w-[20%]">
+                    {formatDate(task.dateCreated)}
+                  </TableCell>
+                  <TableCell className="py-2 w-[15%]">
+                    <div className="flex items-center gap-1">
+                      {task.hasAttachment && (
+                        <div className="w-3 h-3 bg-gray-100 rounded flex items-center justify-center">
+                          <svg className="w-2 h-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                      )}
+                      <button 
+                        className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle file attachment
+                        }}
+                      >
+                        <Plus className="w-2 h-2" strokeWidth="2" />
+                      </button>
                     </div>
                   </TableCell>
                   <TableCell className="py-2 w-[25%]">
@@ -431,29 +455,6 @@ const TaskGroupSection = ({
                           </DropdownMenuContent>
                         </DropdownMenu>
                       )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground py-2 w-[18%]">
-                    {formatDate(task.dateCreated)}
-                  </TableCell>
-                  <TableCell className="py-2 w-[22%]">
-                    <div className="flex items-center gap-1">
-                      {task.hasAttachment && (
-                        <div className="w-3 h-3 bg-gray-100 rounded flex items-center justify-center">
-                          <svg className="w-2 h-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        </div>
-                      )}
-                      <button 
-                        className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // Handle file attachment
-                        }}
-                      >
-                        <Plus className="w-2 h-2" strokeWidth="2" />
-                      </button>
                     </div>
                   </TableCell>
                 </TableRow>
