@@ -19,18 +19,19 @@ interface InvoiceTableProps {
 
 const InvoiceTable = ({ invoices, onOpenPDF, onDownloadPDF }: InvoiceTableProps) => {
   return (
-    <div className="flex-1 overflow-y-auto px-4 pb-4">
-      <div className="space-y-0.5">
-        {/* Header Row */}
-        <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b mt-4">
-          <div className="col-span-2">Last Name</div>
-          <div className="col-span-3">Project Address</div>
-          <div className="col-span-2">Status</div>
-          <div className="col-span-2">Amount</div>
-          <div className="col-span-2">Date Created</div>
-          <div className="col-span-1">Invoice</div>
-        </div>
-        
+    <div className="flex-1 overflow-y-auto">
+      {/* Header Row - positioned at the top border */}
+      <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b px-4 bg-background sticky top-0">
+        <div className="col-span-2">Last Name</div>
+        <div className="col-span-3">Project Address</div>
+        <div className="col-span-2">Status</div>
+        <div className="col-span-2">Amount</div>
+        <div className="col-span-2">Date Created</div>
+        <div className="col-span-1">Invoice</div>
+      </div>
+      
+      {/* Content area with padding */}
+      <div className="px-4 pb-4 space-y-0.5">
         {/* Invoice Rows */}
         {invoices.map((invoice, index) => (
           <InvoiceRow
