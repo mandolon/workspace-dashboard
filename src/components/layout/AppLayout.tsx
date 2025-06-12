@@ -1,17 +1,23 @@
 import React, { ReactNode, useRef, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
 import { useSidebarContext } from '@/contexts/SidebarContext';
+import { useLocation } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import PageHeader from '@/components/shared/PageHeader';
 
 interface AppLayoutProps {
   children: ReactNode;
+  showHeader?: boolean;
 }
 
-const AppLayout = ({ children }: AppLayoutProps) => {
+const AppLayout = ({ children, showHeader = true }: AppLayoutProps) => {
   const { isCollapsed, isHidden, toggleSidebar, setSidebarHidden } = useSidebarContext();
   const sidebarPanelRef = useRef<ImperativePanelHandle>(null);
   const wasHiddenRef = useRef(isHidden);
+  const location = useLocation();
+
+  // Don't show the default header on the home page since it has its own header
+  const shouldShowHeader = showHeader && location.pathname !== '/';
 
   // Track when sidebar transitions from hidden to visible
   useEffect(() => {
@@ -40,7 +46,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <div className="min-h-screen w-full bg-background flex">
         {/* Main Content when sidebar is hidden */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          <PageHeader onToggleSidebar={toggleSidebar} />
+          {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
           <div className="flex-1 overflow-hidden">
             {children}
           </div>
@@ -60,7 +66,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          <PageHeader onToggleSidebar={toggleSidebar} />
+          {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
           <div className="flex-1 overflow-hidden">
             {children}
           </div>
@@ -101,7 +107,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         {/* Main Content Panel */}
         <Panel minSize={60} className="h-screen overflow-hidden">
           <div className="flex-1 flex flex-col h-screen overflow-hidden">
-            <PageHeader onToggleSidebar={toggleSidebar} />
+            {shouldShowHeader && <PageHeader onToggleSidebar={toggleSidebar} />}
             <div className="flex-1 overflow-hidden">
               {children}
             </div>
