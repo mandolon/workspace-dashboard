@@ -201,15 +201,17 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
           fields={clientInformationFields}
         />
 
-        <InformationSection
-          title="Project Address"
-          fields={projectAddressFields}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InformationSection
+            title="Project Address"
+            fields={projectAddressFields}
+          />
 
-        <InformationSection
-          title="Billing Address"
-          fields={billingAddressFields}
-        />
+          <InformationSection
+            title="Billing Address"
+            fields={billingAddressFields}
+          />
+        </div>
 
         <InformationSection
           title="Project Information"
