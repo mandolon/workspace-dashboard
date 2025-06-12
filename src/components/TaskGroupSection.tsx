@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import TaskGroupHeader from './task-group/TaskGroupHeader';
 import TaskTable from './task-group/TaskTable';
 import AddTaskButton from './task-group/AddTaskButton';
 import QuickAddTask from './QuickAddTask';
-import { useTaskManagement } from '@/hooks/useTaskManagement';
+import { useTaskManagement } from '@/hooks/useTaskManagement.tsx';
 
 interface Task {
   id: number;
