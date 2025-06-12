@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -280,8 +279,8 @@ const TaskGroupSection = ({
             <TableHeader>
               <TableRow className="border-b border-border">
                 <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%]">Name</TableHead>
-                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
                 <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
                 <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
               </TableRow>
             </TableHeader>
@@ -346,9 +345,6 @@ const TaskGroupSection = ({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
-                    {formatDate(task.dateCreated)}
-                  </TableCell>
                   <TableCell className="py-2 w-[8%]">
                     <div className="flex items-center gap-1">
                       {task.hasAttachment && (
@@ -368,6 +364,9 @@ const TaskGroupSection = ({
                         <Plus className="w-2 h-2" strokeWidth="2" />
                       </button>
                     </div>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+                    {formatDate(task.dateCreated)}
                   </TableCell>
                   <TableCell className="py-2 w-[25%]">
                     <div className="flex items-center -space-x-1">
