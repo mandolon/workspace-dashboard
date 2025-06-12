@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Users, MapPin } from 'lucide-react';
+import { Users, MapPin, Calendar } from 'lucide-react';
 import { getProjectDisplayName, getClientData } from '@/data/projectClientData';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ProjectHeaderProps {
   projectName: string;
@@ -11,6 +12,10 @@ interface ProjectHeaderProps {
 const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
   const { projectId } = useParams();
   const clientData = getClientData(projectId);
+
+  const handleStatusChange = (status: string) => {
+    console.log('Status changed to:', status);
+  };
 
   return (
     <div className="px-4 py-2">
@@ -26,7 +31,23 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Status and Date Info */}
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Calendar className="w-3 h-3" />
+            <span>5/8/23, 5 Weeks</span>
+          </div>
+          <Select defaultValue="in-progress" onValueChange={handleStatusChange}>
+            <SelectTrigger className="w-32 h-7 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="complete">Complete</SelectItem>
+              <SelectItem value="in-progress">In Progress</SelectItem>
+              <SelectItem value="on-hold">On Hold</SelectItem>
+              <SelectItem value="not-started">Not Started</SelectItem>
+            </SelectContent>
+          </Select>
           <div className="flex items-center gap-1">
             <Users className="w-4 h-4" />
             <span className="text-xs">Agents</span>
