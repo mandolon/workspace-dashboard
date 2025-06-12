@@ -14,9 +14,11 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
   const handleResize = (sizes: number[]) => {
     const sidebarSize = sizes[0];
+    console.log('Sidebar resize:', sidebarSize);
     
     // If sidebar is dragged below 8% of screen width, hide it completely
     if (sidebarSize < 8) {
+      console.log('Hiding sidebar due to small size');
       setSidebarHidden(true);
     }
   };
@@ -59,13 +61,22 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   // Resizable layout when sidebar is expanded
   return (
     <div className="min-h-screen w-full bg-background">
-      <PanelGroup direction="horizontal" onLayout={handleResize}>
+      <PanelGroup 
+        direction="horizontal" 
+        onLayout={handleResize}
+        autoSaveId="sidebar-layout"
+      >
         {/* Resizable Sidebar Panel */}
         <Panel 
           defaultSize={20} 
-          minSize={15} 
+          minSize={8}
           maxSize={40}
           className="h-screen overflow-hidden"
+          collapsible={true}
+          onCollapse={() => {
+            console.log('Panel collapsed');
+            setSidebarHidden(true);
+          }}
         >
           <div className="h-full bg-sidebar border-r border-sidebar-border">
             <Sidebar isCollapsed={false} />
