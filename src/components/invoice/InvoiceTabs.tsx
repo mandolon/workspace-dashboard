@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText, Plus, Settings, Download, CheckCircle, Clock, Send } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,35 +27,35 @@ const InvoiceTabs = ({
   const invoices = [
     {
       id: "RH15465",
-      projectAddress: "123 Oak Street, Springfield, IL",
+      projectAddress: "123 Oak Street",
       status: "Paid",
       amount: "$304.65",
       dateCreated: "Jan 12, 2023, 8:00 AM"
     },
     {
       id: "RH65842",
-      projectAddress: "456 Maple Avenue, Portland, OR",
+      projectAddress: "456 Maple Avenue",
       status: "Sent",
       amount: "$450.00",
       dateCreated: "Jan 15, 2023, 2:30 PM"
     },
     {
       id: "RH78123",
-      projectAddress: "789 Pine Road, Austin, TX",
+      projectAddress: "789 Pine Road",
       status: "Unpaid",
       amount: "$750.25",
       dateCreated: "Jan 20, 2023, 10:15 AM"
     },
     {
       id: "RH89456",
-      projectAddress: "321 Elm Drive, Seattle, WA",
+      projectAddress: "321 Elm Drive",
       status: "Paid",
       amount: "$525.80",
       dateCreated: "Jan 25, 2023, 4:45 PM"
     },
     {
       id: "RH91234",
-      projectAddress: "654 Cedar Lane, Denver, CO",
+      projectAddress: "654 Cedar Lane",
       status: "Sent",
       amount: "$200.00",
       dateCreated: "Jan 30, 2023, 9:00 AM"
