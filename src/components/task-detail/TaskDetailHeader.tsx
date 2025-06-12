@@ -17,8 +17,6 @@ const TaskDetailHeader = ({ task, onClose }: TaskDetailHeaderProps) => {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <span className="text-sm text-muted-foreground">{task.project}</span>
-        <span className="text-sm text-muted-foreground">-</span>
-        <span className="text-sm text-muted-foreground">{task.project}</span>
         <div className="ml-auto flex items-center gap-1">
           <div className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
             REDLINE / TO DO
