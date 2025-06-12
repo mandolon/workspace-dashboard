@@ -75,14 +75,14 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
   };
 
   return (
-    <Card>
+    <Card className="border-0 shadow-none bg-muted/30">
       <CardHeader className="pb-2 pt-3 px-3">
         <CardTitle className="text-sm font-semibold">Time Entries</CardTitle>
       </CardHeader>
       <CardContent className="px-3 pb-3">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="border-0 hover:bg-transparent">
               <TableHead className="w-[180px] text-xs font-medium text-muted-foreground h-8">Project</TableHead>
               <TableHead className="w-[160px] text-xs font-medium text-muted-foreground h-8">Task</TableHead>
               {weekDays.map((day, index) => (
@@ -103,7 +103,7 @@ const TimesheetTable = ({ selectedWeek, refreshTrigger }: TimesheetTableProps) =
           </TableHeader>
           <TableBody>
             {timeEntries.map((entry) => (
-              <TableRow key={entry.id}>
+              <TableRow key={entry.id} className="border-0 hover:bg-muted/50">
                 <TableCell className="font-medium py-2">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${entry.billable ? 'bg-green-500' : 'bg-gray-400'}`} />

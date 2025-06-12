@@ -15,8 +15,8 @@ const TimesheetsHeader = ({ selectedWeek, onWeekChange, onAddTimeEntry }: Timesh
   const weekEnd = endOfWeek(selectedWeek, { weekStartsOn: 1 });
 
   return (
-    <div className="border-b border-border bg-background">
-      <div className="px-4 py-3">
+    <div className="bg-background">
+      <div className="px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-semibold">Timesheets</h1>

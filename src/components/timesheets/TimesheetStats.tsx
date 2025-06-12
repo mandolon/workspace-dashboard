@@ -21,7 +21,7 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-      <Card>
+      <Card className="border-0 shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
           <CardTitle className="text-xs font-medium text-muted-foreground">Total Hours</CardTitle>
           <Clock className="w-3 h-3 text-muted-foreground" />
@@ -34,7 +34,7 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-0 shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
           <CardTitle className="text-xs font-medium text-muted-foreground">Target Hours</CardTitle>
           <Target className="w-3 h-3 text-muted-foreground" />
@@ -47,7 +47,7 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-0 shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
           <CardTitle className="text-xs font-medium text-muted-foreground">Billable Hours</CardTitle>
           <TrendingUp className="w-3 h-3 text-muted-foreground" />
@@ -60,7 +60,7 @@ const TimesheetStats = ({ selectedWeek, refreshTrigger }: TimesheetStatsProps) =
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-0 shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-3 px-3">
           <CardTitle className="text-xs font-medium text-muted-foreground">Projects</CardTitle>
           <Calendar className="w-3 h-3 text-muted-foreground" />
