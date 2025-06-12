@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, Plus, Edit, MoreHorizontal, ChevronDown as ChevronDownIcon, Check, X, UserPlus } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -14,9 +13,9 @@ interface Task {
   estimatedCompletion: string;
   dateCreated: string;
   dueDate: string;
-  assignee: { name: string; avatar: string } | null;
+  assignee: { name: string; avatar: string; fullName?: string } | null;
   hasAttachment: boolean;
-  collaborators?: Array<{ name: string; avatar: string }>;
+  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
   status: string;
 }
 
@@ -47,13 +46,13 @@ const TaskGroupSection = ({
   const [editingValue, setEditingValue] = useState('');
   const [tasks, setTasks] = useState<Task[]>(group.tasks);
 
-  // Available people to assign
+  // Available people to assign with full names
   const availablePeople = [
-    { name: "MP", avatar: "bg-blue-500" },
-    { name: "JD", avatar: "bg-green-500" },
-    { name: "SK", avatar: "bg-purple-500" },
-    { name: "AL", avatar: "bg-orange-500" },
-    { name: "RT", avatar: "bg-red-500" }
+    { name: "MP", avatar: "bg-blue-500", fullName: "Marcus Peterson" },
+    { name: "JD", avatar: "bg-green-500", fullName: "Jennifer Davis" },
+    { name: "SK", avatar: "bg-purple-500", fullName: "Sarah Kim" },
+    { name: "AL", avatar: "bg-orange-500", fullName: "Alex Lopez" },
+    { name: "RT", avatar: "bg-red-500", fullName: "Ryan Taylor" }
   ];
 
   const getRandomColor = (name: string) => {
@@ -149,7 +148,7 @@ const TaskGroupSection = ({
     console.log(`Removed collaborator ${collaboratorIndex} from task ${taskId}`);
   };
 
-  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string }) => {
+  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
     setTasks(prevTasks => 
       prevTasks.map(task => 
         task.id === taskId 
@@ -157,10 +156,10 @@ const TaskGroupSection = ({
           : task
       )
     );
-    console.log(`Assigned ${person.name} to task ${taskId}`);
+    console.log(`Assigned ${person.fullName || person.name} to task ${taskId}`);
   };
 
-  const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string }) => {
+  const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
     setTasks(prevTasks => 
       prevTasks.map(task => 
         task.id === taskId 
@@ -171,7 +170,7 @@ const TaskGroupSection = ({
           : task
       )
     );
-    console.log(`Added ${person.name} as collaborator to task ${taskId}`);
+    console.log(`Added ${person.fullName || person.name} as collaborator to task ${taskId}`);
   };
 
   return (
@@ -309,7 +308,7 @@ const TaskGroupSection = ({
                             <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(person.name)}`}>
                               {person.name}
                             </div>
-                            <span>{person.name}</span>
+                            <span>{person.fullName}</span>
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuContent>
@@ -355,7 +354,7 @@ const TaskGroupSection = ({
                               <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(person.name)}`}>
                                 {person.name}
                               </div>
-                              <span>{person.name}</span>
+                              <span>{person.fullName}</span>
                             </DropdownMenuItem>
                           ))}
                       </DropdownMenuContent>
