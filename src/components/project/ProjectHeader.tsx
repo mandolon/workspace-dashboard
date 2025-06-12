@@ -5,11 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getProjectDisplayName, getClientData } from '@/data/projectClientData';
 
-interface ProjectHeaderProps {
-  key?: string;
-}
-
-const ProjectHeader = ({ key }: ProjectHeaderProps) => {
+const ProjectHeader = () => {
   const { projectId } = useParams();
   const clientData = getClientData(projectId);
 

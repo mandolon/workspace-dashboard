@@ -19,7 +19,7 @@ const ProjectPage = () => {
     <AppLayout>
       <div className="flex-1 bg-background p-4">
         <div className="h-full flex flex-col max-w-6xl mx-auto">
-          <ProjectHeader key={refreshKey} />
+          <ProjectHeader key={refreshKey.toString()} />
           <ProjectTabs projectName={projectName} onDataChange={handleDataRefresh} />
         </div>
       </div>
