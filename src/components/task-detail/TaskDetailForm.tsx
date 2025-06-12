@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -12,14 +11,6 @@ interface TaskDetailFormProps {
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   return (
     <div className="space-y-3">
-      {/* Project and Status Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">•</span>
-          <span className="text-xs text-muted-foreground">2717 58th Street</span>
-        </div>
-      </div>
-
       {/* Task Title with Status Badge - centered alignment */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{task.title}</h1>
