@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Download } from 'lucide-react';
 import InvoiceActionsMenu from './InvoiceActionsMenu';
@@ -47,23 +46,8 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, sho
     // Add delete logic here
   };
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    // Don't trigger row click when clicking on the invoice ID or download button
-    if ((e.target as HTMLElement).closest('button')) {
-      return;
-    }
-    
-    if (showEditIcon) {
-      // For Invoices tab, we'll handle this in the dropdown trigger
-      return;
-    }
-  };
-
   return (
-    <div 
-      className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group px-4"
-      onClick={handleRowClick}
-    >
+    <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group px-4">
       <div className="col-span-2 text-muted-foreground">{invoice.lastName}</div>
       <div className="col-span-3 text-muted-foreground">{invoice.projectAddress}</div>
       <div className="col-span-2 text-muted-foreground">{invoice.amount}</div>
@@ -83,7 +67,6 @@ const InvoiceRow = ({ invoice, onOpenPDF, onDownloadPDF, showStatus = false, sho
             invoiceId={invoice.id}
             onMove={handleMove}
             onDelete={handleDelete}
-            triggerOnRowClick={true}
           />
         ) : (
           <button 
