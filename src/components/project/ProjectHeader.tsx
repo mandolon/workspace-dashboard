@@ -31,31 +31,36 @@ const ProjectHeader = ({ projectName }: ProjectHeaderProps) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-end gap-2">
           {/* Status and Date Info */}
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            <span>5/8/23, 5 Weeks</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Calendar className="w-3 h-3" />
+              <span>5/8/23, 5 Weeks</span>
+            </div>
+            <Select defaultValue="in-progress" onValueChange={handleStatusChange}>
+              <SelectTrigger className="w-32 h-7 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="complete">Complete</SelectItem>
+                <SelectItem value="in-progress">In Progress</SelectItem>
+                <SelectItem value="on-hold">On Hold</SelectItem>
+                <SelectItem value="not-started">Not Started</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select defaultValue="in-progress" onValueChange={handleStatusChange}>
-            <SelectTrigger className="w-32 h-7 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="complete">Complete</SelectItem>
-              <SelectItem value="in-progress">In Progress</SelectItem>
-              <SelectItem value="on-hold">On Hold</SelectItem>
-              <SelectItem value="not-started">Not Started</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="flex items-center gap-1">
-            <Users className="w-4 h-4" />
-            <span className="text-xs">Agents</span>
-            <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">2</span>
+          {/* Agents and Action Buttons */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <Users className="w-4 h-4" />
+              <span className="text-xs">Agents</span>
+              <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-medium">2</span>
+            </div>
+            <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
+            <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
+            <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
           </div>
-          <button className="text-xs text-blue-600 hover:text-blue-700">Ask AI</button>
-          <button className="text-xs text-gray-600 hover:text-gray-700">Share</button>
-          <button className="text-xs text-gray-600 hover:text-gray-700">Chat</button>
         </div>
       </div>
     </div>
