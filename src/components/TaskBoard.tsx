@@ -6,7 +6,7 @@ import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getTasksByStatus } from '@/data/taskData';
+import { getTasksByStatus, addTask } from '@/data/taskData';
 import { Task, TaskGroup } from '@/types/task';
 
 const TaskBoard = () => {
@@ -64,10 +64,10 @@ const TaskBoard = () => {
 
   const handleQuickAddSave = (taskData: any) => {
     // Convert quick add data to proper task format and create via addTask
-    const { addTask } = require('@/data/taskData');
     const newTask = addTask({
       title: taskData.title,
       projectId: taskData.projectId || 'unknown-project',
+      project: taskData.project || 'No Project',
       status: taskData.status,
       assignee: taskData.assignee,
       dueDate: taskData.dueDate || '—',
