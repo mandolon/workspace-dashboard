@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { getAvailableProjects } from '@/utils/projectMapping';
 
 interface TaskDialogFormProps {
   taskName: string;
@@ -36,6 +37,8 @@ const TaskDialogForm = ({
   description,
   setDescription
 }: TaskDialogFormProps) => {
+  const availableProjects = getAvailableProjects();
+
   return (
     <div className="space-y-3 py-2">
       {/* Project and Status Row */}
@@ -46,10 +49,11 @@ const TaskDialogForm = ({
               <SelectValue placeholder="Select Project" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="piner-haus">Piner Haus Garage</SelectItem>
-              <SelectItem value="rathbun-cabin">Rathbun - USFS Cabin</SelectItem>
-              <SelectItem value="ogden-thew">Ogden - Thew - 2709 T Street</SelectItem>
-              <SelectItem value="adams-40th">Adams - 1063 40th Street</SelectItem>
+              {availableProjects.map((project) => (
+                <SelectItem key={project.projectId} value={project.displayName}>
+                  {project.displayName}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

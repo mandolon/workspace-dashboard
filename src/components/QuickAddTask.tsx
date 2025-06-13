@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import TaskStatusIcon from './TaskStatusIcon';
+import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
@@ -18,25 +19,25 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const projects = [
-    'Adams - 1063 40th St.',
-    'Thew - 2709 T St.',
-    'Tran - 1524 Tiverton Ave.',
-    'Craig - 2015 10th St.',
-    'Kelly - 2200 I Street',
-    'Adamo - 6605 S. Land P...'
-  ];
-
-  const filteredProjects = projects.filter(project =>
-    project.toLowerCase().includes(searchTerm.toLowerCase())
+  const availableProjects = getAvailableProjects();
+  
+  const filteredProjects = availableProjects.filter(project =>
+    project.displayName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSave = () => {
     if (!taskName.trim()) return;
     
+    console.log('Quick add saving with selected project:', selectedProject);
+    
+    // Convert display name to project ID
+    const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
+    console.log('Quick add converted to project ID:', projectId);
+    
     const newTask = {
       id: Date.now(),
       title: taskName,
+      projectId: projectId,
       project: selectedProject || 'No Project',
       estimatedCompletion: '—',
       dateCreated: new Date().toLocaleDateString('en-US', { 
@@ -50,6 +51,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       status: defaultStatus
     };
 
+    console.log('Quick add final task data:', newTask);
     onSave(newTask);
     setTaskName('');
     setSelectedProject('');
@@ -62,8 +64,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     }
   };
 
-  const handleProjectSelect = (project: string) => {
-    setSelectedProject(project);
+  const handleProjectSelect = (project: { displayName: string; projectId: string }) => {
+    console.log('Quick add project selected:', project);
+    setSelectedProject(project.displayName);
     setShowProjectDropdown(false);
     setSearchTerm('');
   };
@@ -110,13 +113,13 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
                   </div>
                 </div>
                 <div className="max-h-32 overflow-y-auto">
-                  {filteredProjects.map((project, index) => (
+                  {filteredProjects.map((project) => (
                     <button
-                      key={index}
+                      key={project.projectId}
                       className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
                       onClick={() => handleProjectSelect(project)}
                     >
-                      {project}
+                      {project.displayName}
                     </button>
                   ))}
                 </div>

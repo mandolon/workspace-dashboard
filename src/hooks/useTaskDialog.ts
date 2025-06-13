@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { addTask } from '@/data/taskData';
 import { getProjectDisplayName } from '@/data/projectClientData';
+import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 
 export const useTaskDialog = () => {
   const [taskName, setTaskName] = useState('');
@@ -13,21 +14,16 @@ export const useTaskDialog = () => {
   const [assignedTo, setAssignedTo] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
-  // Project mapping from display names to project IDs
-  const projectMapping = {
-    'piner-haus': 'piner-piner-haus-garage',
-    'rathbun-cabin': 'rathbun-usfs-cabin', 
-    'ogden-thew': 'ogden-thew-2709-t-street',
-    'adams-40th': 'adams-1063-40th-street'
-  };
-
   const handleCreateTask = (onCreateTask: (taskData: any) => void, onClose: () => void) => {
     if (!taskName.trim()) {
       return;
     }
 
-    // Map the selected project to the correct project ID
-    const projectId = projectMapping[selectedProject as keyof typeof projectMapping] || selectedProject;
+    console.log('Creating task with selected project:', selectedProject);
+    
+    // Convert the selected project display name to project ID
+    const projectId = getProjectIdFromDisplayName(selectedProject);
+    console.log('Converted to project ID:', projectId);
 
     const taskData = {
       title: taskName,
@@ -47,6 +43,8 @@ export const useTaskDialog = () => {
       hasAttachment: false,
       collaborators: []
     };
+    
+    console.log('Final task data:', taskData);
     
     // Use the centralized addTask function
     const newTask = addTask(taskData);
