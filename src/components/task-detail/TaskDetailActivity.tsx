@@ -49,11 +49,9 @@ const TaskDetailActivity = () => {
               {getInitials(activity.user)}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <div className="font-medium text-xs">{activity.user}</div>
-                <div className="text-xs text-muted-foreground">{activity.time}</div>
-              </div>
+              <div className="font-medium text-xs">{activity.user}</div>
               <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
             </div>
           </div>
         ))}
