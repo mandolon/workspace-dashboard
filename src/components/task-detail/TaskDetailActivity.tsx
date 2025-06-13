@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Paperclip, Mic } from 'lucide-react';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
 const TaskDetailActivity = () => {
   const activities = [
@@ -42,40 +41,20 @@ const TaskDetailActivity = () => {
         <h3 className="text-sm font-semibold">Activity</h3>
       </div>
 
-      {/* Activity Table */}
-      <div className="flex-1 overflow-y-auto">
-        <Table>
-          <TableBody>
-            {activities.map((activity, index) => {
-              const isUserMessage = activity.user === "You";
-              
-              return (
-                <TableRow key={index} className="hover:bg-muted/30 border-0">
-                  <TableCell className="w-12 p-3 align-top">
-                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
-                      {getInitials(activity.user)}
-                    </div>
-                  </TableCell>
-                  <TableCell className="w-20 p-3 align-top">
-                    <div className={`font-medium text-xs ${isUserMessage ? 'text-blue-600' : ''}`}>
-                      {activity.user}
-                    </div>
-                  </TableCell>
-                  <TableCell className="p-3 align-top">
-                    <div className="text-xs text-muted-foreground break-words">
-                      {activity.action}
-                    </div>
-                  </TableCell>
-                  <TableCell className="w-16 p-3 align-top text-right">
-                    <div className="text-xs text-muted-foreground">
-                      {activity.time}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+      {/* Activity List */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
+        {activities.map((activity, index) => (
+          <div key={index} className="flex gap-2">
+            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+              {getInitials(activity.user)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-xs">{activity.user}</div>
+              <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Message Input */}
