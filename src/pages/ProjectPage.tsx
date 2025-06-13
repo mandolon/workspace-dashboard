@@ -17,7 +17,11 @@ const ProjectPage = () => {
       <div className="flex-1 bg-background p-4">
         <div className="h-full flex flex-col max-w-6xl mx-auto">
           <ProjectHeader refreshTrigger={refreshTrigger} />
-          <ProjectTabs projectName={projectName} onDataChange={triggerRefresh} />
+          <ProjectTabs 
+            projectName={projectName} 
+            projectId={projectId || ''} 
+            onDataChange={triggerRefresh} 
+          />
         </div>
       </div>
     </AppLayout>
