@@ -1,17 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Edit, MoreHorizontal } from 'lucide-react';
-import { getTasksByProjectId } from '@/data/taskData';
+import { Edit, Trash2 } from 'lucide-react';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import DeleteTaskDialog from '../DeleteTaskDialog';
+import { getTasksByProjectId, softDeleteTask, restoreTask } from '@/data/taskData';
 
 interface TasksTabProps {
   projectName: string;
-  projectId: string; // Add projectId prop
+  projectId: string;
 }
 
 const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<any>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { toast } = useToast();
 
   const getRandomColor = (name: string) => {
     const colors = [
@@ -47,8 +62,8 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
     }
   };
 
-  // Get tasks for the current project
-  const projectTasks = getTasksByProjectId(projectId);
+  // Get tasks for the current project, filtering out deleted ones
+  const projectTasks = getTasksByProjectId(projectId).filter(task => !task.deletedAt);
 
   const renderStatusIcon = (status: string) => {
     const baseClasses = "w-4 h-4 rounded-full border-2 flex items-center justify-center";
@@ -87,9 +102,65 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
       state: {
         returnTo: location.pathname,
         returnToName: `${projectName} - Tasks`,
-        returnToTab: 'tasks' // Add the tab information
+        returnToTab: 'tasks'
       }
     });
+  };
+
+  const handleDeleteClick = (task: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTaskToDelete(task);
+    setShowDeleteDialog(true);
+  };
+
+  const handleDeleteTask = async () => {
+    if (!taskToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      const deletedTask = softDeleteTask(taskToDelete.id, "AL"); // Current user
+      
+      if (deletedTask) {
+        toast({
+          title: "Task deleted",
+          description: `"${taskToDelete.title}" has been deleted.`,
+          action: (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handleUndoDelete(taskToDelete.id)}
+            >
+              Undo
+            </Button>
+          ),
+          duration: 5000,
+        });
+
+        setRefreshTrigger(prev => prev + 1);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete task. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+      setTaskToDelete(null);
+    }
+  };
+
+  const handleUndoDelete = (taskId: number) => {
+    const restoredTask = restoreTask(taskId);
+    if (restoredTask) {
+      toast({
+        title: "Task restored",
+        description: "Task has been restored successfully.",
+        duration: 3000,
+      });
+      setRefreshTrigger(prev => prev + 1);
+    }
   };
 
   return (
@@ -104,39 +175,75 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
         
         {/* Task Rows */}
         {projectTasks.map((task) => (
-          <div 
-            key={task.id} 
-            className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group"
-            onClick={() => handleTaskClick(task)}
-          >
-            <div className="col-span-6 flex items-center gap-2">
-              {renderStatusIcon(task.status)}
-              <span className="text-blue-600 hover:underline truncate">
-                {task.taskId} - {task.title}
-              </span>
-            </div>
-            <div className="col-span-3 text-muted-foreground">{formatDate(task.dateCreated)}</div>
-            <div className="col-span-3 flex items-center justify-between">
-              <div className="flex items-center -space-x-1">
-                {task.assignee && (
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                    {task.assignee.name}
-                  </div>
-                )}
-              </div>
-              <button 
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Handle edit action
-                }}
+          <ContextMenu key={task.id}>
+            <ContextMenuTrigger asChild>
+              <div 
+                className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group"
+                onClick={() => handleTaskClick(task)}
               >
-                <Edit className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
-              </button>
-            </div>
-          </div>
+                <div className="col-span-6 flex items-center gap-2">
+                  {renderStatusIcon(task.status)}
+                  <span className="text-blue-600 hover:underline truncate">
+                    {task.taskId} - {task.title}
+                  </span>
+                </div>
+                <div className="col-span-3 text-muted-foreground">{formatDate(task.dateCreated)}</div>
+                <div className="col-span-3 flex items-center justify-between">
+                  <div className="flex items-center -space-x-1">
+                    {task.assignee && (
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                        {task.assignee.name}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      className="p-1 hover:bg-gray-100 rounded"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Handle edit action
+                      }}
+                    >
+                      <Edit className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                    </button>
+                    <button 
+                      className="p-1 hover:bg-gray-100 rounded"
+                      onClick={(e) => handleDeleteClick(task, e)}
+                    >
+                      <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth="2" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem onClick={(e) => { e.stopPropagation(); /* Handle edit */ }}>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit task
+              </ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem 
+                onClick={() => handleDeleteClick(task, {} as React.MouseEvent)} 
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         ))}
       </div>
+
+      <DeleteTaskDialog
+        isOpen={showDeleteDialog}
+        onClose={() => {
+          setShowDeleteDialog(false);
+          setTaskToDelete(null);
+        }}
+        onConfirm={handleDeleteTask}
+        taskTitle={taskToDelete?.title || ""}
+        isLoading={isDeleting}
+      />
     </div>
   );
 };

@@ -15,18 +15,18 @@ const TaskBoard = () => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // Add refresh trigger for centralized tasks
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Get task groups using centralized data
   const getTaskGroups = (): TaskGroup[] => {
-    // Get centralized tasks and combine with custom tasks, avoiding duplicates
-    const centralizedRedline = getTasksByStatus('redline');
-    const centralizedProgress = getTasksByStatus('progress'); 
-    const centralizedCompleted = getTasksByStatus('completed');
+    // Get centralized tasks and combine with custom tasks, filtering out deleted ones
+    const centralizedRedline = getTasksByStatus('redline').filter(task => !task.deletedAt);
+    const centralizedProgress = getTasksByStatus('progress').filter(task => !task.deletedAt); 
+    const centralizedCompleted = getTasksByStatus('completed').filter(task => !task.deletedAt);
     
-    const customRedline = customTasks.filter(task => task.status === 'redline' && !task.archived);
-    const customProgress = customTasks.filter(task => task.status === 'progress' && !task.archived);
-    const customCompleted = customTasks.filter(task => task.status === 'completed' && !task.archived);
+    const customRedline = customTasks.filter(task => task.status === 'redline' && !task.archived && !task.deletedAt);
+    const customProgress = customTasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
+    const customCompleted = customTasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
 
     const redlineTasks = [...centralizedRedline, ...customRedline];
     const progressTasks = [...centralizedProgress, ...customProgress];
@@ -115,6 +115,11 @@ const TaskBoard = () => {
     }
   };
 
+  const handleTaskDeleted = () => {
+    // Trigger refresh to update the UI after deletion/restoration
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   const taskGroups = getTaskGroups();
 
   return (
@@ -128,13 +133,14 @@ const TaskBoard = () => {
           <div className="p-4 space-y-4">
             {taskGroups.map((group, groupIndex) => (
               <TaskGroupSection
-                key={`${groupIndex}-${refreshTrigger}`} // Add refreshTrigger to key to force re-render
+                key={`${groupIndex}-${refreshTrigger}`}
                 group={group}
                 showQuickAdd={showQuickAdd}
                 onSetShowQuickAdd={setShowQuickAdd}
                 onQuickAddSave={handleQuickAddSave}
                 onTaskClick={handleTaskClick}
                 onTaskArchive={handleTaskArchive}
+                onTaskDeleted={handleTaskDeleted}
               />
             ))}
           </div>

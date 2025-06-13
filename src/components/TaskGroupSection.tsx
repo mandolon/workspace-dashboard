@@ -14,6 +14,7 @@ interface TaskGroupSectionProps {
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
   onTaskArchive?: (taskId: number) => void;
+  onTaskDeleted?: () => void;
 }
 
 const TaskGroupSection = ({ 
@@ -22,7 +23,8 @@ const TaskGroupSection = ({
   onSetShowQuickAdd, 
   onQuickAddSave, 
   onTaskClick,
-  onTaskArchive
+  onTaskArchive,
+  onTaskDeleted
 }: TaskGroupSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const quickAddRef = useRef<HTMLDivElement>(null);
@@ -79,8 +81,8 @@ const TaskGroupSection = ({
     };
   }, [editingTaskId, handleCancelEdit]);
 
-  // Filter out archived tasks from display
-  const visibleTasks = tasks.filter(task => !task.archived);
+  // Filter out archived and deleted tasks from display
+  const visibleTasks = tasks.filter(task => !task.archived && !task.deletedAt);
 
   return (
     <div className="space-y-2">
@@ -109,6 +111,7 @@ const TaskGroupSection = ({
             onRemoveCollaborator={handleRemoveCollaborator}
             onAssignPerson={handleAssignPerson}
             onAddCollaborator={handleAddCollaborator}
+            onTaskDeleted={onTaskDeleted}
           />
 
           {showQuickAdd === group.status ? (

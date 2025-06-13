@@ -20,6 +20,7 @@ interface TaskTableProps {
   onRemoveCollaborator: (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => void;
   onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
+  onTaskDeleted?: () => void;
 }
 
 const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
@@ -37,7 +38,8 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onRemoveAssignee,
   onRemoveCollaborator,
   onAssignPerson,
-  onAddCollaborator
+  onAddCollaborator,
+  onTaskDeleted
 }, ref) => {
   return (
     <div ref={ref}>
@@ -69,6 +71,7 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
               onRemoveCollaborator={onRemoveCollaborator}
               onAssignPerson={onAssignPerson}
               onAddCollaborator={onAddCollaborator}
+              onTaskDeleted={onTaskDeleted}
             />
           ))}
         </TableBody>
