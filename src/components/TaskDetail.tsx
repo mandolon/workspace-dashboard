@@ -10,6 +10,7 @@ interface TaskDetailProps {
   onClose: () => void;
   task: {
     id: number;
+    taskId: string;
     title: string;
     project: string;
     estimatedCompletion: string;

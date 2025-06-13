@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import TaskDetail from '@/components/TaskDetail';
-import { getTaskById } from '@/data/taskData';
+import { getTaskById, getTaskByTaskId } from '@/data/taskData';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
@@ -15,8 +15,17 @@ const TaskDetailPage = () => {
   // Get navigation state passed from previous page
   const { returnTo, returnToName, returnToTab } = location.state || {};
 
-  // Get task from centralized data store
-  const task = taskId ? getTaskById(parseInt(taskId, 10)) : null;
+  // Get task from centralized data store - support both numeric IDs and TaskIDs
+  let task = null;
+  if (taskId) {
+    // Check if it's a TaskID format (starts with T)
+    if (taskId.startsWith('T')) {
+      task = getTaskByTaskId(taskId);
+    } else {
+      // Fallback to numeric ID for backward compatibility
+      task = getTaskById(parseInt(taskId, 10));
+    }
+  }
 
   console.log('TaskDetailPage - selected task:', task);
 

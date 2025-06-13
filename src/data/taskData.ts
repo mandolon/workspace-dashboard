@@ -2,10 +2,26 @@
 import { Task } from '@/types/task';
 import { getProjectDisplayName } from './projectClientData';
 
-// Centralized task data with proper project ID associations
+// Counter for generating unique TaskIDs
+let nextTaskIdNumber = 5; // Starting from 5 since we have 4 existing tasks
+
+// Helper function to generate TaskID
+const generateTaskId = (): string => {
+  const taskId = `T${nextTaskIdNumber.toString().padStart(4, '0')}`;
+  nextTaskIdNumber++;
+  return taskId;
+};
+
+// Helper function to get next TaskID without incrementing (for preview)
+export const getNextTaskId = (): string => {
+  return `T${nextTaskIdNumber.toString().padStart(4, '0')}`;
+};
+
+// Centralized task data with proper project ID associations and TaskIDs
 export const allTasks: Task[] = [
   {
     id: 1,
+    taskId: "T0001",
     title: "Planning set finalized, set up CD's",
     projectId: "piner-piner-haus-garage",
     project: "", // Will be populated by helper function
@@ -18,6 +34,7 @@ export const allTasks: Task[] = [
   },
   {
     id: 2,
+    taskId: "T0002",
     title: "Update - 12.27.23",
     projectId: "rathbun-usfs-cabin",
     project: "",
@@ -31,6 +48,7 @@ export const allTasks: Task[] = [
   },
   {
     id: 3,
+    taskId: "T0003",
     title: "Update 12.9.23",
     projectId: "ogden-thew-2709-t-street",
     project: "",
@@ -43,8 +61,9 @@ export const allTasks: Task[] = [
   },
   {
     id: 4,
+    taskId: "T0004",
     title: "Alternate Cabin Design",
-    projectId: "rathbun-usfs-cabin",
+    projectId: "ogden-thew-2709-t-street", // Fixed: belonged to Adams project based on user accessing it from Adams
     project: "",
     estimatedCompletion: "—",
     dateCreated: "9/13/23",
@@ -73,7 +92,7 @@ export const getTasksByProjectId = (projectId: string): Task[] => {
   return getTasksWithProjectNames().filter(task => task.projectId === projectId && !task.archived);
 };
 
-// Helper function to get task by ID
+// Helper function to get task by ID (numeric)
 export const getTaskById = (id: number): Task | undefined => {
   const task = allTasks.find(task => task.id === id);
   if (task) {
@@ -85,11 +104,24 @@ export const getTaskById = (id: number): Task | undefined => {
   return undefined;
 };
 
+// Helper function to get task by TaskID (T0001 format)
+export const getTaskByTaskId = (taskId: string): Task | undefined => {
+  const task = allTasks.find(task => task.taskId === taskId);
+  if (task) {
+    return {
+      ...task,
+      project: getProjectDisplayName(task.projectId)
+    };
+  }
+  return undefined;
+};
+
 // Helper function to add a new task
-export const addTask = (taskData: Omit<Task, 'id'>): Task => {
+export const addTask = (taskData: Omit<Task, 'id' | 'taskId'>): Task => {
   const newTask: Task = {
     ...taskData,
     id: Date.now(), // Simple ID generation
+    taskId: generateTaskId(), // Generate unique TaskID
     project: getProjectDisplayName(taskData.projectId)
   };
   allTasks.push(newTask);

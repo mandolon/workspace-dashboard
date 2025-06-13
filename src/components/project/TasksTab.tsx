@@ -2,12 +2,14 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Edit, MoreHorizontal } from 'lucide-react';
+import { getTasksByProjectId } from '@/data/taskData';
 
 interface TasksTabProps {
   projectName: string;
+  projectId: string; // Add projectId prop
 }
 
-const TasksTab = ({ projectName }: TasksTabProps) => {
+const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,45 +47,8 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
     }
   };
 
-  // Flatten all tasks from groups into a single array
-  const allTasks = [
-    {
-      id: 1,
-      title: "Planning set finalized, set up CD's",
-      dateCreated: "Jan 12, 2023",
-      dueDate: "June 15",
-      assignee: { name: "MP", avatar: "bg-blue-500" },
-      hasAttachment: true,
-      status: "redline"
-    },
-    {
-      id: 2,
-      title: "Update - 12.27.23",
-      dateCreated: "Jan 12, 2023",
-      dueDate: "June 15",
-      assignee: { name: "MP", avatar: "bg-blue-500" },
-      hasAttachment: true,
-      status: "progress"
-    },
-    {
-      id: 3,
-      title: "Update 12.9.23",
-      dateCreated: "Jan 12, 2023",
-      dueDate: "June 15",
-      assignee: { name: "MP", avatar: "bg-blue-500" },
-      hasAttachment: true,
-      status: "progress"
-    },
-    {
-      id: 4,
-      title: "Alternate Cabin Design",
-      dateCreated: "Jan 12, 2023",
-      dueDate: "June 15",
-      assignee: { name: "MP", avatar: "bg-green-500" },
-      hasAttachment: true,
-      status: "completed"
-    }
-  ];
+  // Get tasks for the current project
+  const projectTasks = getTasksByProjectId(projectId);
 
   const renderStatusIcon = (status: string) => {
     const baseClasses = "w-4 h-4 rounded-full border-2 flex items-center justify-center";
@@ -117,8 +82,8 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
   };
 
   const handleTaskClick = (task: any) => {
-    // Navigate to task detail with state indicating we came from a project's tasks tab
-    navigate(`/task/${task.id}`, {
+    // Navigate to task detail using TaskID
+    navigate(`/task/${task.taskId}`, {
       state: {
         returnTo: location.pathname,
         returnToName: `${projectName} - Tasks`,
@@ -138,7 +103,7 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
         </div>
         
         {/* Task Rows */}
-        {allTasks.map((task) => (
+        {projectTasks.map((task) => (
           <div 
             key={task.id} 
             className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group"
@@ -146,14 +111,18 @@ const TasksTab = ({ projectName }: TasksTabProps) => {
           >
             <div className="col-span-6 flex items-center gap-2">
               {renderStatusIcon(task.status)}
-              <span className="text-blue-600 hover:underline truncate">{task.title}</span>
+              <span className="text-blue-600 hover:underline truncate">
+                {task.taskId} - {task.title}
+              </span>
             </div>
             <div className="col-span-3 text-muted-foreground">{formatDate(task.dateCreated)}</div>
             <div className="col-span-3 flex items-center justify-between">
               <div className="flex items-center -space-x-1">
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                  {task.assignee.name}
-                </div>
+                {task.assignee && (
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                    {task.assignee.name}
+                  </div>
+                )}
               </div>
               <button 
                 className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"

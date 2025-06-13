@@ -74,7 +74,8 @@ const TaskBoard = () => {
   };
 
   const handleTaskClick = (task: Task) => {
-    navigate(`/task/${task.id}`);
+    // Use TaskID for navigation
+    navigate(`/task/${task.taskId}`);
   };
 
   const handleTaskArchive = (taskId: number) => {

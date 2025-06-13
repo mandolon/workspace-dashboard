@@ -1,6 +1,7 @@
 
 export interface Task {
   id: number;
+  taskId: string; // Human-readable task ID like T0001, T0002, etc.
   title: string;
   projectId: string;
   project: string; // Display name for backward compatibility

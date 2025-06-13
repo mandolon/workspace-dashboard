@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 
 interface TaskDetailHeaderProps {
   task: {
+    taskId: string;
     project: string;
   };
   onClose: () => void;
@@ -17,6 +18,8 @@ const TaskDetailHeader = ({ task, onClose }: TaskDetailHeaderProps) => {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <span className="text-xs text-muted-foreground">{task.project}</span>
+        <span className="text-xs text-muted-foreground">•</span>
+        <span className="text-xs font-medium">{task.taskId}</span>
       </div>
     </div>
   );
