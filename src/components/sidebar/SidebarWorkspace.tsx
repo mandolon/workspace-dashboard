@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SidebarProjectSection from './SidebarProjectSection';
+import CreateProjectDialog from './CreateProjectDialog';
 import { projectStatusData } from '@/data/projectStatus';
 
 interface Workspace {
@@ -35,10 +36,15 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
     navigate('/');
   }, [navigate]);
 
+  const handlePlusClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+  }, []);
+
   // Use centralized project data
-  const inProgressProjects = useMemo(() => projectStatusData.inProgress, []);
-  const onHoldProjects = useMemo(() => projectStatusData.onHold, []);
-  const completedProjects = useMemo(() => projectStatusData.completed, []);
+  const inProgressProjects = useMemo(() => projectStatusData.inProgress, [refreshTrigger]);
+  const onHoldProjects = useMemo(() => projectStatusData.onHold, [refreshTrigger]);
+  const completedProjects = useMemo(() => projectStatusData.completed, [refreshTrigger]);
 
   const toggleInProgress = useCallback(() => toggleSection('inProgress'), [toggleSection]);
   const toggleOnHold = useCallback(() => toggleSection('onHold'), [toggleSection]);
@@ -55,7 +61,14 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
         {workspace.locked && <div className="w-3 h-3 text-muted-foreground text-xs flex-shrink-0">🔒</div>}
         <div className="flex items-center gap-1 flex-shrink-0">
           <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-          <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
+          <CreateProjectDialog>
+            <button
+              onClick={handlePlusClick}
+              className="p-0.5 hover:bg-sidebar-accent rounded transition-colors"
+            >
+              <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
+            </button>
+          </CreateProjectDialog>
         </div>
       </div>
 
