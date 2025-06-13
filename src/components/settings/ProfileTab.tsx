@@ -1,92 +1,84 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useUser } from '@/contexts/UserContext';
-import { ARCHITECTURE_ROLES, ROLE_DISPLAY_NAMES } from '@/types/roles';
 
 const ProfileTab = () => {
   const { currentUser, updateUser } = useUser();
-  const [formData, setFormData] = useState({
-    name: currentUser.name,
-    email: currentUser.email,
-    bio: currentUser.bio || '',
-    role: currentUser.role,
-  });
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleSave = () => {
-    updateUser(formData);
-    console.log('Profile updated:', formData);
+    // Handle save logic
+    console.log('Saving profile changes');
   };
 
   return (
     <div className="p-6 max-w-2xl">
       <div className="space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Profile Information</h2>
-          <div className="space-y-4">
+        {/* Avatar Section */}
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center text-white text-2xl font-medium">
+            {currentUser.avatar}
+          </div>
+          <div>
+            <Button variant="outline" size="sm">Change photo</Button>
+            <p className="text-xs text-muted-foreground mt-1">JPG, GIF or PNG. 1MB max.</p>
+          </div>
+        </div>
+
+        {/* Personal Information */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                className="mt-1"
+                value={currentUser.name}
+                onChange={(e) => updateUser({ name: e.target.value })}
               />
             </div>
-            
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                className="mt-1"
-              />
-            </div>
-            
             <div>
               <Label htmlFor="role">Role</Label>
-              <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ARCHITECTURE_ROLES.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {ROLE_DISPLAY_NAMES[role]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                value={formData.bio}
-                onChange={(e) => handleInputChange('bio', e.target.value)}
-                className="mt-1"
-                rows={3}
-                placeholder="Tell us about yourself..."
+              <Input
+                id="role"
+                value={currentUser.role}
+                onChange={(e) => updateUser({ role: e.target.value })}
               />
             </div>
           </div>
+
+          <div>
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea
+              id="bio"
+              value={currentUser.bio || ''}
+              onChange={(e) => updateUser({ bio: e.target.value })}
+              placeholder="Tell us about yourself..."
+              className="h-20"
+            />
+          </div>
         </div>
-        
-        <div className="flex justify-end">
-          <Button onClick={handleSave}>
-            Save Changes
-          </Button>
+
+        {/* Display Preferences */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Display Preferences</h3>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Show online status</span>
+              <Button variant="outline" size="sm">Enabled</Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Show last active</span>
+              <Button variant="outline" size="sm">Enabled</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <Button onClick={handleSave}>Save changes</Button>
+          <Button variant="outline">Cancel</Button>
         </div>
       </div>
     </div>

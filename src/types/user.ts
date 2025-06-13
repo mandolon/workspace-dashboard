@@ -1,6 +1,4 @@
 
-import { ArchitectureRole } from './roles';
-
 export interface User {
   id: string;
   name: string;
@@ -8,7 +6,7 @@ export interface User {
   avatar: string;
   status: 'online' | 'away' | 'busy' | 'offline';
   bio?: string;
-  role: ArchitectureRole;
+  role: string;
   lastActive: string;
   notificationsMuted: boolean;
 }
