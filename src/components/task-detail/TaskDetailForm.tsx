@@ -58,7 +58,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             onChange={(e) => setEditingValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            className="text-2xl font-semibold text-blue-600 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 w-full resize-none"
+            className="text-2xl font-semibold opacity-60 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 w-full resize-none"
             autoFocus
           />
         ) : (
