@@ -43,18 +43,22 @@ const TaskDetailActivity = () => {
 
       {/* Activity List */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
-        {activities.map((activity, index) => (
-          <div key={index} className="flex gap-2">
-            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
-              {getInitials(activity.user)}
+        {activities.map((activity, index) => {
+          const isUserMessage = activity.user === "You";
+          
+          return (
+            <div key={index} className={`flex gap-2 ${isUserMessage ? 'flex-row-reverse' : ''}`}>
+              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+                {getInitials(activity.user)}
+              </div>
+              <div className={`flex-1 min-w-0 ${isUserMessage ? 'text-right' : ''}`}>
+                <div className="font-medium text-xs">{activity.user}</div>
+                <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-medium text-xs">{activity.user}</div>
-              <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Message Input */}
