@@ -11,6 +11,8 @@ export interface User {
   role: ArchitectureRole;
   lastActive: string;
   notificationsMuted: boolean;
+  showOnlineStatus: boolean;
+  showLastActive: boolean;
 }
 
 export interface UserContextType {

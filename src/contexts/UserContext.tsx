@@ -22,7 +22,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     bio: 'Senior Architect & Project Manager',
     role: 'Project Manager',
     lastActive: new Date().toISOString(),
-    notificationsMuted: false
+    notificationsMuted: false,
+    showOnlineStatus: true,
+    showLastActive: true
   });
 
   const updateUserStatus = (status: User['status']) => {
