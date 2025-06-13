@@ -176,12 +176,6 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-2 hover:bg-accent px-2 py-1 rounded-md transition-colors w-full">
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                {currentUser.avatar}
-              </div>
-              <Circle className={`w-3 h-3 absolute -bottom-0.5 -right-0.5 ${getStatusColor(currentUser.status)} fill-current`} />
-            </div>
             <div className="text-left">
               <div className="text-sm font-medium">{currentUser.name}</div>
               <div className="text-xs text-muted-foreground">{getStatusText(currentUser.status)}</div>
