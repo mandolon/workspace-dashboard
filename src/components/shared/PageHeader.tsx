@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu, ChevronDown, Circle, Bell, BellOff, Settings, Keyboard, Download, HelpCircle, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -27,10 +26,10 @@ const PageHeader = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'text-green-500';
-      case 'away': return 'text-yellow-500';
-      case 'busy': return 'text-red-500';
-      default: return 'text-gray-400';
+      case 'online': return 'text-green-300';
+      case 'away': return 'text-amber-300';
+      case 'busy': return 'text-rose-300';
+      default: return 'text-gray-300';
     }
   };
 
@@ -98,19 +97,19 @@ const PageHeader = ({
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   <DropdownMenuItem onClick={() => updateUserStatus('online')}>
-                    <Circle className="w-4 h-4 mr-2 text-green-500 fill-current" />
+                    <Circle className="w-4 h-4 mr-2 text-green-300 fill-current" />
                     Online
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => updateUserStatus('away')}>
-                    <Circle className="w-4 h-4 mr-2 text-yellow-500 fill-current" />
+                    <Circle className="w-4 h-4 mr-2 text-amber-300 fill-current" />
                     Away
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => updateUserStatus('busy')}>
-                    <Circle className="w-4 h-4 mr-2 text-red-500 fill-current" />
+                    <Circle className="w-4 h-4 mr-2 text-rose-300 fill-current" />
                     Busy
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => updateUserStatus('offline')}>
-                    <Circle className="w-4 h-4 mr-2 text-gray-400 fill-current" />
+                    <Circle className="w-4 h-4 mr-2 text-gray-300 fill-current" />
                     Offline
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
