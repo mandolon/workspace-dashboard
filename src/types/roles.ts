@@ -6,7 +6,17 @@ export const ARCHITECTURE_ROLES = [
   'Designer',
   'Interior Designer',
   'Consultant',
-  'Project Manager'
+  'Project Manager',
+  'Admin',
+  'Developer',
+  'QA Tester',
+  'Team Lead',
+  'Marketing Manager',
+  'Customer Support',
+  'Operations',
+  'Jr Designer',
+  'Contractor',
+  'Client'
 ] as const;
 
 export type ArchitectureRole = typeof ARCHITECTURE_ROLES[number];
@@ -18,5 +28,15 @@ export const ROLE_DISPLAY_NAMES: Record<ArchitectureRole, string> = {
   'Designer': 'Designer',
   'Interior Designer': 'Interior Designer',
   'Consultant': 'Consultant',
-  'Project Manager': 'Project Manager'
+  'Project Manager': 'Project Manager',
+  'Admin': 'Admin',
+  'Developer': 'Developer',
+  'QA Tester': 'QA Tester',
+  'Team Lead': 'Team Lead',
+  'Marketing Manager': 'Marketing Manager',
+  'Customer Support': 'Customer Support',
+  'Operations': 'Operations',
+  'Jr Designer': 'Jr Designer',
+  'Contractor': 'Contractor',
+  'Client': 'Client'
 };
