@@ -58,9 +58,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             onChange={(e) => setEditingValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            className="text-2xl font-semibold bg-transparent border-none outline-none focus:ring-0 p-0 m-0 w-full"
+            className="text-2xl font-semibold text-blue-600 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 w-full resize-none"
             autoFocus
-            style={{ fontSize: 'inherit', fontWeight: 'inherit' }}
           />
         ) : (
           <h1 
@@ -71,9 +70,11 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             {task.title}
           </h1>
         )}
-        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
-          REDLINE / TO DO
-        </div>
+        {!isEditing && (
+          <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+            REDLINE / TO DO
+          </div>
+        )}
       </div>
 
       {/* Description */}
