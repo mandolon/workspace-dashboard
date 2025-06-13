@@ -113,6 +113,14 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
     setShowDeleteDialog(true);
   };
 
+  const handleContextMenuDelete = (task: any, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Context menu delete clicked for task:', task.id);
+    setTaskToDelete(task);
+    setShowDeleteDialog(true);
+  };
+
   const handleDeleteTask = async () => {
     if (!taskToDelete) return;
     
@@ -223,7 +231,7 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
               </ContextMenuItem>
               <ContextMenuSeparator />
               <ContextMenuItem 
-                onClick={() => handleDeleteClick(task, {} as React.MouseEvent)} 
+                onClick={(e) => handleContextMenuDelete(task, e)} 
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
