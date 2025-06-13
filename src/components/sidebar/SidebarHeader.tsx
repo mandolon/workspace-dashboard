@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronDown, Circle, Bell, BellOff, Settings, Keyboard, Download, HelpCircle, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -49,12 +48,7 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
       <div className="px-4 py-3 border-b border-sidebar-border flex justify-center">
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center hover:bg-accent rounded-md transition-colors">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                {currentUser.avatar}
-              </div>
-              <Circle className={`w-3 h-3 absolute -bottom-0.5 -right-0.5 ${getStatusColor(currentUser.status)} fill-current`} />
-            </div>
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
             {/* User Info Section */}
@@ -176,12 +170,6 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-2 hover:bg-accent px-2 py-1 rounded-md transition-colors w-full">
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                {currentUser.avatar}
-              </div>
-              <Circle className={`w-3 h-3 absolute -bottom-0.5 -right-0.5 ${getStatusColor(currentUser.status)} fill-current`} />
-            </div>
             <div className="text-left">
               <div className="text-sm font-medium">{currentUser.name}</div>
               <div className="text-xs text-muted-foreground">{getStatusText(currentUser.status)}</div>
