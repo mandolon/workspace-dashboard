@@ -15,6 +15,7 @@ const ProfileTab = () => {
   const [formData, setFormData] = useState({
     name: currentUser.name,
     bio: currentUser.bio || '',
+    company: currentUser.company || '',
     role: currentUser.role,
     showOnlineStatus: currentUser.showOnlineStatus,
     showLastActive: currentUser.showLastActive,
@@ -66,6 +67,17 @@ const ProfileTab = () => {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          
+          <div>
+            <Label htmlFor="company">Company Name</Label>
+            <Input
+              id="company"
+              value={formData.company}
+              onChange={(e) => handleInputChange('company', e.target.value)}
+              className="mt-1"
+              placeholder="Enter your company name"
+            />
           </div>
           
           <div>

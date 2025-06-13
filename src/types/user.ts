@@ -8,6 +8,7 @@ export interface User {
   avatar: string;
   status: 'online' | 'away' | 'busy' | 'offline';
   bio?: string;
+  company?: string;
   role: ArchitectureRole;
   lastActive: string;
   notificationsMuted: boolean;

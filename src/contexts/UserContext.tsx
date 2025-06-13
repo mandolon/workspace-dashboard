@@ -20,6 +20,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     avatar: 'AL',
     status: 'online',
     bio: 'Senior Architect & Project Manager',
+    company: 'Acme Corporation',
     role: 'Project Manager',
     lastActive: new Date().toISOString(),
     notificationsMuted: false,
