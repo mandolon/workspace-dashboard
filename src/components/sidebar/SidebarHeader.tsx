@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronDown, Circle, Bell, BellOff, Settings, Keyboard, Download, HelpCircle, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -178,7 +177,7 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
           <div className="flex items-center gap-2">
             <div className="text-left">
               <div className="text-sm font-medium">{currentUser.name}</div>
-              <div className="text-xs text-muted-foreground">{getStatusText(currentUser.status)}</div>
+              <div className="text-xs text-muted-foreground">{currentUser.role}</div>
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
           </div>
@@ -245,7 +244,7 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="w-4 h-4 mr-2" /> {/* Spacer for themes icon */}
+            <div className="w-4 h-4 mr-2" />
             Themes
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate('/settings')}>
@@ -265,7 +264,7 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
             Keyboard shortcuts
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="w-4 h-4 mr-2" /> {/* Spacer for referrals icon */}
+            <div className="w-4 h-4 mr-2" />
             Referrals
           </DropdownMenuItem>
           <DropdownMenuItem>
