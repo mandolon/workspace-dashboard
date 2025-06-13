@@ -6,7 +6,7 @@ import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
 import TaskGroupSection from './TaskGroupSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getTasksByStatus, addTask } from '@/data/taskData';
+import { getTasksByStatus } from '@/data/taskData';
 import { Task, TaskGroup } from '@/types/task';
 
 const TaskBoard = () => {
@@ -57,19 +57,26 @@ const TaskBoard = () => {
     return taskGroups;
   };
 
-  const handleCreateTask = (taskData: any) => {
-    console.log('Creating task:', taskData);
-    const newTask: Task = {
-      ...taskData,
-      id: Date.now(),
-      projectId: taskData.projectId || 'unknown-project',
-      project: taskData.project || 'Unknown Project'
-    };
+  const handleCreateTask = (newTask: Task) => {
+    console.log('Creating task:', newTask);
     setCustomTasks(prev => [newTask, ...prev]);
   };
 
   const handleQuickAddSave = (taskData: any) => {
-    handleCreateTask(taskData);
+    // Convert quick add data to proper task format and create via addTask
+    const { addTask } = require('@/data/taskData');
+    const newTask = addTask({
+      title: taskData.title,
+      projectId: taskData.projectId || 'unknown-project',
+      status: taskData.status,
+      assignee: taskData.assignee,
+      dueDate: taskData.dueDate || '—',
+      dateCreated: new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }),
+      estimatedCompletion: '—',
+      hasAttachment: false,
+      collaborators: []
+    });
+    setCustomTasks(prev => [newTask, ...prev]);
     setShowQuickAdd(null);
   };
 

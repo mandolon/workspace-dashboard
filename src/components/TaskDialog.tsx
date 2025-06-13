@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { addTask, getNextTaskId } from '@/data/taskData';
 
 interface TaskDialogProps {
   isOpen: boolean;
@@ -42,30 +43,43 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
   const [assignedTo, setAssignedTo] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
+  // Project mapping from display names to project IDs
+  const projectMapping = {
+    'piner-haus': 'piner-piner-haus-garage',
+    'rathbun-cabin': 'rathbun-usfs-cabin', 
+    'ogden-thew': 'ogden-thew-2709-t-street',
+    'adams-40th': 'adams-1063-40th-street'
+  };
+
   const handleCreateTask = () => {
     if (!taskName.trim()) {
       return;
     }
 
+    // Map the selected project to the correct project ID
+    const projectId = projectMapping[selectedProject as keyof typeof projectMapping] || selectedProject;
+
     const taskData = {
-      id: Date.now(), // Simple ID generation
       title: taskName,
-      project: selectedProject,
+      projectId: projectId,
       status: selectedStatus || 'progress',
       description: addDescription ? description : '',
-      assignedTo,
-      dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '',
-      dateCreated: format(new Date(), 'MM/dd/yy'),
-      hasAttachment: false,
-      assignee: {
-        name: assignedTo || 'UN',
+      assignee: assignedTo ? {
+        name: assignedTo,
         avatar: assignedTo === 'MH' ? 'bg-purple-500' : 
                 assignedTo === 'AL' ? 'bg-gray-600' : 
                 assignedTo === 'MP' ? 'bg-green-500' : 'bg-blue-500'
-      }
+      } : null,
+      dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '—',
+      dateCreated: format(new Date(), 'MM/dd/yy'),
+      estimatedCompletion: '—',
+      hasAttachment: false,
+      collaborators: []
     };
     
-    onCreateTask(taskData);
+    // Use the centralized addTask function
+    const newTask = addTask(taskData);
+    onCreateTask(newTask);
     handleReset();
     onClose();
   };
@@ -89,7 +103,9 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-3xl w-[900px] bg-background border border-border shadow-lg">
         <DialogHeader className="py-3">
-          <DialogTitle className="text-base font-medium">Task</DialogTitle>
+          <DialogTitle className="text-base font-medium">
+            Task - {getNextTaskId()}
+          </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-3 py-2">
