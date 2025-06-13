@@ -65,16 +65,11 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
   const toggleOnHold = useCallback(() => toggleSection('onHold'), [toggleSection]);
   const toggleCompleted = useCallback(() => toggleSection('completed'), [toggleSection]);
 
-  // After implementing the collapse functionality, now disable the click action
-  const handleWorkspaceClickDisabled = useCallback(() => {
-    // Do nothing when clicked
-  }, []);
-
   return (
     <div>
       <div 
-        onClick={handleWorkspaceClickDisabled}
-        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm"
+        onClick={handleWorkspaceClick}
+        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50"
       >
         <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         <span className="truncate flex-1 text-sm">{workspace.name}</span>
