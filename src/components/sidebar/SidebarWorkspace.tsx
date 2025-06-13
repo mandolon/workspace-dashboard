@@ -36,11 +36,6 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
     navigate('/');
   }, [navigate]);
 
-  const handlePlusClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-  }, []);
-
   // Use centralized project data
   const inProgressProjects = useMemo(() => projectStatusData.inProgress, [refreshTrigger]);
   const onHoldProjects = useMemo(() => projectStatusData.onHold, [refreshTrigger]);
@@ -62,10 +57,7 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
         <div className="flex items-center gap-1 flex-shrink-0">
           <MoreHorizontal className="w-3 h-3 text-muted-foreground hover:text-foreground" />
           <CreateProjectDialog>
-            <button
-              onClick={handlePlusClick}
-              className="p-0.5 hover:bg-sidebar-accent rounded transition-colors"
-            >
+            <button className="p-0.5 hover:bg-sidebar-accent rounded transition-colors">
               <Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
             </button>
           </CreateProjectDialog>
