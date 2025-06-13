@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import TaskDetail from '@/components/TaskDetail';
 import { getTaskById, getTaskByTaskId } from '@/data/taskData';
+import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
@@ -43,6 +44,15 @@ const TaskDetailPage = () => {
     }
   };
 
+  const handleProjectClick = () => {
+    if (task?.project) {
+      console.log('Navigating to project:', task.project);
+      const projectId = getProjectIdFromDisplayName(task.project);
+      console.log('Converted to project ID:', projectId);
+      navigate(`/project/${projectId}`);
+    }
+  };
+
   if (!task) {
     return (
       <AppLayout>
@@ -64,6 +74,7 @@ const TaskDetailPage = () => {
           <TaskDetail 
             isOpen={true} 
             onClose={handleBack}
+            onProjectClick={handleProjectClick}
             task={task} 
           />
         </div>

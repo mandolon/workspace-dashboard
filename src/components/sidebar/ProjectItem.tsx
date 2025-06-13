@@ -8,6 +8,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import ProjectContextMenu from './ProjectContextMenu';
+import { convertDisplayNameToProjectId } from '@/data/projectStatus';
 
 interface ProjectItemProps {
   project: string;
@@ -28,7 +29,14 @@ const ProjectItem = ({
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
   const isProjectActive = (projectName: string) => {
-    const projectIdFromName = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    // Use the centralized conversion function to ensure consistency
+    const projectIdFromName = convertDisplayNameToProjectId(projectName);
+    console.log('ProjectItem - Checking if active:', {
+      projectName,
+      projectIdFromName,
+      urlProjectId: projectId,
+      isActive: projectId === projectIdFromName
+    });
     return projectId === projectIdFromName;
   };
 

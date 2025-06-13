@@ -8,6 +8,7 @@ import TaskDetailActivity from './task-detail/TaskDetailActivity';
 interface TaskDetailProps {
   isOpen: boolean;
   onClose: () => void;
+  onProjectClick?: () => void;
   task: {
     id: number;
     taskId: string;
@@ -28,12 +29,12 @@ interface TaskDetailProps {
   } | null;
 }
 
-const TaskDetail = ({ isOpen, onClose, task }: TaskDetailProps) => {
+const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) => {
   if (!task || !isOpen) return null;
 
   return (
     <div className="h-full bg-background flex flex-col max-w-none">
-      <TaskDetailHeader task={task} onClose={onClose} />
+      <TaskDetailHeader task={task} onClose={onClose} onProjectClick={onProjectClick} />
 
       <div className="flex-1 flex overflow-hidden">
         {/* Main Content */}

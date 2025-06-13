@@ -6,7 +6,7 @@ import { getAvailableProjectsForTasks, convertDisplayNameToProjectId } from '@/d
 export const getProjectIdFromDisplayName = (displayName: string): string => {
   console.log('Converting display name to project ID:', displayName);
   
-  // Convert display name to project ID format
+  // Convert display name to project ID format using the centralized function
   const projectId = convertDisplayNameToProjectId(displayName);
   console.log('Converted project ID:', projectId);
   
