@@ -68,10 +68,6 @@ const PageHeader = ({
                   </div>
                   <Circle className={`w-3 h-3 absolute -bottom-0.5 -right-0.5 ${getStatusColor(currentUser.status)} fill-current`} />
                 </div>
-                <div className="text-left">
-                  <div className="text-sm font-medium">{currentUser.name}</div>
-                  <div className="text-xs text-muted-foreground">{getStatusText(currentUser.status)}</div>
-                </div>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </div>
             </DropdownMenuTrigger>
