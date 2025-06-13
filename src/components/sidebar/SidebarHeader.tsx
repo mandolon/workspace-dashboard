@@ -174,12 +174,12 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
     <div className="px-4 py-3 border-b border-sidebar-border">
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-2 hover:bg-accent px-2 py-1 rounded-md transition-colors w-full">
-          <div className="flex items-center gap-2">
-            <div className="text-left">
+          <div className="flex items-center gap-2 w-full">
+            <div className="text-left flex-1">
               <div className="text-sm font-medium">{currentUser.name}</div>
-              <div className="text-xs text-muted-foreground">{currentUser.role}</div>
+              <div className="text-xs text-muted-foreground text-right">{currentUser.role}</div>
             </div>
-            <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64">
