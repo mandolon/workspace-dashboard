@@ -37,16 +37,16 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
       <TaskDetailHeader task={task} onClose={onClose} onProjectClick={onProjectClick} />
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-3 space-y-4">
+        {/* Main Content - Fixed width for optimal readability */}
+        <div className="w-full max-w-4xl overflow-y-auto">
+          <div className="p-3 space-y-4">
             <TaskDetailForm task={task} />
             <TaskDetailAttachments />
           </div>
         </div>
 
-        {/* Activity Sidebar - made wider to w-100 */}
-        <div className="w-[400px] border-l border-border flex-shrink-0">
+        {/* Activity Sidebar - Flexible width that grows on larger screens */}
+        <div className="flex-1 min-w-[300px] border-l border-border flex-shrink-0">
           <TaskDetailActivity />
         </div>
       </div>
