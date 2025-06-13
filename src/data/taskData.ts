@@ -17,7 +17,7 @@ export const getNextTaskId = (): string => {
   return `T${nextTaskIdNumber.toString().padStart(4, '0')}`;
 };
 
-// Centralized task data with proper project ID associations and TaskIDs
+// Centralized task data with proper project ID associations, TaskIDs, and audit fields
 export const allTasks: Task[] = [
   {
     id: 1,
@@ -30,7 +30,10 @@ export const allTasks: Task[] = [
     dueDate: "—",
     assignee: { name: "MH", avatar: "bg-purple-500" },
     hasAttachment: true,
-    status: "redline"
+    status: "redline",
+    createdBy: "AL",
+    createdAt: "2022-08-10T10:00:00Z",
+    updatedAt: "2022-08-10T10:00:00Z"
   },
   {
     id: 2,
@@ -44,7 +47,10 @@ export const allTasks: Task[] = [
     assignee: { name: "AL", avatar: "bg-gray-600" },
     hasAttachment: true,
     collaborators: [{ name: "MP", avatar: "bg-green-500" }],
-    status: "progress"
+    status: "progress",
+    createdBy: "AL",
+    createdAt: "2023-12-27T10:00:00Z",
+    updatedAt: "2023-12-27T10:00:00Z"
   },
   {
     id: 3,
@@ -57,20 +63,26 @@ export const allTasks: Task[] = [
     dueDate: "—",
     assignee: { name: "AL", avatar: "bg-gray-600" },
     hasAttachment: true,
-    status: "progress"
+    status: "progress",
+    createdBy: "AL",
+    createdAt: "2023-12-09T10:00:00Z",
+    updatedAt: "2023-12-09T10:00:00Z"
   },
   {
     id: 4,
     taskId: "T0004",
     title: "Alternate Cabin Design",
-    projectId: "ogden-thew-2709-t-street", // Fixed: belonged to Adams project based on user accessing it from Adams
+    projectId: "ogden-thew-2709-t-street",
     project: "",
     estimatedCompletion: "—",
     dateCreated: "9/13/23",
     dueDate: "9/22/23, 5...",
     assignee: { name: "AL", avatar: "bg-gray-600" },
     hasAttachment: false,
-    status: "progress"
+    status: "progress",
+    createdBy: "AL",
+    createdAt: "2023-09-13T10:00:00Z",
+    updatedAt: "2023-09-13T10:00:00Z"
   }
 ];
 
@@ -117,12 +129,16 @@ export const getTaskByTaskId = (taskId: string): Task | undefined => {
 };
 
 // Helper function to add a new task
-export const addTask = (taskData: Omit<Task, 'id' | 'taskId'>): Task => {
+export const addTask = (taskData: Omit<Task, 'id' | 'taskId' | 'createdBy' | 'createdAt' | 'updatedAt'>): Task => {
+  const now = new Date().toISOString();
   const newTask: Task = {
     ...taskData,
     id: Date.now(), // Simple ID generation
     taskId: generateTaskId(), // Generate unique TaskID
-    project: getProjectDisplayName(taskData.projectId)
+    project: getProjectDisplayName(taskData.projectId),
+    createdBy: "AL", // Default to current user - will be updated when user context is available
+    createdAt: now,
+    updatedAt: now
   };
   allTasks.push(newTask);
   return newTask;
@@ -132,11 +148,44 @@ export const addTask = (taskData: Omit<Task, 'id' | 'taskId'>): Task => {
 export const updateTask = (id: number, updates: Partial<Task>): Task | null => {
   const taskIndex = allTasks.findIndex(task => task.id === id);
   if (taskIndex !== -1) {
-    allTasks[taskIndex] = { ...allTasks[taskIndex], ...updates };
+    allTasks[taskIndex] = { 
+      ...allTasks[taskIndex], 
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
     // Refresh project name if projectId changed
     if (updates.projectId) {
       allTasks[taskIndex].project = getProjectDisplayName(updates.projectId);
     }
+    return allTasks[taskIndex];
+  }
+  return null;
+};
+
+// Helper function to soft delete a task
+export const softDeleteTask = (id: number, deletedBy: string): Task | null => {
+  const taskIndex = allTasks.findIndex(task => task.id === id);
+  if (taskIndex !== -1) {
+    allTasks[taskIndex] = {
+      ...allTasks[taskIndex],
+      deletedAt: new Date().toISOString(),
+      deletedBy: deletedBy,
+      updatedAt: new Date().toISOString()
+    };
+    return allTasks[taskIndex];
+  }
+  return null;
+};
+
+// Helper function to restore a deleted task
+export const restoreTask = (id: number): Task | null => {
+  const taskIndex = allTasks.findIndex(task => task.id === id);
+  if (taskIndex !== -1) {
+    const { deletedAt, deletedBy, ...taskWithoutDeletedFields } = allTasks[taskIndex];
+    allTasks[taskIndex] = {
+      ...taskWithoutDeletedFields,
+      updatedAt: new Date().toISOString()
+    };
     return allTasks[taskIndex];
   }
   return null;

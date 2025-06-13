@@ -13,6 +13,12 @@ export interface Task {
   collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
   status: string;
   archived?: boolean;
+  // New audit fields
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+  deletedBy?: string;
 }
 
 export interface TaskGroup {

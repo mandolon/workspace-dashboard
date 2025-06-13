@@ -1,7 +1,15 @@
+
 import React from 'react';
-import { Plus, Edit, Check, X } from 'lucide-react';
+import { Plus, Edit, Check, X, MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
 import TaskStatusIcon from '../TaskStatusIcon';
 import TaskRowAssignees from './TaskRowAssignees';
 import { formatDate } from '@/utils/taskUtils';
@@ -42,99 +50,136 @@ const TaskRow = ({
   onAssignPerson,
   onAddCollaborator
 }: TaskRowProps) => {
+  
+  const handleDeleteTask = () => {
+    console.log('Deleting task:', task.id);
+    // This will be implemented to soft delete the task
+  };
+
+  const handleDuplicateTask = () => {
+    console.log('Duplicating task:', task.id);
+  };
+
+  const handleMarkComplete = () => {
+    onTaskStatusClick(task.id);
+  };
+
   return (
-    <TableRow key={task.id} className="hover:bg-accent/50 group">
-      <TableCell className="py-2 w-[50%]">
-        <div 
-          className="flex items-center gap-2 cursor-pointer pl-4" 
-          onClick={() => onTaskClick(task)}
-        >
-          <TaskStatusIcon 
-            status={task.status} 
-            onClick={() => onTaskStatusClick(task.id)}
-          />
-          <div className="flex-1">
-            {editingTaskId === task.id ? (
-              <div className="flex items-center gap-1">
-                <Input
-                  value={editingValue}
-                  onChange={(e) => onSetEditingValue(e.target.value)}
-                  onKeyDown={(e) => onKeyDown(e, task.id)}
-                  className="text-xs h-6 px-1 py-0 border border-border"
-                  autoFocus
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSaveEdit(task.id);
-                  }}
-                  className="p-0.5 text-green-600 hover:text-green-700"
-                >
-                  <Check className="w-3 h-3" strokeWidth="2" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onCancelEdit();
-                  }}
-                  className="p-0.5 text-red-600 hover:text-red-700"
-                >
-                  <X className="w-3 h-3" strokeWidth="2" />
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div className="flex items-center gap-1 group/title">
-                  <div className="font-medium text-xs">
-                    {task.title}
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <TableRow key={task.id} className="hover:bg-accent/50 group">
+          <TableCell className="py-2 w-[50%]">
+            <div 
+              className="flex items-center gap-2 cursor-pointer pl-4" 
+              onClick={() => onTaskClick(task)}
+            >
+              <TaskStatusIcon 
+                status={task.status} 
+                onClick={() => onTaskStatusClick(task.id)}
+              />
+              <div className="flex-1">
+                {editingTaskId === task.id ? (
+                  <div className="flex items-center gap-1">
+                    <Input
+                      value={editingValue}
+                      onChange={(e) => onSetEditingValue(e.target.value)}
+                      onKeyDown={(e) => onKeyDown(e, task.id)}
+                      className="text-xs h-6 px-1 py-0 border border-border"
+                      autoFocus
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSaveEdit(task.id);
+                      }}
+                      className="p-0.5 text-green-600 hover:text-green-700"
+                    >
+                      <Check className="w-3 h-3" strokeWidth="2" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onCancelEdit();
+                      }}
+                      className="p-0.5 text-red-600 hover:text-red-700"
+                    >
+                      <X className="w-3 h-3" strokeWidth="2" />
+                    </button>
                   </div>
-                  <button
-                    onClick={(e) => onEditClick(task, e)}
-                    className="opacity-0 group-hover/title:opacity-100 p-0.5 hover:bg-accent rounded transition-opacity"
-                  >
-                    <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
-                  </button>
-                </div>
-                <div className="text-xs text-muted-foreground">{task.project}</div>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-1 group/title">
+                      <div className="font-medium text-xs">
+                        {task.title}
+                      </div>
+                      <button
+                        onClick={(e) => onEditClick(task, e)}
+                        className="opacity-0 group-hover/title:opacity-100 p-0.5 hover:bg-accent rounded transition-opacity"
+                      >
+                        <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
+                      </button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">{task.project}</div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      </TableCell>
-      <TableCell className="py-2 w-[8%]">
-        <div className="flex items-center gap-1">
-          {task.hasAttachment && (
-            <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
-              <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
             </div>
-          )}
-          <button 
-            className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Handle file attachment
-            }}
-          >
-            <Plus className="w-2 h-2" strokeWidth="2" />
-          </button>
-        </div>
-      </TableCell>
-      <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
-        {formatDate(task.dateCreated)}
-      </TableCell>
-      <TableCell className="py-2 w-[25%]">
-        <TaskRowAssignees
-          task={task}
-          onRemoveAssignee={onRemoveAssignee}
-          onRemoveCollaborator={onRemoveCollaborator}
-          onAssignPerson={onAssignPerson}
-          onAddCollaborator={onAddCollaborator}
-        />
-      </TableCell>
-    </TableRow>
+          </TableCell>
+          <TableCell className="py-2 w-[8%]">
+            <div className="flex items-center gap-1">
+              {task.hasAttachment && (
+                <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+                  <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              )}
+              <button 
+                className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Handle file attachment
+                }}
+              >
+                <Plus className="w-2 h-2" strokeWidth="2" />
+              </button>
+            </div>
+          </TableCell>
+          <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+            {formatDate(task.dateCreated)}
+          </TableCell>
+          <TableCell className="py-2 w-[25%]">
+            <TaskRowAssignees
+              task={task}
+              onRemoveAssignee={onRemoveAssignee}
+              onRemoveCollaborator={onRemoveCollaborator}
+              onAssignPerson={onAssignPerson}
+              onAddCollaborator={onAddCollaborator}
+            />
+          </TableCell>
+        </TableRow>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem onClick={(e) => { e.stopPropagation(); onEditClick(task, e as any); }}>
+          <Edit className="w-4 h-4 mr-2" />
+          Edit task
+        </ContextMenuItem>
+        <ContextMenuItem onClick={handleMarkComplete}>
+          <Check className="w-4 h-4 mr-2" />
+          Mark as complete
+        </ContextMenuItem>
+        <ContextMenuItem onClick={handleDuplicateTask}>
+          <div className="w-4 h-4 mr-2" /> {/* Spacer for duplicate icon */}
+          Duplicate
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem onClick={handleDeleteTask} className="text-red-600">
+          <div className="w-4 h-4 mr-2" /> {/* Spacer for delete icon */}
+          Delete
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
 
