@@ -62,9 +62,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           <input 
             type="text" 
             value={getCreatedByName(task.createdBy)}
-            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent" 
+            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent text-left" 
             readOnly
-            disabled
           />
         </div>
 
@@ -75,9 +74,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           <input 
             type="text" 
             value={formatCreatedDate(task.createdAt)}
-            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent" 
+            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent text-left" 
             readOnly
-            disabled
           />
         </div>
 
@@ -85,7 +83,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           <label className="text-xs text-muted-foreground">
             Assigned to
           </label>
-          <select className="w-full px-2 py-1 text-xs bg-transparent">
+          <select className="w-full px-2 py-1 text-xs bg-transparent text-left">
             <option>Select User</option>
           </select>
         </div>
@@ -96,7 +94,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           </label>
           <input 
             type="date" 
-            className="w-full px-2 py-1 text-xs bg-transparent" 
+            className="w-full px-2 py-1 text-xs bg-transparent text-left" 
           />
         </div>
       </div>
