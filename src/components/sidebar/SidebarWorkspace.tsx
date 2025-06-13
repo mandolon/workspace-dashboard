@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { Folder, MoreHorizontal, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import SidebarProjectSection from './SidebarProjectSection';
 import CreateProjectDialog from './CreateProjectDialog';
 import { projectStatusData } from '@/data/projectStatus';
@@ -18,12 +17,12 @@ interface SidebarWorkspaceProps {
 }
 
 const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorkspaceProps) => {
-  const navigate = useNavigate();
   const [openSections, setOpenSections] = useState({
     inProgress: true,
     onHold: false,
     completed: false,
   });
+  const [allSectionsCollapsed, setAllSectionsCollapsed] = useState(false);
 
   const toggleSection = useCallback((section: keyof typeof openSections) => {
     setOpenSections(prev => ({
@@ -33,8 +32,29 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
   }, []);
 
   const handleWorkspaceClick = useCallback(() => {
-    navigate('/');
-  }, [navigate]);
+    // Toggle master collapse state
+    setAllSectionsCollapsed(prev => {
+      const newCollapsedState = !prev;
+      
+      if (newCollapsedState) {
+        // Collapse all sections
+        setOpenSections({
+          inProgress: false,
+          onHold: false,
+          completed: false,
+        });
+      } else {
+        // Restore sections to their previous state or default open state
+        setOpenSections({
+          inProgress: true,
+          onHold: false,
+          completed: false,
+        });
+      }
+      
+      return newCollapsedState;
+    });
+  }, []);
 
   // Use centralized project data
   const inProgressProjects = useMemo(() => projectStatusData.inProgress, [refreshTrigger]);
@@ -45,11 +65,16 @@ const SidebarWorkspace = React.memo(({ workspace, refreshTrigger }: SidebarWorks
   const toggleOnHold = useCallback(() => toggleSection('onHold'), [toggleSection]);
   const toggleCompleted = useCallback(() => toggleSection('completed'), [toggleSection]);
 
+  // After implementing the collapse functionality, now disable the click action
+  const handleWorkspaceClickDisabled = useCallback(() => {
+    // Do nothing when clicked
+  }, []);
+
   return (
     <div>
       <div 
-        onClick={handleWorkspaceClick}
-        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-sidebar-accent/50"
+        onClick={handleWorkspaceClickDisabled}
+        className="flex items-center gap-2 px-2 py-1.5 rounded text-sm"
       >
         <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         <span className="truncate flex-1 text-sm">{workspace.name}</span>
