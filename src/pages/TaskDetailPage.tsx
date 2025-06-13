@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import TaskDetail from '@/components/TaskDetail';
@@ -10,11 +10,20 @@ const TaskDetailPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [, forceUpdate] = useState({});
 
   console.log('TaskDetailPage - taskId from URL:', taskId);
 
   // Get navigation state passed from previous page
   const { returnTo, returnToName, returnToTab } = location.state || {};
+
+  // Force component re-render every 100ms to reflect title changes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      forceUpdate({});
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
 
   // Get task from centralized data store - support both numeric IDs and TaskIDs
   let task = null;

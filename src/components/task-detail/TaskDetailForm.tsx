@@ -3,9 +3,11 @@ import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
 import { useUser } from '@/contexts/UserContext';
+import { useTaskTitleEdit } from '@/hooks/useTaskTitleEdit';
 
 interface TaskDetailFormProps {
   task: {
+    id: number;
     project: string;
     title: string;
     createdBy: string;
@@ -15,6 +17,14 @@ interface TaskDetailFormProps {
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   const { currentUser } = useUser();
+  const {
+    isEditing,
+    editingValue,
+    setEditingValue,
+    startEditing,
+    handleKeyDown,
+    handleBlur
+  } = useTaskTitleEdit(task.id, task.title);
 
   // Debug log to force component refresh
   console.log('TaskDetailForm rendering with task:', task.title);
@@ -41,7 +51,26 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     <div className="space-y-3">
       {/* Task Title with Status Badge - centered alignment */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{task.title}</h1>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editingValue}
+            onChange={(e) => setEditingValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            className="text-2xl font-semibold bg-transparent border-none outline-none focus:ring-0 p-0 m-0 w-full"
+            autoFocus
+            style={{ fontSize: 'inherit', fontWeight: 'inherit' }}
+          />
+        ) : (
+          <h1 
+            className="text-2xl font-semibold cursor-pointer hover:bg-accent/50 rounded px-1 py-0.5 -mx-1 -my-0.5 transition-colors"
+            onClick={startEditing}
+            title="Click to edit title"
+          >
+            {task.title}
+          </h1>
+        )}
         <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
           REDLINE / TO DO
         </div>
