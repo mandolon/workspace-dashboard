@@ -14,7 +14,6 @@ const ProfileTab = () => {
   const { currentUser, updateUser } = useUser();
   const [formData, setFormData] = useState({
     name: currentUser.name,
-    email: currentUser.email,
     bio: currentUser.bio || '',
     role: currentUser.role,
     showOnlineStatus: currentUser.showOnlineStatus,
@@ -67,17 +66,6 @@ const ProfileTab = () => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-          
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              className="mt-1"
-            />
           </div>
           
           <div>
