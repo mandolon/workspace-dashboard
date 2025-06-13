@@ -27,6 +27,7 @@ import {
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { addTask, getNextTaskId } from '@/data/taskData';
+import { getProjectDisplayName } from '@/data/projectClientData';
 
 interface TaskDialogProps {
   isOpen: boolean;
@@ -62,6 +63,7 @@ const TaskDialog = ({ isOpen, onClose, onCreateTask }: TaskDialogProps) => {
     const taskData = {
       title: taskName,
       projectId: projectId,
+      project: getProjectDisplayName(projectId), // Add the missing project display name
       status: selectedStatus || 'progress',
       description: addDescription ? description : '',
       assignee: assignedTo ? {
