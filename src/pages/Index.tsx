@@ -12,7 +12,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <AppLayout showHeader={false}>
+    <AppLayout showHeader={true}>
       <div className="flex flex-col h-full">
         <DashboardPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex-1 overflow-hidden">

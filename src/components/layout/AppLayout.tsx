@@ -1,3 +1,4 @@
+
 import React, { ReactNode, useRef, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
 import { useSidebarContext } from '@/contexts/SidebarContext';
@@ -16,8 +17,8 @@ const AppLayout = ({ children, showHeader = true }: AppLayoutProps) => {
   const wasHiddenRef = useRef(isHidden);
   const location = useLocation();
 
-  // Don't show the default header on the home page since it has its own header
-  const shouldShowHeader = showHeader && location.pathname !== '/';
+  // Show header when showHeader is true (removed the home page exception)
+  const shouldShowHeader = showHeader;
 
   // Track when sidebar transitions from hidden to visible
   useEffect(() => {

@@ -9,6 +9,9 @@ interface SidebarHeaderProps {
 
 const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
   const { currentUser } = useUser();
+  
+  // Debug logging
+  console.log('SidebarHeader - currentUser:', currentUser);
 
   if (isCollapsed) {
     return (
