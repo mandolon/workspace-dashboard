@@ -2,6 +2,7 @@
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
+import { useUser } from '@/contexts/UserContext';
 
 interface TaskDetailFormProps {
   task: {
@@ -13,6 +14,8 @@ interface TaskDetailFormProps {
 }
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
+  const { currentUser } = useUser();
+
   const formatCreatedDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -20,6 +23,15 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     } catch {
       return dateString;
     }
+  };
+
+  const getCreatedByName = (createdBy: string) => {
+    // Map initials to full name using current user context
+    if (createdBy === "AL" || createdBy === currentUser.name) {
+      return currentUser.name;
+    }
+    // Fallback to showing the initials if no mapping found
+    return createdBy;
   };
 
   return (
@@ -50,8 +62,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           </label>
           <input 
             type="text" 
-            value={task.createdBy}
-            className="w-full border border-border rounded px-2 py-1 text-xs bg-muted cursor-not-allowed" 
+            value={getCreatedByName(task.createdBy)}
+            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent" 
             readOnly
             disabled
           />
@@ -65,7 +77,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           <input 
             type="text" 
             value={formatCreatedDate(task.createdAt)}
-            className="w-full border border-border rounded px-2 py-1 text-xs bg-muted cursor-not-allowed" 
+            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent" 
             readOnly
             disabled
           />
