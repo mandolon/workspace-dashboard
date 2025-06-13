@@ -56,8 +56,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
       {/* Form Fields */}
       <div className="grid grid-cols-4 gap-3">
         <div className="space-y-1">
-          <label className="text-xs text-muted-foreground flex items-center gap-1">
-            <span>👤</span>
+          <label className="text-xs text-muted-foreground">
             Created by
           </label>
           <input 
@@ -70,8 +69,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs text-muted-foreground flex items-center gap-1">
-            <span>📅</span>
+          <label className="text-xs text-muted-foreground">
             Date Created
           </label>
           <input 
@@ -84,23 +82,21 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs text-muted-foreground flex items-center gap-1">
-            <span>👥</span>
+          <label className="text-xs text-muted-foreground">
             Assigned to
           </label>
-          <select className="w-full border border-border rounded px-2 py-1 text-xs bg-background">
+          <select className="w-full px-2 py-1 text-xs bg-transparent">
             <option>Select User</option>
           </select>
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs text-muted-foreground flex items-center gap-1">
-            <span>✅</span>
+          <label className="text-xs text-muted-foreground">
             Marked Complete
           </label>
           <input 
             type="date" 
-            className="w-full border border-border rounded px-2 py-1 text-xs bg-background" 
+            className="w-full px-2 py-1 text-xs bg-transparent" 
           />
         </div>
       </div>
