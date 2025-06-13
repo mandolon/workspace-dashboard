@@ -1,29 +1,18 @@
 
 import { projectClientData } from '@/data/projectClientData';
-
-// Project display name to project ID mapping
-export const projectDisplayToIdMapping: Record<string, string> = {
-  'Piner Haus Garage': 'piner-piner-haus-garage',
-  'Rathbun - USFS Cabin': 'rathbun-usfs-cabin',
-  'Ogden - Thew - 2709 T Street': 'ogden-thew-2709-t-street',
-  'Adams - 1063 40th Street': 'adams-1063-40th-street'
-};
-
-// Reverse mapping for dropdown options
-export const projectIdToDisplayMapping: Record<string, string> = {
-  'piner-piner-haus-garage': 'Piner Haus Garage',
-  'rathbun-usfs-cabin': 'Rathbun - USFS Cabin', 
-  'ogden-thew-2709-t-street': 'Ogden - Thew - 2709 T Street',
-  'adams-1063-40th-street': 'Adams - 1063 40th Street'
-};
+import { getAvailableProjectsForTasks, convertDisplayNameToProjectId } from '@/data/projectStatus';
 
 // Get project ID from display name
 export const getProjectIdFromDisplayName = (displayName: string): string => {
   console.log('Converting display name to project ID:', displayName);
   
-  const projectId = projectDisplayToIdMapping[displayName];
-  if (projectId) {
-    console.log('Found project ID:', projectId);
+  // Convert display name to project ID format
+  const projectId = convertDisplayNameToProjectId(displayName);
+  console.log('Converted project ID:', projectId);
+  
+  // Check if this project exists in our client data
+  if (projectClientData[projectId]) {
+    console.log('Found project in client data:', projectId);
     return projectId;
   }
   
@@ -39,19 +28,29 @@ export const getProjectIdFromDisplayName = (displayName: string): string => {
     return fallbackId;
   }
   
-  console.warn('No project ID found for display name:', displayName);
-  return 'unknown-project';
+  console.warn('No project ID found for display name, using converted ID:', displayName, projectId);
+  return projectId;
 };
 
 // Get display name from project ID
 export const getDisplayNameFromProjectId = (projectId: string): string => {
-  return projectIdToDisplayMapping[projectId] || projectId;
+  const availableProjects = getAvailableProjectsForTasks();
+  const project = availableProjects.find(p => p.projectId === projectId);
+  
+  if (project) {
+    return project.displayName;
+  }
+  
+  // Fallback to client data
+  if (projectClientData[projectId]) {
+    const clientData = projectClientData[projectId];
+    return `${clientData.lastName} - ${clientData.projectAddress}`;
+  }
+  
+  return projectId;
 };
 
-// Get all available projects for dropdowns
+// Get all available projects for dropdowns (only In Progress projects)
 export const getAvailableProjects = () => {
-  return Object.entries(projectDisplayToIdMapping).map(([displayName, projectId]) => ({
-    displayName,
-    projectId
-  }));
+  return getAvailableProjectsForTasks();
 };
