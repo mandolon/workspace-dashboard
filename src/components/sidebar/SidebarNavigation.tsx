@@ -98,7 +98,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
               <div
                 key={index}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded text-sm cursor-pointer transition-colors my-0.5",
+                  "flex items-center gap-3 px-3 py-1.5 rounded text-sm cursor-pointer transition-colors my-0",
                   item.active 
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
