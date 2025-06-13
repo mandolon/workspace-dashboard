@@ -26,6 +26,7 @@ const TaskGroupSection = ({
 }: TaskGroupSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const quickAddRef = useRef<HTMLDivElement>(null);
+  const taskTableRef = useRef<HTMLDivElement>(null);
 
   const {
     tasks,
@@ -61,6 +62,23 @@ const TaskGroupSection = ({
     };
   }, [showQuickAdd, group.status, onSetShowQuickAdd]);
 
+  // Handle click outside to cancel task editing
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (editingTaskId && taskTableRef.current && !taskTableRef.current.contains(event.target as Node)) {
+        handleCancelEdit();
+      }
+    };
+
+    if (editingTaskId) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [editingTaskId, handleCancelEdit]);
+
   // Filter out archived tasks from display
   const visibleTasks = tasks.filter(task => !task.archived);
 
@@ -75,6 +93,7 @@ const TaskGroupSection = ({
       {isExpanded && (
         <>
           <TaskTable
+            ref={taskTableRef}
             tasks={visibleTasks}
             editingTaskId={editingTaskId}
             editingValue={editingValue}

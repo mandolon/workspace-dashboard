@@ -22,7 +22,7 @@ interface TaskTableProps {
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
 }
 
-const TaskTable = ({
+const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
   tasks,
   editingTaskId,
   editingValue,
@@ -38,41 +38,45 @@ const TaskTable = ({
   onRemoveCollaborator,
   onAssignPerson,
   onAddCollaborator
-}: TaskTableProps) => {
+}, ref) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className="border-b border-border">
-          <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%] pl-8">Name</TableHead>
-          <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
-          <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
-          <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {tasks.map((task) => (
-          <TaskRow
-            key={task.id}
-            task={task}
-            editingTaskId={editingTaskId}
-            editingValue={editingValue}
-            onSetEditingValue={onSetEditingValue}
-            onTaskClick={onTaskClick}
-            onTaskNameClick={onTaskNameClick}
-            onEditClick={onEditClick}
-            onSaveEdit={onSaveEdit}
-            onCancelEdit={onCancelEdit}
-            onKeyDown={onKeyDown}
-            onTaskStatusClick={onTaskStatusClick}
-            onRemoveAssignee={onRemoveAssignee}
-            onRemoveCollaborator={onRemoveCollaborator}
-            onAssignPerson={onAssignPerson}
-            onAddCollaborator={onAddCollaborator}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <div ref={ref}>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%] pl-8">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tasks.map((task) => (
+            <TaskRow
+              key={task.id}
+              task={task}
+              editingTaskId={editingTaskId}
+              editingValue={editingValue}
+              onSetEditingValue={onSetEditingValue}
+              onTaskClick={onTaskClick}
+              onTaskNameClick={onTaskNameClick}
+              onEditClick={onEditClick}
+              onSaveEdit={onSaveEdit}
+              onCancelEdit={onCancelEdit}
+              onKeyDown={onKeyDown}
+              onTaskStatusClick={onTaskStatusClick}
+              onRemoveAssignee={onRemoveAssignee}
+              onRemoveCollaborator={onRemoveCollaborator}
+              onAssignPerson={onAssignPerson}
+              onAddCollaborator={onAddCollaborator}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
-};
+});
+
+TaskTable.displayName = "TaskTable";
 
 export default TaskTable;
