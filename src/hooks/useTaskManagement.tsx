@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Task } from '@/types/task';
+import { updateTask } from '@/data/taskData';
 
 export const useTaskManagement = (initialTasks: Task[], onTaskArchive?: (taskId: number) => void) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
@@ -24,6 +25,32 @@ export const useTaskManagement = (initialTasks: Task[], onTaskArchive?: (taskId:
 
   const handleSaveEdit = (taskId: number) => {
     console.log(`Updating task ${taskId} with new title: ${editingValue}`);
+    
+    // Validate the title
+    if (editingValue.trim() === '') {
+      console.warn('Cannot save empty task title');
+      setEditingTaskId(null);
+      setEditingValue('');
+      return;
+    }
+
+    // Update the centralized task data
+    const updatedTask = updateTask(taskId, { title: editingValue.trim() });
+    
+    if (updatedTask) {
+      // Update local state to reflect the change immediately
+      setTasks(prevTasks => 
+        prevTasks.map(task => 
+          task.id === taskId 
+            ? { ...task, title: editingValue.trim() }
+            : task
+        )
+      );
+      console.log(`Successfully updated task ${taskId} title to: ${editingValue.trim()}`);
+    } else {
+      console.error(`Failed to update task ${taskId}`);
+    }
+    
     setEditingTaskId(null);
     setEditingValue('');
   };
