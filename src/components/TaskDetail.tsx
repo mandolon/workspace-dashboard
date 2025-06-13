@@ -26,6 +26,9 @@ interface TaskDetailProps {
       name: string;
       avatar: string;
     }>;
+    createdBy: string;
+    createdAt: string;
+    updatedAt: string;
   } | null;
 }
 

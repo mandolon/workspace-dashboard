@@ -17,6 +17,9 @@ export const getNextTaskId = (): string => {
   return `T${nextTaskIdNumber.toString().padStart(4, '0')}`;
 };
 
+// Get today's date in ISO format
+const today = new Date().toISOString();
+
 // Centralized task data with proper project ID associations, TaskIDs, and audit fields
 export const allTasks: Task[] = [
   {
@@ -32,8 +35,8 @@ export const allTasks: Task[] = [
     hasAttachment: true,
     status: "redline",
     createdBy: "AL",
-    createdAt: "2022-08-10T10:00:00Z",
-    updatedAt: "2022-08-10T10:00:00Z"
+    createdAt: today,
+    updatedAt: today
   },
   {
     id: 2,
@@ -49,8 +52,8 @@ export const allTasks: Task[] = [
     collaborators: [{ name: "MP", avatar: "bg-green-500" }],
     status: "progress",
     createdBy: "AL",
-    createdAt: "2023-12-27T10:00:00Z",
-    updatedAt: "2023-12-27T10:00:00Z"
+    createdAt: today,
+    updatedAt: today
   },
   {
     id: 3,
@@ -65,8 +68,8 @@ export const allTasks: Task[] = [
     hasAttachment: true,
     status: "progress",
     createdBy: "AL",
-    createdAt: "2023-12-09T10:00:00Z",
-    updatedAt: "2023-12-09T10:00:00Z"
+    createdAt: today,
+    updatedAt: today
   },
   {
     id: 4,
@@ -81,8 +84,8 @@ export const allTasks: Task[] = [
     hasAttachment: false,
     status: "progress",
     createdBy: "AL",
-    createdAt: "2023-09-13T10:00:00Z",
-    updatedAt: "2023-09-13T10:00:00Z"
+    createdAt: today,
+    updatedAt: today
   }
 ];
 

@@ -1,14 +1,27 @@
+
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
+import { format } from 'date-fns';
 
 interface TaskDetailFormProps {
   task: {
     project: string;
     title: string;
+    createdBy: string;
+    createdAt: string;
   };
 }
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
+  const formatCreatedDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return format(date, 'MMM d, yyyy');
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
     <div className="space-y-3">
       {/* Task Title with Status Badge - centered alignment */}
@@ -35,9 +48,13 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             <span>👤</span>
             Created by
           </label>
-          <select className="w-full border border-border rounded px-2 py-1 text-xs bg-background">
-            <option>Select User</option>
-          </select>
+          <input 
+            type="text" 
+            value={task.createdBy}
+            className="w-full border border-border rounded px-2 py-1 text-xs bg-muted cursor-not-allowed" 
+            readOnly
+            disabled
+          />
         </div>
 
         <div className="space-y-1">
@@ -47,9 +64,10 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           </label>
           <input 
             type="text" 
-            value="Jan 6, 4 Weeks"
-            className="w-full border border-border rounded px-2 py-1 text-xs bg-background" 
+            value={formatCreatedDate(task.createdAt)}
+            className="w-full border border-border rounded px-2 py-1 text-xs bg-muted cursor-not-allowed" 
             readOnly
+            disabled
           />
         </div>
 
