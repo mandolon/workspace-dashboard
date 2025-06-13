@@ -70,11 +70,9 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             {task.title}
           </h1>
         )}
-        {!isEditing && (
-          <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
-            REDLINE / TO DO
-          </div>
-        )}
+        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+          REDLINE / TO DO
+        </div>
       </div>
 
       {/* Description */}
