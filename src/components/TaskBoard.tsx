@@ -15,12 +15,22 @@ const TaskBoard = () => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // Add refresh trigger for centralized tasks
 
   // Get task groups using centralized data
   const getTaskGroups = (): TaskGroup[] => {
-    const redlineTasks = [...getTasksByStatus('redline'), ...customTasks.filter(task => task.status === 'redline' && !task.archived)];
-    const progressTasks = [...getTasksByStatus('progress'), ...customTasks.filter(task => task.status === 'progress' && !task.archived)];
-    const completedTasks = [...getTasksByStatus('completed'), ...customTasks.filter(task => task.status === 'completed' && !task.archived)];
+    // Get centralized tasks and combine with custom tasks, avoiding duplicates
+    const centralizedRedline = getTasksByStatus('redline');
+    const centralizedProgress = getTasksByStatus('progress'); 
+    const centralizedCompleted = getTasksByStatus('completed');
+    
+    const customRedline = customTasks.filter(task => task.status === 'redline' && !task.archived);
+    const customProgress = customTasks.filter(task => task.status === 'progress' && !task.archived);
+    const customCompleted = customTasks.filter(task => task.status === 'completed' && !task.archived);
+
+    const redlineTasks = [...centralizedRedline, ...customRedline];
+    const progressTasks = [...centralizedProgress, ...customProgress];
+    const completedTasks = [...centralizedCompleted, ...customCompleted];
 
     const taskGroups: TaskGroup[] = [];
 
@@ -58,12 +68,14 @@ const TaskBoard = () => {
   };
 
   const handleCreateTask = (newTask: Task) => {
-    console.log('Creating task:', newTask);
+    console.log('Creating task via dialog:', newTask);
+    // For tasks created via dialog, add to custom tasks only
     setCustomTasks(prev => [newTask, ...prev]);
   };
 
   const handleQuickAddSave = (taskData: any) => {
-    // Convert quick add data to proper task format and create via addTask
+    console.log('Quick add task data:', taskData);
+    // For quick add, use the centralized addTask function and trigger refresh
     const newTask = addTask({
       title: taskData.title,
       projectId: taskData.projectId || 'unknown-project',
@@ -76,7 +88,10 @@ const TaskBoard = () => {
       hasAttachment: false,
       collaborators: []
     });
-    setCustomTasks(prev => [newTask, ...prev]);
+    
+    console.log('Quick add created task:', newTask);
+    // Trigger a refresh to ensure the new task appears
+    setRefreshTrigger(prev => prev + 1);
     setShowQuickAdd(null);
   };
 
@@ -113,7 +128,7 @@ const TaskBoard = () => {
           <div className="p-4 space-y-4">
             {taskGroups.map((group, groupIndex) => (
               <TaskGroupSection
-                key={groupIndex}
+                key={`${groupIndex}-${refreshTrigger}`} // Add refreshTrigger to key to force re-render
                 group={group}
                 showQuickAdd={showQuickAdd}
                 onSetShowQuickAdd={setShowQuickAdd}
