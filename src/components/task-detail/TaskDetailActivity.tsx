@@ -51,10 +51,10 @@ const TaskDetailActivity = () => {
               <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
                 {getInitials(activity.user)}
               </div>
-              <div className={`flex-1 min-w-0 ${isUserMessage ? 'text-right' : ''}`}>
-                <div className="font-medium text-xs">{activity.user}</div>
+              <div className="flex-1 min-w-0">
+                <div className={`font-medium text-xs ${isUserMessage ? 'text-right' : ''}`}>{activity.user}</div>
                 <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
+                <div className={`text-xs text-muted-foreground mt-0.5 ${isUserMessage ? 'text-right' : ''}`}>{activity.time}</div>
               </div>
             </div>
           );
