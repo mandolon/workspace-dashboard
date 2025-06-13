@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Edit, Check, X, Trash2 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -110,6 +109,13 @@ const TaskRow = ({
         onTaskDeleted();
       }
     }
+  };
+
+  const handleContextMenuDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Context menu delete clicked for task:', task.id);
+    setShowDeleteDialog(true);
   };
 
   const handleDuplicateTask = () => {
@@ -243,7 +249,7 @@ const TaskRow = ({
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
-            onClick={() => setShowDeleteDialog(true)} 
+            onClick={handleContextMenuDelete}
             className="text-destructive focus:text-destructive"
           >
             <Trash2 className="w-4 h-4 mr-2" />
