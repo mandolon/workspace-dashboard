@@ -16,6 +16,9 @@ interface TaskDetailFormProps {
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   const { currentUser } = useUser();
 
+  // Debug log to force component refresh
+  console.log('TaskDetailForm rendering with task:', task.title);
+
   const formatCreatedDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -53,7 +56,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         />
       </div>
 
-      {/* Form Fields */}
+      {/* Form Fields - Updated without disabled attributes */}
       <div className="grid grid-cols-4 gap-3">
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
