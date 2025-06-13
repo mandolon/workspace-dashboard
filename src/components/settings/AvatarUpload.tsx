@@ -28,7 +28,10 @@ const AvatarUpload = ({ user, onAvatarChange }: AvatarUploadProps) => {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center text-lg font-medium">
+      <div 
+        className="w-16 h-16 rounded-full flex items-center justify-center text-lg font-medium text-white"
+        style={{ backgroundColor: 'rgb(75 85 99 / var(--tw-bg-opacity, 1))' }}
+      >
         {user.avatar}
       </div>
       <div>
