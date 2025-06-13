@@ -56,49 +56,42 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         />
       </div>
 
-      {/* Form Fields - Updated without disabled attributes */}
+      {/* Form Fields - Plain text values without containers */}
       <div className="grid grid-cols-4 gap-3">
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
             Created by
           </label>
-          <input 
-            type="text" 
-            value={getCreatedByName(task.createdBy)}
-            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent text-left" 
-            readOnly
-          />
+          <div className="text-xs">
+            {getCreatedByName(task.createdBy)}
+          </div>
         </div>
 
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
             Date Created
           </label>
-          <input 
-            type="text" 
-            value={formatCreatedDate(task.createdAt)}
-            className="w-full px-2 py-1 text-xs cursor-not-allowed bg-transparent text-left" 
-            readOnly
-          />
+          <div className="text-xs">
+            {formatCreatedDate(task.createdAt)}
+          </div>
         </div>
 
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
             Assigned to
           </label>
-          <select className="w-full px-2 py-1 text-xs bg-transparent text-left">
-            <option>Select User</option>
-          </select>
+          <div className="text-xs text-muted-foreground">
+            Select User
+          </div>
         </div>
 
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
             Marked Complete
           </label>
-          <input 
-            type="date" 
-            className="w-full px-2 py-1 text-xs bg-transparent text-left" 
-          />
+          <div className="text-xs text-muted-foreground">
+            —
+          </div>
         </div>
       </div>
     </div>
