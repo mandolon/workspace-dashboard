@@ -1,202 +1,72 @@
 
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
 import { Task } from '@/types/task';
-import { updateTask } from '@/data/taskData';
+import { useTaskEdit } from './useTaskEdit';
+import { useTaskAssignment } from './useTaskAssignment';
+import { useTaskStatus } from './useTaskStatus';
 
 export const useTaskManagement = (initialTasks: Task[], onTaskArchive?: (taskId: number) => void) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
-  const [editingValue, setEditingValue] = useState('');
-  const { toast } = useToast();
 
-  const handleTaskNameClick = (task: Task, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingTaskId(task.id);
-    setEditingValue(task.title);
-  };
+  // Use the smaller hooks
+  const taskEdit = useTaskEdit();
+  const taskAssignment = useTaskAssignment();
+  const taskStatus = useTaskStatus(onTaskArchive);
 
-  const handleEditClick = (task: Task, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingTaskId(task.id);
-    setEditingValue(task.title);
-  };
-
-  const handleSaveEdit = (taskId: number) => {
-    console.log(`Updating task ${taskId} with new title: ${editingValue}`);
-    
-    // Validate the title
-    if (editingValue.trim() === '') {
-      console.warn('Cannot save empty task title');
-      setEditingTaskId(null);
-      setEditingValue('');
-      return;
-    }
-
-    // Update the centralized task data
-    const updatedTask = updateTask(taskId, { title: editingValue.trim() });
-    
-    if (updatedTask) {
-      // Update local state to reflect the change immediately
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id === taskId 
-            ? { ...task, title: editingValue.trim() }
-            : task
-        )
-      );
-      console.log(`Successfully updated task ${taskId} title to: ${editingValue.trim()}`);
-    } else {
-      console.error(`Failed to update task ${taskId}`);
-    }
-    
-    setEditingTaskId(null);
-    setEditingValue('');
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTaskId(null);
-    setEditingValue('');
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, taskId: number) => {
-    if (e.key === 'Enter') {
-      handleSaveEdit(taskId);
-    } else if (e.key === 'Escape') {
-      handleCancelEdit();
-    }
-  };
-
-  const handleRemoveAssignee = (taskId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
+  // Centralized task update function
+  const updateTaskInState = (taskId: number, updates: Partial<Task>) => {
     setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { ...task, assignee: null }
-          : task
-      )
+      prevTasks.map(task => {
+        if (task.id === taskId) {
+          // Handle special cases for collaborators
+          if (updates.collaborators !== undefined && updates.collaborators.length === 0) {
+            // For removing collaborators, we need the current task state
+            const currentTask = prevTasks.find(t => t.id === taskId);
+            if (currentTask) {
+              return { ...task, ...updates };
+            }
+          }
+          return { ...task, ...updates };
+        }
+        return task;
+      })
     );
-    console.log(`Removed assignee from task ${taskId}`);
   };
 
+  // Enhanced collaborator handlers that work with current state
   const handleRemoveCollaborator = (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { 
-              ...task, 
-              collaborators: task.collaborators?.filter((_, index) => index !== collaboratorIndex) || []
-            }
-          : task
-      )
-    );
+    const currentTask = tasks.find(t => t.id === taskId);
+    if (currentTask) {
+      const updatedCollaborators = currentTask.collaborators?.filter((_, index) => index !== collaboratorIndex) || [];
+      updateTaskInState(taskId, { collaborators: updatedCollaborators });
+    }
     console.log(`Removed collaborator ${collaboratorIndex} from task ${taskId}`);
   };
 
-  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { ...task, assignee: person }
-          : task
-      )
-    );
-    console.log(`Assigned ${person.fullName || person.name} to task ${taskId}`);
-  };
-
   const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { 
-              ...task, 
-              collaborators: [...(task.collaborators || []), person]
-            }
-          : task
-      )
-    );
-    console.log(`Added ${person.fullName || person.name} as collaborator to task ${taskId}`);
-  };
-
-  const handleTaskStatusClick = (taskId: number) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task && task.status !== 'completed') {
-      const previousStatus = task.status;
-      
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id === taskId 
-            ? { ...task, status: 'completed', archived: true }
-            : task
-        )
-      );
-      
-      if (onTaskArchive) {
-        onTaskArchive(taskId);
-      }
-      
-      toast({
-        title: "Task completed",
-        description: `"${task.title}" has been marked as completed.`,
-        action: (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => handleUndoComplete(taskId, previousStatus)}
-          >
-            Undo
-          </Button>
-        ),
-        duration: 5000,
-      });
-      
-      console.log(`Completed and archived task ${taskId}`);
-    } else if (task && task.status === 'completed') {
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id === taskId 
-            ? { ...task, status: 'progress', archived: false }
-            : task
-        )
-      );
-      console.log(`Unarchived task ${taskId}`);
+    const currentTask = tasks.find(t => t.id === taskId);
+    if (currentTask) {
+      const updatedCollaborators = [...(currentTask.collaborators || []), person];
+      updateTaskInState(taskId, { collaborators: updatedCollaborators });
     }
-  };
-
-  const handleUndoComplete = (taskId: number, previousStatus: string) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { ...task, status: previousStatus, archived: false }
-          : task
-      )
-    );
-    
-    toast({
-      title: "Task restored",
-      description: "Task has been restored to its previous status.",
-      duration: 3000,
-    });
-    
-    console.log(`Undid completion for task ${taskId}, restored to ${previousStatus}`);
+    console.log(`Added ${person.fullName || person.name} as collaborator to task ${taskId}`);
   };
 
   return {
     tasks,
-    editingTaskId,
-    editingValue,
-    setEditingValue,
-    handleTaskNameClick,
-    handleEditClick,
-    handleSaveEdit,
-    handleCancelEdit,
-    handleKeyDown,
-    handleRemoveAssignee,
+    editingTaskId: taskEdit.editingTaskId,
+    editingValue: taskEdit.editingValue,
+    setEditingValue: taskEdit.setEditingValue,
+    handleTaskNameClick: taskEdit.handleTaskNameClick,
+    handleEditClick: taskEdit.handleEditClick,
+    handleSaveEdit: (taskId: number) => taskEdit.handleSaveEdit(taskId, updateTaskInState),
+    handleCancelEdit: taskEdit.handleCancelEdit,
+    handleKeyDown: (e: React.KeyboardEvent, taskId: number) => taskEdit.handleKeyDown(e, taskId, updateTaskInState),
+    handleRemoveAssignee: (taskId: number, e: React.MouseEvent) => taskAssignment.handleRemoveAssignee(taskId, e, updateTaskInState),
     handleRemoveCollaborator,
-    handleAssignPerson,
+    handleAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => taskAssignment.handleAssignPerson(taskId, person, updateTaskInState),
     handleAddCollaborator,
-    handleTaskStatusClick
+    handleTaskStatusClick: (taskId: number) => taskStatus.handleTaskStatusClick(taskId, tasks, updateTaskInState)
   };
 };
