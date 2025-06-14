@@ -6,21 +6,21 @@ import { Task } from '@/types/task';
 import { Triangle } from 'lucide-react';
 
 interface TaskTableProps {
-  tasks: Task[];
+  tasks: any[];
   editingTaskId: number | null;
   editingValue: string;
   onSetEditingValue: (value: string) => void;
-  onTaskClick: (task: Task) => void;
-  onTaskNameClick: (task: Task, e: React.MouseEvent) => void;
-  onEditClick: (task: Task, e: React.MouseEvent) => void;
+  onTaskClick: (task: any) => void;
+  onTaskNameClick: (task: any, e: React.MouseEvent) => void;
+  onEditClick: (task: any, e: React.MouseEvent) => void;
   onSaveEdit: (taskId: number) => void;
   onCancelEdit: () => void;
   onKeyDown: (e: React.KeyboardEvent, taskId: number) => void;
   onTaskStatusClick: (taskId: number) => void;
-  onRemoveAssignee: (taskId: number, e: React.MouseEvent) => void;
-  onRemoveCollaborator: (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => void;
-  onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
-  onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
+  onRemoveAssignee: (taskId: string, e: React.MouseEvent) => void;
+  onRemoveCollaborator: (taskId: string, collaboratorIndex: number, e: React.MouseEvent) => void;
+  onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
+  onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
   onTaskDeleted?: () => void;
   // For sorting
   currentSortBy?: 'dateCreated' | 'assignee' | null;
@@ -29,6 +29,7 @@ interface TaskTableProps {
   onAssignedToFilterClick?: (e: React.MouseEvent) => void;
 }
 
+// @ts-ignore forwardRef types
 const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
   tasks,
   editingTaskId,

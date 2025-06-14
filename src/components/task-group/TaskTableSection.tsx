@@ -18,14 +18,14 @@ interface TaskTableSectionProps {
   editingTaskId?: number | null;
   editingValue?: string;
   setEditingValue?: (value: string) => void;
-  startEditingTask?: (task: Task) => void;
+  startEditingTask?: (task: any) => void;
   saveTaskEdit?: (id: number) => void;
   cancelTaskEdit?: () => void;
   toggleTaskStatus?: (id: number) => void;
-  assignPerson?: any;
-  removeAssignee?: any;
-  addCollaborator?: any;
-  removeCollaborator?: any;
+  assignPerson?: (taskId: string, person: any) => void;
+  removeAssignee?: (taskId: string) => void;
+  addCollaborator?: (taskId: string, person: any) => void;
+  removeCollaborator?: (taskId: string, idx: number) => void;
 }
 
 const TaskTableSection = ({
@@ -89,6 +89,21 @@ const TaskTableSection = ({
   } = useTaskSorting(group.tasks);
 
   const isShowingQuickAdd = showQuickAdd === group.status;
+
+  // Handler rewiring for correct signature everywhere
+  if (useContext) {
+    const ctx = useTaskContext();
+    // All context handlers below must have the correct signatures and should use task.taskId for upstream
+    assignPerson = ctx.assignPerson;
+    removeAssignee = ctx.removeAssignee;
+    addCollaborator = ctx.addCollaborator;
+    removeCollaborator = ctx.removeCollaborator;
+  } else {
+    assignPerson = propsAssignPerson;
+    removeAssignee = propsRemoveAssignee;
+    addCollaborator = propsAddCollaborator;
+    removeCollaborator = propsRemoveCollaborator;
+  }
 
   // Handle click outside to cancel quick add
   useEffect(() => {

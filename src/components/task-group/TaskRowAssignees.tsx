@@ -10,10 +10,10 @@ import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TaskRowAssigneesProps {
   task: any;
-  onRemoveAssignee: (taskId: number, e: React.MouseEvent) => void;
-  onRemoveCollaborator: (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => void;
-  onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
-  onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
+  onRemoveAssignee: (taskId: string, e: React.MouseEvent) => void;
+  onRemoveCollaborator: (taskId: string, collaboratorIndex: number, e: React.MouseEvent) => void;
+  onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
+  onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
 }
 
 const TaskRowAssignees = ({
@@ -41,10 +41,10 @@ const TaskRowAssignees = ({
   const handleAdd = (person: any) => {
     if (!assignee) {
       console.info("AssignPerson handler called with: ", person);
-      onAssignPerson(task.id, person);
+      onAssignPerson(task.taskId, person);
     } else {
       console.info("AddCollaborator handler called with: ", person);
-      onAddCollaborator(task.id, person);
+      onAddCollaborator(task.taskId, person);
     }
     setOpen(false);
   };
@@ -63,7 +63,7 @@ const TaskRowAssignees = ({
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
-            onClick={e => { e.stopPropagation(); onRemoveAssignee(task.id, e); }}
+            onClick={e => { e.stopPropagation(); onRemoveAssignee(task.taskId, e); }}
             title="Remove assignee"
             tabIndex={-1}
           >
@@ -83,7 +83,7 @@ const TaskRowAssignees = ({
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
-            onClick={e => { e.stopPropagation(); onRemoveCollaborator(task.id, idx, e); }}
+            onClick={e => { e.stopPropagation(); onRemoveCollaborator(task.taskId, idx, e); }}
             title="Remove collaborator"
             tabIndex={-1}
           >
@@ -135,3 +135,4 @@ const TaskRowAssignees = ({
 };
 
 export default TaskRowAssignees;
+
