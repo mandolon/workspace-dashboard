@@ -22,9 +22,11 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
   const handleCreate = async () => {
     if (!title.trim() || !projectId) return;
 
+    // Hardcoded for PDF for now (no whiteboard/sketch types yet)
+    const type = "pdf";
+
     // If type is "pdf", require a file and upload to supabase storage
     let pdf_url: string | undefined = undefined;
-    const type = "pdf";
     if (type === "pdf") {
       if (!pdfFile) return;
       const ext = pdfFile.name.split(".").pop();

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FileText, Users } from 'lucide-react';
 
@@ -10,6 +9,7 @@ interface WhiteboardCardWhiteboard {
   thumbnail: string;
   projectName: string;
   sharedWithClient?: boolean;
+  pdf_url?: string; // Added for PDF navigation
 }
 
 interface WhiteboardCardProps {

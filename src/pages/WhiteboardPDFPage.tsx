@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -92,8 +91,8 @@ const WhiteboardPDFPage = () => {
         }
       )
       .subscribe();
-
-    return () => supabase.removeChannel(channel);
+    // FIX: Cleanup must be synchronous!
+    return () => { supabase.removeChannel(channel); }
   }, [id]);
 
   // On PDF pin drop
