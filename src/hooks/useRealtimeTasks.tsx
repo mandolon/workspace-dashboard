@@ -1,10 +1,9 @@
-
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
 import { fetchAllTasks, dbRowToTask } from "@/data/taskSupabase";
 import { useUser } from "@/contexts/UserContext";
-import { filterTasksForUser } from "@/utils/taskVisibility";
+import { filterTasksForUser, canUserViewTask } from "@/utils/taskVisibility";
 
 export function useRealtimeTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -49,28 +48,29 @@ export function useRealtimeTasks() {
             const task = dbRowToTask(row);
 
             // Only update UI if new/changed/removed task matches visibility for this user
-            const taskVisible = filterTasksForUser([task], currentUser).length > 0;
+            const visible = canUserViewTask(task, currentUser);
+            if (!visible.allowed) {
+              // If losing access and present, remove
+              if (filteredPrev.some(t => t.id === task.id)) {
+                return filteredPrev.filter(t => t.id !== task.id);
+              }
+              // Not present, do nothing
+              return filteredPrev;
+            }
 
             if (payload.eventType === "INSERT") {
-              // Add if not present and is visible
-              if (taskVisible && !filteredPrev.some(t => t.id === task.id)) {
+              if (!filteredPrev.some(t => t.id === task.id)) {
                 return [task, ...filteredPrev];
               }
               return filteredPrev;
             }
             if (payload.eventType === "UPDATE") {
-              if (taskVisible) {
-                // If should be visible after update (add or update)
-                const present = filteredPrev.some(t => t.id === task.id);
-                if (present) {
-                  return filteredPrev.map(t => (t.id === task.id ? task : t));
-                }
-                // Was not visible before, but now is visible
-                return [task, ...filteredPrev];
-              } else {
-                // Was visible before, now should NOT be visible -> remove
-                return filteredPrev.filter(t => t.id !== task.id);
+              const present = filteredPrev.some(t => t.id === task.id);
+              if (present) {
+                return filteredPrev.map(t => (t.id === task.id ? task : t));
               }
+              // Was not visible before, now is visible
+              return [task, ...filteredPrev];
             }
             if (payload.eventType === "DELETE") {
               // Remove deleted task from filtered list
