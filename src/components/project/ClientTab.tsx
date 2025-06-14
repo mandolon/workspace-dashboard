@@ -28,3 +28,4 @@ const ClientTab = ({ onDataChange }: ClientTabProps) => {
 };
 
 export default ClientTab;
+
