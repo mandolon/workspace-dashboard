@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskTitleEdit } from '@/hooks/useTaskTitleEdit';
-import AssigneeSelect from "@/components/ui/AssigneeSelect";
 
 interface TaskDetailFormProps {
   task: {
@@ -46,9 +46,6 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     // Fallback to showing the initials if no mapping found
     return createdBy;
   };
-
-  // Stub state & handler for the new select (not wired up yet)
-  const [assigneeValue, setAssigneeValue] = React.useState("");
 
   return (
     <div className="space-y-3">
@@ -114,8 +111,9 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           <label className="text-xs text-muted-foreground">
             Assigned to
           </label>
-          {/* Replace with new component; not yet wired to task props */}
-          <AssigneeSelect value={assigneeValue} onValueChange={setAssigneeValue} />
+          <div className="text-xs text-muted-foreground">
+            Select User
+          </div>
         </div>
 
         <div className="space-y-1">

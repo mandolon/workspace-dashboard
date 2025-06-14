@@ -1,17 +1,22 @@
-
 import React, { useState } from 'react';
-import TaskNameCell from './TaskNameCell';
-import TaskActionMenu from './TaskActionMenu';
-import TaskFileCell from './TaskFileCell';
+import { Plus, Edit, Check, X, Trash2 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 import TaskStatusIcon from '../TaskStatusIcon';
 import TaskRowAssignees from './TaskRowAssignees';
 import DeleteTaskDialog from '../DeleteTaskDialog';
 import { formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
 import { softDeleteTask, restoreTask } from '@/data/taskData';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
 
 interface TaskRowProps {
   task: Task;
@@ -30,12 +35,6 @@ interface TaskRowProps {
   onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onTaskDeleted?: () => void;
-  columnConfig: {
-    key: string;
-    label: string;
-    headClassName: string;
-    cellClassName: string;
-  }[];
 }
 
 const TaskRow = ({
@@ -54,8 +53,7 @@ const TaskRow = ({
   onRemoveCollaborator,
   onAssignPerson,
   onAddCollaborator,
-  onTaskDeleted,
-  columnConfig
+  onTaskDeleted
 }: TaskRowProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -113,6 +111,13 @@ const TaskRow = ({
     }
   };
 
+  const handleContextMenuDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Context menu delete clicked for task:', task.id);
+    setShowDeleteDialog(true);
+  };
+
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
   };
@@ -121,77 +126,137 @@ const TaskRow = ({
     onTaskStatusClick(task.id);
   };
 
-  // Remove context menu from here—move into dedicated component
   return (
     <>
-      <TaskActionMenu
-        onEdit={(e) => onEditClick(task, e)}
-        onMarkComplete={handleMarkComplete}
-        onDuplicate={handleDuplicateTask}
-        onDelete={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setShowDeleteDialog(true);
-        }}
-      >
-        <TableRow key={task.id} className="hover:bg-accent/50 group">
-          {/* Name column */}
-          <TableCell className={columnConfig[0].cellClassName}>
-            <div className="flex items-center gap-2">
-              <TaskStatusIcon 
-                status={task.status} 
-                onClick={() => onTaskStatusClick(task.id)}
-              />
-              <TaskNameCell
-                editing={editingTaskId === task.id}
-                value={editingValue}
-                onSetValue={onSetEditingValue}
-                onKeyDown={e => onKeyDown(e, task.id)}
-                onSave={e => {
-                  e.stopPropagation();
-                  onSaveEdit(task.id);
-                }}
-                onCancel={e => {
-                  e.stopPropagation();
-                  onCancelEdit();
-                }}
-                onEdit={e => onEditClick(task, e)}
-                onDelete={e => {
-                  e.stopPropagation();
-                  setShowDeleteDialog(true);
-                }}
-                title={task.title}
-                project={task.project}
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <TableRow key={task.id} className="hover:bg-accent/50 group">
+            <TableCell className="py-2 w-[50%]">
+              <div 
+                className="flex items-center gap-2 cursor-pointer pl-4" 
                 onClick={() => onTaskClick(task)}
+              >
+                <TaskStatusIcon 
+                  status={task.status} 
+                  onClick={() => onTaskStatusClick(task.id)}
+                />
+                <div className="flex-1">
+                  {editingTaskId === task.id ? (
+                    <div className="flex items-center gap-1">
+                      <Input
+                        value={editingValue}
+                        onChange={(e) => onSetEditingValue(e.target.value)}
+                        onKeyDown={(e) => onKeyDown(e, task.id)}
+                        className="text-xs h-6 px-1 py-0 border border-border"
+                        autoFocus
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSaveEdit(task.id);
+                        }}
+                        className="p-0.5 text-green-600 hover:text-green-700"
+                      >
+                        <Check className="w-3 h-3" strokeWidth="2" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onCancelEdit();
+                        }}
+                        className="p-0.5 text-red-600 hover:text-red-700"
+                      >
+                        <X className="w-3 h-3" strokeWidth="2" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex items-center gap-1 group/title">
+                        <div className="font-medium text-xs">
+                          {task.title}
+                        </div>
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100">
+                          <button
+                            onClick={(e) => onEditClick(task, e)}
+                            className="p-0.5 hover:bg-accent rounded transition-opacity"
+                          >
+                            <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowDeleteDialog(true);
+                            }}
+                            className="p-0.5 hover:bg-accent rounded transition-opacity"
+                          >
+                            <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth="2" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">{task.project}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TableCell>
+            <TableCell className="py-2 w-[8%]">
+              <div className="flex items-center gap-1">
+                {task.hasAttachment && (
+                  <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+                    <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                )}
+                <button 
+                  className="p-0.5 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Handle file attachment
+                  }}
+                >
+                  <Plus className="w-2 h-2" strokeWidth="2" />
+                </button>
+              </div>
+            </TableCell>
+            <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+              {formatDate(task.dateCreated)}
+            </TableCell>
+            <TableCell className="py-2 w-[25%]">
+              <TaskRowAssignees
+                task={task}
+                onRemoveAssignee={onRemoveAssignee}
+                onRemoveCollaborator={onRemoveCollaborator}
+                onAssignPerson={onAssignPerson}
+                onAddCollaborator={onAddCollaborator}
               />
-            </div>
-          </TableCell>
-          {/* Files column */}
-          <TableCell className={columnConfig[1].cellClassName}>
-            <TaskFileCell 
-              hasAttachment={task.hasAttachment}
-              onAddAttachment={(e) => {
-                e.stopPropagation();
-                // Handle file attachment
-              }}
-            />
-          </TableCell>
-          {/* Date Created column */}
-          <TableCell className={columnConfig[2].cellClassName + " text-xs text-muted-foreground"}>
-            {formatDate(task.dateCreated)}
-          </TableCell>
-          {/* Assigned To column */}
-          <TableCell className={columnConfig[3].cellClassName}>
-            <TaskRowAssignees
-              task={task}
-              onRemoveAssignee={onRemoveAssignee}
-              onRemoveCollaborator={onRemoveCollaborator}
-              onAssignPerson={onAssignPerson}
-              onAddCollaborator={onAddCollaborator}
-            />
-          </TableCell>
-        </TableRow>
-      </TaskActionMenu>
+            </TableCell>
+          </TableRow>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onClick={(e) => { e.stopPropagation(); onEditClick(task, e as any); }}>
+            <Edit className="w-4 h-4 mr-2" />
+            Edit task
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleMarkComplete}>
+            <Check className="w-4 h-4 mr-2" />
+            Mark as complete
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleDuplicateTask}>
+            <div className="w-4 h-4 mr-2" />
+            Duplicate
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem 
+            onClick={handleContextMenuDelete}
+            className="text-destructive focus:text-destructive"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
 
       <DeleteTaskDialog
         isOpen={showDeleteDialog}
@@ -205,4 +270,3 @@ const TaskRow = ({
 };
 
 export default TaskRow;
-

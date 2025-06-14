@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Calendar, User, Paperclip } from 'lucide-react';
 import { format } from 'date-fns';
@@ -16,7 +17,6 @@ import {
 } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import AssigneeSelect from "@/components/ui/AssigneeSelect";
 
 interface TaskDialogActionsProps {
   assignedTo: string;
@@ -38,12 +38,18 @@ const TaskDialogActions = ({
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
-        <AssigneeSelect
-          value={assignedTo}
-          onValueChange={setAssignedTo}
-          className="w-28 h-7 text-xs"
-        />
-
+        <Select value={assignedTo} onValueChange={setAssignedTo}>
+          <SelectTrigger className="w-28 h-7 text-xs">
+            <User className="w-3 h-3 mr-1" />
+            <SelectValue placeholder="Assignee" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="MH">MH</SelectItem>
+            <SelectItem value="AL">AL</SelectItem>
+            <SelectItem value="MP">MP</SelectItem>
+          </SelectContent>
+        </Select>
+        
         <Popover>
           <PopoverTrigger asChild>
             <Button
