@@ -42,7 +42,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const availableProjects = getAvailableProjects();
 
   // ================== ASSIGNEE STATE AND LOGIC ==================
-  const [assignee, setAssignee] = useState<{ name: string; avatar: string; fullName?: string } | null>(null);
+  const [assignee, setAssignee] = useState<QuickAddTaskPerson | null>(null);
   const [showAssigneePopover, setShowAssigneePopover] = useState(false);
 
   const filteredProjects = availableProjects.filter(project =>
@@ -241,11 +241,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           {assignee ? (
             <>
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${
-                  assignee.avatarColor
-                    ? assignee.avatarColor
-                    : getRandomColor(assignee.name)
-                }`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${assignee.avatarColor ? assignee.avatarColor : getRandomColor(assignee.name)}`}
               >
                 {assignee.name}
               </div>
@@ -276,12 +272,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             <button
               key={person.name}
               className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent text-xs text-foreground"
-              onClick={() => { setAssignee(person); setShowAssigneePopover(false); }}
+              onClick={() => { setAssignee(person as QuickAddTaskPerson); setShowAssigneePopover(false); }}
               type="button"
             >
-              <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${
-                person.avatarColor ? person.avatarColor : getRandomColor(person.name)
-              }`}>
+              <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${person.avatarColor ? person.avatarColor : getRandomColor(person.name)}`}>
                 {person.name}
               </div>
               <span>{person.fullName || person.name}</span>

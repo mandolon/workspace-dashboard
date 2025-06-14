@@ -20,6 +20,20 @@ interface TeamMemberRowProps {
   onRoleChange: (memberId: string, newRole: string) => void;
 }
 
+// Add the getStatusColor helper:
+const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
+  switch (status) {
+    case 'Active':
+      return 'bg-green-100 text-green-700';
+    case 'Inactive':
+      return 'bg-gray-100 text-gray-500';
+    case 'Pending':
+      return 'bg-yellow-100 text-yellow-700';
+    default:
+      return 'bg-gray-100 text-gray-500';
+  }
+};
+
 const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
   // Helper for consistent color: use avatarColor if present
   const getColor = (member: any) => member.avatarColor || getRandomColor(member.id);
