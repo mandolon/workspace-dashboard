@@ -20,12 +20,7 @@ export const getNextTaskId = (): string => {
 // Get today's date in ISO format
 const today = new Date().toISOString();
 
-// Helper to get a random TeamUser for assignment
-function getRandomTeamUser() {
-  return TEAM_USERS[Math.floor(Math.random() * TEAM_USERS.length)];
-}
-
-// Centralized task data with random TeamUser assignments
+// Centralized task data with fixed TeamUser assignments
 export const allTasks: Task[] = [
   {
     id: 1,
@@ -36,7 +31,7 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "8/10/22",
     dueDate: "—",
-    assignee: getRandomTeamUser(),
+    assignee: TEAM_USERS.find(u => u.name === "AL"), // Armando Lopez
     hasAttachment: true,
     status: "redline",
     createdBy: "AL",
@@ -52,9 +47,9 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "12/27/23",
     dueDate: "—",
-    assignee: getRandomTeamUser(),
+    assignee: TEAM_USERS.find(u => u.name === "ALD"), // Alice Dale
     hasAttachment: true,
-    collaborators: [getRandomTeamUser()],
+    collaborators: [TEAM_USERS.find(u => u.name === "MP")], // Mark Pinsky
     status: "progress",
     createdBy: "AL",
     createdAt: today,
@@ -69,7 +64,7 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "12/9/23",
     dueDate: "—",
-    assignee: getRandomTeamUser(),
+    assignee: TEAM_USERS.find(u => u.name === "MP"), // Mark Pinsky
     hasAttachment: true,
     status: "progress",
     createdBy: "AL",
@@ -85,7 +80,7 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "9/13/23",
     dueDate: "9/22/23, 5...",
-    assignee: getRandomTeamUser(),
+    assignee: TEAM_USERS.find(u => u.name === "JH"), // James Hall
     hasAttachment: false,
     status: "progress",
     createdBy: "AL",
