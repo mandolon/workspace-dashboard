@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -70,7 +71,8 @@ const TaskRowFiles = ({
                 aria-label="Show attachments"
               >
                 <Paperclip className="w-4 h-4 text-gray-600" />
-                <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1">{attachments.length}</span>
+                {/* Show local count over icon if needed,
+                    but only show attachmentCount badge (see below) */}
               </button>
               {showDropdown && (
                 <div
@@ -98,10 +100,12 @@ const TaskRowFiles = ({
           ) : (
             <Paperclip className="w-4 h-4 text-gray-600" />
           )}
-          {(attachments.length === 1) && (
-            <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1">1</span>
+          {/* Show the original attachment count in top right if available */}
+          {attachmentCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1 font-semibold z-10">
+              {attachmentCount}
+            </span>
           )}
-          {/* If zero, show nothing */}
         </div>
       )}
 
