@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from "next-themes"; // Added
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,38 +45,40 @@ const App = () => {
   }));
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <UserProvider>
-          <SidebarProvider>
-            <ProjectDataProvider>
-              <BrowserRouter>
-                <TaskProvider>
-                  <Toaster />
-                  <Sonner />
-                  <LocationLogger />
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/tasks" element={<TasksPage />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/project/:projectId" element={<ProjectPage />} />
-                    <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                    <Route path="/inbox" element={<InboxPage />} />
-                    <Route path="/teams" element={<TeamsPage />} />
-                    <Route path="/invoices" element={<InvoicePage />} />
-                    <Route path="/timesheets" element={<TimesheetsPage />} />
-                    <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/settings/notifications" element={<SettingsPage />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </TaskProvider>
-              </BrowserRouter>
-            </ProjectDataProvider>
-          </SidebarProvider>
-        </UserProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <UserProvider>
+            <SidebarProvider>
+              <ProjectDataProvider>
+                <BrowserRouter>
+                  <TaskProvider>
+                    <Toaster />
+                    <Sonner />
+                    <LocationLogger />
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/tasks" element={<TasksPage />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/project/:projectId" element={<ProjectPage />} />
+                      <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                      <Route path="/inbox" element={<InboxPage />} />
+                      <Route path="/teams" element={<TeamsPage />} />
+                      <Route path="/invoices" element={<InvoicePage />} />
+                      <Route path="/timesheets" element={<TimesheetsPage />} />
+                      <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                      <Route path="/settings/notifications" element={<SettingsPage />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </TaskProvider>
+                </BrowserRouter>
+              </ProjectDataProvider>
+            </SidebarProvider>
+          </UserProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 
