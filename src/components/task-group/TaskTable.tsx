@@ -23,7 +23,7 @@ interface TaskTableProps {
   onTaskDeleted?: () => void;
 }
 
-const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
+const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   tasks,
   editingTaskId,
   editingValue,
@@ -41,6 +41,8 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onAddCollaborator,
   onTaskDeleted
 }, ref) => {
+  const memoizedTasks = React.useMemo(() => tasks, [tasks]);
+
   return (
     <div ref={ref}>
       <Table>
@@ -53,7 +55,7 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map((task) => (
+          {memoizedTasks.map((task) => (
             <TaskRow
               key={task.id}
               task={task}
@@ -78,7 +80,7 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
       </Table>
     </div>
   );
-});
+}));
 
 TaskTable.displayName = "TaskTable";
 

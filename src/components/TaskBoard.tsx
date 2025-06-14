@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { TaskGroup } from '@/types/task';
 
-const TaskBoard = () => {
+const TaskBoard = React.memo(() => {
   const {
     getTasksByStatus,
     refreshTrigger,
@@ -18,15 +18,15 @@ const TaskBoard = () => {
   const [isTaskDialogOpen, setIsTaskDialogOpen] = React.useState(false);
   const [showQuickAdd, setShowQuickAdd] = React.useState<string | null>(null);
 
-  const getTaskGroups = (): TaskGroup[] => {
+  const taskGroups = useMemo((): TaskGroup[] => {
     const redlineTasks = getTasksByStatus('redline');
     const progressTasks = getTasksByStatus('progress');
     const completedTasks = getTasksByStatus('completed');
 
-    const taskGroups: TaskGroup[] = [];
+    const groups: TaskGroup[] = [];
 
     if (redlineTasks.length > 0) {
-      taskGroups.push({
+      groups.push({
         title: "TASK/ REDLINE",
         count: redlineTasks.length,
         color: "bg-red-500",
@@ -36,7 +36,7 @@ const TaskBoard = () => {
     }
 
     if (progressTasks.length > 0) {
-      taskGroups.push({
+      groups.push({
         title: "PROGRESS/ UPDATE",
         count: progressTasks.length,
         color: "bg-blue-500",
@@ -46,7 +46,7 @@ const TaskBoard = () => {
     }
 
     if (completedTasks.length > 0) {
-      taskGroups.push({
+      groups.push({
         title: "COMPLETED",
         count: completedTasks.length,
         color: "bg-green-500",
@@ -55,15 +55,15 @@ const TaskBoard = () => {
       });
     }
 
-    return taskGroups;
-  };
+    return groups;
+  }, [getTasksByStatus, refreshTrigger]);
 
-  const handleCreateTask = (newTask: any) => {
+  const handleCreateTask = useCallback((newTask: any) => {
     console.log('Creating task via dialog:', newTask);
     createTask({ ...newTask, useCustomTasks: true });
-  };
+  }, [createTask]);
 
-  const handleQuickAddSave = (taskData: any) => {
+  const handleQuickAddSave = useCallback((taskData: any) => {
     console.log('Quick add task data:', taskData);
     createTask({
       title: taskData.title,
@@ -79,9 +79,15 @@ const TaskBoard = () => {
       useCustomTasks: false
     });
     setShowQuickAdd(null);
-  };
+  }, [createTask]);
 
-  const taskGroups = getTaskGroups();
+  const handleOpenTaskDialog = useCallback(() => {
+    setIsTaskDialogOpen(true);
+  }, []);
+
+  const handleCloseTaskDialog = useCallback(() => {
+    setIsTaskDialogOpen(false);
+  }, []);
 
   return (
     <>
@@ -94,16 +100,18 @@ const TaskBoard = () => {
         onTaskClick={navigateToTask}
         onTaskArchive={archiveTask}
         onTaskDeleted={triggerRefresh}
-        onAddTask={() => setIsTaskDialogOpen(true)}
+        onAddTask={handleOpenTaskDialog}
       />
 
       <TaskDialog
         isOpen={isTaskDialogOpen}
-        onClose={() => setIsTaskDialogOpen(false)}
+        onClose={handleCloseTaskDialog}
         onCreateTask={handleCreateTask}
       />
     </>
   );
-};
+});
+
+TaskBoard.displayName = "TaskBoard";
 
 export default TaskBoard;

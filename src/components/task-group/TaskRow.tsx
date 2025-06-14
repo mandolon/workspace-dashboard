@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
@@ -29,7 +29,7 @@ interface TaskRowProps {
   onTaskDeleted?: () => void;
 }
 
-const TaskRow = ({
+const TaskRow = React.memo(({
   task,
   editingTaskId,
   editingValue,
@@ -51,7 +51,9 @@ const TaskRow = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteTask } = useTaskContext();
 
-  const handleDeleteTask = async () => {
+  const formattedDate = useMemo(() => formatDate(task.dateCreated), [task.dateCreated]);
+
+  const handleDeleteTask = useCallback(async () => {
     setIsDeleting(true);
     try {
       await deleteTask(task.id);
@@ -63,19 +65,23 @@ const TaskRow = ({
       setIsDeleting(false);
       setShowDeleteDialog(false);
     }
-  };
+  }, [deleteTask, task.id, onTaskDeleted]);
 
-  const handleContextMenuDelete = (e: React.MouseEvent) => {
+  const handleContextMenuDelete = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Context menu delete clicked for task:', task.id);
     setShowDeleteDialog(true);
-  };
+  }, [task.id]);
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
+  const handleDeleteClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteDialog(true);
-  };
+  }, []);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    setShowDeleteDialog(false);
+  }, []);
 
   return (
     <>
@@ -105,7 +111,7 @@ const TaskRow = ({
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
-            {formatDate(task.dateCreated)}
+            {formattedDate}
           </TableCell>
           <TableCell className="py-2 w-[25%]">
             <TaskRowAssignees
@@ -121,13 +127,15 @@ const TaskRow = ({
 
       <DeleteTaskDialog
         isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
+        onClose={handleCloseDeleteDialog}
         onConfirm={handleDeleteTask}
         taskTitle={task.title}
         isLoading={isDeleting}
       />
     </>
   );
-};
+});
+
+TaskRow.displayName = "TaskRow";
 
 export default TaskRow;

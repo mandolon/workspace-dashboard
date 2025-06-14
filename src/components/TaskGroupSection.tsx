@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import TaskGroupHeader from './task-group/TaskGroupHeader';
 import TaskTable from './task-group/TaskTable';
 import AddTaskButton from './task-group/AddTaskButton';
@@ -17,7 +17,7 @@ interface TaskGroupSectionProps {
   onTaskDeleted?: () => void;
 }
 
-const TaskGroupSection = ({ 
+const TaskGroupSection = React.memo(({ 
   group, 
   showQuickAdd, 
   onSetShowQuickAdd, 
@@ -44,22 +44,30 @@ const TaskGroupSection = ({
     removeCollaborator
   } = useTaskContext();
 
+  // Memoize filtered tasks
+  const visibleTasks = useMemo(() => 
+    group.tasks.filter(task => !task.archived && !task.deletedAt),
+    [group.tasks]
+  );
+
+  const isShowingQuickAdd = showQuickAdd === group.status;
+
   // Handle click outside to cancel quick add
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (showQuickAdd === group.status && quickAddRef.current && !quickAddRef.current.contains(event.target as Node)) {
+      if (isShowingQuickAdd && quickAddRef.current && !quickAddRef.current.contains(event.target as Node)) {
         onSetShowQuickAdd(null);
       }
     };
 
-    if (showQuickAdd === group.status) {
+    if (isShowingQuickAdd) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showQuickAdd, group.status, onSetShowQuickAdd]);
+  }, [isShowingQuickAdd, onSetShowQuickAdd]);
 
   // Handle click outside to cancel task editing
   useEffect(() => {
@@ -78,55 +86,64 @@ const TaskGroupSection = ({
     };
   }, [editingTaskId, cancelTaskEdit]);
 
-  const handleTaskNameClick = (task: Task, e: React.MouseEvent) => {
+  const handleTaskNameClick = useCallback((task: Task, e: React.MouseEvent) => {
     e.stopPropagation();
     startEditingTask(task);
-  };
+  }, [startEditingTask]);
 
-  const handleEditClick = (task: Task, e: React.MouseEvent) => {
+  const handleEditClick = useCallback((task: Task, e: React.MouseEvent) => {
     e.stopPropagation();
     startEditingTask(task);
-  };
+  }, [startEditingTask]);
 
-  const handleKeyDown = (e: React.KeyboardEvent, taskId: number) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, taskId: number) => {
     if (e.key === 'Enter') {
       saveTaskEdit(taskId);
     } else if (e.key === 'Escape') {
       cancelTaskEdit();
     }
-  };
+  }, [saveTaskEdit, cancelTaskEdit]);
 
-  const handleRemoveAssignee = (taskId: number, e: React.MouseEvent) => {
+  const handleRemoveAssignee = useCallback((taskId: number, e: React.MouseEvent) => {
     e.stopPropagation();
     removeAssignee(taskId);
-  };
+  }, [removeAssignee]);
 
-  const handleRemoveCollaborator = (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
+  const handleRemoveCollaborator = useCallback((taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
     removeCollaborator(taskId, collaboratorIndex);
-  };
+  }, [removeCollaborator]);
 
-  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
+  const handleAssignPerson = useCallback((taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
     assignPerson(taskId, person);
-  };
+  }, [assignPerson]);
 
-  const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
+  const handleAddCollaborator = useCallback((taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
     addCollaborator(taskId, person);
-  };
+  }, [addCollaborator]);
 
-  const handleTaskStatusClick = (taskId: number) => {
+  const handleTaskStatusClick = useCallback((taskId: number) => {
     toggleTaskStatus(taskId);
-  };
+  }, [toggleTaskStatus]);
 
-  // Filter out archived and deleted tasks from display
-  const visibleTasks = group.tasks.filter(task => !task.archived && !task.deletedAt);
+  const handleToggleExpanded = useCallback(() => {
+    setIsExpanded(!isExpanded);
+  }, [isExpanded]);
+
+  const handleShowQuickAdd = useCallback(() => {
+    onSetShowQuickAdd(group.status);
+  }, [onSetShowQuickAdd, group.status]);
+
+  const handleHideQuickAdd = useCallback(() => {
+    onSetShowQuickAdd(null);
+  }, [onSetShowQuickAdd]);
 
   return (
     <div className="space-y-2">
       <TaskGroupHeader
         group={group}
         isExpanded={isExpanded}
-        onToggleExpanded={() => setIsExpanded(!isExpanded)}
+        onToggleExpanded={handleToggleExpanded}
       />
 
       {isExpanded && (
@@ -151,21 +168,23 @@ const TaskGroupSection = ({
             onTaskDeleted={onTaskDeleted}
           />
 
-          {showQuickAdd === group.status ? (
+          {isShowingQuickAdd ? (
             <div ref={quickAddRef}>
               <QuickAddTask
                 onSave={onQuickAddSave}
-                onCancel={() => onSetShowQuickAdd(null)}
+                onCancel={handleHideQuickAdd}
                 defaultStatus={group.status}
               />
             </div>
           ) : (
-            <AddTaskButton onAddTask={() => onSetShowQuickAdd(group.status)} />
+            <AddTaskButton onAddTask={handleShowQuickAdd} />
           )}
         </>
       )}
     </div>
   );
-};
+});
+
+TaskGroupSection.displayName = "TaskGroupSection";
 
 export default TaskGroupSection;
