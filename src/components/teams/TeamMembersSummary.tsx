@@ -13,16 +13,17 @@ interface TeamMember {
 interface TeamMembersSummaryProps {
   filteredMembers: TeamMember[];
   totalMembers: number;
+  isMobile?: boolean;
 }
 
-const TeamMembersSummary = ({ filteredMembers, totalMembers }: TeamMembersSummaryProps) => {
+const TeamMembersSummary = ({ filteredMembers, totalMembers, isMobile }: TeamMembersSummaryProps) => {
   return (
-    <div className="mt-6 p-3 bg-accent/30 rounded border">
-      <div className="flex items-center justify-between text-xs">
+    <div className={`mt-6 p-3 bg-accent/30 rounded border ${isMobile ? "text-xs p-2 mt-4" : ""}`}>
+      <div className={`flex ${isMobile ? "flex-col gap-1 items-start" : "items-center justify-between"} text-xs`}>
         <span className="text-muted-foreground">
           Total: {filteredMembers.length} of {totalMembers} members
         </span>
-        <div className="flex items-center gap-4">
+        <div className={`flex items-center gap-4 ${isMobile ? "gap-2 mt-1" : ""}`}>
           <span className="text-green-600">
             Active: {filteredMembers.filter(m => m.status === 'Active').length}
           </span>
