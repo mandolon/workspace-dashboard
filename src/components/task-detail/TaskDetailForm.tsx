@@ -1,10 +1,12 @@
-import React from 'react';
+
+import React, { useCallback, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task';
 import TaskDetailTitleSection from './TaskDetailTitleSection';
 import TaskDetailDescription from './TaskDetailDescription';
 import TaskDetailFields from './TaskDetailFields';
+import { updateTaskSupabase } from '@/data/taskSupabase';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -27,6 +29,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   } = useTaskContext();
 
   const isEditing = editingTaskId === task.id;
+  const [desc, setDesc] = useState(task.description ?? "");
+  const [descLoading, setDescLoading] = useState(false);
 
   // These wrappers ensure we always use string id (task.taskId)
   const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
@@ -49,6 +53,18 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     changeTaskStatus(task.id, newStatus);
   };
 
+  // Save handler for description field
+  const handleSaveDescription = useCallback(async (newDesc: string) => {
+    if (newDesc === task.description) return;
+    setDescLoading(true);
+    setDesc(newDesc);
+    try {
+      await updateTaskSupabase(task.taskId, { description: newDesc });
+    } finally {
+      setDescLoading(false);
+    }
+  }, [task.description, task.taskId]);
+
   return (
     <div className="space-y-3">
       <TaskDetailTitleSection
@@ -61,7 +77,11 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         task={task}
         onChangeStatus={handleChangeStatus}
       />
-      <TaskDetailDescription />
+      <TaskDetailDescription
+        value={desc}
+        onSave={handleSaveDescription}
+        disabled={descLoading}
+      />
       <TaskDetailFields
         task={task}
         currentUser={currentUser}

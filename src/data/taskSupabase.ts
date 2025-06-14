@@ -23,6 +23,7 @@ export function dbRowToTask(row: any): Task {
     updatedAt: row.updated_at,
     deletedAt: row.deleted_at,
     deletedBy: row.deleted_by,
+    description: row.description ?? '', // <-- populate description
   };
 }
 
@@ -36,7 +37,6 @@ export async function insertTask(task: Omit<Task, "id" | "createdAt" | "updatedA
     estimated_completion: task.estimatedCompletion,
     date_created: task.dateCreated,
     due_date: task.dueDate,
-    // Explicitly cast to JSON (Supabase types), since TaskUser is not assignable to Json directly
     assignee: task.assignee as any,
     has_attachment: task.hasAttachment,
     collaborators: (task.collaborators ?? []) as any,
@@ -45,6 +45,7 @@ export async function insertTask(task: Omit<Task, "id" | "createdAt" | "updatedA
     created_by: task.createdBy,
     deleted_at: task.deletedAt,
     deleted_by: task.deletedBy,
+    description: task.description ?? null, // <-- handle description
     // created_at, updated_at will default server-side
   };
   const { data, error } = await supabase
@@ -75,8 +76,9 @@ export async function updateTaskSupabase(taskId: string, updates: Partial<Task>)
     else if (k === "dueDate") toSend["due_date"] = v;
     else if (k === "hasAttachment") toSend["has_attachment"] = v;
     else if (k === "createdBy") toSend["created_by"] = v;
-    else if (k === "collaborators") toSend["collaborators"] = v; // not stringified!
+    else if (k === "collaborators") toSend["collaborators"] = v;
     else if (k === "assignee") toSend["assignee"] = v;
+    else if (k === "description") toSend["description"] = v; // <-- handle description
     else toSend[k] = v;
   });
   const { data, error } = await supabase

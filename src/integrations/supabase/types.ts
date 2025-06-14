@@ -19,6 +19,7 @@ export type Database = {
           date_created: string | null
           deleted_at: string | null
           deleted_by: string | null
+          description: string | null
           due_date: string | null
           estimated_completion: string | null
           has_attachment: boolean | null
@@ -39,6 +40,7 @@ export type Database = {
           date_created?: string | null
           deleted_at?: string | null
           deleted_by?: string | null
+          description?: string | null
           due_date?: string | null
           estimated_completion?: string | null
           has_attachment?: boolean | null
@@ -59,6 +61,7 @@ export type Database = {
           date_created?: string | null
           deleted_at?: string | null
           deleted_by?: string | null
+          description?: string | null
           due_date?: string | null
           estimated_completion?: string | null
           has_attachment?: boolean | null

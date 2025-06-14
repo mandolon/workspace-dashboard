@@ -1,4 +1,3 @@
-
 export interface TaskUser {
   id?: string;                  // Can be used for unique user identification (optional for backward compatibility)
   name: string;
@@ -21,12 +20,12 @@ export interface Task {
   collaborators?: TaskUser[];
   status: string;
   archived?: boolean;
-  // New audit fields
   createdBy: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
   deletedBy?: string;
+  description?: string; // <-- added field
 }
 
 export interface TaskGroup {
