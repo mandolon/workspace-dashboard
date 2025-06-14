@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Paperclip } from 'lucide-react';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -34,6 +34,18 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
             <span className="text-blue-600 hover:underline truncate">
               {task.taskId} - {task.title}
             </span>
+          </div>
+          {/* Files column now shows icon if hasAttachment is true */}
+          <div className="col-span-2 flex items-center justify-center">
+            {task.hasAttachment && (
+              <span className="inline-flex items-center justify-center w-6 h-6">
+                <Paperclip 
+                  className="w-4 h-4 text-orange-600 dark:text-orange-300" 
+                  strokeWidth={2.2}
+                  aria-label="Attachment"
+                />
+              </span>
+            )}
           </div>
           <div className="col-span-3 text-muted-foreground">{formattedDate}</div>
           <div className="col-span-3 flex items-center justify-between">
@@ -83,3 +95,4 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
 };
 
 export default TasksTabRow;
+
