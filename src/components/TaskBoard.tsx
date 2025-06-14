@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -62,30 +61,53 @@ const TaskBoard = React.memo(() => {
     createTask({ ...newTask, useCustomTasks: true });
   }, [createTask]);
 
-  // After creating task, save attachments in the attachment context using correct taskId.
+  // After creating task, find the new task by its unique data, then save attachments
   const handleQuickAddSave = useCallback((taskData: any) => {
     console.log('Quick add task data:', taskData);
-    // Actually create the task, get the returned object so we get the real task with taskId
-    const result = createTask({
-      title: taskData.title,
-      projectId: taskData.projectId || 'unknown-project',
+
+    // Keep strong uniqueness on title + projectId + date
+    const uniqueTitle = taskData.title;
+    const uniqueProjectId = taskData.projectId || 'unknown-project';
+    const creationDateStr = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' });
+
+    // 1. Actually create the task
+    createTask({
+      title: uniqueTitle,
+      projectId: uniqueProjectId,
       project: taskData.project || 'No Project',
       status: taskData.status,
       assignee: taskData.assignee,
       dueDate: taskData.dueDate || '—',
-      dateCreated: new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }),
+      dateCreated: creationDateStr,
       estimatedCompletion: '—',
-      hasAttachment: taskData.hasAttachment ?? (Array.isArray(taskData.attachments) && taskData.attachments.length > 0),
+      hasAttachment: taskData.hasAttachment ?? (
+        Array.isArray(taskData.attachments) && taskData.attachments.length > 0
+      ),
       attachments: taskData.attachments ?? [],
       collaborators: [],
       useCustomTasks: false
     });
-    // If there are files, store them using the correct taskId (from either created task, or fallback to display warning)
-    if (taskData.attachments && taskData.attachments.length > 0 && result && result.taskId) {
-      addAttachments(result.taskId, taskData.attachments, "ME");
+
+    // 2. If there are files, try to find the just-created task by status, title, projectId, dateCreated
+    if (taskData.attachments && taskData.attachments.length > 0) {
+      // A. Get latest list of tasks of correct status
+      const statusList = getTasksByStatus(taskData.status);
+
+      // B. Find the latest task with all unique fields matching
+      const foundTask = statusList.find(t =>
+        t.title === uniqueTitle &&
+        t.projectId === uniqueProjectId &&
+        t.dateCreated === creationDateStr
+      );
+
+      if (foundTask && foundTask.taskId) {
+        addAttachments(foundTask.taskId, taskData.attachments, "ME");
+      } else {
+        console.warn("Could not find created task to add attachments.");
+      }
     }
     setShowQuickAdd(null);
-  }, [createTask, addAttachments]);
+  }, [createTask, getTasksByStatus, addAttachments]);
 
   const handleOpenTaskDialog = useCallback(() => {
     setIsTaskDialogOpen(true);
