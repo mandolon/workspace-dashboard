@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -35,9 +34,8 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() =>
     TEAM_USERS.map(user => ({
       ...user,
-      email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
       lastActive: memberStatus[user.name]?.lastActive || '—',
-      status: memberStatus[user.name]?.status || 'Active',
+      status: memberStatus[user.name]?.status || 'Active'
     }))
   );
 

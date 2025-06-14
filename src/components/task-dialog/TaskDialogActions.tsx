@@ -16,7 +16,8 @@ import {
 } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { TEAM_USERS, TeamUser } from '@/utils/teamUsers';
+import { TEAM_USERS } from '@/utils/teamUsers';
+import { TeamUser } from '@/types/user'; // FIXED: Import from correct path;
 
 interface TaskDialogActionsProps {
   assignedTo: string | TeamUser;
