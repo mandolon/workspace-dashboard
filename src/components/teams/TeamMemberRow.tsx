@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -58,9 +59,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
             </div>
             <span className="font-medium">{member.fullName ?? member.name}</span>
           </div>
-          <div className="mt-0.5 pl-10 text-[11px] text-gray-500">
-            CRM: <span className="font-semibold">{member.crmRole}</span>
-          </div>
+          {/* Removed CRM role display */}
         </div>
         <div className="col-span-3 flex items-center gap-1 text-muted-foreground">
           <Mail className="w-3 h-3" />
@@ -79,7 +78,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
               ))}
             </SelectContent>
           </Select>
-          <div className="text-[11px] text-gray-400 pt-0.5">Title Role</div>
+          {/* Removed 'Title Role' descriptor */}
         </div>
         <div className="col-span-2 flex items-center text-muted-foreground">
           <span>{member.lastActive}</span>
