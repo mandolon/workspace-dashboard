@@ -1,6 +1,5 @@
-
 import { Client } from "@/data/projectClientData";
-import { getAllClients } from "@/data/projectClientData";
+import { getAllClients } from "@/data/projectClientHelpers";
 
 // Generate unique client ID like "C0001", "C0002", etc.
 // Looks at all clients and generates the next available number.
@@ -28,4 +27,3 @@ export function getClientInitials(client: Client) {
     (client.firstName?.[0] ?? "") + (client.lastName?.[0] ?? "")
   ).toUpperCase();
 }
-

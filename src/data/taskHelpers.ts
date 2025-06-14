@@ -1,7 +1,6 @@
-
 import { Task } from '@/types/task';
 import { baseTasks } from './tasksBase';
-import { getProjectDisplayName } from './projectClientData';
+import { getProjectDisplayName } from './projectClientHelpers';
 
 // Unique task ID generator state
 let nextTaskIdNumber = 5;

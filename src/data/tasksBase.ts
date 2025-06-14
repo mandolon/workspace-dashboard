@@ -1,7 +1,6 @@
-
 import { Task } from '@/types/task';
 import { TEAM_USERS } from '@/utils/teamUsers';
-import { getProjectDisplayName } from './projectClientData';
+import { getProjectDisplayName } from './projectClientHelpers';
 
 // Get today's date in ISO format
 const today = new Date().toISOString();

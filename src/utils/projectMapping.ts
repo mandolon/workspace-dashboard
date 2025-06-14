@@ -1,5 +1,4 @@
-
-import { projectClientData } from '@/data/projectClientData';
+import { projectClientData } from '@/data/projectClientStaticData';
 import { getAvailableProjectsForTasks, convertDisplayNameToProjectId } from '@/data/projectStatus';
 
 // Get project ID from display name
