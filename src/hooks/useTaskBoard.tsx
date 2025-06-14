@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup } from '@/types/task';
 import { useUser } from '@/contexts/UserContext';
@@ -10,10 +11,12 @@ export const useTaskBoard = () => {
   const navigate = useNavigate();
   const { currentUser } = useUser();
   const { tasks, setTasks } = useRealtimeTasks();
-  const showQuickAdd = null;
-  const setShowQuickAdd = () => {};
-  const refreshTrigger = 0;
-  const setRefreshTrigger = () => {};
+
+  // Fix: Store dialog and quick add state locally
+  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  // showQuickAdd can be null or a group status string ("redline", "progress", "completed")
+  const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Task grouping (by status)
   const getTaskGroups = (): TaskGroup[] => {
@@ -59,6 +62,7 @@ export const useTaskBoard = () => {
         taskId,
         createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       });
+      setIsTaskDialogOpen(false); // Close dialog after creating a task
     },
     [currentUser]
   );
@@ -71,8 +75,7 @@ export const useTaskBoard = () => {
         taskId,
         createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       });
-      // Do not pass a param since setShowQuickAdd is a noop and expects none
-      setShowQuickAdd();
+      setShowQuickAdd(null); // Close quick add after save
     },
     [currentUser]
   );
@@ -97,8 +100,8 @@ export const useTaskBoard = () => {
   };
 
   return {
-    isTaskDialogOpen: false,
-    setIsTaskDialogOpen: () => {},
+    isTaskDialogOpen,
+    setIsTaskDialogOpen,
     showQuickAdd,
     setShowQuickAdd,
     refreshTrigger,
