@@ -21,34 +21,30 @@ export const useTaskBoard = () => {
     const centralizedProgress = tasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
     const centralizedCompleted = tasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
 
-    const taskGroups: TaskGroup[] = [];
-    if (centralizedRedline.length > 0) {
-      taskGroups.push({
+    // Always show all groups, even if they have zero tasks
+    const taskGroups: TaskGroup[] = [
+      {
         title: "TASK/ REDLINE",
         count: centralizedRedline.length,
         color: "bg-red-500",
         status: "redline",
         tasks: centralizedRedline
-      });
-    }
-    if (centralizedProgress.length > 0) {
-      taskGroups.push({
+      },
+      {
         title: "PROGRESS/ UPDATE",
         count: centralizedProgress.length,
         color: "bg-blue-500",
         status: "progress",
         tasks: centralizedProgress
-      });
-    }
-    if (centralizedCompleted.length > 0) {
-      taskGroups.push({
+      },
+      {
         title: "COMPLETED",
         count: centralizedCompleted.length,
         color: "bg-green-500",
         status: "completed",
         tasks: centralizedCompleted
-      });
-    }
+      }
+    ];
     return taskGroups;
   };
 
