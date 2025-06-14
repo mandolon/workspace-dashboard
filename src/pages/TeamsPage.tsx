@@ -4,6 +4,7 @@ import PageSectionHeader from '@/components/shared/PageSectionHeader';
 import RoleSwitcher from '@/components/teams/RoleSwitcher';
 import TeamsContent from '@/components/teams/TeamsContent';
 import SelectUserDropdown from "@/components/teams/SelectUserDropdown";
+import ClientViewContent from "@/components/teams/ClientViewContent";
 
 // Provide CRM role through context
 export type CRMRoles = "admin" | "team" | "client";
@@ -20,6 +21,9 @@ const TeamsPage = () => {
   const [role, setRole] = useState<CRMRoles>("admin");
   const [activeTab, setActiveTab] = useState<CRMRoles>("admin");
   const [selectedUserId, setSelectedUserId] = useState<string>("");
+
+  // When viewing as client, we could allow a "select project" or pick a demo projectId
+  // For now, leave projectId undefined to use the ClientViewContent fallback
 
   return (
     <CRMRoleContext.Provider value={role}>
@@ -58,12 +62,7 @@ const TeamsPage = () => {
               <TeamsContent tab={activeTab} selectedUserId={selectedUserId} />
             )}
             {activeTab === "client" && (
-              <div className="flex-1 overflow-y-auto p-6">
-                <div className="mb-4 text-lg font-medium">Client View</div>
-                <p className="text-muted-foreground mb-4">
-                  This is what a client sees in the CRM. They can only see their own info and their account manager.
-                </p>
-              </div>
+              <ClientViewContent />
             )}
           </div>
         </div>
