@@ -67,7 +67,7 @@ const TaskBoard: React.FC = React.memo(() => {
         onQuickAddSave={onQuickAddSave}
         onTaskClick={handleTaskClick}
         onTaskArchive={handleTaskArchive}
-        onTaskDeleted={() => {}} {/* fix: match expected type */}
+        onTaskDeleted={() => {}} 
         onAddTask={onDialogOpen}
       />
       <TaskDialog
