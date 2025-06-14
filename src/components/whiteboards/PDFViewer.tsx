@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
+import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -39,48 +40,52 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   function handleDropPin(e: React.MouseEvent) {
     const rect = viewerRef.current?.getBoundingClientRect();
     if (!rect) return;
-    // Normalized (0-1) coordinates in PDF page
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
     onPinDrop({ x, y });
   }
 
+  // For UI mock: show "+/-/100%" but not real zoom
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center">
-      <div className="mb-2 flex items-center gap-2">
+    <div className="relative w-[560px] h-[760px] bg-[#17181b] rounded-xl shadow-xl flex flex-col items-center justify-center border border-neutral-800">
+      {/* Page controls above PDF */}
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-[#222326] py-1 px-3 rounded-full shadow-lg border border-neutral-800">
         <button
           disabled={pageNumber <= 1}
           onClick={() => onPageChange(pageNumber - 1)}
-          className="px-2 py-1 text-sm border rounded disabled:opacity-50"
+          className="p-1 rounded-full text-muted-foreground hover:text-white transition disabled:opacity-60"
         >
-          Prev
+          <ChevronLeft />
         </button>
-        <span className="text-sm">
-          Page {pageNumber} / {totalPages}
-        </span>
+        <span className="mx-1 text-sm text-white">{pageNumber} / {totalPages}</span>
         <button
           disabled={pageNumber >= totalPages}
           onClick={() => onPageChange(pageNumber + 1)}
-          className="px-2 py-1 text-sm border rounded disabled:opacity-50"
+          className="p-1 rounded-full text-muted-foreground hover:text-white transition disabled:opacity-60"
         >
-          Next
+          <ChevronRight />
         </button>
+        <div className="mx-2 w-px h-4 bg-neutral-700" />
+        <button className="p-1 text-muted-foreground rounded-full hover:text-white transition" tabIndex={-1}><Minus className="w-4 h-4" /></button>
+        <span className="text-xs px-2 font-bold text-white">100%</span>
+        <button className="p-1 text-muted-foreground rounded-full hover:text-white transition" tabIndex={-1}><Plus className="w-4 h-4" /></button>
       </div>
+      {/* PDF */}
       <div
         ref={viewerRef}
-        className="relative mx-auto"
-        style={{ width: 520, height: 680, background: "#FDFDFD" }}
+        className="relative cursor-crosshair rounded overflow-hidden mt-8"
+        style={{ width: 520, height: 680, background: "#fff" }}
         onClick={handleDropPin}
       >
         {fileUrl && (
           <Document
             file={fileUrl}
             onLoadSuccess={({ numPages }) => setTotalPages(numPages)}
+            loading={<div className="flex items-center justify-center w-full h-full text-muted-foreground">Loading PDF…</div>}
           >
             <Page pageNumber={pageNumber} width={520} height={680} />
           </Document>
         )}
-
         {/* Pins overlay */}
         {pins
           .filter(pin => pin.page === pageNumber)
@@ -101,7 +106,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
             </div>
           ))}
       </div>
-      <div className="text-xs text-muted-foreground mt-2">
+      <div className="text-xs text-muted-foreground mt-3">
         Click anywhere on the PDF to drop a pin.
       </div>
     </div>

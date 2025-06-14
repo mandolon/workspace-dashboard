@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,6 +6,7 @@ import PDFViewer from "@/components/whiteboards/PDFViewer";
 import PDFCommentsSidebar from "@/components/whiteboards/PDFCommentsSidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Download, Plus, MoveLeft } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 
 type PDFPin = {
@@ -91,7 +93,6 @@ const WhiteboardPDFPage = () => {
         }
       )
       .subscribe();
-    // FIX: Cleanup must be synchronous!
     return () => { supabase.removeChannel(channel); }
   }, [id]);
 
@@ -103,7 +104,6 @@ const WhiteboardPDFPage = () => {
   // Add comment for pin
   async function handleSubmitComment() {
     if (!id || !currentUser || !pendingPin || !newCommentText.trim()) return;
-    // Next pin number (sequence)
     const n = pins.length === 0 ? 1 : Math.max(...pins.map(p => p.number)) + 1;
     const { error } = await supabase.from("pdf_comments").insert({
       whiteboard_id: id,
@@ -117,9 +117,18 @@ const WhiteboardPDFPage = () => {
     if (!error) {
       setNewCommentText("");
       setPendingPin(null);
-      setActivePin(n); // focus on it
+      setActivePin(n);
     }
   }
+
+  // Download the PDF
+  const handleDownload = () => {
+    if (!whiteboard?.pdf_url) return;
+    const link = document.createElement("a");
+    link.href = whiteboard.pdf_url;
+    link.download = "whiteboard.pdf";
+    link.click();
+  };
 
   if (!whiteboard) {
     return <div className="p-8">Loading whiteboard...</div>;
@@ -129,37 +138,71 @@ const WhiteboardPDFPage = () => {
   }
 
   return (
-    <div className="flex h-full bg-background">
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <h1 className="text-xl font-semibold py-4">{whiteboard.title}</h1>
-        <PDFViewer
-          fileUrl={whiteboard.pdf_url}
-          pins={pins}
-          pageNumber={pageNumber}
-          onPinDrop={handlePinDrop}
-          onPageChange={setPageNumber}
-          totalPages={totalPages}
-          setTotalPages={setTotalPages}
-        />
-        {/* When pin drop is activated, show comment box */}
-        {pendingPin && (
-          <div className="mt-4 w-full max-w-xs mx-auto bg-muted border rounded-lg p-4">
-            <div className="text-sm mb-2">Add a comment for this pin:</div>
-            <Input
-              value={newCommentText}
-              onChange={e => setNewCommentText(e.target.value)}
-              className="mb-2"
-              autoFocus
-              placeholder="Enter comment"
-            />
-            <div className="flex gap-2 justify-end">
-              <Button size="sm" variant="outline" onClick={() => setPendingPin(null)}>Cancel</Button>
-              <Button size="sm" onClick={handleSubmitComment} disabled={!newCommentText.trim()}>Add</Button>
-            </div>
-          </div>
-        )}
+    <div className="min-h-screen bg-[#252627] flex flex-col">
+      {/* Top bar */}
+      <div className="flex items-center justify-between bg-[#1b1c1e] h-16 px-8 border-b border-[#232324] shadow-md relative z-10">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" asChild className="mr-2">
+            <a href="/whiteboards">
+              <MoveLeft className="w-5 h-5 text-muted-foreground" />
+            </a>
+          </Button>
+          <div className="text-lg font-semibold text-white truncate max-w-[360px]">{whiteboard.title}</div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleDownload}
+            className="text-white hover:bg-muted/30"
+            title="Download PDF"
+          >
+            <Download className="w-5 h-5" />
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setPendingPin({ x: 0.5, y: 0.5 })}
+            className="gap-2 bg-primary text-white hover:bg-primary/80"
+          >
+            <Plus className="w-4 h-4" />
+            Add comment
+          </Button>
+        </div>
       </div>
-      <PDFCommentsSidebar pins={pins} activePin={activePin} setActivePin={setActivePin} />
+      {/* Main area */}
+      <div className="flex-1 flex flex-row bg-[#252627]">
+        <div className="flex-1 flex justify-center items-start px-0 py-10 overflow-x-auto">
+          <div className="rounded-lg shadow-xl overflow-hidden border border-neutral-800 bg-black p-6 flex flex-col items-center">
+            <PDFViewer
+              fileUrl={whiteboard.pdf_url}
+              pins={pins}
+              pageNumber={pageNumber}
+              onPinDrop={handlePinDrop}
+              onPageChange={setPageNumber}
+              totalPages={totalPages}
+              setTotalPages={setTotalPages}
+            />
+            {pendingPin && (
+              <div className="mt-6 w-[320px] bg-white border border-muted rounded-lg p-5 shadow-xl">
+                <div className="text-sm mb-2 font-medium text-foreground">Add a comment for this pin:</div>
+                <Input
+                  value={newCommentText}
+                  onChange={e => setNewCommentText(e.target.value)}
+                  className="mb-2"
+                  autoFocus
+                  placeholder="Enter comment"
+                />
+                <div className="flex gap-2 justify-end">
+                  <Button size="sm" variant="outline" onClick={() => setPendingPin(null)}>Cancel</Button>
+                  <Button size="sm" onClick={handleSubmitComment} disabled={!newCommentText.trim()}>Add</Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <PDFCommentsSidebar pins={pins} activePin={activePin} setActivePin={setActivePin} />
+      </div>
     </div>
   );
 };
