@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
 import { Task } from '@/types/task';
+import { Filter } from 'lucide-react';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -46,11 +48,31 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
     <div ref={ref}>
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%]">Files</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">Date Created</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">Assigned to</TableHead>
+          <TableRow className="border-b border-border group">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8">
+              Name
+            </TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%]">
+              Files
+            </TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">
+              <div className="flex items-center gap-1">
+                Date Created
+                <Filter
+                  className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  aria-label="Filter by date"
+                />
+              </div>
+            </TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">
+              <div className="flex items-center gap-1">
+                Assigned to
+                <Filter
+                  className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  aria-label="Filter by assignee"
+                />
+              </div>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr:last-child]:border-b">
