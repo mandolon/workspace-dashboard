@@ -1,9 +1,9 @@
-
 import React from 'react';
 import WhiteboardCard from './WhiteboardCard';
 import { getVisibleWhiteboardsForUser } from "@/utils/whiteboardStore";
 import { useUser } from "@/contexts/UserContext";
 import { projectClientData } from "@/data/projectClientStaticData";
+import { useNavigate } from "react-router-dom";
 
 // Helper
 function getProjectName(projectId: string) {
@@ -16,6 +16,7 @@ function getProjectName(projectId: string) {
 const WhiteboardsGrid = ({ viewMode }: { viewMode: 'grid' | 'list' }) => {
   const { currentUser } = useUser();
   const whiteboards = getVisibleWhiteboardsForUser(currentUser);
+  const navigate = useNavigate();
 
   if (whiteboards.length === 0) return (
     <div className="text-center text-muted-foreground italic py-8">
@@ -28,7 +29,11 @@ const WhiteboardsGrid = ({ viewMode }: { viewMode: 'grid' | 'list' }) => {
       <div className="px-6 py-4">
         <div className="space-y-2">
           {whiteboards.map((whiteboard) => (
-            <div key={whiteboard.id} className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-lg cursor-pointer">
+            <div
+              key={whiteboard.id}
+              className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-lg cursor-pointer"
+              onClick={() => navigate(`/whiteboard/${whiteboard.id}`)}
+            >
               <div className="w-8 h-8 bg-muted rounded flex-shrink-0" />
               <div className="flex-1">
                 <div className="font-medium text-sm flex gap-2 items-center">
@@ -51,14 +56,19 @@ const WhiteboardsGrid = ({ viewMode }: { viewMode: 'grid' | 'list' }) => {
     <div className="px-6 py-4">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {whiteboards.map((whiteboard) => (
-          <WhiteboardCard
+          <div
             key={whiteboard.id}
-            whiteboard={{
-              ...whiteboard,
-              projectName: getProjectName(whiteboard.projectId),
-            }}
-            showSharingStatus
-          />
+            className="hover:shadow cursor-pointer"
+            onClick={() => navigate(`/whiteboard/${whiteboard.id}`)}
+          >
+            <WhiteboardCard
+              whiteboard={{
+                ...whiteboard,
+                projectName: getProjectName(whiteboard.projectId),
+              }}
+              showSharingStatus
+            />
+          </div>
         ))}
       </div>
     </div>
