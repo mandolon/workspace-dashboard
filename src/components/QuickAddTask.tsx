@@ -156,6 +156,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           width: dropdownStyle.width,
           minWidth: 240,
         }}
+        onMouseDown={e => {
+          // Prevent outside click handler from firing when interacting with dropdown
+          e.stopPropagation();
+        }}
       >
         <div className="p-2 border-b border-border">
           <div className="relative">
@@ -166,6 +170,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
               ref={searchInputRef}
+              onMouseDown={e => e.stopPropagation()}
             />
           </div>
         </div>
@@ -174,13 +179,16 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             <button
               key={project.projectId}
               className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
-              onClick={(e) => handleProjectSelect(project, e)} // <-- pass the click event so it can be stopped
+              onClick={(e) => handleProjectSelect(project, e)}
+              onMouseDown={e => e.stopPropagation()} // <= stop container outside click as well
             >
               {project.displayName}
             </button>
           ))}
           {filteredProjects.length === 0 && (
-            <div className="text-xs text-muted-foreground px-3 py-2">No lists found.</div>
+            <div className="text-xs text-muted-foreground px-3 py-2" onMouseDown={e => e.stopPropagation()}>
+              No lists found.
+            </div>
           )}
         </div>
       </div>,
