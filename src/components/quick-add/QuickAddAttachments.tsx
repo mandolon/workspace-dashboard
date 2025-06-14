@@ -1,7 +1,6 @@
 
 import React, { useRef, useState } from "react";
-import { Paperclip } from "lucide-react";
-import { createPortal } from "react-dom";
+import { Paperclip, Plus } from "lucide-react";
 import QuickAddFileIcons from "./QuickAddFileIcons";
 
 interface QuickAddAttachmentsProps {
@@ -12,7 +11,6 @@ interface QuickAddAttachmentsProps {
 // Only handles upload & removal, delegates icon display to QuickAddFileIcons
 const QuickAddAttachments: React.FC<QuickAddAttachmentsProps> = ({ files, setFiles }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [showFilesDropdown, setShowFilesDropdown] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length) {
@@ -27,14 +25,13 @@ const QuickAddAttachments: React.FC<QuickAddAttachmentsProps> = ({ files, setFil
 
   const hasFiles = files.length > 0;
 
-  // Inline icon view
   return (
     <div className="flex items-center gap-2 relative">
-      {/* Paperclip upload trigger */}
+      {/* Attachment upload trigger, changes icon if files present */}
       <button
         type="button"
         className={`flex items-center justify-center border border-border rounded px-2 py-1 h-6 bg-white relative transition-colors
-          ${hasFiles ? "bg-accent hover:bg-accent/70 text-blue-700" : "text-muted-foreground hover:text-blue-700 hover:bg-accent"}`}
+           ${hasFiles ? "hover:bg-accent/70 text-muted-foreground" : "text-muted-foreground hover:text-blue-700 hover:bg-accent"}`}
         title={hasFiles ? (files.length === 1 ? files[0].name : `${files.length} files`) : "Attach files"}
         onClick={e => {
           e.stopPropagation();
@@ -44,14 +41,15 @@ const QuickAddAttachments: React.FC<QuickAddAttachmentsProps> = ({ files, setFil
         tabIndex={0}
         onMouseDown={e => e.preventDefault()}
       >
-        <Paperclip
-          className="w-3 h-3"
-          strokeWidth={hasFiles ? 2.5 : 2}
-          fill={hasFiles ? "currentColor" : "none"}
-          style={{
-            color: hasFiles ? "#2563eb" : undefined, // tailwind blue-700
-          }}
-        />
+        {hasFiles ? (
+          <Plus className="w-3 h-3" strokeWidth={2.5} /> 
+        ) : (
+          <Paperclip
+            className="w-3 h-3"
+            strokeWidth={2}
+            fill="none"
+          />
+        )}
         {hasFiles && (
           <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1 leading-none z-10 border border-white">
             {files.length}
@@ -76,3 +74,4 @@ const QuickAddAttachments: React.FC<QuickAddAttachmentsProps> = ({ files, setFil
 };
 
 export default QuickAddAttachments;
+
