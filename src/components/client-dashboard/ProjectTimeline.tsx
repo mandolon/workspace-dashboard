@@ -2,15 +2,14 @@
 import React from "react";
 
 const phases = [
-  { label: "Concept", complete: true },
-  { label: "Design", complete: true },
-  { label: "Construction Docs", complete: false },
-  { label: "Permitting", complete: false },
-  { label: "Construction", complete: false }
+  { label: "Measurements and Documentation", complete: true },
+  { label: "Architectural Drawings", complete: true },
+  { label: "Planning (if required) and Building Review", complete: false },
+  { label: "Permit and Approvals", complete: false }
 ];
 
 /**
- * Improved timeline with proper lines and mobile-friendly stacking
+ * Project timeline with custom 4 phases.
  */
 const ProjectTimeline: React.FC = () => (
   <div className="w-full max-w-full py-2 px-2">
