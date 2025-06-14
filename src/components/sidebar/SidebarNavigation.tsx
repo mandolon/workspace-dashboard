@@ -47,7 +47,42 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
   const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
-  const handleNavigateHelp = useCallback(() => navigate('/help'), [navigate]);
+
+  // Utility to get the help page for the current role
+  const getHelpPagePath = () => {
+    const role = clientMode
+      ? 'Client'
+      : (isImpersonating && impersonatedUser)
+        ? impersonatedUser.role
+        : currentUser.role;
+    if (role === 'Admin') return '/help/admin';
+    if (
+      role === 'Team Lead' ||
+      role === 'Project Manager' ||
+      role === 'Engineer' ||
+      role === 'Designer' ||
+      role === 'Operations' ||
+      role === 'QA Tester' ||
+      role === 'Consultant' ||
+      role === 'CAD Tech' ||
+      role === 'Jr Designer' ||
+      role === 'Developer' ||
+      role === 'Marketing Manager' ||
+      role === 'Customer Support' ||
+      role === 'Interior Designer' ||
+      role === 'Contractor'
+    ) {
+      return '/help/team';
+    }
+    if (role === 'Client') return '/help/client';
+    // Fallback
+    return '/help/client';
+  };
+
+  const handleNavigateHelp = useCallback(() => {
+    navigate(getHelpPagePath());
+  // eslint-disable-next-line
+  }, [clientMode, isImpersonating, impersonatedUser, currentUser]);
 
   // For admin/team: full nav; for client: only dashboard & help
   const mainNavItems = useMemo(() => {
