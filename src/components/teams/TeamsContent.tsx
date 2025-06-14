@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -61,7 +60,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
       <TeamsSearchBar
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        onAddMember={handleAddMember}
         isMobile={isMobile}
       />
       <TeamMembersTable

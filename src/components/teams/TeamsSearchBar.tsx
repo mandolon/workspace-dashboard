@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import InviteDialog from '@/components/sidebar/InviteDialog';
@@ -29,13 +28,9 @@ const TeamsSearchBar = ({ searchTerm, onSearchChange, isMobile }: TeamsSearchBar
       <InviteDialog
         triggerButtonClassName={`bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 mt-2
           ${isMobile ? "self-stretch w-full justify-center" : ""}`}
-      >
-        <Plus className="w-3 h-3" />
-        Add Member
-      </InviteDialog>
+      />
     </div>
   );
 };
 
 export default TeamsSearchBar;
-
