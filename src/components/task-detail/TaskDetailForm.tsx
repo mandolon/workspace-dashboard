@@ -49,28 +49,32 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 
   return (
     <div className="space-y-3">
-      {/* Task Title with Status Badge - centered alignment */}
+      {/* Task Title with Status Badge - fix overlap */}
       <div className="flex items-center justify-between">
-        {isEditing ? (
-          <input
-            type="text"
-            value={editingValue}
-            onChange={(e) => setEditingValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-            className="text-2xl font-semibold opacity-60 bg-transparent border-none outline-none focus:ring-0 px-1 py-0.5 m-0 flex-1 min-w-0 resize-none"
-            autoFocus
-          />
-        ) : (
-          <h1 
-            className="text-2xl font-semibold cursor-pointer hover:bg-accent/50 rounded px-1 py-0.5 -mx-1 -my-0.5 transition-colors flex-1 min-w-0"
-            onClick={startEditing}
-            title="Click to edit title"
-          >
-            {task.title}
-          </h1>
-        )}
-        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium flex-shrink-0">
+        {/* Title input or text, wrapper gets max-w to avoid badge overlap */}
+        <div className="flex-1 min-w-0 max-w-[calc(100%-130px)] mr-4">
+          {isEditing ? (
+            <input
+              type="text"
+              value={editingValue}
+              onChange={(e) => setEditingValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+              className="text-2xl font-semibold opacity-60 bg-transparent border-none outline-none focus:ring-0 px-1 py-0.5 m-0 w-full"
+              autoFocus
+              style={{ fontSize: "1.5rem" }}
+            />
+          ) : (
+            <h1 
+              className="text-2xl font-semibold cursor-pointer hover:bg-accent/50 rounded px-1 py-0.5 -mx-1 -my-0.5 transition-colors truncate"
+              onClick={startEditing}
+              title="Click to edit title"
+            >
+              {task.title}
+            </h1>
+          )}
+        </div>
+        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ml-2">
           REDLINE / TO DO
         </div>
       </div>
@@ -84,7 +88,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         />
       </div>
 
-      {/* Form Fields - Plain text values without containers */}
+      {/* Form Fields */}
       <div className="grid grid-cols-4 gap-3">
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
