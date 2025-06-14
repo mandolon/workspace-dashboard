@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -71,8 +70,6 @@ const TaskRowFiles = ({
                 aria-label="Show attachments"
               >
                 <Paperclip className="w-4 h-4 text-gray-600" />
-                {/* Show local count over icon if needed,
-                    but only show attachmentCount badge (see below) */}
               </button>
               {showDropdown && (
                 <div
@@ -100,12 +97,24 @@ const TaskRowFiles = ({
           ) : (
             <Paperclip className="w-4 h-4 text-gray-600" />
           )}
+
           {/* Show the original attachment count in top right if available */}
           {attachmentCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1 font-semibold z-10">
               {attachmentCount}
             </span>
           )}
+
+          {/* Overlapping "+" button bottom-right, like avatar add button */}
+          <button
+            className="absolute bottom-0 -right-1.5 bg-white border border-gray-200 rounded-full p-[2px] shadow hover:bg-accent z-30 transition-colors"
+            style={{ minWidth: 18, minHeight: 18 }}
+            onClick={handleUploadClick}
+            aria-label="Add file"
+            tabIndex={0}
+          >
+            <Plus className="w-3 h-3 text-gray-900" strokeWidth="2" />
+          </button>
         </div>
       )}
 
@@ -118,16 +127,6 @@ const TaskRowFiles = ({
         onChange={handleFileInputChange}
         aria-label="Upload file"
       />
-      {/* "+" button always visible (could be on hover, made always visible for accessibility) */}
-      <button
-        className="p-1 hover:bg-accent rounded flex items-center justify-center"
-        style={{ minWidth: 28, minHeight: 28 }}
-        onClick={handleUploadClick}
-        aria-label="Add file"
-        tabIndex={0}
-      >
-        <Plus className="w-4 h-4" strokeWidth="2" />
-      </button>
     </div>
   );
 };
