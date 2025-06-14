@@ -71,21 +71,14 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                 Date Created
                 <button
                   type="button"
-                  className="ml-1 rounded-full p-1.5 bg-transparent border border-transparent cursor-pointer opacity-0 group-hover/date:opacity-100 hover:opacity-100 transition-all duration-150 outline-none
-                    focus:ring-2 focus:ring-gray-400 focus:bg-gray-100 focus:border-gray-400
-                    active:bg-gray-200 active:border-gray-400
-                  "
-                  style={{
-                    lineHeight: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                  className="ml-1 p-0 bg-transparent border-none rounded cursor-pointer opacity-0 group-hover/date:opacity-100 hover:opacity-100 transition-opacity duration-150 outline-none focus:ring-1 focus:ring-blue-300 focus:bg-blue-50 active:bg-blue-100"
+                  style={{ lineHeight: 0, display: 'flex', alignItems: 'center' }}
                   onClick={onDateCreatedFilterClick}
                   aria-label="Filter by date"
                   tabIndex={0}
                 >
                   <Triangle
-                    className={`w-[15px] h-[15px] pointer-events-none transition-transform duration-150 
+                    className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
                       ${isDateActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
@@ -103,21 +96,14 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                 Assigned to
                 <button
                   type="button"
-                  className="ml-1 rounded-full p-1.5 bg-transparent border border-transparent cursor-pointer opacity-0 group-hover/assigned:opacity-100 hover:opacity-100 transition-all duration-150 outline-none
-                    focus:ring-2 focus:ring-gray-400 focus:bg-gray-100 focus:border-gray-400
-                    active:bg-gray-200 active:border-gray-400
-                  "
-                  style={{
-                    lineHeight: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                  className="ml-1 p-0 bg-transparent border-none rounded cursor-pointer opacity-0 group-hover/assigned:opacity-100 hover:opacity-100 transition-opacity duration-150 outline-none focus:ring-1 focus:ring-blue-300 focus:bg-blue-50 active:bg-blue-100"
+                  style={{ lineHeight: 0, display: 'flex', alignItems: 'center' }}
                   onClick={onAssignedToFilterClick}
                   aria-label="Filter by assignee"
                   tabIndex={0}
                 >
                   <Triangle
-                    className={`w-[15px] h-[15px] pointer-events-none transition-transform duration-150 
+                    className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
                       ${isAssigneeActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
