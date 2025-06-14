@@ -8,11 +8,11 @@ export interface TeamMember {
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
   titleRole: ArchitectureRole;
-  lastActive?: string; // Only added in the Teams page layer
-  status?: 'Active' | 'Inactive' | 'Pending'; // Only added in the Teams page layer
+  lastActive: string; // Now required
+  status: 'Active' | 'Inactive' | 'Pending'; // Now required
   avatar: string;
-  email: string; // ADDED, used in Teams UI
-  role: ArchitectureRole; // ADDED for compatibility with other user types
+  email: string; // used in Teams UI
+  role: ArchitectureRole; // for compatibility with other user types
 }
 
 export const TEAM_USERS: TeamMember[] = [
@@ -22,6 +22,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Armando Lopez',
     crmRole: 'Admin',
     titleRole: 'Admin',
+    lastActive: 'Jun 2, 2025',
+    status: 'Active',
     email: 'armando.lopez@example.com',
     role: 'Admin',
     avatar: 'bg-blue-800'
@@ -32,6 +34,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Alice Dale',
     crmRole: 'Team',
     titleRole: 'Team Lead',
+    lastActive: '—',
+    status: 'Active',
     email: 'alice.dale@example.com',
     role: 'Team Lead',
     avatar: 'bg-purple-500'
@@ -42,6 +46,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Mark Pinsky',
     crmRole: 'Team',
     titleRole: 'Team Lead',
+    lastActive: '—',
+    status: 'Active',
     email: 'mark.pinsky@example.com',
     role: 'Team Lead',
     avatar: 'bg-green-500'
@@ -52,6 +58,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Stephanie Sharp',
     crmRole: 'Team',
     titleRole: 'Team Lead',
+    lastActive: '—',
+    status: 'Active',
     email: 'stephanie.sharp@example.com',
     role: 'Team Lead',
     avatar: 'bg-blue-500'
@@ -62,6 +70,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Joshua Jones',
     crmRole: 'Team',
     titleRole: 'Team Lead',
+    lastActive: '—',
+    status: 'Inactive',
     email: 'joshua.jones@example.com',
     role: 'Team Lead',
     avatar: 'bg-orange-500'
@@ -72,6 +82,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'Rhonda Hill',
     crmRole: 'Client',
     titleRole: 'Client',
+    lastActive: '—',
+    status: 'Pending',
     email: 'rhonda.hill@example.com',
     role: 'Client',
     avatar: 'bg-pink-500'
@@ -82,6 +94,8 @@ export const TEAM_USERS: TeamMember[] = [
     fullName: 'James Hall',
     crmRole: 'Client',
     titleRole: 'Client',
+    lastActive: '—',
+    status: 'Active',
     email: 'james.hall@example.com',
     role: 'Client',
     avatar: 'bg-gray-500'
