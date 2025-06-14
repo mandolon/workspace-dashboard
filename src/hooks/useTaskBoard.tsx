@@ -1,10 +1,10 @@
-
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup } from '@/types/task';
 import { useUser } from '@/contexts/UserContext';
 import { useRealtimeTasks } from './useRealtimeTasks';
 import { insertTask, updateTaskSupabase, deleteTaskSupabase } from '@/data/taskSupabase';
+import { nanoid } from "nanoid";
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
@@ -52,20 +52,33 @@ export const useTaskBoard = () => {
     return taskGroups;
   };
 
-  const handleCreateTask = useCallback(async (newTask: Task) => {
-    await insertTask({
-      ...newTask,
-      createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-    });
-  }, [currentUser]);
+  // Generate a new taskId for every task insert
+  const generateTaskId = () => "T" + Math.floor(Math.random() * 100000).toString().padStart(4, "0");
 
-  const handleQuickAddSave = useCallback(async (taskData: any) => {
-    await insertTask({
-      ...taskData,
-      createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-    });
-    setShowQuickAdd(null);
-  }, [currentUser]);
+  const handleCreateTask = useCallback(
+    async (newTask: any) => {
+      const taskId = newTask.taskId ?? generateTaskId();
+      await insertTask({
+        ...newTask,
+        taskId,
+        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+      });
+    },
+    [currentUser]
+  );
+
+  const handleQuickAddSave = useCallback(
+    async (taskData: any) => {
+      const taskId = taskData.taskId ?? generateTaskId();
+      await insertTask({
+        ...taskData,
+        taskId,
+        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+      });
+      setShowQuickAdd(null);
+    },
+    [currentUser]
+  );
 
   const handleTaskClick = (task: Task) => {
     navigate(`/task/${task.taskId}`);
@@ -78,8 +91,9 @@ export const useTaskBoard = () => {
     }
   };
 
-  const handleTaskDeleted = async (taskId: number) => {
-    const task = tasks.find(t => t.id === taskId);
+  // Fix: find by .taskId (string), not .id (number)
+  const handleTaskDeleted = async (taskId: string) => {
+    const task = tasks.find(t => t.taskId === taskId);
     if (task) {
       await deleteTaskSupabase(task.taskId);
     }

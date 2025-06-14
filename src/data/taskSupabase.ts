@@ -26,28 +26,25 @@ export function dbRowToTask(row: any): Task {
   };
 }
 
-export async function fetchAllTasks() {
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return (data ?? []).map(dbRowToTask);
-}
-
-export async function insertTask(task: Omit<Task, "id" | "taskId" | "createdAt" | "updatedAt">) {
+// Accepts all required fields, including taskId
+export async function insertTask(task: Omit<Task, "id" | "createdAt" | "updatedAt"> & { taskId: string }) {
   const toSend = {
-    ...task,
     task_id: task.taskId,
+    title: task.title,
     project_id: task.projectId,
+    project: task.project,
     estimated_completion: task.estimatedCompletion,
     date_created: task.dateCreated,
     due_date: task.dueDate,
+    assignee: task.assignee,
     has_attachment: task.hasAttachment,
+    collaborators: task.collaborators ?? [],
+    status: task.status,
+    archived: !!task.archived,
     created_by: task.createdBy,
-    collaborators: JSON.stringify(task.collaborators ?? []),
-    // Remove camelCase properties not needed
-    taskId: undefined, projectId: undefined, estimatedCompletion: undefined, dateCreated: undefined, dueDate: undefined, hasAttachment: undefined, createdBy: undefined,
+    deleted_at: task.deletedAt,
+    deleted_by: task.deletedBy,
+    // created_at, updated_at will default server-side
   };
   const { data, error } = await supabase
     .from("tasks")
@@ -56,6 +53,15 @@ export async function insertTask(task: Omit<Task, "id" | "taskId" | "createdAt" 
     .single();
   if (error) throw error;
   return dbRowToTask(data);
+}
+
+export async function fetchAllTasks() {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(dbRowToTask);
 }
 
 export async function updateTaskSupabase(taskId: string, updates: Partial<Task>) {
@@ -68,7 +74,8 @@ export async function updateTaskSupabase(taskId: string, updates: Partial<Task>)
     else if (k === "dueDate") toSend["due_date"] = v;
     else if (k === "hasAttachment") toSend["has_attachment"] = v;
     else if (k === "createdBy") toSend["created_by"] = v;
-    else if (k === "collaborators") toSend["collaborators"] = JSON.stringify(v);
+    else if (k === "collaborators") toSend["collaborators"] = v; // not stringified!
+    else if (k === "assignee") toSend["assignee"] = v;
     else toSend[k] = v;
   });
   const { data, error } = await supabase
