@@ -1,11 +1,11 @@
 
-// Make title/header 100% consistent with other pages
+// Make the Inbox heading layout, tabs, and spacing 100% consistent with the Whiteboards page.
 
-import React from 'react';
-import AppLayout from '@/components/layout/AppLayout';
-import InboxContent from '@/components/inbox/InboxContent';
-import { useInboxState } from '@/hooks/useInboxState';
-import PageSectionHeader from '@/components/shared/PageSectionHeader';
+import React from "react";
+import AppLayout from "@/components/layout/AppLayout";
+import InboxHeader from "@/components/inbox/InboxHeader";
+import InboxContent from "@/components/inbox/InboxContent";
+import { useInboxState } from "@/hooks/useInboxState";
 
 const InboxPage = () => {
   const {
@@ -28,7 +28,14 @@ const InboxPage = () => {
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
-        <PageSectionHeader title="Inbox" />
+        <InboxHeader
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          unreadCount={unreadCount}
+        />
         <div className="flex-1 flex flex-col">
           <InboxContent
             selectedEmails={selectedEmails}

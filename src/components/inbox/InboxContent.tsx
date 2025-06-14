@@ -55,13 +55,13 @@ const InboxContent = React.memo(({
 
   return (
     <div className="h-full flex flex-col">
-      {/* Removed InboxHeader here to avoid repeated title and unread notification */}
-      <InboxToolbar 
+      {/* InboxHeader is now rendered at the page level for consistent layout */}
+      <InboxToolbar
         selectedEmails={selectedEmails}
         totalEmails={filteredEmails.length}
         onSelectAll={onSelectAll}
       />
-      <EmailList 
+      <EmailList
         emails={filteredEmails}
         selectedEmails={selectedEmails}
         onSelectEmail={onSelectEmail}

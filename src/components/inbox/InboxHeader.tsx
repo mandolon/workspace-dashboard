@@ -1,58 +1,91 @@
 
-import React from 'react';
-import InboxTabs from './InboxTabs';
+import React from "react";
+import { Inbox, FileText, Send, Archive, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface InboxHeaderProps {
-  unreadCount: number;
   activeTab: string;
   onTabChange: (tab: string) => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  unreadCount: number;
 }
 
-const InboxHeader = ({ 
-  unreadCount, 
-  activeTab, 
-  onTabChange, 
-  currentPage, 
-  totalPages, 
-  onPageChange 
+const tabs = [
+  { id: "inbox", label: "Inbox", icon: Inbox },
+  { id: "drafts", label: "Drafts", icon: FileText },
+  { id: "sent", label: "Sent", icon: Send },
+  { id: "archive", label: "Archive", icon: Archive },
+  { id: "trash", label: "Trash", icon: Trash2 },
+];
+
+const InboxHeader = ({
+  activeTab,
+  onTabChange,
+  currentPage,
+  totalPages,
+  onPageChange,
+  unreadCount,
 }: InboxHeaderProps) => {
-  const getTabLabel = () => {
-    switch (activeTab) {
-      case 'inbox':
-        return 'Inbox';
-      case 'drafts':
-        return 'Drafts';
-      case 'sent':
-        return 'Sent';
-      case 'archive':
-        return 'Archive';
-      case 'trash':
-        return 'Trash';
-      default:
-        return 'Inbox';
-    }
-  };
+  const mainTitle = tabs.find((tab) => tab.id === activeTab)?.label || "Inbox";
 
   return (
-    <div className="border-b border-border">
-      <div className="px-6 py-4">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-medium">{getTabLabel()}</h1>
-          {activeTab === 'inbox' && unreadCount > 0 && (
-            <span className="text-xs text-muted-foreground">({unreadCount} unread)</span>
+    <div className="border-b border-border bg-background">
+      <div className="px-6 pt-6 pb-4 flex items-center justify-between">
+        <h1 className="text-xl font-semibold tracking-tight leading-tight">
+          {mainTitle}
+          {activeTab === "inbox" && unreadCount > 0 && (
+            <span className="ml-2 text-xs text-muted-foreground font-normal align-middle">
+              ({unreadCount} unread)
+            </span>
           )}
+        </h1>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-1"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            <ChevronLeft className="w-3 h-3" />
+          </Button>
+          <span className="text-xs text-muted-foreground px-2 select-none">
+            {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-1"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            <ChevronRight className="w-3 h-3" />
+          </Button>
         </div>
       </div>
-      <InboxTabs
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-      />
+      <div className="flex items-center px-6 pb-2 space-x-3">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const selected = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={`flex items-center gap-2 text-sm pb-2 border-b-2 transition-colors
+                ${selected
+                  ? "border-primary text-foreground font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              style={{ outline: "none" }}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
