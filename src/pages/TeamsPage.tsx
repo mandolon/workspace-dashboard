@@ -44,9 +44,8 @@ const TeamsPage = () => {
             ))}
           </div>
           <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full">
-            {/* Both 'admin' and 'team' now render the same TeamsContent */}
             {(activeTab === "admin" || activeTab === "team") && (
-              <TeamsContent />
+              <TeamsContent tab={activeTab} />
             )}
             {activeTab === "client" && (
               <div className="flex-1 overflow-y-auto p-6">

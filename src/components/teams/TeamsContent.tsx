@@ -27,7 +27,13 @@ export type TeamMember = {
   avatar: string;
 };
 
-const TeamsContent = () => {
+interface TeamsContentProps {
+  tab: "admin" | "team";
+}
+
+const ADMIN_NAME = 'Armando Lopez';
+
+const TeamsContent = ({ tab }: TeamsContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Map TEAM_USERS into full table records for the CRM
@@ -35,7 +41,6 @@ const TeamsContent = () => {
     id: user.id,
     name: user.name,
     fullName: user.fullName,
-    // Demo email from full name
     email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
     role: user.role,
     lastActive: memberStatus[user.name]?.lastActive || '—',
@@ -64,17 +69,23 @@ const TeamsContent = () => {
   ];
 
   const handleRoleChange = (memberId: string, newRole: string) => {
-    // For demo: would update role in state - here just console log for now
     console.log(`Role change requested for ${memberId}: ${newRole}`);
-    // You can add state logic here if you want roles to be updated in UI as a demo
   };
 
   const handleAddMember = () => {
-    // In a real app, this would open a modal or navigate to an add member form
     console.log('Add member clicked');
   };
 
-  const filteredMembers = teamMembers.filter(member =>
+  // Filter based on tab: show only admin for Admin tab, only non-admins for Team tab
+  let filteredMembers: TeamMember[];
+  if (tab === "admin") {
+    filteredMembers = teamMembers.filter(m => m.fullName === ADMIN_NAME);
+  } else {
+    filteredMembers = teamMembers.filter(m => m.fullName !== ADMIN_NAME);
+  }
+
+  // Apply search filter
+  const displayedMembers = filteredMembers.filter(member =>
     member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -87,13 +98,13 @@ const TeamsContent = () => {
         onAddMember={handleAddMember}
       />
       <TeamMembersTable
-        members={filteredMembers}
+        members={displayedMembers}
         roles={roles}
         onRoleChange={handleRoleChange}
       />
       <TeamMembersSummary
-        filteredMembers={filteredMembers}
-        totalMembers={teamMembers.length}
+        filteredMembers={displayedMembers}
+        totalMembers={filteredMembers.length}
       />
     </div>
   );
