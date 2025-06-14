@@ -20,7 +20,12 @@ interface UserDropdownMenuProps {
 
 const UserDropdownMenu = ({ user, onStatusChange, onToggleNotifications }: UserDropdownMenuProps) => {
   const navigate = useNavigate();
-  const { isImpersonating, exitImpersonation, impersonatedUser } = useUser();
+  const { isImpersonating, exitImpersonation, impersonatedUser, logout } = useUser();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <DropdownMenuContent align="end" className="w-64">
@@ -112,7 +117,7 @@ const UserDropdownMenu = ({ user, onStatusChange, onToggleNotifications }: UserD
         <Trash2 className="w-4 h-4 mr-2" />
         Trash
       </DropdownMenuItem>
-      <DropdownMenuItem className="text-red-600">
+      <DropdownMenuItem onClick={handleLogout} className="text-red-600">
         <LogOut className="w-4 h-4 mr-2" />
         Log out
       </DropdownMenuItem>

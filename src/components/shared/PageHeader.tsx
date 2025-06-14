@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu, ChevronDown, Circle, Bell, BellOff, Settings, Keyboard, Download, HelpCircle, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +23,7 @@ const PageHeader = ({
   onToggleSidebar
 }: PageHeaderProps) => {
   const navigate = useNavigate();
-  const { currentUser, updateUserStatus, toggleNotifications } = useUser();
+  const { currentUser, updateUserStatus, toggleNotifications, logout } = useUser();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -42,6 +41,11 @@ const PageHeader = ({
       case 'busy': return 'Busy';
       default: return 'Offline';
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -183,7 +187,7 @@ const PageHeader = ({
                 <Trash2 className="w-4 h-4 mr-2" />
                 Trash
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                 <LogOut className="w-4 h-4 mr-2" />
                 Log out
               </DropdownMenuItem>
