@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -24,41 +25,47 @@ interface SidebarProviderProps {
 }
 
 export const SidebarProvider = ({ children }: SidebarProviderProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsedState, setIsCollapsedState] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const isMobile = useIsMobile();
+
+  // On mobile, force collapsed
+  const isCollapsed = isMobile ? true : isCollapsedState;
 
   const toggleSidebar = () => {
+    if (isMobile) {
+      // no-op: Always collapsed
+      return;
+    }
     if (isHidden) {
-      // If hidden, show it in expanded mode
       setIsHidden(false);
-      setIsCollapsed(false);
-    } else if (isCollapsed) {
-      // If collapsed, expand it
-      setIsCollapsed(false);
+      setIsCollapsedState(false);
+    } else if (isCollapsedState) {
+      setIsCollapsedState(false);
     } else {
-      // If expanded, collapse it
-      setIsCollapsed(true);
+      setIsCollapsedState(true);
     }
   };
 
   const setSidebarCollapsed = (collapsed: boolean) => {
-    setIsCollapsed(collapsed);
+    if (isMobile) return; // no-op on mobile
+    setIsCollapsedState(collapsed);
   };
 
   const setSidebarHidden = (hidden: boolean) => {
     setIsHidden(hidden);
     if (hidden) {
-      setIsCollapsed(false); // Reset collapsed state when hiding
+      setIsCollapsedState(false); // Reset collapsed state when hiding
     }
   };
 
   return (
-    <SidebarContext.Provider value={{ 
-      isCollapsed, 
-      isHidden, 
-      toggleSidebar, 
-      setSidebarCollapsed, 
-      setSidebarHidden 
+    <SidebarContext.Provider value={{
+      isCollapsed,
+      isHidden,
+      toggleSidebar,
+      setSidebarCollapsed,
+      setSidebarHidden
     }}>
       {children}
     </SidebarContext.Provider>
