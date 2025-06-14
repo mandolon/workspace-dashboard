@@ -7,8 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import UserDropdownMenu from './UserDropdownMenu';
-import UserAvatar from './UserAvatar';
-// Removed: import { ThemeToggle } from '@/components/ThemeToggle'; 
+
+// Removed: import UserAvatar from './UserAvatar'; 
 
 interface SidebarHeaderProps {
   isCollapsed: boolean;
@@ -22,11 +22,21 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
 
   if (isCollapsed) {
     return (
-      <div className="px-4 py-3 border-b border-sidebar-border flex flex-col items-center gap-2">
+      <div className="px-2 py-3 border-b border-sidebar-border flex flex-col items-center gap-2">
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center hover:bg-accent rounded-md transition-colors">
-            {/* Avatar shown in collapsed mode, status DOT hidden */}
-            <UserAvatar user={currentUser} size="sm" showStatus={false} />
+          <DropdownMenuTrigger className="flex flex-col items-center justify-center w-10 h-10 rounded-md hover:bg-accent transition-colors p-0 focus:outline-none">
+            {/* Use logo image as icon when collapsed */}
+            <img
+              src="/lovable-uploads/055f1e94-8aee-498f-b5c8-39455c83efc2.png"
+              alt="Sidebar Logo"
+              className="block"
+              style={{
+                maxHeight: 32,
+                maxWidth: 32,
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
           </DropdownMenuTrigger>
           <UserDropdownMenu 
             user={currentUser}
@@ -34,7 +44,6 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
             onToggleNotifications={toggleNotifications}
           />
         </DropdownMenu>
-        {/* Removed ThemeToggle from here */}
       </div>
     );
   }
@@ -44,15 +53,12 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-2 hover:bg-accent px-2 py-1 rounded-md transition-colors w-full">
           <div className="flex items-center gap-2 flex-grow">
-            {/* Avatar hidden in expanded mode */}
-            {/* <UserAvatar user={currentUser} size="sm" /> */}
             <div className="text-left">
               <div className="text-sm font-medium">{currentUser.name}</div>
               <div className="text-xs text-muted-foreground">{currentUser.company}</div>
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
           </div>
-          {/* Removed ThemeToggle from here */}
         </DropdownMenuTrigger>
         <UserDropdownMenu 
           user={currentUser}
