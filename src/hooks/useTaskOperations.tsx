@@ -47,33 +47,21 @@ export const useTaskOperations = () => {
   const deleteTask = useCallback(async (taskId: number) => {
     try {
       const deletedTask = softDeleteTask(taskId, "AL"); // Current user
-
+      
       if (deletedTask) {
         const taskTitle = deletedTask.title;
-
+        
         toast({
           title: "Task deleted",
           description: `"${taskTitle}" has been deleted.`,
           action: (
-            <div className="flex items-center gap-1 mt-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => restoreDeletedTask(taskId)}
-                className="text-muted-foreground px-2 py-0 h-7"
-              >
-                Undo
-              </Button>
-              <span className="text-xs text-border mx-1 select-none">•</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/settings?tab=trash')}
-                className="text-muted-foreground px-2 py-0 h-7"
-              >
-                Go to Trash
-              </Button>
-            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => restoreDeletedTask(taskId)}
+            >
+              Undo
+            </Button>
           ),
           duration: 5000,
         });
@@ -87,7 +75,7 @@ export const useTaskOperations = () => {
         variant: "destructive",
       });
     }
-  }, [toast, triggerRefresh, navigate]);
+  }, [toast, triggerRefresh]);
 
   const restoreDeletedTask = useCallback((taskId: number) => {
     const restoredTask = restoreTask(taskId);
@@ -124,7 +112,6 @@ export const useTaskOperations = () => {
   }, [customTasks]);
 
   const getAllTasks = useCallback(() => {
-    // Get all tasks from centralized data and combine with custom tasks, filtering out deleted ones
     const allCentralizedTasks = getTasksByStatus('redline')
       .concat(getTasksByStatus('progress'))
       .concat(getTasksByStatus('completed'))

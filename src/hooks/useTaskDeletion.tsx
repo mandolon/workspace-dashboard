@@ -1,6 +1,5 @@
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -12,7 +11,6 @@ export const useTaskDeletion = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteTask, restoreDeletedTask } = useTaskContext();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleDeleteClick = useCallback((task: Task, e?: React.MouseEvent) => {
     if (e) {
@@ -24,32 +22,22 @@ export const useTaskDeletion = () => {
 
   const handleDeleteTask = useCallback(async () => {
     if (!taskToDelete) return;
+    
     setIsDeleting(true);
     try {
       await deleteTask(taskToDelete.id);
+      
       toast({
         title: "Task deleted",
         description: `"${taskToDelete.title}" has been deleted.`,
         action: (
-          <div className="flex items-center gap-1 mt-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => restoreDeletedTask(taskToDelete.id)}
-              className="text-muted-foreground px-2 py-0 h-7"
-            >
-              Undo
-            </Button>
-            <span className="text-xs text-border mx-1 select-none">•</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/settings?tab=trash')}
-              className="text-muted-foreground px-2 py-0 h-7"
-            >
-              Go to Trash
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => restoreDeletedTask(taskToDelete.id)}
+          >
+            Undo
+          </Button>
         ),
         duration: 5000,
       });
@@ -64,7 +52,7 @@ export const useTaskDeletion = () => {
       setShowDeleteDialog(false);
       setTaskToDelete(null);
     }
-  }, [taskToDelete, deleteTask, restoreDeletedTask, toast, navigate]);
+  }, [taskToDelete, deleteTask, restoreDeletedTask, toast]);
 
   const handleCloseDeleteDialog = useCallback(() => {
     setShowDeleteDialog(false);
