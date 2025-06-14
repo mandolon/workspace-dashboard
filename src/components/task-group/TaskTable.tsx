@@ -46,14 +46,19 @@ const TaskTable = forwardRef<HTMLDivElement, TaskTableProps>(({
   // Get status from first task if available
   const status = tasks.length > 0 ? tasks[0].status : 'unknown';
   
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: status,
   });
+
+  console.log('TaskTable for status:', status, 'isOver:', isOver, 'tasks:', tasks.length);
 
   return (
     <div ref={ref} className="space-y-0">
       <TaskTableHeader />
-      <div ref={setNodeRef} className="min-h-[20px]">
+      <div 
+        ref={setNodeRef} 
+        className={`min-h-[20px] transition-colors ${isOver ? 'bg-accent/20' : ''}`}
+      >
         <Table>
           <TableBody>
             {tasks.map((task) => (

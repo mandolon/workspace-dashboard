@@ -56,13 +56,17 @@ const DragDropTaskBoard = ({
     
     if (task) {
       setActiveTask(task);
+      console.log('Drag started for task:', task.title);
     }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
+    console.log('Drag ended - active:', active?.id, 'over:', over?.id);
+    
     if (!over) {
+      console.log('No drop target found');
       setActiveTask(null);
       return;
     }
@@ -70,7 +74,16 @@ const DragDropTaskBoard = ({
     const taskId = active.id as number;
     const newStatus = over.id as string;
 
+    // Validate that the new status is one of our valid statuses
+    const validStatuses = ['redline', 'progress', 'completed'];
+    if (!validStatuses.includes(newStatus)) {
+      console.log('Invalid drop target:', newStatus);
+      setActiveTask(null);
+      return;
+    }
+
     if (activeTask && activeTask.status !== newStatus) {
+      console.log('Updating task status from', activeTask.status, 'to', newStatus);
       updateTaskById(taskId, { status: newStatus });
     }
 
