@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskDetailHeader from './task-detail/TaskDetailHeader';
 import TaskDetailForm from './task-detail/TaskDetailForm';
@@ -24,7 +25,7 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="max-w-4xl mx-auto p-3 space-y-4">
             <TaskDetailForm task={task} />
-            <TaskDetailAttachments />
+            <TaskDetailAttachments taskId={task.taskId} />
           </div>
         </div>
 
@@ -38,3 +39,4 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
 };
 
 export default TaskDetail;
+
