@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Send } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
+import TaskChatInput from './TaskChatInput';
 
 // Shared interface for messages
 interface ActivityMessage {
@@ -24,7 +24,6 @@ interface TaskDetailActivityProps {
 const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const { currentUser } = useUser();
   const [messages, setMessages] = useState<ActivityMessage[]>([]);
-  const [messageInput, setMessageInput] = useState('');
   const [inputHeight, setInputHeight] = useState(0);
   const messageListRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -112,33 +111,19 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     setMessages(next);
   }
 
-  const handleSendMessage = () => {
-    const trimmed = messageInput.trim();
-    if (!trimmed || !currentUser) return;
+  function handleSendMessageInput(value: string) {
+    if (!value.trim() || !currentUser) return;
     const newMsg: ActivityMessage = {
       id: (messages[messages.length - 1]?.id ?? 0) + 1,
       user: currentUser.name,
       avatar: getInitials(currentUser.name),
-      message: trimmed,
+      message: value.trim(),
       timestamp: new Date().toISOString(),
       isCurrentUser: true,
     };
     const next = [...messages, newMsg];
     saveMessages(next);
-    setMessageInput('');
-    setInputHeight(0);
-    // Refocus input after send
-    setTimeout(() => {
-      if (textareaRef.current) textareaRef.current.focus();
-    }, 100);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -186,55 +171,8 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
         ))}
       </div>
 
-      {/* ChatGPT-style Message Input */}
-      <div className="p-4 border-t border-border bg-background">
-        <div
-          className="relative w-full mx-auto max-w-2xl"
-        >
-          <div className="flex flex-col">
-            <div
-              className={
-                "relative flex items-end w-full rounded-2xl bg-muted/60 shadow-sm border border-border px-3 py-2 focus-within:ring-2 focus-within:ring-primary transition"
-              }
-            >
-              <textarea
-                ref={textareaRef}
-                value={messageInput}
-                onChange={e => setMessageInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type your message... (Shift+Enter for newline)"
-                className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[36px] max-h-40 font-sans rounded-2xl placeholder:text-muted-foreground disabled:opacity-50"
-                rows={1}
-                spellCheck={true}
-                autoFocus={false}
-                style={{height: inputHeight ? `${inputHeight}px` : undefined}}
-                aria-label="Send message"
-              />
-              {/* Send Button (ChatGPT style) */}
-              <button
-                type="button"
-                onClick={handleSendMessage}
-                disabled={!messageInput.trim()}
-                className={
-                  "absolute right-2 bottom-2 transition duration-200 " +
-                  (messageInput.trim()
-                    ? "bg-green-500 hover:bg-green-600 active:bg-green-700 text-white shadow-md"
-                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60") +
-                  " rounded-full w-9 h-9 flex items-center justify-center focus:outline-none"
-                }
-                aria-label="Send message"
-                tabIndex={0}
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-            {/* Optional helper text below input */}
-            <div className="text-[11px] text-muted-foreground text-center pt-2 pb-0">
-              Press <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Shift</kbd>+<kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> for newline
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ChatGPT-style Message Input - now a separate component */}
+      <TaskChatInput onSendMessage={handleSendMessageInput} disabled={!currentUser} />
     </div>
   );
 };
