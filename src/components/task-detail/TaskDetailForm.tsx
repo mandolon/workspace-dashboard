@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task';
@@ -7,8 +7,9 @@ import TaskDetailTitleSection from './TaskDetailTitleSection';
 import TaskDetailDescription from './TaskDetailDescription';
 import TaskDetailFields from './TaskDetailFields';
 import { updateTaskSupabase } from '@/data/taskSupabase';
-import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
 import { toast } from "@/hooks/use-toast";
+import { useTaskDetailAssignmentHandlers } from './hooks/useTaskDetailAssignmentHandlers';
+import { useTaskDetailDescriptionSave } from './hooks/useTaskDetailDescriptionSave';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -23,48 +24,23 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     startEditingTask,
     saveTaskEdit,
     cancelTaskEdit,
-    assignPerson: legacyAssignPerson,
-    removeAssignee: legacyRemoveAssignee,
-    addCollaborator: legacyAddCollaborator,
-    removeCollaborator: legacyRemoveCollaborator,
     changeTaskStatus: legacyChangeTaskStatus
-    // deleteTask, // removed legacyDeleteTask from here
   } = useTaskContext();
 
-  const isSupabaseTask = !!originalTask.taskId && !!originalTask.updatedAt;
   const [task, setTask] = useState<Task>(originalTask);
 
-  // Use correct assignment handlers
-  const supabaseAssignments = useSupabaseTaskAssignments(task, setTask);
+  // Assignment/collaborator handlers (refactored out)
+  const {
+    handleAssignPerson,
+    handleRemoveAssignee,
+    handleAddCollaborator,
+    handleRemoveCollaborator,
+    isSupabaseTask
+  } = useTaskDetailAssignmentHandlers(task, setTask);
 
+  // Supabase/legacy status change logic stays here (no assignment logic touched)
   const isEditing = editingTaskId === task.id;
-  const [desc, setDesc] = useState(task.description ?? "");
-  const [descLoading, setDescLoading] = useState(false);
-
-  // Handler selection
-  const handlerSet = isSupabaseTask ? supabaseAssignments : {
-    assignPerson: legacyAssignPerson,
-    removeAssignee: legacyRemoveAssignee,
-    addCollaborator: legacyAddCollaborator,
-    removeCollaborator: legacyRemoveCollaborator,
-  };
-
-  const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
-    handlerSet.assignPerson(taskId, person);
-  };
-
-  const handleRemoveAssignee = (taskId: string) => {
-    handlerSet.removeAssignee(taskId);
-  };
-
-  const handleAddCollaborator = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
-    if (handlerSet.addCollaborator) handlerSet.addCollaborator(taskId, person);
-  };
-
-  const handleRemoveCollaborator = (taskId: string, idx: number) => {
-    if (handlerSet.removeCollaborator) handlerSet.removeCollaborator(taskId, idx);
-  };
-
+  
   const handleChangeStatus = async (newStatus: "redline" | "progress" | "completed") => {
     if (!task) return;
     if (isSupabaseTask) {
@@ -104,20 +80,12 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     }
   };
 
-  // Save handler for description field
-  const handleSaveDescription = useCallback(async (newDesc: string) => {
-    if (newDesc === task.description) return;
-    setDescLoading(true);
-    setDesc(newDesc);
-    try {
-      if (isSupabaseTask) {
-        await updateTaskSupabase(task.taskId, { description: newDesc });
-        setTask(t => ({ ...t, description: newDesc, updatedAt: new Date().toISOString() }));
-      }
-    } finally {
-      setDescLoading(false);
-    }
-  }, [task.description, task.taskId, isSupabaseTask]);
+  // Description save/dirty state logic (refactored out)
+  const {
+    desc,
+    descLoading,
+    handleSaveDescription,
+  } = useTaskDetailDescriptionSave(task, setTask, isSupabaseTask);
 
   return (
     <div className="space-y-3 relative">
