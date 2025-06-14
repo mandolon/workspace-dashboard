@@ -1,19 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
   getClientData, 
   updateClientData, 
   addClientToProject, 
-  setPrimaryClient,
-  Client 
+  setPrimaryClient, 
+  Client, 
 } from '@/data/projectClientData';
 import { useToast } from '@/hooks/use-toast';
 import { generateClientId } from '@/utils/clientHelpers';
 import InformationSection from './InformationSection';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ClientTabFormProps {
   onSave: () => void;
@@ -27,7 +27,7 @@ const emptyClient = (): Client => ({
   isPrimary: false,
 });
 
-const CLIENTS_PER_PAGE = 10;
+const CLIENTS_PER_BATCH = 10;
 
 const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
   const { projectId } = useParams();
@@ -37,15 +37,19 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [showAdd, setShowAdd] = useState(false);
   const [newClient, setNewClient] = useState<Client>(emptyClient());
-  const [page, setPage] = useState(1);
+
+  const [visibleCount, setVisibleCount] = useState(CLIENTS_PER_BATCH);
 
   useEffect(() => {
     const project = getClientData(projectId);
     setClients([...project.clients]);
-    setPage(1); // Reset page if project changes
+    setVisibleCount(CLIENTS_PER_BATCH); // Reset visible count if project changes
   }, [projectId]);
 
-  const numPages = Math.ceil(clients.length / CLIENTS_PER_PAGE);
+  useEffect(() => {
+    // If clients decrease, recalculate visible count
+    setVisibleCount(prev => Math.min(Math.max(CLIENTS_PER_BATCH, prev), clients.length));
+  }, [clients.length]);
 
   // Add new client handler (uses unique ID generator)
   const handleAddClient = () => {
@@ -53,7 +57,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       toast({ title: "Missing info", description: "First & last name required" });
       return;
     }
-    // Generate unique Cxxxx ID
     const id = generateClientId();
     const client: Client = { ...newClient, clientId: id, isPrimary: false };
     const updated = [...clients, client];
@@ -64,10 +67,8 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     setNewClient(emptyClient());
     toast({ title: "Client added", description: "New client added to project." });
     onSave();
-    // Go to last page if new client overflow
-    if (Math.ceil(updated.length / CLIENTS_PER_PAGE) > numPages) {
-      setPage(page + 1);
-    }
+    // After add, ensure new client becomes visible if hidden
+    setVisibleCount(v => Math.max(v, Math.ceil(updated.length / CLIENTS_PER_BATCH) * CLIENTS_PER_BATCH));
   };
 
   // Make a client primary
@@ -86,11 +87,31 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     updateClientData(projectId!, updated);
     toast({ title: "Client Removed" });
     onSave();
-    // Stay on valid page if last removed
-    if ((page - 1) * CLIENTS_PER_PAGE >= updated.length && page > 1) {
-      setPage(page - 1);
-    }
+    setVisibleCount(prev => Math.min(Math.max(CLIENTS_PER_BATCH, prev), updated.length));
   };
+
+  // Infinite scroll callback (only for desktop)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, clientHeight, scrollHeight } = scrollContainerRef.current;
+    // Load more if scrolled within 60px from the bottom and not all shown
+    if (
+      scrollTop + clientHeight >= scrollHeight - 60 &&
+      visibleCount < clients.length
+    ) {
+      setVisibleCount(count => Math.min(count + CLIENTS_PER_BATCH, clients.length));
+    }
+  }, [visibleCount, clients.length]);
+
+  useEffect(() => {
+    const node = scrollContainerRef.current;
+    if (!isMobile && node) {
+      node.addEventListener('scroll', handleScroll);
+      return () => node.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll, isMobile]);
 
   // UI to edit/add a new client
   const addForm = (
@@ -123,13 +144,9 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     </div>
   );
 
-  // Pagination controls for desktop
-  const showPagination = !isMobile && clients.length > CLIENTS_PER_PAGE;
-
-  // Paginated/scrollable client list UI
   let renderedClients;
   if (isMobile) {
-    // Scroll-area for mobile, all clients, easy scroll
+    // Mobile: scrollable vertical list (shows all clients)
     renderedClients = (
       <div className="flex flex-col gap-2 mb-4 max-h-96 overflow-y-auto">
         {clients.map(client => (
@@ -153,13 +170,15 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       </div>
     );
   } else {
-    // Paginated desktop view
-    const start = (page - 1) * CLIENTS_PER_PAGE;
-    const end = start + CLIENTS_PER_PAGE;
+    // Desktop: infinite scroll with batch loading
     renderedClients = (
-      <>
-        <div className="space-y-2 mb-2 min-h-16">
-          {clients.slice(start, end).map(client => (
+      <ScrollArea className="h-96 w-full mb-2" type="always">
+        <div
+          className="space-y-2 min-h-16"
+          ref={scrollContainerRef}
+          style={{ overflowY: 'auto', maxHeight: 384 }} // 96 * 4 to match h-96
+        >
+          {clients.slice(0, visibleCount).map(client => (
             <div key={client.clientId} className={`border rounded px-3 py-2 flex items-center gap-3 ${client.isPrimary ? 'bg-green-50 border-green-300' : 'bg-background'}`}>
               <div className="flex-1">
                 <div className="font-medium">
@@ -177,45 +196,17 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
               )}
             </div>
           ))}
+          {/* Loader */}
+          {visibleCount < clients.length && (
+            <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
+              Loading more clients...
+            </div>
+          )}
         </div>
-        {showPagination && (
-          <Pagination className="mt-2 mb-4">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setPage(page > 1 ? page - 1 : 1)} 
-                  aria-disabled={page === 1}
-                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
-                  href="#"
-                />
-              </PaginationItem>
-              {Array.from({length: numPages}).map((_, idx) => (
-                <PaginationItem key={idx}>
-                  <a
-                    className={`px-3 py-1 rounded border ${page === idx + 1 ? "border-primary text-primary font-semibold" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-                    onClick={e => {e.preventDefault(); setPage(idx+1);}}
-                    href="#"
-                  >
-                    {idx + 1}
-                  </a>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setPage(page < numPages ? page + 1 : numPages)} 
-                  aria-disabled={page === numPages}
-                  className={page === numPages ? "pointer-events-none opacity-50" : ""}
-                  href="#"
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
-      </>
+      </ScrollArea>
     );
   }
 
-  // Client list (show clients, with their unique clientId, and option to add more)
   const clientList = (
     <>
       <div className="mb-2 text-sm font-semibold">Project Contacts</div>
@@ -249,4 +240,3 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
 };
 
 export default ClientTabForm;
-
