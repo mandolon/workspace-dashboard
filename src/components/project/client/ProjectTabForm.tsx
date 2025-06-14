@@ -49,12 +49,14 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     onSave();
   };
 
+  // Move project address to TOP, remove Project ID
   const projectInformationFields = [
     {
-      label: 'Project ID',
-      value: formData.projectId,
-      readOnly: true,
-      span: 'full' as const,
+      label: 'Project Address',
+      value: formData.projectAddress,
+      onChange: (value: string) => handleInputChange('projectAddress', value),
+      type: 'input' as const,
+      placeholder: 'Enter project address...',
       onKeyDown: handleKeyDown
     },
     {
@@ -79,14 +81,6 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('projectNotes', value),
       type: 'textarea' as const,
       placeholder: 'Add any additional project notes...',
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'Project Address',
-      value: formData.projectAddress,
-      onChange: (value: string) => handleInputChange('projectAddress', value),
-      type: 'input' as const,
-      placeholder: 'Enter project address...',
       onKeyDown: handleKeyDown
     }
   ];
