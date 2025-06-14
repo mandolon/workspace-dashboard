@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useMemo, useCallback } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { X, Users } from 'lucide-react';
 import { TEAM_USERS } from "@/utils/teamUsers";
@@ -6,6 +7,7 @@ import { getCRMUser } from '@/utils/taskUserCRM';
 import { getInitials } from '@/utils/taskUtils';
 import { getAvatarColor } from '@/utils/avatarColors';
 import { format } from 'date-fns';
+import TaskDetailAssignees from './TaskDetailAssignees';
 
 interface TaskDetailFieldsProps {
   task: any;
@@ -109,3 +111,4 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
 };
 
 export default TaskDetailFields;
+
