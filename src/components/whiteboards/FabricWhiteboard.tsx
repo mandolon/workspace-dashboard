@@ -139,8 +139,10 @@ const FabricWhiteboard: React.FC = () => {
     reader.onload = function(event) {
       const dataUrl = event.target?.result as string;
       if (!dataUrl) return;
-      // Use fabric.Image.fromURL to add the image
-      FabricImage.fromURL(dataUrl, (img) => {
+      // Use Fabric v6 async fromURL signature
+      FabricImage.fromURL(dataUrl, {
+        crossOrigin: 'anonymous'
+      }).then((img) => {
         img.set({
           left: 150,
           top: 150,
@@ -151,7 +153,7 @@ const FabricWhiteboard: React.FC = () => {
         canvas.setActiveObject(img);
         canvas.renderAll();
         setActiveTool("select");
-      }, { crossOrigin: 'anonymous' });
+      });
     };
     reader.readAsDataURL(file);
     // Reset file input to allow uploading the same image again
