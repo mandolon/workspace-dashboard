@@ -122,7 +122,7 @@ const TaskRow = React.memo(({
         onContextMenuDelete={handleContextMenuDelete}
       >
         <TableRow key={task.id} className="hover:bg-accent/50 group">
-          <TableCell className="py-2 w-[47%]">
+          <TableCell className="py-2 w-[50%]">
             {rowContent}
           </TableCell>
           <TableCell className="py-2 w-[7%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
@@ -131,13 +131,13 @@ const TaskRow = React.memo(({
               taskId={task.taskId}
             />
           </TableCell>
-          <TableCell className="text-xs text-muted-foreground py-2 w-[12%]">
+          <TableCell className="text-xs text-muted-foreground py-2 w-[9%]">
             {formattedDate}
           </TableCell>
-          <TableCell className="py-2 w-[10%]">
+          <TableCell className="py-2 w-[8%]">
             <TaskRowCreatedBy createdBy={task.createdBy} />
           </TableCell>
-          <TableCell className="py-2 w-[18%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
+          <TableCell className="py-2 w-[14%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             {rowAssignees}
           </TableCell>
         </TableRow>
