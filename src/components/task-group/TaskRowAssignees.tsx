@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -64,7 +63,7 @@ const TaskRowAssignees = React.memo(({
     <div className="flex items-center -space-x-1">
       {task.assignee ? (
         <div className="relative group/avatar">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium ${assigneeColor}`}>
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-[2.2px] border-background ${assigneeColor}`}>
             {task.assignee.name}
           </div>
           <button
