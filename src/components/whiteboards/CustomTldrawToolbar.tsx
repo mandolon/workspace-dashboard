@@ -1,25 +1,24 @@
 
 import React from "react";
-import { 
-  Pen, Highlighter, RectangleHorizontal, Circle, 
-  Text as TextIcon, Eraser, Select, Line, 
-  CircleArrowUp, ZoomIn, ZoomOut 
+import { select, line } from "lucide-react";
+import {
+  Pen, Highlighter, RectangleHorizontal, Circle,
+  Text as TextIcon, Eraser, CircleArrowUp, ZoomIn, ZoomOut
 } from "lucide-react";
-import { useEditor, TLShapeTool } from "@tldraw/tldraw";
+import { useEditor } from "@tldraw/tldraw";
 import { cn } from "@/lib/utils";
 
-// Simple macOS style palette
 const TOOL_BUTTONS: Array<{
-  key: TLShapeTool | "eraser" | "select" | "zoom-in" | "zoom-out";
-  icon: React.ReactNode;
-  label: string;
+  key: string,
+  icon: React.ReactNode,
+  label: string,
 }> = [
-  { key: "select", icon: <Select />, label: "Select" },
+  { key: "select", icon: React.createElement(select), label: "Select" },
   { key: "zoom-in", icon: <ZoomIn />, label: "Zoom In" },
   { key: "zoom-out", icon: <ZoomOut />, label: "Zoom Out" },
   { key: "draw", icon: <Pen />, label: "Pen" },
   { key: "highlight", icon: <Highlighter />, label: "Highlighter" },
-  { key: "line", icon: <Line />, label: "Line" },
+  { key: "line", icon: React.createElement(line), label: "Line" },
   { key: "rectangle", icon: <RectangleHorizontal />, label: "Rectangle" },
   { key: "ellipse", icon: <Circle />, label: "Ellipse" },
   { key: "text", icon: <TextIcon />, label: "Text" },
@@ -50,8 +49,8 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setStyle({ color });
-      editor.setStyle({ size: stroke });
+      editor.setCurrentStyle({ color });
+      editor.setCurrentStyle({ size: stroke });
     }
   }, [color, stroke, editor]);
 
@@ -72,13 +71,13 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setStyle({ color: "#fff176", opacity: 0.32, size:6 });
+      editor.setCurrentStyle({ color: "#fff176", opacity: 0.32, size: 6 });
       setColor("#fff176");
       setStroke(6);
     }
     else {
       // Supported shape tools: draw, line, rectangle, ellipse, text
-      editor.setCurrentTool(tool as TLShapeTool);
+      editor.setCurrentTool(tool);
     }
   };
 
