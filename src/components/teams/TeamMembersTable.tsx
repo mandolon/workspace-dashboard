@@ -8,9 +8,18 @@ interface TeamMembersTableProps {
   roles: string[];
   onRoleChange: (memberId: string, newTitleRole: string) => void;
   isMobile?: boolean;
+  visibleCount?: number;
+  totalCount?: number; // for showing loader in infinite scroll
 }
 
-const TeamMembersTable = ({ members, roles, onRoleChange, isMobile }: TeamMembersTableProps) => {
+const TeamMembersTable = ({
+  members,
+  roles,
+  onRoleChange,
+  isMobile,
+  visibleCount,
+  totalCount,
+}: TeamMembersTableProps) => {
   if (isMobile) {
     // Mobile: stack list vertically
     return (
@@ -50,6 +59,7 @@ const TeamMembersTable = ({ members, roles, onRoleChange, isMobile }: TeamMember
           isMobile={false}
         />
       ))}
+      {/* Loader handled by parent (TeamsContent) if needed */}
     </div>
   );
 };
