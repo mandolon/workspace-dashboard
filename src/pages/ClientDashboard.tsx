@@ -11,9 +11,6 @@ import ProjectHealth from "@/components/client-dashboard/ProjectHealth";
 
 /**
  * Tweaked layout for better responsiveness & visual clarity.
- * - Info row uses flex-col on mobile, gap rebalanced
- * - Main area uses updated grid with adjusted gaps and stacking on smaller screens
- * - Container is full width on mobile, maxed for desktop
  */
 const activeProject = {
   name: "Adams - 1063 40th Street",
@@ -35,18 +32,14 @@ const ClientDashboard = () => {
             status={activeProject.status}
           />
 
-          {/* Info Row: Timeline, Project Health, Quick Actions */}
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <ProjectTimeline />
-            </div>
-            <div className="flex-1">
-              <ProjectHealth />
-            </div>
-            <div className="flex-1 flex items-end justify-end lg:items-start">
-              <QuickActions />
-            </div>
-          </div>
+          {/* Project Timeline */}
+          <ProjectTimeline />
+
+          {/* Project Health */}
+          <ProjectHealth />
+
+          {/* Quick Actions */}
+          <QuickActions />
 
           {/* Lower Section: Activity feed & documents; team */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
