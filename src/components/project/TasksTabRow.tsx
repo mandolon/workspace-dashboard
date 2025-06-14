@@ -39,8 +39,8 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
           <div className="col-span-2 flex items-center justify-center">
             {task.hasAttachment && (
               <span className="inline-flex items-center justify-center w-6 h-6">
-                <Paperclip 
-                  className="w-4 h-4 text-orange-600 dark:text-orange-300" 
+                <Paperclip
+                  className="w-4 h-4 text-orange-600 dark:text-white"
                   strokeWidth={2.2}
                   aria-label="Attachment"
                 />
