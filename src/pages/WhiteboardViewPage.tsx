@@ -1,12 +1,11 @@
-
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
-import ExcalidrawWhiteboard from "@/components/whiteboards/ExcalidrawWhiteboard";
+import FabricWhiteboard from "@/components/whiteboards/FabricWhiteboard";
 
 const WhiteboardViewPage = () => {
   return (
     <AppLayout>
-      <ExcalidrawWhiteboard />
+      <FabricWhiteboard />
     </AppLayout>
   );
 };

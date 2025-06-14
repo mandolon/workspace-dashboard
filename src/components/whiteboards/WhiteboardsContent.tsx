@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import WhiteboardsHeader from './WhiteboardsHeader';
 import WhiteboardsGrid from './WhiteboardsGrid';
 import WhiteboardCreateDialog from './WhiteboardCreateDialog';
 import { useUser } from "@/contexts/UserContext";
+import FabricWhiteboard from "./FabricWhiteboard";
 
 const WhiteboardsContent = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
