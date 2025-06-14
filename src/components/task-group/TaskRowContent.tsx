@@ -1,11 +1,10 @@
-
 import React, { useCallback } from 'react';
 import { Edit, Check, X, GripVertical } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Task } from '@/types/task';
 import { DraggableAttributes } from '@dnd-kit/core';
-import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useListeners';
+import type { SyntheticListenerMap } from '@dnd-kit/core';
 
 interface TaskRowContentProps {
   task: Task;
@@ -93,12 +92,16 @@ const TaskRowContent = React.memo(({
         {...dragAttributes} 
         {...dragListeners}
         onClick={handleDragHandleClick} // Stop propagation on drag handle click
+        role="button" // Added role for accessibility
+        tabIndex={0} // Added tabIndex for accessibility
+        aria-label="Drag task" // Added aria-label
       >
         <GripVertical className="w-4 h-4" strokeWidth="1.5" />
       </div>
       <TaskStatusIcon 
         status={task.status} 
         onClick={handleStatusClick}
+        isDashed={true} // Make icon dashed
       />
       <div className="flex-1 min-w-0">
         {isEditing ? (
@@ -114,21 +117,24 @@ const TaskRowContent = React.memo(({
             <button
               onClick={handleSaveEdit}
               className="p-0.5 text-green-600 hover:text-green-700"
+              aria-label="Save edit"
             >
               <Check className="w-3 h-3" strokeWidth="2" />
             </button>
             <button
               onClick={handleCancelEdit}
               className="p-0.5 text-red-600 hover:text-red-700"
+              aria-label="Cancel edit"
             >
               <X className="w-3 h-3" strokeWidth="2" />
             </button>
           </div>
         ) : (
           <div 
-            className="py-0.5"
+            className="py-0.5 leading-tight" // Adjusted leading for tighter spacing
             // onClick={handleTaskClick} // Moved onClick to parent div for broader click area when not editing
           >
+            {/* Project name above task title */}
             <div className="text-xs text-muted-foreground truncate">{task.project}</div>
             <div className="flex items-center gap-1 group/title">
               <div className="font-medium text-xs text-foreground truncate">
@@ -138,12 +144,14 @@ const TaskRowContent = React.memo(({
                 <button
                   onClick={handleEditClick}
                   className="p-0.5 hover:bg-accent rounded"
+                  aria-label="Edit task"
                 >
                   <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
                 </button>
                 <button
                   onClick={onDeleteClick}
                   className="p-0.5 hover:bg-accent rounded"
+                  aria-label="Delete task"
                 >
                   <X className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth="2" />
                 </button>
