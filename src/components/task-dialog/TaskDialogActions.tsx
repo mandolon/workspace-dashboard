@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -17,7 +18,7 @@ import {
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { TEAM_USERS } from '@/utils/teamUsers';
-import { TeamUser } from '@/types/user'; // FIXED: Import from correct path;
+import { TeamUser } from '@/types/user';
 
 interface TaskDialogActionsProps {
   assignedTo: string | TeamUser;
@@ -27,6 +28,9 @@ interface TaskDialogActionsProps {
   taskName: string;
   onCreateTask: (attachments?: File[]) => void;
 }
+
+// Only use TEAM members for assignment dropdown
+const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
 
 const TaskDialogActions = ({
   assignedTo,
@@ -63,9 +67,9 @@ const TaskDialogActions = ({
         <Select 
           value={selectValue}
           onValueChange={value => {
-            // Always set full TEAM_USERS object as assignee
-            const found = TEAM_USERS.find(u => u.id === value);
-            setAssignedTo(found ? { ...found } : TEAM_USERS[0]);
+            // Always set full teamAssignees object as assignee
+            const found = teamAssignees.find(u => u.id === value);
+            setAssignedTo(found ? { ...found } : teamAssignees[0]);
           }}
         >
           <SelectTrigger className="w-28 h-7 text-xs">
@@ -73,7 +77,7 @@ const TaskDialogActions = ({
             <SelectValue placeholder="Assignee" />
           </SelectTrigger>
           <SelectContent>
-            {TEAM_USERS.map(u => (
+            {teamAssignees.map(u => (
               <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
             ))}
           </SelectContent>
@@ -153,3 +157,4 @@ const TaskDialogActions = ({
 };
 
 export default TaskDialogActions;
+

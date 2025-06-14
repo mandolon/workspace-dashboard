@@ -3,13 +3,12 @@ import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Users, X } from 'lucide-react';
-// REMOVE: import { getRandomColor } from '@/utils/taskUtils';
 import { getInitials } from '@/utils/taskUtils';
 import { getAvatarColor } from '@/utils/avatarColors';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 type QuickAddTaskPerson = {
-  id: string;                    // Always include unique ID for project filtering!
+  id: string;
   name: string;
   avatar: string;
   fullName?: string;
@@ -24,7 +23,8 @@ interface QuickAddAssigneePopoverProps {
   setShowAssigneePopover: (show: boolean) => void;
 }
 
-const availableAssignees = TEAM_USERS;
+// Only use TEAM members for assignment dropdown
+const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
 
 const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
   assignee,
@@ -74,13 +74,13 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
         <PopoverContent align="end" className="p-1 w-44 bg-popover z-50 border border-border rounded shadow-xl">
           <div className="text-xs font-semibold pb-1 px-2 text-foreground">Assign to...</div>
           <div className="flex flex-col">
-            {availableAssignees.map(person => (
+            {teamAssignees.map(person => (
               <button
                 key={person.id}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setAssignee({ ...person }); // always passes full team user object including id
+                  setAssignee({ ...person });
                   setShowAssigneePopover(false);
                 }}
                 type="button"
@@ -99,3 +99,4 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
+

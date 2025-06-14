@@ -35,8 +35,8 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
   };
 
   // Assignee UI logic
-  const availableForAssignment = useMemo(() => {
-    return TEAM_USERS;
+  const teamAssignees = useMemo(() => {
+    return TEAM_USERS.filter(member => member.crmRole === 'Team');
   }, []);
 
   const handleAssign = useCallback((person: { name: string; avatar: string; fullName?: string }) => {
@@ -109,7 +109,7 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-popover z-50">
-                {availableForAssignment.map((person) => (
+                {teamAssignees.map((person) => (
                   <DropdownMenuItem
                     key={person.name}
                     onClick={() => handleAssign(person)}
@@ -140,3 +140,4 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
 };
 
 export default TaskDetailFields;
+
