@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -83,7 +82,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       {/* Task Input Row - Aligned with table columns */}
-      <div className="grid grid-cols-12 gap-4 items-center">
+      <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
         {/* Name column - made wider */}
         <div className="col-span-6 flex items-center gap-2 pl-4">
           <TaskStatusIcon status={defaultStatus} onClick={handleStatusIconClick} />
@@ -104,7 +103,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             />
 
             {showProjectDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-50">
                 <div className="p-2 border-b border-border">
                   <div className="relative">
                     <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
