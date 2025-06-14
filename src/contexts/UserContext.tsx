@@ -52,12 +52,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [originalUser, setOriginalUser] = useState<User | null>(defaultUser);
   const [currentUser, setCurrentUser] = useState<User | null>(defaultUser);
   const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const isImpersonating = !!impersonatedUser;
   const isAuthenticated = !!currentUser;
 
   // Login as a given userId
   const loginAs = useCallback((userId: string) => {
+    setLoading(true);
     const user = findUserById(userId);
     if (user) {
       setOriginalUser(user);
@@ -65,6 +67,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setImpersonatedUser(null);
       window.localStorage.setItem(LOCAL_STORAGE_KEY, userId);
     }
+    setLoading(false);
   }, []);
 
   // Logout: clear auth and session
@@ -114,11 +117,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCurrentUser(user);
       }
     }
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // only run on mount
+
+  // Only render children once loading is done
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></span>
+        <span className="ml-3">Loading authentication...</span>
+      </div>
+    );
+  }
 
   return (
     <UserContext.Provider value={{
-      currentUser: currentUser!,
+      currentUser,
       updateUserStatus,
       toggleNotifications,
       updateUser,

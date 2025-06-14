@@ -1,17 +1,32 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "@/contexts/UserContext";
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const { loginAs } = useUser();
+  const { loginAs, isAuthenticated } = useUser();
   const [selectedId, setSelectedId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If already authenticated (on a weird reload), redirect
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedId) {
+      setSubmitting(true);
       loginAs(selectedId);
+      setTimeout(() => {
+        setSubmitting(false);
+        navigate("/dashboard", { replace: true });
+      }, 200); // delay for effect
     }
   };
 
@@ -26,6 +41,7 @@ const LoginPage: React.FC = () => {
           <select
             id="user-select"
             value={selectedId}
+            disabled={submitting}
             onChange={e => setSelectedId(e.target.value)}
             className="rounded border border-input px-3 py-2"
           >
@@ -36,8 +52,8 @@ const LoginPage: React.FC = () => {
               </option>
             ))}
           </select>
-          <Button type="submit" disabled={!selectedId} className="mt-2 w-full">
-            Log In
+          <Button type="submit" disabled={!selectedId || submitting} className="mt-2 w-full">
+            {submitting ? "Logging in..." : "Log In"}
           </Button>
         </form>
       </div>
