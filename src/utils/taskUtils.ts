@@ -47,7 +47,7 @@ export const formatDate = (dateString: string) => {
 // Now consistently use 'avatarColor' for color property (for all available people)
 // 'avatar' property is for displaying initials only (for legacy fallback).
 export const availablePeople = [
-  { name: "MP", avatar: "MP", fullName: "Marcus Peterson", avatarColor: "bg-blue-500" },
+  { name: "MP", avatar: "MP", fullName: "Marcus Pierce", avatarColor: "bg-blue-500" },
   { name: "JD", avatar: "JD", fullName: "Jennifer Davis", avatarColor: "bg-green-500" },
   { name: "SK", avatar: "SK", fullName: "Sarah Kim", avatarColor: "bg-purple-500" },
   { name: "AL", avatar: "AL", fullName: "Alex Lopez", avatarColor: "bg-orange-500" },

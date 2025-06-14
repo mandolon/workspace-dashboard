@@ -20,7 +20,7 @@ export const TEAM_USERS: TeamUser[] = [
   {
     id: 't1',
     name: 'ALD',
-    fullName: 'Alice Liddell',
+    fullName: 'Alice Dale',
     role: 'Team Lead',
     avatar: 'bg-purple-500'
   },
@@ -34,7 +34,7 @@ export const TEAM_USERS: TeamUser[] = [
   {
     id: 't3',
     name: 'SS',
-    fullName: 'Stephanie Sharkey',
+    fullName: 'Stephanie Sharp',
     role: 'Team Lead',
     avatar: 'bg-blue-500'
   },
@@ -48,7 +48,7 @@ export const TEAM_USERS: TeamUser[] = [
   {
     id: 't5',
     name: 'RH',
-    fullName: 'Rhonda Rhodes',
+    fullName: 'Rhonda Hill',
     role: 'Team Lead',
     avatar: 'bg-pink-500'
   },
@@ -60,3 +60,4 @@ export const TEAM_USERS: TeamUser[] = [
     avatar: 'bg-gray-500'
   }
 ];
+
