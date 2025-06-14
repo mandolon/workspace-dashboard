@@ -9,6 +9,8 @@ import { useUser } from "@/contexts/UserContext";
 import PDFUploadField from "./PDFUploadField";
 import { supabase } from "@/integrations/supabase/client";
 
+const type = "pdf";
+
 const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -21,9 +23,6 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
 
   const handleCreate = async () => {
     if (!title.trim() || !projectId) return;
-
-    // Hardcoded for PDF for now (no whiteboard/sketch types yet)
-    const type = "pdf";
 
     // If type is "pdf", require a file and upload to supabase storage
     let pdf_url: string | undefined = undefined;
@@ -102,7 +101,12 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
             </label>
           </div>
           <div className="flex justify-end">
-            <Button variant="default" size="sm" onClick={handleCreate} disabled={!title.trim() || !projectId || (type === "pdf" && !pdfFile)}>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleCreate}
+              disabled={!title.trim() || !projectId || (type === "pdf" && !pdfFile)}
+            >
               Create
             </Button>
           </div>
