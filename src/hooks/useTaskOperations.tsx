@@ -135,14 +135,22 @@ export const useTaskOperations = () => {
     ) {
       return tasks;
     }
-    const myName = currentUser.name;
+
+    // Support both fullName and name for matching
+    const myNames = [currentUser.name, (currentUser as any).fullName].filter(Boolean);
     return tasks.filter(
       t =>
-        t.assignee?.fullName === myName
-        || t.assignee?.name === myName
-        || t.collaborators?.some(c =>
-             c.fullName === myName || c.name === myName)
-        || t.createdBy === myName
+        // Match on assignee's name or fullName
+        (t.assignee && (
+          myNames.includes(t.assignee?.fullName) ||
+          myNames.includes(t.assignee?.name)
+        ))
+        // Or if a collaborator matches
+        || (t.collaborators && t.collaborators.some(
+          c => myNames.includes(c.fullName) || myNames.includes(c.name)
+        ))
+        // Or createdBy matches
+        || myNames.includes(t.createdBy)
         || t.createdBy === currentUser.email // fallback just in case
     );
   }
