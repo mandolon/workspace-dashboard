@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import TaskStatusIcon from './TaskStatusIcon';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { createPortal } from 'react-dom';
+import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
@@ -50,6 +51,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   // Dropdown for file list display
   const [showFilesDropdown, setShowFilesDropdown] = useState(false);
   const filesDropdownButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Access the attachment context for syncing files after saving the task:
+  const { addAttachments } = useTaskAttachmentContext();
 
   // Handle smart positioning for the dropdown (ensure it is visible in the viewport)
   useEffect(() => {
@@ -121,6 +125,13 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     };
 
     onSave(newTask);
+
+    // Sync attachments to the AttachmentContext so other components (like TaskRowFiles) can see them:
+    if (attachedFiles.length > 0) {
+      // use id (number) as the key for now, since the row uses task.id to reference
+      addAttachments(String(newTask.id), attachedFiles, "ME");
+    }
+
     setTaskName('');
     setSelectedProject('');
     setAttachedFiles([]);
