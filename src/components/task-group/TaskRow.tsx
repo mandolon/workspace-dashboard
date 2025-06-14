@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -128,7 +127,6 @@ const TaskRow = React.memo(({
           <TableCell className="py-2 w-[8%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             <TaskRowFiles 
               hasAttachment={task.hasAttachment}
-              attachmentCount={task.attachments?.length ?? 0}
               taskId={task.taskId}
             />
           </TableCell>
