@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ThemeProvider } from "next-themes"; // Added
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +22,7 @@ import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
 import { TaskProvider } from "./contexts/TaskContext";
+import { TaskAttachmentProvider } from "./contexts/TaskAttachmentContext";
 
 const LocationLogger = () => {
   const location = useLocation();
@@ -34,7 +35,6 @@ const LocationLogger = () => {
 };
 
 const App = () => {
-  // Create QueryClient inside the component to ensure proper React context
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -52,26 +52,28 @@ const App = () => {
             <SidebarProvider>
               <ProjectDataProvider>
                 <BrowserRouter>
-                  <TaskProvider>
-                    <Toaster />
-                    <Sonner />
-                    <LocationLogger />
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/tasks" element={<TasksPage />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/project/:projectId" element={<ProjectPage />} />
-                      <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                      <Route path="/inbox" element={<InboxPage />} />
-                      <Route path="/teams" element={<TeamsPage />} />
-                      <Route path="/invoices" element={<InvoicePage />} />
-                      <Route path="/timesheets" element={<TimesheetsPage />} />
-                      <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                      <Route path="/settings/notifications" element={<SettingsPage />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </TaskProvider>
+                  <TaskAttachmentProvider>
+                    <TaskProvider>
+                      <Toaster />
+                      <Sonner />
+                      <LocationLogger />
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/tasks" element={<TasksPage />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/project/:projectId" element={<ProjectPage />} />
+                        <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                        <Route path="/inbox" element={<InboxPage />} />
+                        <Route path="/teams" element={<TeamsPage />} />
+                        <Route path="/invoices" element={<InvoicePage />} />
+                        <Route path="/timesheets" element={<TimesheetsPage />} />
+                        <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                        <Route path="/settings" element={<SettingsPage />} />
+                        <Route path="/settings/notifications" element={<SettingsPage />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </TaskProvider>
+                  </TaskAttachmentProvider>
                 </BrowserRouter>
               </ProjectDataProvider>
             </SidebarProvider>
@@ -83,3 +85,4 @@ const App = () => {
 };
 
 export default App;
+
