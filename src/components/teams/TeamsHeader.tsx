@@ -1,13 +1,8 @@
+
+// This header is now redundant and should not render anything. (Left as a stub to avoid import errors if used elsewhere.)
+
 import React from 'react';
 
-const TeamsHeader = () => {
-  return (
-    <div className="border-b border-border px-4 py-3">
-      <div className="flex items-center gap-3">
-        <h1 className="text-base font-semibold">Team Management</h1>
-      </div>
-    </div>
-  );
-};
+const TeamsHeader = () => null;
 
 export default TeamsHeader;

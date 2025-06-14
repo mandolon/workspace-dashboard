@@ -1,7 +1,8 @@
 
+// Ensure consistent spacing/title by using only PageSectionHeader
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import InvoiceHeader from '@/components/invoice/InvoiceHeader';
 import InvoiceTabs from '@/components/invoice/InvoiceTabs';
 import PageSectionHeader from '@/components/shared/PageSectionHeader';
 
@@ -15,7 +16,7 @@ const InvoicePage = () => {
   };
 
   const updateLineItem = (index: number, field: string, value: string) => {
-    const updatedItems = lineItems.map((item, i) => 
+    const updatedItems = lineItems.map((item, i) =>
       i === index ? { ...item, [field]: value } : item
     );
     setLineItems(updatedItems);
@@ -31,9 +32,9 @@ const InvoicePage = () => {
 
   return (
     <AppLayout>
-      <div className="bg-background p-0 h-full overflow-hidden flex flex-col">
+      <div className="flex flex-col h-full">
         <PageSectionHeader title="Invoices" />
-        <div className="h-full flex flex-col max-w-6xl mx-auto flex-1 pt-0">
+        <div className="flex-1 flex flex-col max-w-6xl mx-auto pt-0">
           <InvoiceTabs
             lineItems={lineItems}
             onAddLineItem={addLineItem}

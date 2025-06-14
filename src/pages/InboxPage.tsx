@@ -1,4 +1,6 @@
 
+// Make title/header 100% consistent with other pages
+
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import InboxContent from '@/components/inbox/InboxContent';
@@ -25,7 +27,7 @@ const InboxPage = () => {
 
   return (
     <AppLayout>
-      <div className="h-full flex flex-col">
+      <div className="flex flex-col h-full">
         <PageSectionHeader title="Inbox" />
         <div className="flex-1 flex flex-col">
           <InboxContent

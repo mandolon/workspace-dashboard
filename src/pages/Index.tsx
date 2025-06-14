@@ -1,4 +1,6 @@
 
+// Make all headers consistent and use identical layout, padding, and section-header component
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
@@ -15,9 +17,7 @@ const Index = () => {
     <AppLayout showHeader={true}>
       <div className="flex flex-col h-full">
         <PageSectionHeader title="Home" />
-        <div className="pt-0">
-          <DashboardPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
+        <DashboardPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex-1 overflow-hidden">
           {activeTab === 'overview' && (
             <div className="p-3">
