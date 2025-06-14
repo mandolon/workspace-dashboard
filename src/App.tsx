@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -32,82 +33,86 @@ import ImpersonationGate from "./components/ImpersonationGate";
 import LoginPage from "./components/auth/LoginPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
+// Move all providers OUTSIDE BrowserRouter to avoid context hook errors in route children!
+const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <QueryClientProvider client={new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          refetchOnWindowFocus: false,
+        },
+      },
+    })}>
+      <TooltipProvider>
+        <UserProvider>
+          <SidebarProvider>
+            <ProjectDataProvider>
+              <TaskAttachmentProvider>
+                <TaskProvider>
+                  {children}
+                </TaskProvider>
+              </TaskAttachmentProvider>
+            </ProjectDataProvider>
+          </SidebarProvider>
+        </UserProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
+);
+
 const LocationLogger = () => {
   const location = useLocation();
-  
   useEffect(() => {
     console.log('App component is rendering, current path:', location.pathname);
   }, [location]);
-  
   return null;
 };
 
 const App = () => {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-        refetchOnWindowFocus: false,
-      },
-    },
-  }));
-
+  // Any state/hooks must not be at this level, should be under the provider tree for correct context.
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <UserProvider>
-            <SidebarProvider>
-              <ProjectDataProvider>
-                <BrowserRouter>
-                  <TaskAttachmentProvider>
-                    <TaskProvider>
-                      <Toaster />
-                      <Sonner />
-                      <LocationLogger />
-                      <ImpersonationGate>
-                        <Routes>
-                          <Route path="/login" element={<LoginPage />} />
-                          <Route
-                            path="/*"
-                            element={
-                              <ProtectedRoute>
-                                <Routes>
-                                  <Route path="/" element={<Index />} />
-                                  <Route path="/tasks" element={<TasksPage />} />
-                                  <Route path="/dashboard" element={<Dashboard />} />
-                                  <Route path="/project/:projectId" element={<ProjectPage />} />
-                                  <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                                  <Route path="/inbox" element={<InboxPage />} />
-                                  <Route path="/teams" element={<TeamsPage />} />
-                                  <Route path="/client/account" element={<ClientAccountPage />} />
-                                  <Route path="/client/dashboard" element={<ClientDashboard />} />
-                                  <Route path="/invoices" element={<InvoicePage />} />
-                                  <Route path="/timesheets" element={<TimesheetsPage />} />
-                                  <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                                  <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
-                                  <Route path="/settings" element={<SettingsPage />} />
-                                  <Route path="/settings/notifications" element={<SettingsPage />} />
-                                  <Route path="/help" element={<HelpRedirector />} />
-                                  <Route path="/help/admin" element={<AdminHelpPage />} />
-                                  <Route path="/help/team" element={<TeamHelpPage />} />
-                                  <Route path="/help/client" element={<ClientHelpPage />} />
-                                  <Route path="*" element={<NotFound />} />
-                                </Routes>
-                              </ProtectedRoute>
-                            }
-                          />
-                        </Routes>
-                      </ImpersonationGate>
-                    </TaskProvider>
-                  </TaskAttachmentProvider>
-                </BrowserRouter>
-              </ProjectDataProvider>
-            </SidebarProvider>
-          </UserProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <AppProviders>
+      <BrowserRouter>
+        <Toaster />
+        <Sonner />
+        <LocationLogger />
+        <ImpersonationGate>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/project/:projectId" element={<ProjectPage />} />
+                    <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                    <Route path="/inbox" element={<InboxPage />} />
+                    <Route path="/teams" element={<TeamsPage />} />
+                    <Route path="/client/account" element={<ClientAccountPage />} />
+                    <Route path="/client/dashboard" element={<ClientDashboard />} />
+                    <Route path="/invoices" element={<InvoicePage />} />
+                    <Route path="/timesheets" element={<TimesheetsPage />} />
+                    <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                    <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/settings/notifications" element={<SettingsPage />} />
+                    <Route path="/help" element={<HelpRedirector />} />
+                    <Route path="/help/admin" element={<AdminHelpPage />} />
+                    <Route path="/help/team" element={<TeamHelpPage />} />
+                    <Route path="/help/client" element={<ClientHelpPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </ImpersonationGate>
+      </BrowserRouter>
+    </AppProviders>
   );
 };
 
