@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getInitials } from '@/utils/taskUtils';
 import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
+import TeamMemberContextMenu from './TeamMemberContextMenu';
 
 interface TeamMember {
   id: string;
@@ -39,46 +41,69 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
   // Helper for consistent color: now use getAvatarColor for all avatars
   const getColor = (member: any) => getAvatarColor(member);
 
+  // Placeholder handlers for demo (replace with real actions as needed)
+  const handleViewAsUser = () => {
+    console.log(`View as user: ${member.fullName ?? member.name}`);
+    // Implementation for "view as" could update context or route in CRM
+    // For demo, just log
+  };
+  const handleEditUser = () => {
+    console.log(`Edit user: ${member.fullName ?? member.name}`);
+  };
+  const handleRemoveUser = () => {
+    console.log(`Remove user from team: ${member.fullName ?? member.name}`);
+  };
+  const handleSendMessage = () => {
+    console.log(`Send message to user: ${member.fullName ?? member.name}`);
+  };
+
   return (
-    <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
-      <div className="col-span-3">
-        <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 ${getColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
-            {getInitials(member.fullName ?? member.name)}
+    <TeamMemberContextMenu
+      onViewAsUser={handleViewAsUser}
+      onEditUser={handleEditUser}
+      onRemoveUser={handleRemoveUser}
+      onSendMessage={handleSendMessage}
+    >
+      <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
+        <div className="col-span-3">
+          <div className="flex items-center gap-2">
+            <div className={`w-8 h-8 ${getColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
+              {getInitials(member.fullName ?? member.name)}
+            </div>
+            <span className="font-medium">{member.fullName ?? member.name}</span>
           </div>
-          <span className="font-medium">{member.fullName ?? member.name}</span>
+        </div>
+        <div className="col-span-3 flex items-center gap-1 text-muted-foreground">
+          <Mail className="w-3 h-3" />
+          <span className="text-blue-600 hover:underline">{member.email}</span>
+        </div>
+        <div className="col-span-2 flex items-center">
+          <Select value={member.role} onValueChange={(value) => onRoleChange(member.id, value)}>
+            <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {roles.map((role) => (
+                <SelectItem key={role} value={role} className="text-xs">
+                  {role}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="col-span-2 flex items-center text-muted-foreground">
+          <span>{member.lastActive}</span>
+        </div>
+        <div className="col-span-2 flex items-center justify-between">
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+            {member.status}
+          </span>
+          <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
+            <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+          </button>
         </div>
       </div>
-      <div className="col-span-3 flex items-center gap-1 text-muted-foreground">
-        <Mail className="w-3 h-3" />
-        <span className="text-blue-600 hover:underline">{member.email}</span>
-      </div>
-      <div className="col-span-2 flex items-center">
-        <Select value={member.role} onValueChange={(value) => onRoleChange(member.id, value)}>
-          <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {roles.map((role) => (
-              <SelectItem key={role} value={role} className="text-xs">
-                {role}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="col-span-2 flex items-center text-muted-foreground">
-        <span>{member.lastActive}</span>
-      </div>
-      <div className="col-span-2 flex items-center justify-between">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
-          {member.status}
-        </span>
-        <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
-          <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
-        </button>
-      </div>
-    </div>
+    </TeamMemberContextMenu>
   );
 };
 
