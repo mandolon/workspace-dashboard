@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';
@@ -8,10 +7,10 @@ import TaskRowAssignees from '../task-group/TaskRowAssignees';
 interface TaskDetailFieldsProps {
   task: any;
   currentUser: any;
-  assignPerson: (taskId: number | string, person: any) => void;
-  removeAssignee: (taskId: number | string) => void;
-  addCollaborator?: (taskId: number | string, person: any) => void;
-  removeCollaborator?: (taskId: number | string, collaboratorIndex: number) => void;
+  assignPerson: (taskId: string, person: any) => void;
+  removeAssignee: (taskId: string) => void;
+  addCollaborator?: (taskId: string, person: any) => void;
+  removeCollaborator?: (taskId: string, collaboratorIndex: number) => void;
 }
 
 const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
@@ -38,22 +37,22 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
     return createdBy;
   };
 
-  // These handlers match TaskRowAssignees' expected signatures
-  const handleRemoveAssignee = useCallback((taskId: number, e: React.MouseEvent) => {
+  // These handlers now match the expected (taskId: string, ...) signature
+  const handleRemoveAssignee = useCallback((taskId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     removeAssignee(taskId);
   }, [removeAssignee]);
 
-  const handleRemoveCollaborator = useCallback((taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
+  const handleRemoveCollaborator = useCallback((taskId: string, collaboratorIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (removeCollaborator) removeCollaborator(taskId, collaboratorIndex);
   }, [removeCollaborator]);
 
-  const handleAssignPerson = useCallback((taskId: number, person: any) => {
+  const handleAssignPerson = useCallback((taskId: string, person: any) => {
     assignPerson(taskId, person);
   }, [assignPerson]);
 
-  const handleAddCollaborator = useCallback((taskId: number, person: any) => {
+  const handleAddCollaborator = useCallback((taskId: string, person: any) => {
     if (addCollaborator) addCollaborator(taskId, person);
   }, [addCollaborator]);
 
@@ -97,4 +96,3 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
 };
 
 export default TaskDetailFields;
-
