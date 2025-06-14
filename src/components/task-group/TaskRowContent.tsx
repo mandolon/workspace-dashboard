@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { Edit, Check, X } from 'lucide-react';
+import { Edit, Check, X, GripVertical } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Task } from '@/types/task';
@@ -70,9 +70,12 @@ const TaskRowContent = React.memo(({
 
   return (
     <div 
-      className="flex items-center gap-2 cursor-pointer pl-4" 
+      className="flex items-center gap-2 cursor-pointer py-1" 
       onClick={handleTaskClick}
     >
+      <div className="text-muted-foreground hover:text-foreground cursor-move">
+        <GripVertical className="w-4 h-4" strokeWidth="2" />
+      </div>
       <TaskStatusIcon 
         status={task.status} 
         onClick={handleStatusClick}
@@ -104,10 +107,11 @@ const TaskRowContent = React.memo(({
         ) : (
           <div>
             <div className="flex items-center gap-1 group/title">
-              <div className="font-medium text-xs">
-                {task.title}
+              <div className="flex flex-col">
+                <div className="text-xs text-muted-foreground mb-0.5">{task.project}</div>
+                <div className="font-medium text-sm text-foreground">{task.title}</div>
               </div>
-              <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100">
+              <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100 ml-auto">
                 <button
                   onClick={handleEditClick}
                   className="p-0.5 hover:bg-accent rounded transition-opacity"
@@ -122,7 +126,6 @@ const TaskRowContent = React.memo(({
                 </button>
               </div>
             </div>
-            <div className="text-xs text-muted-foreground">{task.project}</div>
           </div>
         )}
       </div>

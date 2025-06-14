@@ -36,8 +36,8 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
     if (status === 'redline') {
       return (
         <div className={cn(
-          "w-4 h-4 border-2 border-red-500 rounded-full cursor-pointer hover:bg-red-50 transition-all duration-200",
-          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500"
+          "w-4 h-4 border-2 border-dashed border-red-500 rounded-full cursor-pointer hover:bg-red-50 transition-all duration-200",
+          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500 border-solid"
         )}>
           {isAnimating && (
             <div className="w-full h-full flex items-center justify-center">
@@ -51,8 +51,8 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
     if (status === 'progress') {
       return (
         <div className={cn(
-          "w-4 h-4 border-2 border-blue-500 rounded-full cursor-pointer hover:bg-blue-50 transition-all duration-200",
-          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500"
+          "w-4 h-4 border-2 border-dashed border-blue-500 rounded-full cursor-pointer hover:bg-blue-50 transition-all duration-200",
+          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500 border-solid"
         )}>
           {isAnimating && (
             <div className="w-full h-full flex items-center justify-center">
@@ -64,7 +64,7 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
     }
 
     return (
-      <div className="w-4 h-4 border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-50 transition-all duration-200" />
+      <div className="w-4 h-4 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:bg-gray-50 transition-all duration-200" />
     );
   };
 
