@@ -2,7 +2,7 @@
 import React from "react";
 import { 
   Brush, 
-  Rectangle, 
+  RectangleHorizontal,  // Fixed import
   Circle as CircleIcon, 
   Text as TextIcon, 
   Save, 
@@ -45,7 +45,7 @@ const toolList: {
   {
     key: "rectangle",
     label: "Rectangle",
-    icon: <Rectangle />,
+    icon: <RectangleHorizontal />,    // Updated to match import
   },
   {
     key: "circle",
