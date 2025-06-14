@@ -1,4 +1,3 @@
-
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup } from '@/types/task';
@@ -57,6 +56,22 @@ export const useTaskBoard = () => {
   const handleCreateTask = useCallback(
     async (newTask: any) => {
       const taskId = newTask.taskId ?? generateTaskId();
+      // Optimistically add to UI
+      setTasks(prev => [
+        {
+          ...newTask,
+          taskId,
+          id: Math.random(), // Temporary optimistic ID (will be replaced by real-time update)
+          status: newTask.status || "progress",
+          archived: false,
+          deletedAt: null,
+          deletedBy: null,
+          createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+          hasAttachment: false,
+          collaborators: [],
+        },
+        ...prev,
+      ]);
       await insertTask({
         ...newTask,
         taskId,
@@ -64,12 +79,28 @@ export const useTaskBoard = () => {
       });
       setIsTaskDialogOpen(false); // Close dialog after creating a task
     },
-    [currentUser]
+    [currentUser, setTasks]
   );
 
   const handleQuickAddSave = useCallback(
     async (taskData: any) => {
       const taskId = taskData.taskId ?? generateTaskId();
+      // Optimistically add to UI
+      setTasks(prev => [
+        {
+          ...taskData,
+          taskId,
+          id: Math.random(),
+          status: taskData.status || "progress",
+          archived: false,
+          deletedAt: null,
+          deletedBy: null,
+          createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+          hasAttachment: false,
+          collaborators: [],
+        },
+        ...prev,
+      ]);
       await insertTask({
         ...taskData,
         taskId,
@@ -77,7 +108,7 @@ export const useTaskBoard = () => {
       });
       setShowQuickAdd(null); // Close quick add after save
     },
-    [currentUser]
+    [currentUser, setTasks]
   );
 
   const handleTaskClick = (task: Task) => {
