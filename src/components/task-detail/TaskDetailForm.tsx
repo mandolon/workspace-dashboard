@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
@@ -6,7 +5,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task'; 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { getRandomColor, availablePeople } from '@/utils/taskUtils';
+import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
 import { X, UserPlus } from 'lucide-react';
 
 interface TaskDetailFormProps {
@@ -142,11 +141,11 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             {task.assignee ? (
               <div className="flex items-center gap-1 relative min-h-[24px]">
                 <div className="relative group/avatar w-6 h-6">
-                  {/* AVATAR CIRCLE ONLY, NO initials/text */}
+                  {/* AVATAR CIRCLE WITH INITIALS */}
                   <div
-                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name)}`}
+                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name)} text-white font-medium text-xs`}
                   >
-                    {/* No initials or name */}
+                    {getInitials(task.assignee.name)}
                   </div>
                   {/* Small red X in the top-left */}
                   <button
@@ -160,7 +159,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                     <X className="w-2 h-2" strokeWidth="2" />
                   </button>
                 </div>
-                {/* Optionally, you could show name as text next to avatar, but per request we will NOT show name here */}
+                {/* No name next to avatar */}
               </div>
             ) : (
               <DropdownMenu>
