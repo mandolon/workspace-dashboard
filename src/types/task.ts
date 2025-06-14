@@ -1,9 +1,10 @@
 
 export interface TaskUser {
+  id?: string;                  // Can be used for unique user identification (optional for backward compatibility)
   name: string;
-  avatar: string;              // Can be used for legacy avatar data (letters or image, fallback)
+  avatar: string;               // Can be used for legacy avatar data (letters or image, fallback)
   fullName?: string;
-  avatarColor?: string;        // Added: allows passing avatarColor property as in user settings
+  avatarColor?: string;         // Allows passing avatarColor property as in user settings
 }
 
 export interface Task {
