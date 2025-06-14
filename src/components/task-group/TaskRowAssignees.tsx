@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
@@ -28,12 +29,14 @@ const TaskRowAssignees = ({
   const assignee = getCRMUser(task.assignee);
   const collaborators = (task.collaborators || []).map(getCRMUser);
 
-  // No more getColor (was: useRandomColor), use new avatar color logic
+  // Only TEAM members in availablePeople
   const assignedIds = [
     ...(assignee ? [assignee.name] : []),
     ...(collaborators?.map((c: any) => c?.name) || [])
   ];
-  const availablePeople = TEAM_USERS.filter(u => !assignedIds.includes(u.name));
+  const availablePeople = TEAM_USERS
+    .filter(u => u.crmRole === 'Team')
+    .filter(u => !assignedIds.includes(u.name));
 
   const handleAdd = (person: any) => {
     if (!assignee) {
