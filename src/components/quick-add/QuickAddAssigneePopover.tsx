@@ -1,0 +1,98 @@
+
+import React from 'react';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { Users, X } from 'lucide-react';
+import { getRandomColor } from '@/utils/taskUtils';
+import { TEAM_USERS } from '@/utils/teamUsers';
+
+type QuickAddTaskPerson = {
+  name: string;
+  avatar: string;
+  fullName?: string;
+  avatarColor?: string;
+};
+
+interface QuickAddAssigneePopoverProps {
+  assignee: QuickAddTaskPerson | null;
+  setAssignee: (assignee: QuickAddTaskPerson | null) => void;
+  showAssigneePopover: boolean;
+  setShowAssigneePopover: (show: boolean) => void;
+}
+
+const availableAssignees: QuickAddTaskPerson[] = TEAM_USERS.map(member => ({
+  name: member.name,
+  avatar: member.avatar,
+  fullName: member.fullName,
+  avatarColor: member.avatar,
+}));
+
+const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
+  assignee,
+  setAssignee,
+  showAssigneePopover,
+  setShowAssigneePopover
+}) => {
+  return (
+    <div className="relative z-10 flex items-center">
+      <Popover open={showAssigneePopover} onOpenChange={setShowAssigneePopover}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded bg-background transition-colors"
+            type="button"
+            aria-label={assignee ? `Assigned to ${assignee.fullName || assignee.name}` : "Assign user"}
+            data-testid="assign-button"
+          >
+            {assignee ? (
+              <>
+                <div
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${assignee.avatarColor ? assignee.avatarColor : getRandomColor(assignee.name)}`}
+                >
+                  {assignee.name}
+                </div>
+                <span className="max-w-[64px] truncate">{assignee.fullName || assignee.name}</span>
+                <button
+                  type="button"
+                  className="ml-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
+                  style={{ lineHeight: 1, fontSize: 13 }}
+                  onClick={e => { e.stopPropagation(); setAssignee(null); }}
+                  tabIndex={-1}
+                  title="Clear assignee"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </>
+            ) : (
+              <>
+                <Users className="w-3 h-3" />
+                <span>Assign</span>
+              </>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="end" className="p-1 w-44 bg-popover z-50 border border-border rounded shadow-xl">
+          <div className="text-xs font-semibold pb-1 px-2 text-foreground">Assign to...</div>
+          <div className="flex flex-col">
+            {availableAssignees.map(person => (
+              <button
+                key={person.name}
+                className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
+                onClick={() => { setAssignee(person); setShowAssigneePopover(false); }}
+                type="button"
+              >
+                <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${person.avatarColor ? person.avatarColor : getRandomColor(person.name)}`}>
+                  {person.name}
+                </div>
+                <span>{person.fullName || person.name}</span>
+              </button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
+
+export default QuickAddAssigneePopover;
