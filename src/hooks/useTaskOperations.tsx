@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Task } from '@/types/task';
-import { getTasksByStatus, addTask, updateTask, softDeleteTask, restoreTask } from '@/data/taskData';
+import { getTasksByStatus, addTask, updateTask, softDeleteTask, restoreTask, getAllTasksRaw } from '@/data/taskData';
 import { Undo } from 'lucide-react';
+import { useUser } from '@/contexts/UserContext';
 
 export const useTaskOperations = () => {
   const navigate = useNavigate();
   const { toast, dismiss } = useToast();
-  
+  const { currentUser } = useUser();
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -32,9 +33,9 @@ export const useTaskOperations = () => {
 
   const updateTaskById = useCallback((taskId: number, updates: Partial<Task>) => {
     const updatedTask = updateTask(taskId, updates);
-    
+
     if (updatedTask) {
-      setCustomTasks(prev => 
+      setCustomTasks(prev =>
         prev.map(task => task.id === taskId ? { ...task, ...updates } : task)
       );
       triggerRefresh();
@@ -108,7 +109,7 @@ export const useTaskOperations = () => {
 
   const archiveTask = useCallback((taskId: number) => {
     const taskToArchive = customTasks.find(task => task.id === taskId);
-    
+
     if (taskToArchive) {
       setArchivedTasks(prev => [...prev, { ...taskToArchive, archived: true }]);
       setCustomTasks(prev => prev.filter(task => task.id !== taskId));
@@ -120,24 +121,43 @@ export const useTaskOperations = () => {
     navigate(`/task/${task.taskId}`);
   }, [navigate]);
 
-  // Memoize expensive operations
+  // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created
+  function filterTasksForUser(tasks: Task[]) {
+    if (
+      currentUser.fullName === "Armando Lopez"
+      || currentUser.name === "AL"
+      || currentUser.email === "armando@company.com"
+    ) {
+      return tasks;
+    }
+    const myName = currentUser.fullName || currentUser.name;
+    return tasks.filter(
+      t =>
+        t.assignee?.fullName === currentUser.fullName
+        || t.assignee?.name === currentUser.name
+        || t.collaborators?.some(c =>
+             c.fullName === currentUser.fullName || c.name === currentUser.name)
+        || t.createdBy === currentUser.name
+        || t.createdBy === currentUser.fullName
+        || t.createdBy === currentUser.email // fallback just in case
+    );
+  }
+
   const getTasksByStatusFromContext = useCallback((status: string) => {
+    // Centralized tasks (backend), plus customTasks (new/edited ones)
     const centralizedTasks = getTasksByStatus(status).filter(task => !task.deletedAt);
     const customTasksFiltered = customTasks.filter(task => task.status === status && !task.archived && !task.deletedAt);
-    
-    return [...centralizedTasks, ...customTasksFiltered];
-  }, [customTasks]);
+    const combined = [...centralizedTasks, ...customTasksFiltered];
+    return filterTasksForUser(combined);
+  }, [customTasks, currentUser]);
 
   const getAllTasks = useMemo(() => {
-    const allCentralizedTasks = getTasksByStatus('redline')
-      .concat(getTasksByStatus('progress'))
-      .concat(getTasksByStatus('completed'))
-      .filter(task => !task.deletedAt);
-    
+    // Use a backend utility to get all, then filter for user
+    const allCentralizedTasks = getAllTasksRaw().filter(task => !task.deletedAt);
     const allCustomTasks = customTasks.filter(task => !task.archived && !task.deletedAt);
-    
-    return [...allCentralizedTasks, ...allCustomTasks];
-  }, [customTasks, refreshTrigger]);
+    const all = [...allCentralizedTasks, ...allCustomTasks];
+    return filterTasksForUser(all);
+  }, [customTasks, refreshTrigger, currentUser]);
 
   return {
     customTasks,

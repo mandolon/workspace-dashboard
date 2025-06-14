@@ -94,6 +94,11 @@ export const allTasks: Task[] = [
   }
 ];
 
+// Helper function: get ALL tasks, regardless of status
+export const getAllTasksRaw = (): Task[] => {
+  return getTasksWithProjectNames();
+};
+
 // Helper function to get tasks with populated project display names
 export const getTasksWithProjectNames = (): Task[] => {
   return allTasks.map(task => ({
