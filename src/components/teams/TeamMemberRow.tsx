@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -71,21 +70,24 @@ const TeamMemberRow = ({ member, roles, onRoleChange, isMobile }: TeamMemberRowP
             <Mail className="w-3 h-3" />
             <span className="text-blue-600 break-all">{member.email}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-muted-foreground">Role:</span>
-            <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
-              <SelectTrigger className="h-7 text-xs border border-border bg-accent/30 px-2 py-1 rounded shadow-none">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role} value={role} className="text-xs">
-                    {role}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Only show Role selection if NOT a client */}
+          {member.crmRole !== 'Client' && (
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground">Role:</span>
+              <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
+                <SelectTrigger className="h-7 text-xs border border-border bg-accent/30 px-2 py-1 rounded shadow-none">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((role) => (
+                    <SelectItem key={role} value={role} className="text-xs">
+                      {role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="flex justify-between text-xs">
             <div>
               <span className="text-muted-foreground">Last Active: </span>
@@ -121,21 +123,25 @@ const TeamMemberRow = ({ member, roles, onRoleChange, isMobile }: TeamMemberRowP
           <Mail className="w-3 h-3" />
           <span className="text-blue-600 hover:underline">{member.email}</span>
         </div>
-        <div className="col-span-2 flex flex-col">
-          <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
-            <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {roles.map((role) => (
-                <SelectItem key={role} value={role} className="text-xs">
-                  {role}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="col-span-2 flex items-center text-muted-foreground">
+        {/* Only show Title Role column if member is NOT a client */}
+        {member.crmRole !== 'Client' && (
+          <div className="col-span-2 flex flex-col">
+            <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
+              <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role} value={role} className="text-xs">
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        {/* Adjust the spans to keep the grid lining up */}
+        <div className={member.crmRole === 'Client' ? "col-span-3 flex items-center text-muted-foreground" : "col-span-2 flex items-center text-muted-foreground"}>
           <span>{member.lastActive}</span>
         </div>
         <div className="col-span-2 flex items-center justify-between">

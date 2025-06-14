@@ -28,14 +28,17 @@ const TeamMembersTable = ({ members, roles, onRoleChange, isMobile }: TeamMember
     );
   }
 
+  // Determine if all members are clients
+  const allClients = members.every(member => member.crmRole === 'Client');
+
   // Desktop: Use table header/row layout
   return (
     <div className="space-y-0.5">
-      <div className="grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b">
+      <div className={`grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b`}>
         <div className="col-span-3">Name / CRM Role</div>
         <div className="col-span-3">Email</div>
-        <div className="col-span-2">Title Role</div>
-        <div className="col-span-2">Last Active</div>
+        {!allClients && <div className="col-span-2">Title Role</div>}
+        <div className={allClients ? "col-span-3" : "col-span-2"}>Last Active</div>
         <div className="col-span-2">Status</div>
       </div>
       {members.map((member) => (
@@ -52,3 +55,4 @@ const TeamMembersTable = ({ members, roles, onRoleChange, isMobile }: TeamMember
 };
 
 export default TeamMembersTable;
+
