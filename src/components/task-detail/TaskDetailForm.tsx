@@ -138,22 +138,29 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             Assigned to
           </label>
           <div className="text-xs">
-            {/* If assigned, show avatar+name and remove button, else show dropdown */}
+            {/* If assigned, show avatar and remove button, else show dropdown */}
             {task.assignee ? (
-              <div className="flex items-center gap-1">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-[2.2px] border-background ${getRandomColor(task.assignee.name)}`}>
-                  {task.assignee.name}
+              <div className="flex items-center gap-1 relative min-h-[24px]">
+                <div className="relative group/avatar w-6 h-6">
+                  {/* AVATAR CIRCLE ONLY, NO initials/text */}
+                  <div
+                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name)}`}
+                  >
+                    {/* No initials or name */}
+                  </div>
+                  {/* Small red X in the top-left */}
+                  <button
+                    className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
+                    onClick={handleRemove}
+                    title="Remove assignee"
+                    type="button"
+                    aria-label="Remove assignee"
+                    tabIndex={-1}
+                  >
+                    <X className="w-2 h-2" strokeWidth="2" />
+                  </button>
                 </div>
-                <span className="truncate">{task.assignee.name}</span>
-                <button 
-                  className="ml-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                  onClick={handleRemove}
-                  title="Remove assignee"
-                  type="button"
-                  aria-label="Remove assignee"
-                >
-                  <X className="w-3 h-3" strokeWidth="2" />
-                </button>
+                {/* Optionally, you could show name as text next to avatar, but per request we will NOT show name here */}
               </div>
             ) : (
               <DropdownMenu>
@@ -198,4 +205,3 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
-
