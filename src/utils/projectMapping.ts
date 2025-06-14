@@ -19,7 +19,8 @@ export const getProjectIdFromDisplayName = (displayName: string): string => {
   // Fallback: try to find by partial match in projectClientData
   const fallbackId = Object.keys(projectClientData).find(id => {
     const clientData = projectClientData[id];
-    const generatedDisplayName = `${clientData.lastName} - ${clientData.projectAddress}`;
+    const primaryClient = clientData.clients?.find(c => c.isPrimary) || clientData.clients?.[0];
+    const generatedDisplayName = `${primaryClient?.lastName ?? ''} - ${clientData.projectAddress}`;
     return generatedDisplayName === displayName;
   });
   
@@ -44,7 +45,8 @@ export const getDisplayNameFromProjectId = (projectId: string): string => {
   // Fallback to client data
   if (projectClientData[projectId]) {
     const clientData = projectClientData[projectId];
-    return `${clientData.lastName} - ${clientData.projectAddress}`;
+    const primaryClient = clientData.clients?.find(c => c.isPrimary) || clientData.clients?.[0];
+    return `${primaryClient?.lastName ?? ''} - ${clientData.projectAddress}`;
   }
   
   return projectId;

@@ -75,20 +75,25 @@ const CreateProjectDialog = ({ children }: CreateProjectDialogProps) => {
     // Generate project ID
     const projectId = convertDisplayNameToProjectId(displayName);
     const numericProjectId = getNextProjectId();
-    
+
     // Add to project status data
     projectStatusData.inProgress.push(displayName);
-    
-    // Add to client data
+
+    // Add to client data -- wrap primary client in 'clients' array
     projectClientData[projectId] = {
-      firstName: data.firstName,
-      lastName: data.lastName,
+      clients: [
+        {
+          clientId: `${data.firstName.toLowerCase()}-${data.lastName.toLowerCase()}`,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: "",
+          isPrimary: true
+        }
+      ],
       projectAddress: data.projectAddress,
       city: data.city,
       state: data.state,
-      projectId: numericProjectId,
-      secondaryFirstName: data.secondaryFirstName || '',
-      secondaryLastName: data.secondaryLastName || '',
+      projectId: numericProjectId
     };
 
     console.log('Created new project:', {

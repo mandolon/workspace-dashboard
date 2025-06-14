@@ -1,3 +1,4 @@
+
 import { ArchitectureRole } from '@/types/roles';
 import { getAllClients } from '@/data/projectClientData';
 
@@ -80,14 +81,14 @@ export const TEAM_USERS: TeamMember[] = [
   // ... add client rows dynamically below
   ...getAllClients().map(client => ({
     id: client.clientId,
-    name: (client.firstName[0] + (client.lastName[0] ?? "")).toUpperCase(),
+    name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
     fullName: `${client.firstName} ${client.lastName}`,
-    crmRole: 'Client',
-    titleRole: 'Client',
+    crmRole: 'Client' as const,
+    titleRole: 'Client' as ArchitectureRole,
     lastActive: '—',
-    status: 'Active',
+    status: 'Active' as const,
     email: client.email || 'unknown@email.com',
-    role: 'Client',
+    role: 'Client' as ArchitectureRole,
     avatar: 'bg-gray-500'
   }))
 ];

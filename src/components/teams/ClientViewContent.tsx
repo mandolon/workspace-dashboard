@@ -13,6 +13,7 @@ interface ClientViewContentProps {
 const ClientViewContent = ({ projectId }: ClientViewContentProps) => {
   // Use the provided projectId or fallback to the first available client
   const clientData = getClientData(projectId || fallbackProjectId);
+  const primaryClient = clientData.clients?.find(c => c.isPrimary) || clientData.clients?.[0];
 
   return (
     <div className="flex-1 overflow-y-auto p-6 max-w-xl mx-auto">
@@ -31,11 +32,11 @@ const ClientViewContent = ({ projectId }: ClientViewContentProps) => {
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mt-3">
             <div>
               <dt className="text-muted-foreground">Primary First Name</dt>
-              <dd className="font-medium text-foreground">{clientData.firstName}</dd>
+              <dd className="font-medium text-foreground">{primaryClient?.firstName ?? "-"}</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">Primary Last Name</dt>
-              <dd className="font-medium text-foreground">{clientData.lastName}</dd>
+              <dd className="font-medium text-foreground">{primaryClient?.lastName ?? "-"}</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">Project Address</dt>
@@ -49,18 +50,7 @@ const ClientViewContent = ({ projectId }: ClientViewContentProps) => {
               <dt className="text-muted-foreground">State</dt>
               <dd className="font-medium text-foreground">{clientData.state}</dd>
             </div>
-            {clientData.secondaryFirstName && (
-              <div>
-                <dt className="text-muted-foreground">Secondary First Name</dt>
-                <dd className="font-medium text-foreground">{clientData.secondaryFirstName}</dd>
-              </div>
-            )}
-            {clientData.secondaryLastName && (
-              <div>
-                <dt className="text-muted-foreground">Secondary Last Name</dt>
-                <dd className="font-medium text-foreground">{clientData.secondaryLastName}</dd>
-              </div>
-            )}
+            {/* For now, secondary info omitted since it is not in array of clients */}
             <div>
               <dt className="text-muted-foreground">Project ID</dt>
               <dd className="font-medium text-foreground">{clientData.projectId}</dd>
