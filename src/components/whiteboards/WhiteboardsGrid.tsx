@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import WhiteboardCard from './WhiteboardCard';
 import { getVisibleWhiteboardsForUser } from "@/utils/whiteboardStore";
@@ -13,6 +14,8 @@ import {
 } from "@/components/ui/context-menu";
 import DeleteWhiteboardDialog from "./DeleteWhiteboardDialog";
 import { deleteWhiteboard } from "@/utils/whiteboardStore";
+import { deleteWhiteboardSupabase } from "@/utils/deleteWhiteboardSupabase"; // ADDED
+import { toast } from "@/components/ui/use-toast"; // ADDED
 
 // Helper
 function getProjectName(projectId: string) {
@@ -30,10 +33,25 @@ const WhiteboardsGrid = ({ viewMode }: { viewMode: 'grid' | 'list' }) => {
   const whiteboards = getVisibleWhiteboardsForUser(currentUser);
   const navigate = useNavigate();
 
-  const handleDelete = (id: string) => {
+  // Updated to delete from Supabase instead of local store
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteWhiteboardSupabase(id);
+      setDialog(null);
+      setRefresh(r => r + 1);
+      toast({
+        title: "Whiteboard deleted",
+        description: "The whiteboard has been removed.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error deleting whiteboard",
+        description: error?.message || "An error occurred while deleting.",
+        variant: "destructive",
+      });
+    }
+    // Optionally remove from local mock store as well
     deleteWhiteboard(id);
-    setDialog(null);
-    setRefresh(r => r + 1);
   };
 
   if (whiteboards.length === 0) return (
