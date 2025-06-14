@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Users } from 'lucide-react';
+import { Users, MapPin } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -16,7 +16,13 @@ const ProjectTab = () => {
     <div className="h-full flex flex-col">
       {/* Project Actions Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3">
+            <MapPin className="w-4 h-4 text-blue-700" />
+            <span className="text-sm font-semibold">
+              {clientData.projectAddress}
+            </span>
+          </div>
           {/* Right side - Agents and Actions */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
