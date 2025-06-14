@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -23,7 +24,6 @@ import ClientDashboard from "./pages/ClientDashboard";
 import AdminHelpPage from "./pages/AdminHelpPage";
 import TeamHelpPage from "./pages/TeamHelpPage";
 import ClientHelpPage from "./pages/ClientHelpPage";
-import WhiteboardPage from "./pages/WhiteboardPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -99,7 +99,6 @@ const App = () => {
                               <Route path="/help/admin" element={<AdminHelpPage />} />
                               <Route path="/help/team" element={<TeamHelpPage />} />
                               <Route path="/help/client" element={<ClientHelpPage />} />
-                              <Route path="/whiteboard/:whiteboardId" element={<WhiteboardPage />} />
                               <Route path="*" element={<NotFound />} />
                             </Routes>
                           </ProtectedRoute>
