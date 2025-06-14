@@ -6,7 +6,7 @@ import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task'; 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
-import { X, UserPlus } from 'lucide-react';
+import { X, UserPlus, Users } from 'lucide-react';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -137,7 +137,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             Assigned to
           </label>
           <div className="text-xs">
-            {/* If assigned, show avatar and remove button, else show dropdown */}
+            {/* If assigned, show avatar and remove button, else show circular "+" Users button */}
             {task.assignee ? (
               <div className="flex items-center gap-1 relative min-h-[24px]">
                 <div className="relative group/avatar w-6 h-6">
@@ -166,13 +166,14 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
+                    className="w-7 h-7 flex items-center justify-center rounded-full bg-muted hover:bg-accent border-none p-0 focus:outline-none transition-colors"
                     type="button"
+                    aria-label="Assign user"
                   >
-                    <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                    <Users className="w-4 h-4 text-muted-foreground" strokeWidth="2" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-40 bg-popover">
+                <DropdownMenuContent className="w-40 bg-popover z-50">
                   {availableForAssignment.map((person) => (
                     <DropdownMenuItem
                       key={person.name}
