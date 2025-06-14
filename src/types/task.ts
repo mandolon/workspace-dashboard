@@ -1,4 +1,11 @@
 
+export interface TaskUser {
+  name: string;
+  avatar: string;              // Can be used for legacy avatar data (letters or image, fallback)
+  fullName?: string;
+  avatarColor?: string;        // Added: allows passing avatarColor property as in user settings
+}
+
 export interface Task {
   id: number;
   taskId: string; // Human-readable task ID like T0001, T0002, etc.
@@ -8,9 +15,9 @@ export interface Task {
   estimatedCompletion: string;
   dateCreated: string;
   dueDate: string;
-  assignee: { name: string; avatar: string; fullName?: string } | null;
+  assignee: TaskUser | null;
   hasAttachment: boolean;
-  collaborators?: Array<{ name: string; avatar: string; fullName?: string }>;
+  collaborators?: TaskUser[];
   status: string;
   archived?: boolean;
   // New audit fields

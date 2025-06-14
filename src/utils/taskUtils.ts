@@ -3,7 +3,7 @@ export const getRandomColor = (name: string, userColor?: string) => {
   if (userColor) return userColor;
   const colors = [
     'bg-red-500',
-    'bg-blue-500', 
+    'bg-blue-500',
     'bg-green-500',
     'bg-yellow-500',
     'bg-purple-500',
@@ -44,10 +44,13 @@ export const formatDate = (dateString: string) => {
   }
 };
 
+// Now consistently use 'avatarColor' for color property (for all available people)
+// 'avatar' property is for displaying initials only (for legacy fallback).
 export const availablePeople = [
-  { name: "MP", avatar: "bg-blue-500", fullName: "Marcus Peterson" },
-  { name: "JD", avatar: "bg-green-500", fullName: "Jennifer Davis" },
-  { name: "SK", avatar: "bg-purple-500", fullName: "Sarah Kim" },
-  { name: "AL", avatar: "bg-orange-500", fullName: "Alex Lopez" },
-  { name: "RT", avatar: "bg-red-500", fullName: "Ryan Taylor" }
+  { name: "MP", avatar: "MP", fullName: "Marcus Peterson", avatarColor: "bg-blue-500" },
+  { name: "JD", avatar: "JD", fullName: "Jennifer Davis", avatarColor: "bg-green-500" },
+  { name: "SK", avatar: "SK", fullName: "Sarah Kim", avatarColor: "bg-purple-500" },
+  { name: "AL", avatar: "AL", fullName: "Alex Lopez", avatarColor: "bg-orange-500" },
+  { name: "RT", avatar: "RT", fullName: "Ryan Taylor", avatarColor: "bg-red-500" }
 ];
+
