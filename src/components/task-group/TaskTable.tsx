@@ -22,6 +22,10 @@ interface TaskTableProps {
   onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onTaskDeleted?: () => void;
+
+  // New: Optional filter callback props
+  onDateCreatedFilterClick?: (e: React.MouseEvent) => void;
+  onAssignedToFilterClick?: (e: React.MouseEvent) => void;
 }
 
 const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
@@ -40,7 +44,9 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onRemoveCollaborator,
   onAssignPerson,
   onAddCollaborator,
-  onTaskDeleted
+  onTaskDeleted,
+  onDateCreatedFilterClick,
+  onAssignedToFilterClick,
 }, ref) => {
   const memoizedTasks = React.useMemo(() => tasks, [tasks]);
 
@@ -55,26 +61,46 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%]">
               Files
             </TableHead>
-            {/* Date Created - with triangle */}
+            {/* Date Created - with functional filter triangle */}
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">
-              <div className="flex items-center gap-1 group relative w-fit select-none">
+              <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
-                <Triangle
-                  className="w-2 h-2 text-gray-400 fill-current opacity-0 group-hover:opacity-100 transition-opacity duration-150 rotate-180 ml-1 pointer-events-none"
-                  fill="currentColor"
+                <button
+                  type="button"
+                  className="ml-1 p-0 bg-transparent border-none rounded cursor-pointer opacity-0 group-hover/date:opacity-100 hover:opacity-100 transition-opacity duration-150 outline-none focus:ring-1 focus:ring-blue-300 focus:bg-blue-50 active:bg-blue-100"
+                  style={{ lineHeight: 0, display: 'flex', alignItems: 'center' }}
+                  onClick={onDateCreatedFilterClick}
                   aria-label="Filter by date"
-                />
+                  tabIndex={0}
+                >
+                  <Triangle
+                    className="w-2 h-2 text-gray-400 fill-current rotate-180 pointer-events-none"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  />
+                  <span className="sr-only">Filter by date created</span>
+                </button>
               </div>
             </TableHead>
-            {/* Assigned to - with triangle */}
+            {/* Assigned to - with functional filter triangle */}
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">
-              <div className="flex items-center gap-1 group relative w-fit select-none">
+              <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
-                <Triangle
-                  className="w-2 h-2 text-gray-400 fill-current opacity-0 group-hover:opacity-100 transition-opacity duration-150 rotate-180 ml-1 pointer-events-none"
-                  fill="currentColor"
+                <button
+                  type="button"
+                  className="ml-1 p-0 bg-transparent border-none rounded cursor-pointer opacity-0 group-hover/assigned:opacity-100 hover:opacity-100 transition-opacity duration-150 outline-none focus:ring-1 focus:ring-blue-300 focus:bg-blue-50 active:bg-blue-100"
+                  style={{ lineHeight: 0, display: 'flex', alignItems: 'center' }}
+                  onClick={onAssignedToFilterClick}
                   aria-label="Filter by assignee"
-                />
+                  tabIndex={0}
+                >
+                  <Triangle
+                    className="w-2 h-2 text-gray-400 fill-current rotate-180 pointer-events-none"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  />
+                  <span className="sr-only">Filter by assignee</span>
+                </button>
               </div>
             </TableHead>
           </TableRow>
