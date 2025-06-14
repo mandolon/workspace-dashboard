@@ -98,13 +98,15 @@ const TaskRow = React.memo(({
               onDeleteClick={handleDeleteClickInternal}
             />
           </TableCell>
-          <TableCell className="py-2 w-[8%]">
+          {/* Add hover to FILES cell */}
+          <TableCell className="py-2 w-[8%] transition-colors hover:bg-blue-50 cursor-pointer">
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
           </TableCell>
-          <TableCell className="py-2 w-[25%]">
+          {/* Add hover to ASSIGNED TO cell */}
+          <TableCell className="py-2 w-[25%] transition-colors hover:bg-blue-50 cursor-pointer">
             <TaskRowAssignees
               task={task}
               onRemoveAssignee={onRemoveAssignee}
