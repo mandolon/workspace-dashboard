@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Mail, Eye } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,6 +7,7 @@ import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 import { TeamMember } from '@/utils/teamUsers';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/contexts/UserContext';
 
 interface TeamMemberRowMobileProps {
   member: TeamMember;
@@ -31,10 +31,13 @@ const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
 
 const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles, onRoleChange, projectId }) => {
   const navigate = useNavigate();
+  const { impersonateAs, isImpersonating, impersonatedUser, currentUser } = useUser();
 
   // Handlers
   const handleViewAsUser = () => {
-    console.log(`View as user: ${member.fullName ?? member.name}`);
+    if (!isImpersonating || (impersonatedUser && impersonatedUser.id !== member.id)) {
+      impersonateAs(member.id);
+    }
   };
   const handleEditUser = () => {
     console.log(`Edit user: ${member.fullName ?? member.name}`);
@@ -127,4 +130,3 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
 };
 
 export default TeamMemberRowMobile;
-

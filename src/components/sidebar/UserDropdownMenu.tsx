@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell, BellOff, Settings, Keyboard, Download, HelpCircle, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +10,7 @@ import {
 import { User } from '@/types/user';
 import UserAvatar from './UserAvatar';
 import UserStatusMenu from './UserStatusMenu';
+import { useUser } from '@/contexts/UserContext';
 
 interface UserDropdownMenuProps {
   user: User;
@@ -20,6 +20,7 @@ interface UserDropdownMenuProps {
 
 const UserDropdownMenu = ({ user, onStatusChange, onToggleNotifications }: UserDropdownMenuProps) => {
   const navigate = useNavigate();
+  const { isImpersonating, exitImpersonation, impersonatedUser } = useUser();
 
   return (
     <DropdownMenuContent align="end" className="w-64">
@@ -49,6 +50,18 @@ const UserDropdownMenu = ({ user, onStatusChange, onToggleNotifications }: UserD
       </DropdownMenuItem>
       
       <DropdownMenuSeparator />
+      
+      {/* If impersonating, show Exit option */}
+      {isImpersonating &&
+        <DropdownMenuItem
+          onClick={() => {
+            exitImpersonation();
+          }}
+          className="text-red-600"
+        >
+          Exit impersonation
+        </DropdownMenuItem>
+      }
       
       {/* Navigation */}
       <DropdownMenuItem onClick={() => navigate('/settings')}>
