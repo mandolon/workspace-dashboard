@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Users, Search, Paperclip } from 'lucide-react';
+import { Users, Search, Paperclip, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -42,6 +42,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const projectDropdownAnchor = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<{top: number; left: number; width: number} | null>(null);
+
+  // FILE UPLOAD state and handling
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Handle smart positioning for the dropdown (ensure it is visible in the viewport)
   useEffect(() => {
@@ -93,6 +97,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     // Convert display name to project ID
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
 
+    // Attachments: For new/unsaved tasks, we'll store attachments as files, then they should be attached when the task is fully created
     const newTask = {
       id: Date.now(),
       title: taskName,
@@ -106,13 +111,15 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       }),
       dueDate: '—',
       assignee: { name: 'ME', avatar: 'bg-gray-500' },
-      hasAttachment: false,
+      hasAttachment: attachedFiles.length > 0,
+      attachments: attachedFiles,
       status: defaultStatus
     };
 
     onSave(newTask);
     setTaskName('');
     setSelectedProject('');
+    setAttachedFiles([]);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -196,6 +203,17 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     );
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length) {
+      setAttachedFiles(prev => [...prev, ...Array.from(e.target.files)]);
+      e.target.value = "";
+    }
+  };
+
+  const handleRemoveFile = (idx: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
@@ -236,12 +254,21 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
               onClick={(e) => {
                 e.stopPropagation();
-                // Handle file attachment
+                fileInputRef.current?.click();
               }}
+              title="Attach files"
             >
               <Paperclip className="w-3 h-3" />
             </Button>
-            
+            <input 
+              ref={fileInputRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={handleFileChange}
+              aria-label="Attach file(s)"
+            />
+
             <Button
               size="sm"
               variant="ghost"
@@ -250,6 +277,24 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               <Users className="w-3 h-3" />
             </Button>
           </div>
+
+          {/* Show attached files (inline chips) */}
+          {attachedFiles.length > 0 && (
+            <div className="flex gap-1 flex-wrap items-center max-w-[120px] mr-1">
+              {attachedFiles.map((file, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center gap-0.5 bg-muted px-2 py-0.5 rounded text-xs font-medium"
+                  title={file.name}
+                >
+                  {file.name}
+                  <button onClick={() => handleRemoveFile(idx)} className="ml-0.5 text-destructive" type="button" aria-label="Remove file">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Separator */}
           <Separator orientation="vertical" className="h-4" />

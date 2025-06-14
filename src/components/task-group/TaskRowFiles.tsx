@@ -1,27 +1,30 @@
 
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Paperclip } from 'lucide-react';
 
 interface TaskRowFilesProps {
   hasAttachment: boolean;
+  attachmentCount?: number;
+  onAddFileClick?: (e: React.MouseEvent) => void;
 }
 
-const TaskRowFiles = ({ hasAttachment }: TaskRowFilesProps) => {
+const TaskRowFiles = ({ hasAttachment, attachmentCount = 0, onAddFileClick }: TaskRowFilesProps) => {
   return (
     <div className="flex items-center gap-2">
       {hasAttachment && (
-        <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+        <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center relative">
+          <Paperclip className="w-4 h-4 text-gray-600" />
+          {attachmentCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1">{attachmentCount}</span>
+          )}
         </div>
       )}
       <button 
         className="p-1 hover:bg-accent rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
         style={{ minWidth: 28, minHeight: 28 }}
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
-          // Handle file attachment
+          onAddFileClick?.(e);
         }}
         aria-label="Add file"
       >

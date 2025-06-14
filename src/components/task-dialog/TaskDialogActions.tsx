@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Calendar, User, Paperclip } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +24,7 @@ interface TaskDialogActionsProps {
   dueDate: Date | undefined;
   setDueDate: (date: Date | undefined) => void;
   taskName: string;
-  onCreateTask: () => void;
+  onCreateTask: (attachments?: File[]) => void;
 }
 
 const TaskDialogActions = ({
@@ -35,6 +35,17 @@ const TaskDialogActions = ({
   taskName,
   onCreateTask
 }: TaskDialogActionsProps) => {
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length) {
+      setAttachedFiles(prev => [...prev, ...Array.from(e.target.files)]);
+      e.target.value = "";
+    }
+  };
+  const handleRemoveFile = (idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
+
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
@@ -74,14 +85,46 @@ const TaskDialogActions = ({
           </PopoverContent>
         </Popover>
 
-        <button className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground">
+        <Button
+          size="sm"
+          variant="ghost"
+          className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+          onClick={() => fileInputRef.current?.click()}
+          title="Attach file(s)"
+          type="button"
+        >
           <Paperclip className="w-3 h-3" />
-          <span>0</span>
-        </button>
-      </div>
+          <span className="">{attachedFiles.length}</span>
+        </Button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileChange}
+          aria-label="Attach file(s)"
+        />
 
+        {/* Inline file chips */}
+        {attachedFiles.length > 0 && (
+          <div className="flex gap-1 flex-wrap items-center max-w-[120px]">
+            {attachedFiles.map((file, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center gap-0.5 bg-muted px-2 py-0.5 rounded text-xs font-medium"
+                title={file.name}
+              >
+                {file.name}
+                <button onClick={() => handleRemoveFile(idx)} className="ml-0.5 text-destructive" type="button" aria-label="Remove file">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
       <Button 
-        onClick={onCreateTask}
+        onClick={() => onCreateTask(attachedFiles)}
         disabled={!taskName.trim()}
         className="h-7 px-4 text-xs bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
       >
