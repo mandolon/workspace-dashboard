@@ -13,6 +13,23 @@ interface ExcalidrawData {
   files?: Record<string, any>;
 }
 
+const DEFAULT_ZOOM = 1;
+
+function sanitizeAppState(appState: any): any {
+  const safe = { ...appState };
+  if (typeof safe.zoom !== "number" || safe.zoom < 0.1 || safe.zoom > 4) {
+    safe.zoom = DEFAULT_ZOOM;
+  }
+  // Optionally: Force sensible width/height if needed
+  if (typeof safe.width !== "number" || safe.width <= 0) {
+    safe.width = 1920;
+  }
+  if (typeof safe.height !== "number" || safe.height <= 0) {
+    safe.height = 1080;
+  }
+  return safe;
+}
+
 const ExcalidrawWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
@@ -42,7 +59,14 @@ const ExcalidrawWhiteboard: React.FC = () => {
         setLoading(false);
         return;
       }
-      const safeData = data.excalidraw_data || { elements: [], appState: { viewBackgroundColor: "#fff" } };
+      let safeData = data.excalidraw_data || { elements: [], appState: { viewBackgroundColor: "#fff" } };
+      // Sanitize appState zoom to avoid blown-up UI
+      if (safeData.appState) {
+        safeData = {
+          ...safeData,
+          appState: sanitizeAppState(safeData.appState),
+        };
+      }
       setExcalidrawData(safeData);
       setScene(safeData);
       setLoading(false);
@@ -64,10 +88,11 @@ const ExcalidrawWhiteboard: React.FC = () => {
   // Save handler
   const handleSave = async () => {
     const { elements, appState, files } = scene;
+    // Ensure we don't save a weird zoom value
+    const cleanedAppState = sanitizeAppState(appState ?? {});
     const newData = {
-      // elements will already be readonly, that's fine to send to backend/Supabase
       elements: elements,
-      appState,
+      appState: cleanedAppState,
       files: files ?? {},
     };
     const { error } = await supabase
