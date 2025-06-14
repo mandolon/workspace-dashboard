@@ -20,20 +20,22 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const [searchTerm, setSearchTerm] = useState('');
 
   const availableProjects = getAvailableProjects();
-  
+
   const filteredProjects = availableProjects.filter(project =>
     project.displayName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const canSave = !!taskName.trim() && !!selectedProject;
+
   const handleSave = () => {
-    if (!taskName.trim()) return;
-    
+    if (!canSave) return;
+
     console.log('Quick add saving with selected project:', selectedProject);
-    
+
     // Convert display name to project ID
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
     console.log('Quick add converted to project ID:', projectId);
-    
+
     const newTask = {
       id: Date.now(),
       title: taskName,
@@ -60,7 +62,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSave();
+      if (canSave) {
+        handleSave();
+      }
     }
   };
 
@@ -98,7 +102,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:font-medium placeholder:text-xs placeholder:text-muted-foreground"
               autoFocus
             />
-            
+
             {showProjectDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
                 <div className="p-2 border-b border-border">
@@ -174,7 +178,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               size="sm"
               onClick={handleSave}
               className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
-              disabled={!taskName.trim()}
+              disabled={!canSave}
             >
               Save
             </Button>
