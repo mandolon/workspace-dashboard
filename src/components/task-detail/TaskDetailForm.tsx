@@ -1,12 +1,13 @@
+
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
-import { Task } from '@/types/task';
+import { Task } from '@/types/task'; // <-- Ensure Task type is imported
 
 interface TaskDetailFormProps {
-  task: Task;
+  task: Task; // <-- Use full Task type here
 }
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
@@ -141,3 +142,4 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
+
