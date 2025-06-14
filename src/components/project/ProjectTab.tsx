@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Users, MapPin, IdCard } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -11,6 +12,9 @@ const ProjectTab = () => {
   const clientData = getClientData(projectId);
   const form = ProjectTabForm({ onSave: () => {} });
 
+  // Full address string (e.g., 123 Main St, Sacramento, CA)
+  const fullAddress = `${form.formData.projectAddress}, ${form.formData.city}, ${form.formData.state}`;
+
   return (
     <div className="h-full flex flex-col">
       {/* Project Actions Header */}
@@ -18,7 +22,7 @@ const ProjectTab = () => {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <MapPin className="w-4 h-4 text-blue-700" />
-            <span className="text-sm font-semibold">{form.formData.projectAddress}</span>
+            <span className="text-sm font-semibold">{fullAddress}</span>
             <span className="flex items-center gap-1 text-xs text-gray-500 ml-2">
               <IdCard className="w-4 h-4 text-gray-400" />
               <span>{clientData.projectId}</span>
@@ -61,3 +65,4 @@ const ProjectTab = () => {
 };
 
 export default ProjectTab;
+
