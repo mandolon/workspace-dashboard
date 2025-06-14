@@ -24,9 +24,7 @@ interface TaskDetailActivityProps {
 const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const { currentUser } = useUser();
   const [messages, setMessages] = useState<ActivityMessage[]>([]);
-  const [inputHeight, setInputHeight] = useState(0);
   const messageListRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const storageKey = taskId ? `lovable-task-activity-${taskId}` : null;
 
@@ -93,17 +91,6 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
   }, [messages]);
-
-  // Automatically adjust textarea height like ChatGPT
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 160; // pixels, for up to 8 rows
-      textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + "px";
-      setInputHeight(Math.min(scrollHeight, maxHeight));
-    }
-  }, [messageInput]);
 
   function saveMessages(next: ActivityMessage[]) {
     if (storageKey)
