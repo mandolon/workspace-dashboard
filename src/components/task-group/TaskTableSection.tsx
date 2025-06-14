@@ -14,6 +14,19 @@ interface TaskTableSectionProps {
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
   onTaskDeleted?: () => void;
+  // If this is a context-driven usage, useContext is true (default); if false, expect all handlers as props.
+  useContext?: boolean;
+  editingTaskId?: number | null;
+  editingValue?: string;
+  setEditingValue?: (value: string) => void;
+  startEditingTask?: (task: Task) => void;
+  saveTaskEdit?: (id: number) => void;
+  cancelTaskEdit?: () => void;
+  toggleTaskStatus?: (id: number) => void;
+  assignPerson?: any;
+  removeAssignee?: any;
+  addCollaborator?: any;
+  removeCollaborator?: any;
 }
 
 const TaskTableSection = ({
@@ -22,24 +35,51 @@ const TaskTableSection = ({
   onSetShowQuickAdd,
   onQuickAddSave,
   onTaskClick,
-  onTaskDeleted
+  onTaskDeleted,
+  useContext = true,
+  editingTaskId: propsEditingTaskId,
+  editingValue: propsEditingValue,
+  setEditingValue: propsSetEditingValue,
+  startEditingTask: propsStartEditingTask,
+  saveTaskEdit: propsSaveTaskEdit,
+  cancelTaskEdit: propsCancelTaskEdit,
+  toggleTaskStatus: propsToggleTaskStatus,
+  assignPerson: propsAssignPerson,
+  removeAssignee: propsRemoveAssignee,
+  addCollaborator: propsAddCollaborator,
+  removeCollaborator: propsRemoveCollaborator
 }: TaskTableSectionProps) => {
   const quickAddRef = useRef<HTMLDivElement>(null);
   const taskTableRef = useRef<HTMLDivElement>(null);
 
-  const {
-    editingTaskId,
-    editingValue,
-    setEditingValue,
-    startEditingTask,
-    saveTaskEdit,
-    cancelTaskEdit,
-    toggleTaskStatus,
-    assignPerson,
-    removeAssignee,
-    addCollaborator,
-    removeCollaborator
-  } = useTaskContext();
+  // Only use context if in context-driven board
+  let editingTaskId, editingValue, setEditingValue, startEditingTask, saveTaskEdit, cancelTaskEdit, toggleTaskStatus, assignPerson, removeAssignee, addCollaborator, removeCollaborator;
+  if (useContext) {
+    const ctx = useTaskContext();
+    editingTaskId = ctx.editingTaskId;
+    editingValue = ctx.editingValue;
+    setEditingValue = ctx.setEditingValue;
+    startEditingTask = ctx.startEditingTask;
+    saveTaskEdit = ctx.saveTaskEdit;
+    cancelTaskEdit = ctx.cancelTaskEdit;
+    toggleTaskStatus = ctx.toggleTaskStatus;
+    assignPerson = ctx.assignPerson;
+    removeAssignee = ctx.removeAssignee;
+    addCollaborator = ctx.addCollaborator;
+    removeCollaborator = ctx.removeCollaborator;
+  } else {
+    editingTaskId = propsEditingTaskId;
+    editingValue = propsEditingValue;
+    setEditingValue = propsSetEditingValue;
+    startEditingTask = propsStartEditingTask;
+    saveTaskEdit = propsSaveTaskEdit;
+    cancelTaskEdit = propsCancelTaskEdit;
+    toggleTaskStatus = propsToggleTaskStatus;
+    assignPerson = propsAssignPerson;
+    removeAssignee = propsRemoveAssignee;
+    addCollaborator = propsAddCollaborator;
+    removeCollaborator = propsRemoveCollaborator;
+  }
 
   const {
     visibleTasks,
@@ -54,31 +94,16 @@ const TaskTableSection = ({
   // Handle click outside to cancel quick add
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // If not open, do nothing
       if (!isShowingQuickAdd) return;
-
       const quickAddEl = quickAddRef.current;
       const target = event.target as Node;
-
-      // 1. If click inside QuickAdd form, do nothing
-      if (quickAddEl && quickAddEl.contains(target)) {
-        return;
-      }
-
-      // 2. If click is inside a Radix popover (with [data-radix-popper-content-wrapper]),
-      //    do nothing. This covers popovers/portals etc (Radix uses this selector).
+      if (quickAddEl && quickAddEl.contains(target)) return;
+      // Radix popover special area
       let node: Node | null = target;
       while (node) {
-        if (
-          node instanceof HTMLElement &&
-          node.hasAttribute("data-radix-popper-content-wrapper")
-        ) {
-          return;
-        }
+        if (node instanceof HTMLElement && node.hasAttribute("data-radix-popper-content-wrapper")) return;
         node = node.parentNode;
       }
-
-      // 3. Otherwise, treat as outside and close
       onSetShowQuickAdd(null);
     };
 
@@ -94,11 +119,11 @@ const TaskTableSection = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (editingTaskId && taskTableRef.current && !taskTableRef.current.contains(event.target as Node)) {
-        cancelTaskEdit();
+        if (cancelTaskEdit) cancelTaskEdit();
       }
     };
 
-    if (editingTaskId) {
+    if (editingTaskId && cancelTaskEdit) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
@@ -115,17 +140,17 @@ const TaskTableSection = ({
         editingValue={editingValue}
         onSetEditingValue={setEditingValue}
         onTaskClick={onTaskClick}
-        onTaskNameClick={(task, e) => { e.stopPropagation(); startEditingTask(task); }}
-        onEditClick={(task, e) => { e.stopPropagation(); startEditingTask(task); }}
+        onTaskNameClick={(task, e) => { e.stopPropagation(); if (startEditingTask) startEditingTask(task); }}
+        onEditClick={(task, e) => { e.stopPropagation(); if (startEditingTask) startEditingTask(task); }}
         onSaveEdit={saveTaskEdit}
         onCancelEdit={cancelTaskEdit}
         onKeyDown={(e, tid) => {
-          if (e.key === "Enter") saveTaskEdit(tid);
-          else if (e.key === "Escape") cancelTaskEdit();
+          if (e.key === "Enter" && saveTaskEdit) saveTaskEdit(tid);
+          else if (e.key === "Escape" && cancelTaskEdit) cancelTaskEdit();
         }}
         onTaskStatusClick={toggleTaskStatus}
-        onRemoveAssignee={(tid, e) => { e.stopPropagation(); removeAssignee(tid); }}
-        onRemoveCollaborator={(tid, idx, e) => { e.stopPropagation(); removeCollaborator(tid, idx); }}
+        onRemoveAssignee={(tid, e) => { e.stopPropagation(); if (removeAssignee) removeAssignee(tid); }}
+        onRemoveCollaborator={(tid, idx, e) => { e.stopPropagation(); if (removeCollaborator) removeCollaborator(tid, idx); }}
         onAssignPerson={assignPerson}
         onAddCollaborator={addCollaborator}
         onTaskDeleted={onTaskDeleted}
@@ -151,3 +176,4 @@ const TaskTableSection = ({
 };
 
 export default TaskTableSection;
+

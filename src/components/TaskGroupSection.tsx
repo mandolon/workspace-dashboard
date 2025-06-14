@@ -12,6 +12,8 @@ interface TaskGroupSectionProps {
   onTaskClick: (task: Task) => void;
   onTaskArchive?: (taskId: number) => void;
   onTaskDeleted?: () => void;
+  // Add this prop to determine context mode
+  useContext?: boolean;
 }
 
 const TaskGroupSection = React.memo(({
@@ -22,6 +24,7 @@ const TaskGroupSection = React.memo(({
   onTaskClick,
   onTaskArchive,
   onTaskDeleted,
+  useContext = true // default to context mode unless told otherwise
 }: TaskGroupSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -41,6 +44,7 @@ const TaskGroupSection = React.memo(({
           onQuickAddSave={onQuickAddSave}
           onTaskClick={onTaskClick}
           onTaskDeleted={onTaskDeleted}
+          useContext={useContext}
         />
       )}
     </div>

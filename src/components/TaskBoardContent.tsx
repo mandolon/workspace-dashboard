@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -28,7 +27,7 @@ const TaskBoardContent = ({
   onTaskArchive,
   onTaskDeleted,
   onAddTask
-}: TaskBoardContentProps) => {
+}: any) => {
   // Memoize the mapped TaskGroupSections for improved performance
   const renderedGroups = React.useMemo(
     () => taskGroups.map((group, groupIndex) => (
@@ -41,6 +40,7 @@ const TaskBoardContent = ({
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
         onTaskDeleted={onTaskDeleted}
+        useContext={false} // Supabase-powered board disables context mode
       />
     )),
     [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted]
@@ -63,4 +63,3 @@ const TaskBoardContent = ({
 };
 
 export default TaskBoardContent;
-
