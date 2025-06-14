@@ -4,32 +4,13 @@ import TaskDetailHeader from './task-detail/TaskDetailHeader';
 import TaskDetailForm from './task-detail/TaskDetailForm';
 import TaskDetailAttachments from './task-detail/TaskDetailAttachments';
 import TaskDetailActivity from './task-detail/TaskDetailActivity';
+import { Task } from '@/types/task';
 
 interface TaskDetailProps {
   isOpen: boolean;
   onClose: () => void;
   onProjectClick?: () => void;
-  task: {
-    id: number;
-    taskId: string;
-    title: string;
-    project: string;
-    estimatedCompletion: string;
-    dateCreated: string;
-    dueDate: string;
-    assignee: {
-      name: string;
-      avatar: string;
-    };
-    hasAttachment: boolean;
-    collaborators?: Array<{
-      name: string;
-      avatar: string;
-    }>;
-    createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+  task: Task | null;
 }
 
 const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) => {
