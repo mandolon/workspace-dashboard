@@ -26,7 +26,11 @@ const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
   }
 };
 
-const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({ member, roles, onRoleChange }) => {
+const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
+  member,
+  roles,
+  onRoleChange,
+}) => {
   // Handlers
   const handleViewAsUser = () => {
     console.log(`View as user: ${member.fullName ?? member.name}`);
