@@ -4,6 +4,7 @@ import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
 import TaskRowAssignees from './TaskRowAssignees';
 import TaskRowContextMenu from './TaskRowContextMenu';
+import TaskRowCreatedBy from './TaskRowCreatedBy';
 import DeleteTaskDialog from '../DeleteTaskDialog';
 import { useTaskDeletion } from '@/hooks/useTaskDeletion';
 import { formatDate } from '@/utils/taskUtils';
@@ -121,19 +122,22 @@ const TaskRow = React.memo(({
         onContextMenuDelete={handleContextMenuDelete}
       >
         <TableRow key={task.id} className="hover:bg-accent/50 group">
-          <TableCell className="py-2 w-[50%]">
+          <TableCell className="py-2 w-[44%]">
             {rowContent}
           </TableCell>
-          <TableCell className="py-2 w-[8%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
+          <TableCell className="py-2 w-[7%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             <TaskRowFiles 
               hasAttachment={task.hasAttachment}
               taskId={task.taskId}
             />
           </TableCell>
-          <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+          <TableCell className="text-xs text-muted-foreground py-2 w-[14%]">
             {formattedDate}
           </TableCell>
-          <TableCell className="py-2 w-[25%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
+          <TableCell className="py-2 w-[14%]">
+            <TaskRowCreatedBy createdBy={task.createdBy} />
+          </TableCell>
+          <TableCell className="py-2 w-[21%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             {rowAssignees}
           </TableCell>
         </TableRow>

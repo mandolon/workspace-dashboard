@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
+import TaskRowCreatedBy from "./TaskRowCreatedBy";
 import { Task } from '@/types/task';
 import { Triangle } from 'lucide-react';
 
@@ -60,14 +60,14 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border transition-colors hover:bg-accent/50 group">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[78%] sm:w-[50%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[44%] sm:w-[36%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Name
             </TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[7%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Files
             </TableHead>
             {/* Date Created - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[14%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
                 <button
@@ -80,7 +80,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                 >
                   <Triangle
                     className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
-                      ${isDateActive ? 
+                      ${currentSortBy === 'dateCreated' ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
                       text-gray-400 fill-gray-200`}
@@ -91,8 +91,12 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                 </button>
               </div>
             </TableHead>
+            {/* Created by */}
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[14%] transition-colors group-hover:bg-accent/50 hover:bg-accent">
+              Created by
+            </TableHead>
             {/* Assigned to - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[21%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
                 <button
@@ -105,7 +109,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                 >
                   <Triangle
                     className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
-                      ${isAssigneeActive ? 
+                      ${currentSortBy === 'assignee' ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
                       text-gray-400 fill-gray-200`}
@@ -119,7 +123,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr:last-child]:border-b">
-          {memoizedTasks.map((task) => (
+          {tasks.map((task) => (
             <TaskRow
               key={task.id}
               task={task}
@@ -148,4 +152,3 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
 
 TaskTable.displayName = "TaskTable";
 export default TaskTable;
-
