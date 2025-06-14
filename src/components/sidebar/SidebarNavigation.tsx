@@ -11,7 +11,8 @@ import {
   ClipboardList, 
   Clock,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  LayoutDashboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -37,6 +38,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateInvoices = useCallback(() => navigate('/invoices'), [navigate]);
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
+  const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
 
   const mainNavItems = useMemo(() => [
     { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
@@ -47,6 +49,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
     { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
     { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
+    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
   ], [
     handleNavigateHome,
     handleNavigateTasks,
@@ -55,7 +58,8 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateTeams,
     handleNavigateInvoices,
     handleNavigateWhiteboards,
-    handleNavigateTimesheets
+    handleNavigateTimesheets,
+    handleNavigateClientDashboard,
   ]);
 
   if (isCollapsed) {
@@ -119,3 +123,4 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
 SidebarNavigation.displayName = 'SidebarNavigation';
 
 export default SidebarNavigation;
+
