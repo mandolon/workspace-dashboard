@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
@@ -13,36 +14,36 @@ interface TaskContextType {
   editingTaskId: number | null;
   editingValue: string;
   refreshTrigger: number;
-  
+
   // Task operations
   createTask: (taskData: any) => void;
   updateTaskById: (taskId: number, updates: Partial<Task>) => void;
   deleteTask: (taskId: number) => Promise<void>;
   restoreDeletedTask: (taskId: number) => void;
   archiveTask: (taskId: number) => void;
-  
+
   // Edit operations
   startEditingTask: (task: Task) => void;
   saveTaskEdit: (taskId: number) => void;
   cancelTaskEdit: () => void;
   setEditingValue: (value: string) => void;
-  
+
   // Status operations
   toggleTaskStatus: (taskId: number) => void;
-  
+
   // Assignment operations
   assignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   removeAssignee: (taskId: number) => void;
   addCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   removeCollaborator: (taskId: number, collaboratorIndex: number) => void;
-  
+
   // Navigation
   navigateToTask: (task: Task) => void;
-  
+
   // Data getters
   getTasksByStatus: (status: string) => Task[];
   getAllTasks: () => Task[];
-  
+
   // Refresh trigger
   triggerRefresh: () => void;
 }
