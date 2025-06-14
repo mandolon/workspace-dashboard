@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -8,6 +9,8 @@ import TaskDetailFields from './TaskDetailFields';
 import { updateTaskSupabase } from '@/data/taskSupabase';
 import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
 import { toast } from "@/hooks/use-toast";
+import DeleteTaskDialog from "@/components/DeleteTaskDialog";
+import { Button } from "@/components/ui/button";
 
 interface TaskDetailFormProps {
   task: Task;
@@ -26,12 +29,11 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     removeAssignee: legacyRemoveAssignee,
     addCollaborator: legacyAddCollaborator,
     removeCollaborator: legacyRemoveCollaborator,
-    changeTaskStatus: legacyChangeTaskStatus
+    changeTaskStatus: legacyChangeTaskStatus,
+    deleteTask: legacyDeleteTask // legacy delete for local tasks
   } = useTaskContext();
 
-  // Is this a Supabase-backed task? We'll check by presence of taskId (string) and maybe a recent updatedAt.
   const isSupabaseTask = !!originalTask.taskId && !!originalTask.updatedAt;
-  // Local state for optimistic updates (required for smooth UI in detail)
   const [task, setTask] = useState<Task>(originalTask);
 
   // Use correct assignment handlers
@@ -41,6 +43,10 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
   const [desc, setDesc] = useState(task.description ?? "");
   const [descLoading, setDescLoading] = useState(false);
 
+  // Delete dialog state
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // Handler selection
   const handlerSet = isSupabaseTask ? supabaseAssignments : {
     assignPerson: legacyAssignPerson,
@@ -49,7 +55,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     removeCollaborator: legacyRemoveCollaborator,
   };
 
-  // These wrappers ensure we always use string id (task.taskId)
   const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
     handlerSet.assignPerson(taskId, person);
   };
@@ -66,7 +71,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     if (handlerSet.removeCollaborator) handlerSet.removeCollaborator(taskId, idx);
   };
 
-  // This is the new status change handler with Supabase support.
   const handleChangeStatus = async (newStatus: "redline" | "progress" | "completed") => {
     if (!task) return;
     if (isSupabaseTask) {
@@ -77,7 +81,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
         status: newStatus,
         archived: willArchive
       };
-      // Optimistic update
       setTask(prev => ({ ...prev, ...updates, updatedAt: new Date().toISOString() }));
       try {
         const updated = await updateTaskSupabase(task.taskId, updates);
@@ -92,7 +95,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
             }".`
         });
       } catch (e) {
-        // Roll back
         setTask(prev => ({
           ...prev,
           status: oldStatus,
@@ -118,11 +120,54 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
         await updateTaskSupabase(task.taskId, { description: newDesc });
         setTask(t => ({ ...t, description: newDesc, updatedAt: new Date().toISOString() }));
       }
-      // else: legacy update (not really used now)
     } finally {
       setDescLoading(false);
     }
   }, [task.description, task.taskId, isSupabaseTask]);
+
+  // Move to trash / soft delete handler
+  const handleTrashClick = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (isSupabaseTask) {
+        // Soft-delete: set deleted_at to now
+        const deletedTask = await updateTaskSupabase(task.taskId, {
+          deletedAt: new Date().toISOString(),
+        });
+        setTask(deletedTask);
+        toast({
+          title: "Task Trashed",
+          description: "Task moved to trash.",
+          duration: 3000
+        });
+        setShowDeleteDialog(false);
+        // You might want to navigate away after deleting! (optional)
+      } else {
+        await legacyDeleteTask(task.id);
+        toast({
+          title: "Task Trashed",
+          description: "Task moved to trash.",
+          duration: 3000
+        });
+        setShowDeleteDialog(false);
+      }
+    } catch (err) {
+      toast({
+        title: "Delete Failed",
+        description: (err as any)?.message || "Could not move task to trash.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteDialog = () => setShowDeleteDialog(false);
 
   return (
     <div className="space-y-3">
@@ -148,6 +193,28 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
         removeAssignee={handleRemoveAssignee}
         addCollaborator={handleAddCollaborator}
         removeCollaborator={handleRemoveCollaborator}
+      />
+      {/* Move to Trash Button */}
+      <div className="flex justify-end pt-4">
+        <Button
+          variant="destructive"
+          className="flex items-center gap-2"
+          onClick={handleTrashClick}
+          disabled={isDeleting}
+        >
+          {/* Using Lucide trash icon by import and JSX */}
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6h18M9 6v12a2 2 0 002 2h2a2 2 0 002-2V6m-9 0a2 2 0 012-2h2a2 2 0 012 2m7 0v12a2 2 0 01-2 2H9a2 2 0 01-2-2V6" />
+          </svg>
+          Move to Trash
+        </Button>
+      </div>
+      <DeleteTaskDialog
+        isOpen={showDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        taskTitle={task.title}
+        isLoading={isDeleting}
       />
     </div>
   );
