@@ -49,7 +49,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 
   return (
     <div className="space-y-3">
-      {/* Task Title with Status Badge - fix overlap */}
+      {/* Task Title with Status Badge - fix overlap and alignment */}
       <div className="flex items-center justify-between">
         {/* Title input or text, wrapper gets max-w to avoid badge overlap */}
         <div className="flex-1 min-w-0 max-w-[calc(100%-130px)] mr-4">
@@ -60,9 +60,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
               onChange={(e) => setEditingValue(e.target.value)}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className="text-2xl font-semibold opacity-60 bg-transparent border-none outline-none focus:ring-0 px-1 py-0.5 m-0 w-full"
+              className="text-2xl font-semibold opacity-60 bg-transparent border-none outline-none focus:ring-0 px-1 py-0.5 -mx-1 -my-0.5 rounded transition-colors truncate w-full"
               autoFocus
-              style={{ fontSize: "1.5rem" }}
             />
           ) : (
             <h1 
