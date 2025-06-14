@@ -50,12 +50,12 @@ const TaskBoard: React.FC = React.memo(() => {
         console.warn('Could not find created task to add attachments.');
       }
     }
-    setShowQuickAdd(); // fix: no argument
+    setShowQuickAdd(null); // fix: now passing null
   }, [handleQuickAddSave, addAttachments, getTaskGroups, setShowQuickAdd]);
 
   // Dialog open/close helper
-  const onDialogOpen = React.useCallback(() => setIsTaskDialogOpen(), [setIsTaskDialogOpen]); // fix: no argument
-  const onDialogClose = React.useCallback(() => setIsTaskDialogOpen(), [setIsTaskDialogOpen]); // fix: no argument
+  const onDialogOpen = React.useCallback(() => setIsTaskDialogOpen(true), [setIsTaskDialogOpen]); // fix: pass true
+  const onDialogClose = React.useCallback(() => setIsTaskDialogOpen(false), [setIsTaskDialogOpen]); // fix: pass false
 
   return (
     <>
@@ -81,3 +81,4 @@ const TaskBoard: React.FC = React.memo(() => {
 
 TaskBoard.displayName = "TaskBoard";
 export default TaskBoard;
+
