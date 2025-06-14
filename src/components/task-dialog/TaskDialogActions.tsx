@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -16,11 +17,11 @@ import {
 } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { TEAM_USERS } from '@/utils/teamUsers';
+import { TEAM_USERS, TeamUser } from '@/utils/teamUsers';
 
 interface TaskDialogActionsProps {
-  assignedTo: string;
-  setAssignedTo: (value: string) => void;
+  assignedTo: string | TeamUser;
+  setAssignedTo: (value: TeamUser) => void;
   dueDate: Date | undefined;
   setDueDate: (date: Date | undefined) => void;
   taskName: string;
@@ -46,17 +47,27 @@ const TaskDialogActions = ({
   };
   const handleRemoveFile = (idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
 
-  const isCreateDisabled = !taskName.trim() || !assignedTo;
+  const isCreateDisabled = !taskName.trim() || !assignedTo || (typeof assignedTo === "string");
+
+  // Ensure Select value is always a string (the user id)
+  let selectValue: string = "";
+  if (typeof assignedTo === "string") {
+    selectValue = assignedTo;
+  } else if (assignedTo && typeof assignedTo === "object" && "id" in assignedTo) {
+    selectValue = assignedTo.id;
+  }
 
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
         <Select 
-          value={assignedTo && assignedTo.id ? assignedTo.id : assignedTo} 
+          value={selectValue}
           onValueChange={value => {
             // Always set full TEAM_USERS object as assignee
             const found = TEAM_USERS.find(u => u.id === value);
-            setAssignedTo(found || value);
+            // Since the Select only allows picking from the dropdown,
+            // found should always exist, but fallback to first TEAM_USER if not.
+            setAssignedTo(found || TEAM_USERS[0]);
           }}
         >
           <SelectTrigger className="w-28 h-7 text-xs">
@@ -144,3 +155,4 @@ const TaskDialogActions = ({
 };
 
 export default TaskDialogActions;
+
