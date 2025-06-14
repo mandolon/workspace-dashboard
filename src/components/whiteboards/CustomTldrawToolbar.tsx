@@ -47,8 +47,8 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setStyleForNextShapes('color', color);
-      editor.setStyleForNextShapes('size', stroke);
+      editor.setStyleForNextShapes('color', color as any);
+      editor.setStyleForNextShapes('size', stroke as any);
     }
   }, [color, stroke, editor]);
 
@@ -69,9 +69,9 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setStyleForNextShapes('color', "#fff176");
-      editor.setStyleForNextShapes('opacity', 0.32);
-      editor.setStyleForNextShapes('size', 6);
+      editor.setStyleForNextShapes('color', "#fff176" as any);
+      editor.setStyleForNextShapes('opacity', 0.32 as any);
+      editor.setStyleForNextShapes('size', 6 as any);
       setColor("#fff176");
       setStroke(6);
     }
