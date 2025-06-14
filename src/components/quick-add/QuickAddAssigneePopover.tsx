@@ -42,11 +42,8 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             size="sm"
             variant="ghost"
             className={
-              `flex items-center gap-1
-               px-0 py-0 
-               h-8 w-8 min-w-0 min-h-0
-               justify-center rounded-full
-               text-xs text-muted-foreground hover:text-foreground border border-border bg-background transition-colors`
+              `flex items-center gap-1 h-8 rounded-full text-xs text-muted-foreground hover:text-foreground border border-border bg-background transition-colors
+               ${assignee ? 'px-1.5' : 'w-8 justify-center min-w-0 min-h-0 px-0 py-0'}`
             }
             type="button"
             aria-label={assignee ? `Assigned to ${assignee.fullName || assignee.name}` : "Assign user"}
@@ -86,7 +83,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
               <button
                 key={person.name}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
-                onClick={(e) => { e.stopPropagation(); setAssignee(person); }}
+                onClick={(e) => { e.stopPropagation(); setAssignee(person); setShowAssigneePopover(false); }}
                 type="button"
               >
                 <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
