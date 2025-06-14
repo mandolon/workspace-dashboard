@@ -87,27 +87,34 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
         </label>
         <div className="text-xs">
           {canonicalAssignee ? (
-            <div className="flex items-center gap-1 relative min-h-[24px]">
-              <div className="relative group/avatar w-6 h-6">
-                <div
-                  className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${
-                    isTeamAssignee ? 'bg-black' : getAvatarColor(canonicalAssignee)
-                  } text-white font-medium text-xs`}
-                  title={isTeamAssignee ? 'Assigned to Team' : canonicalAssignee.fullName ?? canonicalAssignee.name}
-                >
-                  {getInitials(
-                    canonicalAssignee.fullName ?? canonicalAssignee.name
-                  )}
-                </div>
+            <div className="flex items-center gap-1 relative min-h-[28px]">
+              <div className="relative group/avatar">
+                {/* Use Task Table avatar style for Team */}
+                {isTeamAssignee ? (
+                  <div
+                    className="w-7 h-7 rounded-full border-2 border-background flex items-center justify-center text-white font-bold text-xs bg-black select-none"
+                    title="Assigned to Team"
+                  >
+                    T
+                  </div>
+                ) : (
+                  <div
+                    className={`w-7 h-7 rounded-full border-2 border-background flex items-center justify-center select-none ${getAvatarColor(canonicalAssignee)} text-white font-medium text-xs`}
+                    title={canonicalAssignee.fullName ?? canonicalAssignee.name}
+                  >
+                    {getInitials(canonicalAssignee.fullName ?? canonicalAssignee.name)}
+                  </div>
+                )}
                 <button
-                  className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
+                  className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
                   onClick={handleRemove}
                   title="Remove assignee"
                   type="button"
                   aria-label="Remove assignee"
                   tabIndex={-1}
+                  style={{ fontSize: 10 }}
                 >
-                  <X className="w-2 h-2" strokeWidth="2" />
+                  <X className="w-3 h-3" strokeWidth="2" />
                 </button>
               </div>
               <span className={`ml-2 ${isTeamAssignee ? 'font-semibold text-black' : ''}`}>
@@ -118,23 +125,21 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="w-6 h-6 flex items-center justify-center rounded-full bg-muted hover:bg-accent p-0 focus:outline-none transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-full bg-muted hover:bg-accent p-0 focus:outline-none transition-colors"
                   type="button"
                   aria-label="Assign user"
                 >
-                  <Users className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                  <Users className="w-4 h-4 text-muted-foreground" strokeWidth="2" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-popover z-50">
-                {/* Add "Assign to Team" at the top */}
+                {/* Add "Assign to Team" at the top, visually matching elsewhere */}
                 <DropdownMenuItem
                   onClick={() => handleAssign(VIRTUAL_TEAM_ASSIGNEE)}
                   className="flex items-center gap-2 cursor-pointer font-semibold"
                   data-testid="assign-team"
                 >
-                  <div className="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold bg-black">
-                    T
-                  </div>
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold bg-black border-2 border-background">T</div>
                   <span>Assign to Team</span>
                 </DropdownMenuItem>
                 <div className="border-b border-muted my-1" />
@@ -144,7 +149,7 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
                     onClick={() => handleAssign(person)}
                     className="flex items-center gap-2 cursor-pointer"
                   >
-                    <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(person)}`}>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(person)} border-2 border-background`}>
                       {getInitials(person.fullName ?? person.name)}
                     </div>
                     <span>{person.fullName ?? person.name}</span>
