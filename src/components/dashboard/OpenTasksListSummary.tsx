@@ -1,11 +1,14 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getTasksWithProjectNames } from "@/data/taskData";
 import TaskStatusIcon from "@/components/TaskStatusIcon";
+import { useTaskContext } from "@/contexts/TaskContext";
 
 const OpenTasksListSummary = () => {
-  const tasks = getTasksWithProjectNames();
+  const { getAllTasks } = useTaskContext();
+
+  // Use the context-aware dynamic list INCLUDING created tasks
+  const tasks = getAllTasks();
   const openTasks = tasks.filter(
     (task) =>
       task.status !== "completed" &&
@@ -53,3 +56,4 @@ const OpenTasksListSummary = () => {
 };
 
 export default OpenTasksListSummary;
+
