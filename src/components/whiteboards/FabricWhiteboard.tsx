@@ -51,6 +51,17 @@ const FabricWhiteboard: React.FC = () => {
       fabricRef.current = canvas;
       localCanvas = canvas;
 
+      // Fabric v6: ALWAYS assign a PencilBrush to freeDrawingBrush
+      // (If not present, drawing won't work.)
+      if (!canvas.freeDrawingBrush) {
+        // @ts-ignore for PencilBrush, as fabric6 type may lack .freeDrawingBrush assignment
+        const { PencilBrush } = await import("fabric");
+        canvas.freeDrawingBrush = new PencilBrush(canvas);
+      }
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush.width = 2;
+      canvas.freeDrawingBrush.color = "#1a202c";
+
       // Load saved objects if they exist
       if (data.tldraw_data) {
         try {
@@ -61,10 +72,6 @@ const FabricWhiteboard: React.FC = () => {
           toast.error("Failed to load whiteboard data.");
         }
       }
-      // Register drawing events
-      canvas.isDrawingMode = true;
-      canvas.freeDrawingBrush.width = 2;
-      canvas.freeDrawingBrush.color = "#1a202c";
       loadedOnce.current = true;
     }
     loadBoard();
@@ -87,9 +94,19 @@ const FabricWhiteboard: React.FC = () => {
 
     // Drawing/browsing mode
     if (activeTool === "draw") {
-      canvas.isDrawingMode = true;
-      canvas.selection = false;
-      if (canvas.freeDrawingBrush) {
+      // Fabric v6: assign PencilBrush each time if not present (hot reload/dev mode safety)
+      if (!canvas.freeDrawingBrush) {
+        import("fabric").then(({ PencilBrush }) => {
+          // @ts-ignore
+          canvas.freeDrawingBrush = new PencilBrush(canvas);
+          canvas.freeDrawingBrush.width = 2;
+          canvas.freeDrawingBrush.color = "#1a202c";
+          canvas.isDrawingMode = true;
+          canvas.selection = false;
+        });
+      } else {
+        canvas.isDrawingMode = true;
+        canvas.selection = false;
         canvas.freeDrawingBrush.width = 2;
         canvas.freeDrawingBrush.color = "#1a202c";
       }
