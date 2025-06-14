@@ -48,27 +48,43 @@ const TrashTab = () => {
   const handleRestore = async (taskId) => {
     setRestoringIds((prev) => [...prev, taskId.toString()]);
     const task = allTasks.find(t => t.id === taskId);
+
     if (!task) {
+      console.error("[TrashTab] Restore failed: Task not found.", { taskId });
       setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
       return;
     }
 
+    console.log("[TrashTab] Attempting to restore task", {
+      taskId,
+      task,
+      isSupabase: isSupabaseTask(task),
+    });
+
     if (isSupabaseTask(task)) {
       try {
-        await updateTaskSupabase(task.taskId, { deletedAt: null, deletedBy: null });
+        const result = await updateTaskSupabase(task.taskId, { deletedAt: null, deletedBy: null });
+        console.log("[TrashTab] Supabase task restore result", result);
         setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
         toast({ title: 'Task Restored', description: 'Task has been restored.', duration: 3000 });
       } catch (e) {
+        console.error("[TrashTab] Error restoring Supabase task", e);
         toast({ title: 'Error', description: 'Failed to restore task.', variant: 'destructive' });
       } finally {
         setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
       }
     } else {
       // Legacy task
-      restoreTask(taskId);
-      setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
-      toast({ title: 'Task Restored', description: 'Legacy task has been restored.', duration: 3000 });
-      setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
+      try {
+        restoreTask(taskId);
+        setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
+        toast({ title: 'Task Restored', description: 'Legacy task has been restored.', duration: 3000 });
+        console.log("[TrashTab] Legacy task restored", { taskId });
+      } catch (e) {
+        console.error("[TrashTab] Error restoring legacy task", e);
+      } finally {
+        setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
+      }
     }
   };
 
