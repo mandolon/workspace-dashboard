@@ -1,9 +1,9 @@
-
 import React from 'react';
 import TaskDetailHeader from './task-detail/TaskDetailHeader';
 import TaskDetailForm from './task-detail/TaskDetailForm';
 import TaskDetailAttachments from './task-detail/TaskDetailAttachments';
 import TaskDetailActivity from './task-detail/TaskDetailActivity';
+import TaskDetailTrashButton from './task-detail/TaskDetailTrashButton';
 import { Task } from '@/types/task';
 
 interface TaskDetailProps {
@@ -26,6 +26,8 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
           <div className="max-w-4xl mx-auto p-3 space-y-4">
             <TaskDetailForm task={task} />
             <TaskDetailAttachments taskId={task.taskId} />
+            {/* Trash Button moved below attachments */}
+            <TaskDetailTrashButton task={task} />
           </div>
         </div>
 
@@ -39,4 +41,3 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
 };
 
 export default TaskDetail;
-
