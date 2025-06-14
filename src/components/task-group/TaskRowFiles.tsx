@@ -2,6 +2,7 @@
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
+import { useUser } from '@/contexts/UserContext';
 import { cn } from '@/lib/utils';
 
 interface TaskRowFilesProps {
@@ -16,6 +17,7 @@ const TaskRowFiles = ({
   taskId,
 }: TaskRowFilesProps) => {
   const { getAttachments, addAttachments } = useTaskAttachmentContext();
+  const { currentUser } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const attachments = taskId ? getAttachments(taskId) : [];
@@ -30,7 +32,7 @@ const TaskRowFiles = ({
     if (!taskId) return;
     if (e.target.files && e.target.files.length) {
       const files = Array.from(e.target.files);
-      addAttachments(taskId, files, "ME");
+      addAttachments(taskId, files, currentUser?.name ?? "Unknown");
       e.target.value = "";
     }
   };

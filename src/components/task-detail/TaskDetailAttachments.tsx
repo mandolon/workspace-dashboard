@@ -3,6 +3,7 @@ import React, { useRef, useState, DragEvent } from 'react';
 import { Upload } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
 import { useTaskContext } from '@/contexts/TaskContext';
+import { useUser } from '@/contexts/UserContext';
 import TaskAttachmentTable from '../attachments/TaskAttachmentTable';
 
 interface TaskDetailAttachmentsProps {
@@ -12,6 +13,7 @@ interface TaskDetailAttachmentsProps {
 const TaskDetailAttachments = ({ taskId }: TaskDetailAttachmentsProps) => {
   const { getAttachments, addAttachments, removeAttachment } = useTaskAttachmentContext();
   const { customTasks } = useTaskContext();
+  const { currentUser } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [dragActive, setDragActive] = useState(false);
@@ -24,7 +26,7 @@ const TaskDetailAttachments = ({ taskId }: TaskDetailAttachmentsProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length) {
       const files = Array.from(e.target.files);
-      addAttachments(currentTaskId!, files, "ME");
+      addAttachments(currentTaskId!, files, currentUser?.name ?? "Unknown");
       e.target.value = "";
     }
   };
@@ -51,7 +53,7 @@ const TaskDetailAttachments = ({ taskId }: TaskDetailAttachmentsProps) => {
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const files = Array.from(e.dataTransfer.files);
-      addAttachments(currentTaskId!, files, "ME");
+      addAttachments(currentTaskId!, files, currentUser?.name ?? "Unknown");
     }
   };
 
@@ -99,4 +101,3 @@ const TaskDetailAttachments = ({ taskId }: TaskDetailAttachmentsProps) => {
 };
 
 export default TaskDetailAttachments;
-
