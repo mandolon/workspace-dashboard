@@ -3,7 +3,7 @@ import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
 import { useUser } from '@/contexts/UserContext';
-import { useTaskTitleEdit } from '@/hooks/useTaskTitleEdit';
+import { useTaskContext } from '@/contexts/TaskContext';
 
 interface TaskDetailFormProps {
   task: {
@@ -18,13 +18,16 @@ interface TaskDetailFormProps {
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   const { currentUser } = useUser();
   const {
-    isEditing,
+    editingTaskId,
     editingValue,
     setEditingValue,
-    startEditing,
-    handleKeyDown,
-    handleBlur
-  } = useTaskTitleEdit(task.id, task.title);
+    startEditingTask,
+    saveTaskEdit,
+    cancelTaskEdit
+  } = useTaskContext();
+
+  // Determine if this task is currently being edited
+  const isEditing = editingTaskId === task.id;
 
   // Debug log to force component refresh
   console.log('TaskDetailForm rendering with task:', task.title);
@@ -47,6 +50,20 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     return createdBy;
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveTaskEdit(task.id);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelTaskEdit();
+    }
+  };
+
+  const handleBlur = () => {
+    saveTaskEdit(task.id);
+  };
+
   return (
     <div className="space-y-3">
       {/* Task Title with Status Badge - fix overlap and alignment */}
@@ -66,7 +83,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           ) : (
             <h1 
               className="text-2xl font-semibold cursor-pointer hover:bg-accent/50 rounded px-1 py-0.5 -mx-1 -my-0.5 transition-colors truncate"
-              onClick={startEditing}
+              onClick={() => startEditingTask(task)}
               title="Click to edit title"
             >
               {task.title}
@@ -130,3 +147,4 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
+
