@@ -1,8 +1,6 @@
-
 import React, { useState, createContext, useContext } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import PageSectionHeader from '@/components/shared/PageSectionHeader';
-import RoleSwitcher from '@/components/teams/RoleSwitcher';
 import TeamsContent from '@/components/teams/TeamsContent';
 import SelectUserDropdown from "@/components/teams/SelectUserDropdown";
 // import ClientViewContent from "@/components/teams/ClientViewContent"; // Remove, now using TeamsContent
@@ -29,10 +27,7 @@ const TeamsPage = () => {
         <div className="flex flex-col h-full">
           <PageSectionHeader title="Teams CRM">
             <div className="flex items-center gap-4">
-              <RoleSwitcher
-                role={role}
-                setRole={(newRole) => { setRole(newRole); setActiveTab(newRole); }}
-              />
+              {/* Removed RoleSwitcher */}
               <SelectUserDropdown
                 selectedUserId={selectedUserId}
                 onChange={setSelectedUserId}
