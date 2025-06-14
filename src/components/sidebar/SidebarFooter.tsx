@@ -1,13 +1,13 @@
-
 import React from 'react';
 import { HelpCircle } from 'lucide-react';
 import InviteDialog from './InviteDialog';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
+import { Tooltip } from "@/components/ui/tooltip";
 
 const SidebarFooter = () => {
   const navigate = useNavigate();
-  const { currentUser } = useUser();
+  const { currentUser, isImpersonating, impersonatedUser } = useUser();
 
   // Helper to determine correct help page path for current user
   const getHelpPagePath = () => {
@@ -34,26 +34,39 @@ const SidebarFooter = () => {
     return '/help/client';
   };
 
+  // Impersonated client cannot leave dashboard; disable Help button
+  const helpDisabled =
+    isImpersonating && impersonatedUser && impersonatedUser.role === "Client";
+
   const handleNavigateHelp = () => {
-    navigate(getHelpPagePath());
+    if (helpDisabled) return;
+    const helpPath = getHelpPagePath();
+    console.log(`[SidebarFooter] Navigating to help: ${helpPath}`);
+    navigate(helpPath);
   };
 
   return (
     <div className="border-t border-sidebar-border p-4">
       <div className="flex items-center justify-between">
         <InviteDialog triggerButtonClassName="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-foreground" />
-        <button
-          className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-foreground"
-          onClick={handleNavigateHelp}
-          type="button"
-        >
-          <HelpCircle className="w-4 h-4 flex-shrink-0" />
-          <span className="truncate">Help</span>
-        </button>
+        <Tooltip content={helpDisabled ? "Help is not available when viewing as client." : "Open help docs"}>
+          <button
+            className={`flex items-center gap-2 text-sm text-sidebar-foreground hover:text-foreground transition-opacity
+              ${helpDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
+            `}
+            onClick={handleNavigateHelp}
+            type="button"
+            disabled={helpDisabled}
+            tabIndex={helpDisabled ? -1 : 0}
+            aria-disabled={helpDisabled}
+          >
+            <HelpCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Help</span>
+          </button>
+        </Tooltip>
       </div>
     </div>
   );
 };
 
 export default SidebarFooter;
-
