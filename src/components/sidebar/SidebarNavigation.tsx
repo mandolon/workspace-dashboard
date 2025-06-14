@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -12,7 +11,8 @@ import {
   Clock,
   ChevronDown,
   ChevronRight,
-  LayoutDashboard
+  LayoutDashboard,
+  HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -39,6 +39,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
   const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
+  const handleNavigateHelp = useCallback(() => navigate('/help'), [navigate]);
 
   const mainNavItems = useMemo(() => [
     { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
@@ -49,7 +50,8 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
     { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
     { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
-    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
+    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
+    { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
   ], [
     handleNavigateHome,
     handleNavigateTasks,
@@ -60,6 +62,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateWhiteboards,
     handleNavigateTimesheets,
     handleNavigateClientDashboard,
+    handleNavigateHelp,
   ]);
 
   if (isCollapsed) {
@@ -123,4 +126,3 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
 SidebarNavigation.displayName = 'SidebarNavigation';
 
 export default SidebarNavigation;
-

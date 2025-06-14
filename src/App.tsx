@@ -19,6 +19,9 @@ import NotFound from "./pages/NotFound";
 import TasksPage from "./pages/TasksPage";
 import ClientAccountPage from "./pages/ClientAccountPage";
 import ClientDashboard from "./pages/ClientDashboard";
+import AdminHelpPage from "./pages/AdminHelpPage";
+import TeamHelpPage from "./pages/TeamHelpPage";
+import ClientHelpPage from "./pages/ClientHelpPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -73,6 +76,10 @@ const App = () => {
                         <Route path="/whiteboards" element={<WhiteboardsPage />} />
                         <Route path="/settings" element={<SettingsPage />} />
                         <Route path="/settings/notifications" element={<SettingsPage />} />
+                        <Route path="/help" element={<HelpRedirector />} />
+                        <Route path="/help/admin" element={<AdminHelpPage />} />
+                        <Route path="/help/team" element={<TeamHelpPage />} />
+                        <Route path="/help/client" element={<ClientHelpPage />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </TaskProvider>
@@ -85,6 +92,27 @@ const App = () => {
       </QueryClientProvider>
     </ThemeProvider>
   );
+};
+
+import { useUser } from "./contexts/UserContext";
+import { useNavigate } from "react-router-dom";
+
+const HelpRedirector = () => {
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!currentUser) return;
+    if (currentUser.role === 'Admin') {
+      navigate('/help/admin', { replace: true });
+    } else if (currentUser.role === 'Team Lead' || currentUser.role === 'Project Manager' || currentUser.role === 'Engineer' || currentUser.role === 'Designer' || currentUser.role === 'Operations' || currentUser.role === 'QA Tester' || currentUser.role === 'Consultant' || currentUser.role === 'CAD Tech' || currentUser.role === 'Jr Designer' || currentUser.role === 'Developer' || currentUser.role === 'Marketing Manager' || currentUser.role === 'Customer Support' || currentUser.role === 'Interior Designer' || currentUser.role === 'Contractor') {
+      navigate('/help/team', { replace: true });
+    } else if (currentUser.role === 'Client') {
+      navigate('/help/client', { replace: true });
+    } else {
+      navigate('/help/client', { replace: true });
+    }
+  }, [currentUser, navigate]);
+  return <div>Redirecting to the appropriate Help page…</div>;
 };
 
 export default App;
