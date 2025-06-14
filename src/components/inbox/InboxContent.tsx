@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
 import InboxHeader from './InboxHeader';
@@ -54,8 +55,8 @@ const InboxContent = React.memo(({
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* InboxHeader is now rendered at the page level for consistent layout */}
+    <div className="h-full flex flex-col px-0">
+      {/* Left/right padding should only come from the page container. */}
       <InboxToolbar
         selectedEmails={selectedEmails}
         totalEmails={filteredEmails.length}
