@@ -56,21 +56,19 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   const isDateActive = currentSortBy === 'dateCreated';
   const isAssigneeActive = currentSortBy === 'assignee';
 
-  // Triangle settings: asc = not rotated, desc = rotated 180deg
-  // Filled if active, muted if not
   return (
     <div ref={ref}>
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8 transition-colors hover:bg-blue-50 cursor-pointer">
               Name
             </TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%]">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%] transition-colors hover:bg-blue-50 cursor-pointer">
               Files
             </TableHead>
             {/* Date Created - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%] transition-colors hover:bg-blue-50 cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
                 <button
@@ -95,7 +93,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
               </div>
             </TableHead>
             {/* Assigned to - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%] transition-colors hover:bg-blue-50 cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
                 <button
@@ -151,3 +149,4 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
 
 TaskTable.displayName = "TaskTable";
 export default TaskTable;
+
