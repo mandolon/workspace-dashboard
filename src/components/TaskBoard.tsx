@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -59,6 +60,7 @@ const TaskBoard = React.memo(() => {
     createTask({ ...newTask, useCustomTasks: true });
   }, [createTask]);
 
+  // FIX: Forward attachments to createTask!
   const handleQuickAddSave = useCallback((taskData: any) => {
     console.log('Quick add task data:', taskData);
     createTask({
@@ -70,7 +72,8 @@ const TaskBoard = React.memo(() => {
       dueDate: taskData.dueDate || '—',
       dateCreated: new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }),
       estimatedCompletion: '—',
-      hasAttachment: false,
+      hasAttachment: taskData.hasAttachment ?? (Array.isArray(taskData.attachments) && taskData.attachments.length > 0),
+      attachments: taskData.attachments ?? [],
       collaborators: [],
       useCustomTasks: false
     });
@@ -109,3 +112,4 @@ const TaskBoard = React.memo(() => {
 
 TaskBoard.displayName = "TaskBoard";
 export default TaskBoard;
+
