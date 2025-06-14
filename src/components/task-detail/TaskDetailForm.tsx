@@ -144,7 +144,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-[2.2px] border-background ${getRandomColor(task.assignee.name)}`}>
                   {task.assignee.name}
                 </div>
-                <span className="truncate">{task.assignee.fullName || task.assignee.name}</span>
+                <span className="truncate">{task.assignee.name}</span>
                 <button 
                   className="ml-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
                   onClick={handleRemove}
@@ -175,7 +175,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
                         {person.name}
                       </div>
-                      <span>{person.fullName || person.name}</span>
+                      <span>{person.name}</span>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
