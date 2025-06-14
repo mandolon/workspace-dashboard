@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
@@ -80,7 +79,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
                   tabIndex={0}
                 >
                   <Triangle
-                    className={`w-2 h-2 pointer-events-none transition-transform duration-150 
+                    className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
                       ${isDateActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
@@ -105,7 +104,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
                   tabIndex={0}
                 >
                   <Triangle
-                    className={`w-2 h-2 pointer-events-none transition-transform duration-150 
+                    className={`w-[11px] h-[11px] pointer-events-none transition-transform duration-150 
                       ${isAssigneeActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
@@ -149,4 +148,3 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
 
 TaskTable.displayName = "TaskTable";
 export default TaskTable;
-
