@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect } from 'react';
+
+import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
 import { useTaskEditing } from '@/hooks/useTaskEditing';
@@ -60,24 +61,17 @@ interface TaskProviderProps {
   children: React.ReactNode;
 }
 
-export const TaskProvider = ({ children }: TaskProviderProps) => {
-  // Use the task operations hook
+export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
   const taskOperations = useTaskOperations();
-  
-  // Use the task editing hook
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
-  
-  // Use the task assignments hook
   const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
-  
-  // Use the task status operations hook
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,
     taskOperations.archiveTask
   );
 
-  const value: TaskContextType = {
+  const value = React.useMemo((): TaskContextType => ({
     // Task state
     customTasks: taskOperations.customTasks,
     archivedTasks: taskOperations.archivedTasks,
@@ -116,15 +110,18 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
-  };
-
-  React.useEffect(() => {
-    console.log("[TaskProvider] Mounted! Children type:", typeof children);
-  }, []);
+  }), [
+    taskOperations,
+    taskEditing,
+    taskAssignments,
+    taskStatusOperations
+  ]);
 
   return (
     <TaskContext.Provider value={value}>
       {children}
     </TaskContext.Provider>
   );
-};
+});
+
+TaskProvider.displayName = "TaskProvider";

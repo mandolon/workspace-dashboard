@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -73,6 +74,45 @@ const TaskRow = React.memo(({
     }
   }, [handleDeleteTask, onTaskDeleted]);
 
+  // Memoize row content to prevent unnecessary re-renders
+  const rowContent = useMemo(() => (
+    <TaskRowContent
+      task={task}
+      editingTaskId={editingTaskId}
+      editingValue={editingValue}
+      onSetEditingValue={onSetEditingValue}
+      onTaskClick={onTaskClick}
+      onEditClick={onEditClick}
+      onSaveEdit={onSaveEdit}
+      onCancelEdit={onCancelEdit}
+      onKeyDown={onKeyDown}
+      onTaskStatusClick={onTaskStatusClick}
+      onDeleteClick={handleDeleteClickInternal}
+    />
+  ), [
+    task,
+    editingTaskId,
+    editingValue,
+    onSetEditingValue,
+    onTaskClick,
+    onEditClick,
+    onSaveEdit,
+    onCancelEdit,
+    onKeyDown,
+    onTaskStatusClick,
+    handleDeleteClickInternal
+  ]);
+
+  const rowAssignees = useMemo(() => (
+    <TaskRowAssignees
+      task={task}
+      onRemoveAssignee={onRemoveAssignee}
+      onRemoveCollaborator={onRemoveCollaborator}
+      onAssignPerson={onAssignPerson}
+      onAddCollaborator={onAddCollaborator}
+    />
+  ), [task, onRemoveAssignee, onRemoveCollaborator, onAssignPerson, onAddCollaborator]);
+
   return (
     <>
       <TaskRowContextMenu
@@ -83,36 +123,16 @@ const TaskRow = React.memo(({
       >
         <TableRow key={task.id} className="hover:bg-accent/50 group">
           <TableCell className="py-2 w-[50%]">
-            <TaskRowContent
-              task={task}
-              editingTaskId={editingTaskId}
-              editingValue={editingValue}
-              onSetEditingValue={onSetEditingValue}
-              onTaskClick={onTaskClick}
-              onEditClick={onEditClick}
-              onSaveEdit={onSaveEdit}
-              onCancelEdit={onCancelEdit}
-              onKeyDown={onKeyDown}
-              onTaskStatusClick={onTaskStatusClick}
-              onDeleteClick={handleDeleteClickInternal}
-            />
+            {rowContent}
           </TableCell>
-          {/* Border highlight only on individual FILES cell hover, without affecting top/bottom border */}
           <TableCell className="py-2 w-[8%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
           </TableCell>
-          {/* Border highlight only on individual ASSIGNED TO cell hover, without affecting top/bottom border */}
           <TableCell className="py-2 w-[25%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
-            <TaskRowAssignees
-              task={task}
-              onRemoveAssignee={onRemoveAssignee}
-              onRemoveCollaborator={onRemoveCollaborator}
-              onAssignPerson={onAssignPerson}
-              onAddCollaborator={onAddCollaborator}
-            />
+            {rowAssignees}
           </TableCell>
         </TableRow>
       </TaskRowContextMenu>

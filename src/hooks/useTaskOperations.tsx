@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react';
+
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Task } from '@/types/task';
 import { getTasksByStatus, addTask, updateTask, softDeleteTask, restoreTask } from '@/data/taskData';
-import { Undo, X } from 'lucide-react';
+import { Undo } from 'lucide-react';
 
 export const useTaskOperations = () => {
   const navigate = useNavigate();
@@ -21,10 +22,8 @@ export const useTaskOperations = () => {
   const createTask = useCallback((taskData: any) => {
     console.log('Creating task via context:', taskData);
     if (taskData.useCustomTasks) {
-      // For tasks created via dialog, add to custom tasks only
       setCustomTasks(prev => [taskData, ...prev]);
     } else {
-      // For quick add, use the centralized addTask function
       const newTask = addTask(taskData);
       console.log('Quick add created task:', newTask);
       triggerRefresh();
@@ -32,11 +31,9 @@ export const useTaskOperations = () => {
   }, [triggerRefresh]);
 
   const updateTaskById = useCallback((taskId: number, updates: Partial<Task>) => {
-    // Update centralized data
     const updatedTask = updateTask(taskId, updates);
     
     if (updatedTask) {
-      // Update custom tasks if it exists there
       setCustomTasks(prev => 
         prev.map(task => task.id === taskId ? { ...task, ...updates } : task)
       );
@@ -77,7 +74,6 @@ export const useTaskOperations = () => {
               >
                 trash
               </button>
-              {/* Spacing between trash and Undo button */}
               <span className="ml-6" />
               <Button
                 variant="ghost"
@@ -93,7 +89,6 @@ export const useTaskOperations = () => {
                 Undo
               </Button>
               <span className="mx-2 h-5 border-l border-border inline-block self-center" />
-              {/* Removed the extra close button: the shadcn close button will be used instead */}
             </div>
           ),
           duration: 5000,
@@ -125,15 +120,15 @@ export const useTaskOperations = () => {
     navigate(`/task/${task.taskId}`);
   }, [navigate]);
 
+  // Memoize expensive operations
   const getTasksByStatusFromContext = useCallback((status: string) => {
-    // Get centralized tasks and combine with custom tasks, filtering out deleted ones
     const centralizedTasks = getTasksByStatus(status).filter(task => !task.deletedAt);
     const customTasksFiltered = customTasks.filter(task => task.status === status && !task.archived && !task.deletedAt);
     
     return [...centralizedTasks, ...customTasksFiltered];
   }, [customTasks]);
 
-  const getAllTasks = useCallback(() => {
+  const getAllTasks = useMemo(() => {
     const allCentralizedTasks = getTasksByStatus('redline')
       .concat(getTasksByStatus('progress'))
       .concat(getTasksByStatus('completed'))
@@ -142,7 +137,7 @@ export const useTaskOperations = () => {
     const allCustomTasks = customTasks.filter(task => !task.archived && !task.deletedAt);
     
     return [...allCentralizedTasks, ...allCustomTasks];
-  }, [customTasks]);
+  }, [customTasks, refreshTrigger]);
 
   return {
     customTasks,
