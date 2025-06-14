@@ -29,6 +29,7 @@ interface TaskContextType {
   
   // Status operations
   toggleTaskStatus: (taskId: number) => void;
+  changeTaskStatus: (taskId: number, newStatus: "redline" | "progress" | "completed") => void;
   
   // Assignment operations
   assignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
@@ -95,6 +96,7 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     
     // Status operations
     toggleTaskStatus: taskStatusOperations.toggleTaskStatus,
+    changeTaskStatus: taskStatusOperations.changeTaskStatus,
     
     // Assignment operations
     assignPerson: taskAssignments.assignPerson,

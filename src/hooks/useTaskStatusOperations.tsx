@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -46,7 +45,42 @@ export const useTaskStatusOperations = (
     }
   }, [customTasks, updateTaskById, archiveTask, toast]);
 
+  // NEW: Change status to any value
+  const changeTaskStatus = useCallback((taskId: number, newStatus: "redline" | "progress" | "completed") => {
+    // Get current task
+    const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskId);
+    const customTask = customTasks.find(t => t.id === taskId);
+    const task = centralizedTask || customTask;
+    if (!task) return;
+
+    // If status unchanged, do nothing
+    if (task.status === newStatus) return;
+
+    // If new status is completed mark archived, else not
+    const archived = newStatus === "completed" ? true : false;
+
+    updateTaskById(taskId, { status: newStatus, archived });
+
+    // Archive if moving to completed
+    if (newStatus === "completed") {
+      archiveTask(taskId);
+      toast({
+        title: "Task completed",
+        description: `"${task.title}" has been marked as completed.`,
+        duration: 4000,
+      });
+    } else {
+      toast({
+        title: "Status changed",
+        description: `Task "${task.title}" moved to '${newStatus === "progress" ? "In Progress" : "Redline / To Do"}'.`,
+        duration: 3000,
+      });
+    }
+    console.log(`Changed task ${taskId} status to ${newStatus}`);
+  }, [customTasks, updateTaskById, archiveTask, toast]);
+
   return {
-    toggleTaskStatus
+    toggleTaskStatus,
+    changeTaskStatus
   };
 };

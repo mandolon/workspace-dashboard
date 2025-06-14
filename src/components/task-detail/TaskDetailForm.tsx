@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -24,6 +23,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     removeAssignee,
     addCollaborator,
     removeCollaborator,
+    changeTaskStatus
   } = useTaskContext();
 
   const isEditing = editingTaskId === task.id;
@@ -45,6 +45,10 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     if (removeCollaborator) removeCollaborator(taskId, idx);
   };
 
+  const handleChangeStatus = (newStatus: "redline" | "progress" | "completed") => {
+    changeTaskStatus(task.id, newStatus);
+  };
+
   return (
     <div className="space-y-3">
       <TaskDetailTitleSection
@@ -55,6 +59,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
         saveTaskEdit={saveTaskEdit}
         cancelTaskEdit={cancelTaskEdit}
         task={task}
+        onChangeStatus={handleChangeStatus}
       />
       <TaskDetailDescription />
       <TaskDetailFields

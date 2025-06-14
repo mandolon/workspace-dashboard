@@ -1,5 +1,6 @@
 
 import React from 'react';
+import TaskStatusDropdown from './TaskStatusDropdown';
 
 interface TaskDetailTitleSectionProps {
   isEditing: boolean;
@@ -9,6 +10,7 @@ interface TaskDetailTitleSectionProps {
   saveTaskEdit: (id: number | string) => void;
   cancelTaskEdit: () => void;
   task: any;
+  onChangeStatus: (newStatus: "redline" | "progress" | "completed") => void;
 }
 
 const TaskDetailTitleSection: React.FC<TaskDetailTitleSectionProps> = ({
@@ -18,7 +20,8 @@ const TaskDetailTitleSection: React.FC<TaskDetailTitleSectionProps> = ({
   startEditingTask,
   saveTaskEdit,
   cancelTaskEdit,
-  task
+  task,
+  onChangeStatus
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -34,7 +37,7 @@ const TaskDetailTitleSection: React.FC<TaskDetailTitleSectionProps> = ({
   };
   return (
     <div className="flex items-center justify-between">
-      <div className="flex-1 min-w-0 max-w-[calc(100%-130px)] mr-4">
+      <div className="flex-1 min-w-0 max-w-[calc(100%-160px)] mr-4">
         {isEditing ? (
           <input
             type="text"
@@ -55,8 +58,12 @@ const TaskDetailTitleSection: React.FC<TaskDetailTitleSectionProps> = ({
           </h1>
         )}
       </div>
-      <div className="bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ml-2">
-        REDLINE / TO DO
+      <div className="ml-2 flex-shrink-0">
+        <TaskStatusDropdown
+          status={task.status}
+          onChange={onChangeStatus}
+          disabled={isEditing}
+        />
       </div>
     </div>
   );
