@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -98,15 +97,15 @@ const TaskRow = React.memo(({
               onDeleteClick={handleDeleteClickInternal}
             />
           </TableCell>
-          {/* Add hover to FILES cell */}
-          <TableCell className="py-2 w-[8%] transition-colors hover:bg-blue-50 cursor-pointer">
+          {/* Add border highlight to FILES cell on hover */}
+          <TableCell className="py-2 w-[8%] group-hover:border group-hover:border-blue-300 border-transparent transition-colors">
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
           </TableCell>
-          {/* Add hover to ASSIGNED TO cell */}
-          <TableCell className="py-2 w-[25%] transition-colors hover:bg-blue-50 cursor-pointer">
+          {/* Add border highlight to ASSIGNED TO cell on hover */}
+          <TableCell className="py-2 w-[25%] group-hover:border group-hover:border-blue-300 border-transparent transition-colors">
             <TaskRowAssignees
               task={task}
               onRemoveAssignee={onRemoveAssignee}
@@ -117,7 +116,6 @@ const TaskRow = React.memo(({
           </TableCell>
         </TableRow>
       </TaskRowContextMenu>
-
       <DeleteTaskDialog
         isOpen={showDeleteDialog}
         onClose={handleCloseDeleteDialog}
