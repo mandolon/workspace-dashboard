@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -62,14 +63,68 @@ const TaskDetailPage = () => {
     }
   };
 
-  // Authorization: Only assignee can view
-  const isCurrentUserAssignee = React.useMemo(() => {
-    if (!currentTask || !currentTask.assignee) return false;
-    // Compare by id (new logic)
-    if ('id' in currentTask.assignee && currentTask.assignee.id && currentUser.id) {
-      return currentTask.assignee.id === currentUser.id;
+  // Comprehensive Authorization
+  const isCurrentUserTaskViewer = React.useMemo(() => {
+    if (!currentTask || !currentUser) return false;
+    // Admin users ("Armando Lopez" or "AL" or armando@company.com) see all
+    if (
+      currentUser.name === "Armando Lopez" ||
+      currentUser.name === "AL" ||
+      currentUser.email === "armando@company.com"
+    ) {
+      console.log('Access allowed: Admin user');
+      return true;
     }
-    return false;
+
+    let allowed = false;
+
+    // Assignee (by id, name, or fullName)
+    if (
+      currentTask.assignee &&
+      (
+        currentTask.assignee.id === currentUser.id ||
+        currentTask.assignee.name === currentUser.name ||
+        (currentTask.assignee.fullName && currentTask.assignee.fullName === currentUser.name)
+      )
+    ) {
+      allowed = true;
+      console.log('Access allowed: You are the assignee');
+    }
+
+    // Collab
+    if (
+      currentTask.collaborators &&
+      currentTask.collaborators.some(
+        c =>
+          (c.id && c.id === currentUser.id) ||
+          (c.name && c.name === currentUser.name) ||
+          (c.fullName && c.fullName === currentUser.name)
+      )
+    ) {
+      allowed = true;
+      console.log('Access allowed: You are a collaborator');
+    }
+
+    // Creator (by name or email fallback)
+    if (
+      (currentTask.createdBy && (
+        currentTask.createdBy === currentUser.name || 
+        currentTask.createdBy === currentUser.email
+      ))
+    ) {
+      allowed = true;
+      console.log('Access allowed: You are the creator');
+    }
+
+    if (!allowed) {
+      console.log('Access denied: ', {
+        currentUser,
+        assignee: currentTask.assignee,
+        collaborators: currentTask.collaborators,
+        createdBy: currentTask.createdBy
+      });
+    }
+    return allowed;
   }, [currentTask, currentUser]);
 
   if (!currentTask) {
@@ -85,7 +140,7 @@ const TaskDetailPage = () => {
     );
   }
 
-  if (!isCurrentUserAssignee) {
+  if (!isCurrentUserTaskViewer) {
     // Access denied state
     return (
       <AppLayout>
@@ -122,3 +177,4 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
+
