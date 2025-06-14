@@ -14,7 +14,7 @@ interface TaskBoardContentProps {
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
   onTaskArchive: (taskId: number) => void;
-  onTaskDeleted: () => void;
+  onTaskDeleted: () => void; // <-- ensure consistent signature
   onAddTask: () => void;
   // Handlers for assignment (Supabase only)
   assignPerson: (taskId: string, person: any) => void;
@@ -31,7 +31,7 @@ const TaskBoardContent = ({
   onQuickAddSave,
   onTaskClick,
   onTaskArchive,
-  onTaskDeleted,
+  onTaskDeleted, // This will just be a refresh callback
   onAddTask,
   assignPerson,
   removeAssignee,
@@ -48,7 +48,7 @@ const TaskBoardContent = ({
         onQuickAddSave={onQuickAddSave}
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
-        onTaskDeleted={onTaskDeleted}
+        onTaskDeleted={onTaskDeleted} // Pass unchanged! Now guaranteed to be () => void
         useContext={false}
         // Pass these down for assignment
         assignPerson={assignPerson}

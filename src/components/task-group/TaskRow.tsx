@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -64,7 +63,6 @@ const TaskRow = React.memo(({
   }, [handleDeleteClick, task]);
 
   const handleContextMenuDelete = useCallback((e: React.MouseEvent) => {
-    // Ensures context menu closes before opening dialog
     setTimeout(() => {
       handleDeleteClick(task, e);
     }, 0);
