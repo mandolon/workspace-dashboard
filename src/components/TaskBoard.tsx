@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -71,7 +70,8 @@ const TaskBoard: React.FC = React.memo(() => {
         onQuickAddSave={onQuickAddSave}
         onTaskClick={handleTaskClick}
         onTaskArchive={handleTaskArchive}
-        onTaskDeleted={handleTaskDeleted} {/* <-- IMPORTANT: Use the real delete */}
+        // IMPORTANT: Use the real delete handler
+        onTaskDeleted={handleTaskDeleted}
         onAddTask={onDialogOpen}
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
