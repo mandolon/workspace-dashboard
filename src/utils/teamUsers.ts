@@ -8,7 +8,7 @@ export interface TeamMember {
   name: string; // e.g. "AL"
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
-  titleRole: ArchitectureRole;
+  titleRole?: ArchitectureRole; // Made optional
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
   avatar: string;
@@ -84,7 +84,7 @@ export const TEAM_USERS: TeamMember[] = [
     name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
     fullName: `${client.firstName} ${client.lastName}`,
     crmRole: 'Client' as const,
-    titleRole: 'Client' as ArchitectureRole,
+    // titleRole removed for clients
     lastActive: '—',
     status: 'Active' as const,
     email: client.email || 'unknown@email.com',
