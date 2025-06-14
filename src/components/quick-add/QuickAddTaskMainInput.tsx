@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Input } from '@/components/ui/input';
@@ -46,7 +45,7 @@ const QuickAddTaskMainInput: React.FC<QuickAddTaskMainInputProps> = ({
         <button
           ref={projectDropdownAnchor}
           className="block text-left text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-1 transition-colors"
-          onClick={() => setShowProjectDropdown((prev: boolean) => !prev)}
+          onClick={() => setShowProjectDropdown(!showProjectDropdown)}
           style={{ background: "transparent" }}
         >
           {selectedProject || 'Select List...'}
