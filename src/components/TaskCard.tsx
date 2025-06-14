@@ -13,12 +13,12 @@ interface Task {
   dueDate: string;
   assignee: {
     name: string;
-    avatar: string;
+    avatar: string; // This seems to be a placeholder, actual avatar rendering uses initials/color
   };
   hasAttachment: boolean;
   collaborators?: Array<{
     name: string;
-    avatar: string;
+    avatar: string; // Same as above
   }>;
 }
 
@@ -50,7 +50,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       {/* Files */}
       <div className="col-span-1 flex items-center">
         {task.hasAttachment && (
-          <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
+          <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center"> {/* Increased attachment icon container for consistency if desired, though not an avatar */}
             <Paperclip className="w-3 h-3 text-orange-600" strokeWidth="2" />
           </div>
         )}
@@ -68,9 +68,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
       {/* Assignee */}
       <div className="col-span-1 flex items-center justify-end gap-1">
-        <div className="flex items-center -space-x-1">
+        <div className="flex items-center -space-x-1"> {/* Consider -space-x-1.5 or -space-x-2 if avatars overlap too much */}
           <div className={cn(
-            "w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium",
+            "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium",
             getRandomColor(task.assignee.name)
           )}>
             {getInitials(task.assignee.name)}
@@ -79,7 +79,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <div
               key={index}
               className={cn(
-                "w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
+                "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
                 getRandomColor(collaborator.name)
               )}
             >

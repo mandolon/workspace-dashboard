@@ -64,7 +64,7 @@ const TaskRowAssignees = React.memo(({
     <div className="flex items-center -space-x-1">
       {task.assignee ? (
         <div className="relative group/avatar">
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${assigneeColor}`}>
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium ${assigneeColor}`}>
             {task.assignee.name}
           </div>
           <button
@@ -79,9 +79,9 @@ const TaskRowAssignees = React.memo(({
           <DropdownMenuTrigger asChild>
             <button
               onClick={stopPropagation}
-              className="w-5 h-5 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
+              className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
             >
-              <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+              <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" /> {/* Icon size w-3 h-3 for a w-6 h-6 button */}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40 bg-popover">
@@ -103,7 +103,7 @@ const TaskRowAssignees = React.memo(({
       
       {task.collaborators?.map((collaborator, index) => (
         <div key={index} className="relative group/collaborator">
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${collaboratorColors[index]}`}>
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background ${collaboratorColors[index]}`}>
             {collaborator.name}
           </div>
           <button
@@ -120,9 +120,9 @@ const TaskRowAssignees = React.memo(({
           <DropdownMenuTrigger asChild>
             <button
               onClick={stopPropagation}
-              className="w-5 h-5 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors ml-1"
+              className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors ml-1"
             >
-              <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+              <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" /> {/* Icon size w-3 h-3 for a w-6 h-6 button */}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40 bg-popover">

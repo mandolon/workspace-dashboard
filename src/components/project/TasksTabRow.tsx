@@ -9,16 +9,19 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import TasksTabStatusIcon from './TasksTabStatusIcon';
-import { getRandomColor, formatDate } from './TasksTabUtils';
+import { getRandomColor, formatDate } from './TasksTabUtils'; // Ensure this formatDate is correct or use global one
 
 interface TasksTabRowProps {
-  task: any;
+  task: any; // Consider defining a more specific type for task if possible
   onTaskClick: (task: any) => void;
   onDeleteClick: (task: any, e: React.MouseEvent) => void;
   onContextMenuDelete: (task: any, e: React.MouseEvent) => void;
 }
 
 const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: TasksTabRowProps) => {
+  // Prefer using a robust date formatting utility, e.g., from date-fns or a shared util
+  const formattedDate = formatDate(task.dateCreated); // Assuming TasksTabUtils.formatDate is appropriate
+
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
@@ -32,12 +35,12 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
               {task.taskId} - {task.title}
             </span>
           </div>
-          <div className="col-span-3 text-muted-foreground">{formatDate(task.dateCreated)}</div>
+          <div className="col-span-3 text-muted-foreground">{formattedDate}</div>
           <div className="col-span-3 flex items-center justify-between">
             <div className="flex items-center -space-x-1">
               {task.assignee && (
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                  {task.assignee.name}
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
+                  {task.assignee.name} 
                 </div>
               )}
             </div>
