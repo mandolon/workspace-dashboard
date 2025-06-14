@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -5,14 +6,14 @@ import { cn } from '@/lib/utils';
 
 interface TaskRowFilesProps {
   hasAttachment: boolean;
-  attachmentCount?: number;
+  // attachmentCount?: number;  // No longer needed
   onAddFileClick?: (e: React.MouseEvent) => void;
   taskId?: string; // We now need the taskId to manage attachments
 }
 
 const TaskRowFiles = ({
   hasAttachment,
-  attachmentCount = 0,
+  // attachmentCount = 0,
   onAddFileClick,
   taskId,
 }: TaskRowFilesProps) => {
@@ -44,7 +45,7 @@ const TaskRowFiles = ({
   // - If 1 file: paperclip links directly to it.
   // - If >1: paperclip shows a dropdown with file links.
   return (
-    <div className="flex items-center gap-0.5 relative select-none">
+    <div className="flex items-center relative select-none">
       {(hasFiles || hasAttachment) && (
         <div className="w-6 h-6 rounded flex items-center justify-center relative group">
           {attachments.length === 1 ? (
@@ -98,10 +99,13 @@ const TaskRowFiles = ({
             <Paperclip className="w-4 h-4 text-gray-600" />
           )}
 
-          {/* Show the original attachment count in top right if available */}
-          {attachmentCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1 font-semibold z-10">
-              {attachmentCount}
+          {/* Show the attachment count as a badge in top left if available */}
+          {attachments.length > 0 && (
+            <span className="absolute -top-2 -left-2 bg-orange-600 text-white rounded-full text-[10px] px-1 font-semibold z-20 shadow"
+              style={{ minWidth: 16, minHeight: 16 }}
+              title={`${attachments.length} file${attachments.length > 1 ? 's' : ''}`}
+            >
+              {attachments.length}
             </span>
           )}
 
@@ -132,3 +136,4 @@ const TaskRowFiles = ({
 };
 
 export default TaskRowFiles;
+
