@@ -1,11 +1,13 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { getAvailableProjects } from "@/utils/projectMapping";
-import { createWhiteboard } from "@/utils/whiteboardStore";
+// import { createWhiteboard } from "@/utils/whiteboardStore"; // REMOVE IN FAVOR OF SUPABASE
 import { useUser } from "@/contexts/UserContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated }) => {
   const [open, setOpen] = useState(false);
@@ -15,15 +17,23 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
   const { currentUser } = useUser();
   const availableProjects = getAvailableProjects();
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!title.trim() || !projectId) return;
-    createWhiteboard({
-      title,
-      type: "tldraw", // Use tldraw board as default
-      projectId,
-      createdBy: currentUser.id,
-      sharedWithClient: shared,
-    });
+    // create a new empty tldraw board in Supabase
+    const id = Date.now().toString();
+    await supabase.from('whiteboards').insert([
+      {
+        id,
+        title,
+        type: "tldraw",
+        last_modified: new Date().toISOString(),
+        thumbnail: "/placeholder.svg",
+        project_id: projectId,
+        created_by: currentUser.id,
+        shared_with_client: shared,
+        tldraw_data: null
+      }
+    ]);
     setTitle("");
     setProjectId("");
     setShared(true);
