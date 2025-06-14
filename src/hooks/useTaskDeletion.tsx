@@ -25,14 +25,12 @@ export const useTaskDeletion = () => {
 
   const handleDeleteTask = useCallback(async () => {
     if (!taskToDelete) return;
-    
     setIsDeleting(true);
     try {
       await deleteTask(taskToDelete.id);
 
-      // Show designed notification
-      const toastId = toast({
-        title: (
+      toast({
+        description: (
           <div className="flex items-center gap-2 w-full">
             <span className="font-semibold">Task</span>
             <span>moved to</span>
@@ -61,11 +59,13 @@ export const useTaskDeletion = () => {
               <Undo className="w-4 h-4 mr-1 text-muted-foreground group-hover:text-foreground" strokeWidth={2.2}/>
               Undo
             </Button>
-            {/* Separator line */}
             <span className="mx-2 h-5 border-l border-border inline-block self-center" />
             <button
               type="button"
-              onClick={dismiss}
+              onClick={(e) => {
+                e.stopPropagation();
+                dismiss();
+              }}
               className="text-muted-foreground hover:text-foreground focus:outline-none p-1 ml-1 rounded"
               aria-label="Close"
               style={{ lineHeight: 0 }}

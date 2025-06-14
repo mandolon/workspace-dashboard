@@ -46,13 +46,10 @@ export const useTaskOperations = () => {
 
   const deleteTask = useCallback(async (taskId: number) => {
     try {
-      const deletedTask = softDeleteTask(taskId, "AL"); // Current user
-      
+      const deletedTask = softDeleteTask(taskId, "AL");
       if (deletedTask) {
-        const taskTitle = deletedTask.title;
-        
         toast({
-          title: (
+          description: (
             <div className="flex items-center gap-2 w-full">
               <span className="font-semibold">Task</span>
               <span>moved to</span>
@@ -81,11 +78,13 @@ export const useTaskOperations = () => {
                 <Undo className="w-4 h-4 mr-1 text-muted-foreground group-hover:text-foreground" strokeWidth={2.2}/>
                 Undo
               </Button>
-              {/* Separator line */}
               <span className="mx-2 h-5 border-l border-border inline-block self-center" />
               <button
                 type="button"
-                onClick={dismiss}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dismiss();
+                }}
                 className="text-muted-foreground hover:text-foreground focus:outline-none p-1 ml-1 rounded"
                 aria-label="Close"
                 style={{ lineHeight: 0 }}
