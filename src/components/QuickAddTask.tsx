@@ -8,6 +8,12 @@ import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/proje
 import { createPortal } from 'react-dom';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
 import QuickAddAttachments from './quick-add/QuickAddAttachments';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent
+} from '@/components/ui/popover';
+import { availablePeople, getRandomColor } from '@/utils/taskUtils';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
@@ -34,6 +40,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const taskNameInputRef = useRef<HTMLInputElement>(null);
 
   const availableProjects = getAvailableProjects();
+
+  // ================== ASSIGNEE STATE AND LOGIC ==================
+  const [assignee, setAssignee] = useState<{ name: string; avatar: string; fullName?: string } | null>(null);
+  const [showAssigneePopover, setShowAssigneePopover] = useState(false);
 
   const filteredProjects = availableProjects.filter(project =>
     project.displayName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -95,13 +105,17 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     }
   }, [showProjectDropdown, dropdownStyle]);
 
-  // handler for Save (unchanged, but simpler)
+  // Reset assignee on cancel/save
+  useEffect(() => {
+    return () => {
+      setAssignee(null);
+    };
+  }, []);
+
+  // handler for Save (unchanged, but add assignee)
   const handleSave = () => {
     if (!canSave) return;
-
-    // Convert display name to project ID
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
-
     const newTask = {
       id: Date.now(),
       title: taskName,
@@ -114,7 +128,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit' 
       }),
       dueDate: '—',
-      assignee: { name: 'ME', avatar: 'bg-gray-500' },
+      assignee: assignee ? assignee : { name: 'ME', avatar: 'bg-gray-500' },
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,
       status: defaultStatus,
@@ -124,11 +138,12 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
     // Sync attachments to the AttachmentContext
     if (attachedFiles.length > 0) {
-      addAttachments(String(newTask.id), attachedFiles, "ME");
+      addAttachments(String(newTask.id), attachedFiles, assignee?.name || "ME");
     }
     setTaskName('');
     setSelectedProject('');
     setAttachedFiles([]);
+    setAssignee(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -212,6 +227,65 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     );
   };
 
+  // ============= ASSIGNEE POPOVER UI ================
+  const renderAssigneePopover = (
+    <Popover open={showAssigneePopover} onOpenChange={setShowAssigneePopover}>
+      <PopoverTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded relative"
+          type="button"
+          aria-label={assignee ? `Assigned to ${assignee.fullName || assignee.name}` : "Assign user"}
+        >
+          {assignee ? (
+            <>
+              <div
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(assignee.name)}`}
+              >
+                {assignee.name}
+              </div>
+              <span className="max-w-[64px] truncate">{assignee.fullName || assignee.name}</span>
+              <button
+                type="button"
+                className="ml-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
+                style={{ lineHeight: 1, fontSize: 13 }}
+                onClick={e => { e.stopPropagation(); setAssignee(null); }}
+                tabIndex={-1}
+                title="Clear assignee"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </>
+          ) : (
+            <>
+              <Users className="w-3 h-3" />
+              <span>Assign</span>
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="p-1 w-44 bg-popover z-50">
+        <div className="text-xs font-semibold pb-1 px-2">Assign to...</div>
+        <div className="flex flex-col">
+          {availablePeople.map(person => (
+            <button
+              key={person.name}
+              className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent text-xs text-foreground"
+              onClick={() => { setAssignee(person); setShowAssigneePopover(false); }}
+              type="button"
+            >
+              <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getRandomColor(person.name)}`}>
+                {person.name}
+              </div>
+              <span>{person.fullName || person.name}</span>
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
@@ -244,21 +318,14 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         <div className="col-span-4 flex items-center justify-end gap-2">
           {/* Attachments refactored out */}
           <QuickAddAttachments files={attachedFiles} setFiles={setAttachedFiles} />
-          {/* User Assignment (unchanged, keep current Button) */}
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-            type="button"
-          >
-            <Users className="w-3 h-3" />
-          </Button>
+          {/* User Assignment (NOW WORKING) */}
+          {renderAssigneePopover}
           {/* Separator, Cancel, Save buttons */}
           <Separator orientation="vertical" className="h-4" />
           <Button
             variant="ghost"
             size="sm"
-            onClick={onCancel}
+            onClick={() => { onCancel(); setAssignee(null); }}
             className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
           >
             Cancel
