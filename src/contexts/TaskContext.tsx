@@ -63,11 +63,11 @@ interface TaskProviderProps {
 }
 
 export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
+  // Should not pass any arguments (default usage for custom hooks)
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
   const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
-  
-  // CORRECTED: Pass the required arguments
+
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,
@@ -115,10 +115,29 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
   }), [
-    taskOperations,
-    taskEditing,
-    taskAssignments,
-    taskStatusOperations
+    taskOperations.customTasks,
+    taskOperations.archivedTasks,
+    taskEditing.editingTaskId,
+    taskEditing.editingValue,
+    taskOperations.refreshTrigger,
+    taskOperations.createTask,
+    taskOperations.updateTaskById,
+    taskOperations.deleteTask,
+    taskOperations.restoreDeletedTask,
+    taskOperations.archiveTask,
+    taskEditing.startEditingTask,
+    taskEditing.saveTaskEdit,
+    taskEditing.cancelTaskEdit,
+    taskEditing.setEditingValue,
+    taskStatusOperations.toggleTaskStatus,
+    taskAssignments.assignPerson,
+    taskAssignments.removeAssignee,
+    taskAssignments.addCollaborator,
+    taskAssignments.removeCollaborator,
+    taskOperations.navigateToTask,
+    taskOperations.getTasksByStatus,
+    taskOperations.getAllTasks,
+    taskOperations.triggerRefresh,
   ]);
 
   return (
