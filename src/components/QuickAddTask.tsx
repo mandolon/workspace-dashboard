@@ -241,7 +241,11 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           {assignee ? (
             <>
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(assignee.name)}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${
+                  assignee.avatarColor
+                    ? assignee.avatarColor
+                    : getRandomColor(assignee.name)
+                }`}
               >
                 {assignee.name}
               </div>
@@ -275,7 +279,9 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               onClick={() => { setAssignee(person); setShowAssigneePopover(false); }}
               type="button"
             >
-              <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getRandomColor(person.name)}`}>
+              <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${
+                person.avatarColor ? person.avatarColor : getRandomColor(person.name)
+              }`}>
                 {person.name}
               </div>
               <span>{person.fullName || person.name}</span>
