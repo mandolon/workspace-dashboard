@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTasksByStatus, addTask } from '@/data/taskData';
 import { Task, TaskGroup } from '@/types/task';
+import { useUser } from '@/contexts/UserContext';
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ export const useTaskBoard = () => {
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { currentUser } = useUser();
 
   // Get task groups using centralized data
   const getTaskGroups = (): TaskGroup[] => {
@@ -81,7 +82,8 @@ export const useTaskBoard = () => {
       dateCreated: new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }),
       estimatedCompletion: '—',
       hasAttachment: false,
-      collaborators: []
+      collaborators: [],
+      createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
     });
     
     console.log('Quick add created task:', newTask);

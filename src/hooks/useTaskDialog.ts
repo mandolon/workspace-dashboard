@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { addTask } from '@/data/taskData';
 import { getProjectDisplayName } from '@/data/projectClientData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { TEAM_USERS } from '@/utils/teamUsers';
+import { useUser } from '@/contexts/UserContext';
 
 export const useTaskDialog = () => {
   const [taskName, setTaskName] = useState('');
@@ -14,6 +16,8 @@ export const useTaskDialog = () => {
   const [assignedTo, setAssignedTo] = useState<any>('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
+  const { currentUser } = useUser();
+
   const handleCreateTask = (onCreateTask: (taskData: any) => void, onClose: () => void) => {
     if (!taskName.trim() || !assignedTo) {
       return; // Cannot create if no name or assignee
@@ -21,17 +25,14 @@ export const useTaskDialog = () => {
 
     console.log('Creating task with selected project:', selectedProject);
     
-    // Convert the selected project display name to project ID
     const projectId = getProjectIdFromDisplayName(selectedProject);
     console.log('Converted to project ID:', projectId);
 
-    // If assignedTo is a string (like 'AL'), find the TEAM_USERS entry
     let assigneeObj = assignedTo;
     if (typeof assignedTo === 'string') {
       assigneeObj = TEAM_USERS.find(u => u.id === assignedTo || u.name === assignedTo || u.fullName === assignedTo) 
         || { name: assignedTo, avatar: '', id: assignedTo };
     }
-    // <-- Ensure projectId always included for assignments
     assigneeObj = {
       ...assigneeObj,
       id: assigneeObj.id,
@@ -49,11 +50,12 @@ export const useTaskDialog = () => {
       dateCreated: format(new Date(), 'MM/dd/yy'),
       estimatedCompletion: '—',
       hasAttachment: false,
-      collaborators: []
+      collaborators: [],
+      createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
     };
     
     console.log('Final task data:', taskData);
-    
+
     // Use the centralized addTask function
     const newTask = addTask(taskData);
     onCreateTask(newTask);
