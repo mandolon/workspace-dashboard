@@ -10,10 +10,8 @@ interface Props {
 const TldrawWhiteboard: React.FC<Props> = ({ roomId }) => {
   return (
     <div className="border rounded-lg overflow-hidden bg-white shadow mb-8 h-[80vh] min-h-[500px]">
-      {/* Remove invalid viewport prop. */}
-      {/* Use 'id' prop for persistence and to create unique boards */}
+      {/* Remove unsupported 'id' prop. Use only 'persistenceKey'. */}
       <Tldraw
-        id={roomId}
         persistenceKey={roomId}
         showPages={true}
         autoFocus
@@ -23,4 +21,3 @@ const TldrawWhiteboard: React.FC<Props> = ({ roomId }) => {
 };
 
 export default TldrawWhiteboard;
-
