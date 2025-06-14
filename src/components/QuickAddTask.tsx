@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -124,7 +123,8 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     }
   };
 
-  const handleProjectSelect = (project: { displayName: string; projectId: string }) => {
+  const handleProjectSelect = (project: { displayName: string; projectId: string }, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation(); // <--- prevent parent event from firing
     setSelectedProject(project.displayName);
     setShowProjectDropdown(false);
     setSearchTerm('');
@@ -166,7 +166,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             <button
               key={project.projectId}
               className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
-              onClick={() => handleProjectSelect(project)}
+              onClick={(e) => handleProjectSelect(project, e)} // <-- pass the click event so it can be stopped
             >
               {project.displayName}
             </button>
