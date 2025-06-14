@@ -102,7 +102,7 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
               <Eye className="w-4 h-4 text-muted-foreground" />
             </button>
           ) : (
-            <span className="w-3 h-3" /> {/* Just spacing for grid */}
+            <span className="w-3 h-3" /> /* Just spacing for grid */
           )}
         </div>
       </div>
