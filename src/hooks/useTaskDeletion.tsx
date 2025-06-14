@@ -55,8 +55,8 @@ export const useTaskDeletion = () => {
             deletedBy: deletedByName
           });
         } else {
-          // Legacy: include deletedBy if possible
-          await deleteTask(taskToDeleteObj.id, deletedByName);
+          // Legacy: only pass the ID, as the context only expects one argument
+          await deleteTask(taskToDeleteObj.id);
         }
 
         toast({
