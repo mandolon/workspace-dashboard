@@ -31,9 +31,12 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
     navigateToTaskFromProject(task, projectName);
   };
 
+  // Pass the task to delete!
   const handleDeleteTaskInternal = async () => {
-    await handleDeleteTask();
-    setRefreshTrigger(prev => prev + 1);
+    if (taskToDelete) {
+      await handleDeleteTask(taskToDelete);
+      setRefreshTrigger(prev => prev + 1);
+    }
   };
 
   const handleContextMenuDelete = (task: any, e: React.MouseEvent) => {
@@ -45,7 +48,6 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
     <div className="flex-1 overflow-y-auto p-4 mt-0">
       <div className="space-y-0.5">
         <TasksTabHeader />
-        
         {/* Task Rows */}
         {projectTasks.map((task) => (
           <TasksTabRow
@@ -57,7 +59,6 @@ const TasksTab = ({ projectName, projectId }: TasksTabProps) => {
           />
         ))}
       </div>
-
       <DeleteTaskDialog
         isOpen={showDeleteDialog}
         onClose={handleCloseDeleteDialog}

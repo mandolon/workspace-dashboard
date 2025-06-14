@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,6 @@ export const useTaskDeletion = () => {
 
   // Helper to check if this is a Supabase task (has taskId string, id: number, etc.)
   function isSupabaseTask(task: Task) {
-    // Supabase tasks have updatedAt and/or typical UUID taskId, legacy ones usually have simple numbers
     return !!task.taskId && !!task.updatedAt;
   }
 
@@ -26,6 +26,12 @@ export const useTaskDeletion = () => {
     if (e) e.stopPropagation();
     setTaskToDelete(task);
     setShowDeleteDialog(true);
+  }, []);
+
+  // Added: Close dialog helper
+  const handleCloseDeleteDialog = useCallback(() => {
+    setShowDeleteDialog(false);
+    setTaskToDelete(null);
   }, []);
 
   // Updated delete handler so it can accept either Task or id
@@ -36,7 +42,6 @@ export const useTaskDeletion = () => {
         taskToDeleteObj = taskOrId;
       } else if (typeof taskOrId === "number" || typeof taskOrId === "string") {
         // If only id/taskId was passed, can't resolve here, so fallback: skip
-        // (Only reliable when we have Task, always pass Task from TaskBoard)
         return;
       }
 

@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -68,12 +67,13 @@ const TaskRow = React.memo(({
     handleDeleteClick(task, e);
   }, [handleDeleteClick, task]);
 
+  // Pass the task to delete!
   const handleDeleteTaskInternal = useCallback(async () => {
-    await handleDeleteTask();
+    await handleDeleteTask(task);
     if (onTaskDeleted) {
       onTaskDeleted();
     }
-  }, [handleDeleteTask, onTaskDeleted]);
+  }, [handleDeleteTask, onTaskDeleted, task]);
 
   // Memoize row content to prevent unnecessary re-renders
   const rowContent = useMemo(() => (
@@ -157,4 +157,3 @@ const TaskRow = React.memo(({
 TaskRow.displayName = "TaskRow";
 
 export default TaskRow;
-
