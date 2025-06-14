@@ -22,7 +22,13 @@ export const getRandomColor = (name: string) => {
 };
 
 export const getInitials = (name: string) => {
-  return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+  if (!name) return '';
+  const parts = name.trim().split(' ').filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0][0].toUpperCase();
+  }
+  // First letter of first and last word
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
 export const formatDate = (dateString: string) => {
