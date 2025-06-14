@@ -60,14 +60,14 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border transition-colors hover:bg-accent/50 group">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[44%] sm:w-[36%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[47%] sm:w-[36%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Name
             </TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[7%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Files
             </TableHead>
             {/* Date Created - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[14%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[12%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
                 <button
@@ -92,11 +92,11 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
               </div>
             </TableHead>
             {/* Created by */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[14%] transition-colors group-hover:bg-accent/50 hover:bg-accent">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[10%] transition-colors group-hover:bg-accent/50 hover:bg-accent">
               Created by
             </TableHead>
             {/* Assigned to - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[21%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[18%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
                 <button
