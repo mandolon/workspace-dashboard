@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Canvas, Rect, Circle, IText } from "fabric";
 import { useParams } from "react-router-dom";
@@ -30,7 +29,7 @@ const FabricWhiteboard: React.FC = () => {
         mod =>
           mod.supabase
             .from("whiteboards")
-            .select("fabric_data, title")
+            .select("tldraw_data, title")
             .eq("id", id)
             .maybeSingle()
       );
@@ -53,9 +52,9 @@ const FabricWhiteboard: React.FC = () => {
       localCanvas = canvas;
 
       // Load saved objects if they exist
-      if (data.fabric_data) {
+      if (data.tldraw_data) {
         try {
-          canvas.loadFromJSON(data.fabric_data, () => {
+          canvas.loadFromJSON(data.tldraw_data, () => {
             canvas.renderAll();
           });
         } catch (e) {
@@ -63,7 +62,6 @@ const FabricWhiteboard: React.FC = () => {
         }
       }
       // Register drawing events
-      // Draw mode is on by default
       canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.width = 2;
       canvas.freeDrawingBrush.color = "#1a202c";
@@ -133,7 +131,7 @@ const FabricWhiteboard: React.FC = () => {
       mod =>
         mod.supabase
           .from("whiteboards")
-          .update({ fabric_data: json, updated_at: new Date().toISOString() })
+          .update({ tldraw_data: json, updated_at: new Date().toISOString() })
           .eq("id", id)
     );
     if (error) {
