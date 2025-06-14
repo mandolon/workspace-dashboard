@@ -7,6 +7,7 @@ import { Task } from '@/types/task';
 import { Undo } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { updateTaskSupabase } from '@/data/taskSupabase';
+import { useUser } from '@/contexts/UserContext'; // <-- ADDED
 
 export const useTaskDeletion = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -16,8 +17,8 @@ export const useTaskDeletion = () => {
   const { deleteTask, restoreDeletedTask } = useTaskContext();
   const { toast, dismiss } = useToast();
   const navigate = useNavigate();
+  const { currentUser } = useUser(); // <-- ADDED
 
-  // Helper to check if this is a Supabase task (has taskId string, id: number, etc.)
   function isSupabaseTask(task: Task) {
     return !!task.taskId && !!task.updatedAt;
   }
@@ -28,13 +29,11 @@ export const useTaskDeletion = () => {
     setShowDeleteDialog(true);
   }, []);
 
-  // Added: Close dialog helper
   const handleCloseDeleteDialog = useCallback(() => {
     setShowDeleteDialog(false);
     setTaskToDelete(null);
   }, []);
 
-  // Updated delete handler so it can accept either Task or id
   const handleDeleteTask = useCallback(
     async (taskOrId: Task | number | string) => {
       let taskToDeleteObj: Task | null = null;
@@ -48,15 +47,16 @@ export const useTaskDeletion = () => {
       if (!taskToDeleteObj) return;
       setIsDeleting(true);
       try {
+        const deletedByName = currentUser?.name || currentUser?.email || "—";
         if (isSupabaseTask(taskToDeleteObj)) {
-          // SOFT DELETE: Set deletedAt
+          // SOFT DELETE: Set deletedAt and deletedBy
           await updateTaskSupabase(taskToDeleteObj.taskId, {
             deletedAt: new Date().toISOString(),
-            deletedBy: undefined
+            deletedBy: deletedByName
           });
         } else {
-          // Legacy
-          await deleteTask(taskToDeleteObj.id);
+          // Legacy: include deletedBy if possible
+          await deleteTask(taskToDeleteObj.id, deletedByName);
         }
 
         toast({
@@ -116,7 +116,7 @@ export const useTaskDeletion = () => {
         setTaskToDelete(null);
       }
     },
-    [deleteTask, restoreDeletedTask, toast, navigate, dismiss]
+    [deleteTask, restoreDeletedTask, toast, navigate, dismiss, currentUser]
   );
 
   return {
@@ -128,3 +128,4 @@ export const useTaskDeletion = () => {
     handleCloseDeleteDialog
   };
 };
+
