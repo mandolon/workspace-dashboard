@@ -25,7 +25,7 @@ const InboxPage = () => {
 
   return (
     <AppLayout>
-      <div className="w-full max-w-5xl mx-auto py-6 px-6 h-full flex flex-col">
+      <div className="w-full max-w-5xl mx-auto py-6 px-4 h-full flex flex-col">
         <InboxHeader
           activeTab={activeTab}
           onTabChange={handleTabChange}
@@ -58,3 +58,4 @@ const InboxPage = () => {
 };
 
 export default InboxPage;
+
