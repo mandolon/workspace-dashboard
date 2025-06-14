@@ -54,9 +54,32 @@ const TaskTableSection = ({
   // Handle click outside to cancel quick add
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (isShowingQuickAdd && quickAddRef.current && !quickAddRef.current.contains(event.target as Node)) {
-        onSetShowQuickAdd(null);
+      // If not open, do nothing
+      if (!isShowingQuickAdd) return;
+
+      const quickAddEl = quickAddRef.current;
+      const target = event.target as Node;
+
+      // 1. If click inside QuickAdd form, do nothing
+      if (quickAddEl && quickAddEl.contains(target)) {
+        return;
       }
+
+      // 2. If click is inside a Radix popover (with [data-radix-popper-content-wrapper]),
+      //    do nothing. This covers popovers/portals etc (Radix uses this selector).
+      let node: Node | null = target;
+      while (node) {
+        if (
+          node instanceof HTMLElement &&
+          node.hasAttribute("data-radix-popper-content-wrapper")
+        ) {
+          return;
+        }
+        node = node.parentNode;
+      }
+
+      // 3. Otherwise, treat as outside and close
+      onSetShowQuickAdd(null);
     };
 
     if (isShowingQuickAdd) {
