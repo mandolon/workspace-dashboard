@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -45,7 +44,7 @@ const TaskRowFiles = ({
   // - If 1 file: paperclip links directly to it.
   // - If >1: paperclip shows a dropdown with file links.
   return (
-    <div className="flex items-center gap-2 relative select-none">
+    <div className="flex items-center gap-1 relative select-none">
       {(hasFiles || hasAttachment) && (
         <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center relative group">
           {attachments.length === 1 ? (
@@ -130,4 +129,3 @@ const TaskRowFiles = ({
 };
 
 export default TaskRowFiles;
-
