@@ -1,32 +1,20 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
 import TaskChatInput from './TaskChatInput';
-
-// Shared interface for messages
-interface ActivityMessage {
-  id: number;
-  user: string;
-  avatar: string;
-  message: string;
-  timestamp: string; // store as ISO string for localStorage
-  isCurrentUser: boolean;
-}
+import { fetchTaskMessages, insertTaskMessage, subscribeToTaskMessages, TaskMessage } from '@/data/taskMessagesSupabase';
 
 interface TaskDetailActivityProps {
   taskId?: string;
 }
 
-/**
- * Chat panel visible to users with permission (logic handled at page level).
- * Messages are stored and read from localStorage by taskId, simulating shared chat for allowed users in the browser.
- */
 const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const { currentUser } = useUser();
-  const [messages, setMessages] = useState<ActivityMessage[]>([]);
+  const [messages, setMessages] = useState<TaskMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
-
-  const storageKey = taskId ? `lovable-task-activity-${taskId}` : null;
 
   // Util
   function getInitials(name: string) {
@@ -43,47 +31,30 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     return date.toLocaleDateString();
   }
 
-  // On mount, load messages for this task from localStorage or set default
+  // Fetch messages from Supabase
   useEffect(() => {
-    if (!storageKey) return;
-    let stored: ActivityMessage[] = [];
-    try {
-      const raw = window.localStorage.getItem(storageKey);
-      if (raw) stored = JSON.parse(raw) as ActivityMessage[];
-    } catch {}
-    if (!stored.length) {
-      // First use: set builtin intro message
-      stored = [
-        {
-          id: 1,
-          user: "Kenneth A.",
-          avatar: "KA",
-          message: "Welcome to the Task Activity chat.",
-          timestamp: new Date(Date.now() - 60 * 60 * 1000 * 2).toISOString(),
-          isCurrentUser: false,
-        },
-        {
-          id: 2,
-          user: currentUser?.name || "You",
-          avatar: getInitials(currentUser?.name || "You"),
-          message: "Let's keep track of all task-related discussion here.",
-          timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-          isCurrentUser: true,
-        },
-      ];
-      window.localStorage.setItem(storageKey, JSON.stringify(stored));
-    }
-    setMessages(stored);
-    // Listen for storage updates (in other tabs)
-    function storageHandler(e: StorageEvent) {
-      if (e.key === storageKey && e.newValue) {
-        setMessages(JSON.parse(e.newValue));
-      }
-    }
-    window.addEventListener('storage', storageHandler);
-    return () => window.removeEventListener('storage', storageHandler);
-    // eslint-disable-next-line
-  }, [storageKey, currentUser?.name]);
+    let mounted = true;
+    setLoading(true);
+    setError(null);
+    if (!taskId) return;
+    fetchTaskMessages(taskId)
+      .then(msgs => { if (mounted) setMessages(msgs); })
+      .catch(err => { if (mounted) setError('Could not load messages.'); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
+  }, [taskId]);
+
+  // Subscribe to realtime message updates
+  useEffect(() => {
+    if (!taskId) return;
+    const channel = subscribeToTaskMessages(taskId, (msg) => {
+      setMessages((prev) => {
+        if (prev.some(m => m.id === msg.id)) return prev;
+        return [...prev, msg];
+      });
+    });
+    return () => { window?.supabase?.removeChannel?.(channel); };
+  }, [taskId]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -92,24 +63,14 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     }
   }, [messages]);
 
-  function saveMessages(next: ActivityMessage[]) {
-    if (storageKey)
-      window.localStorage.setItem(storageKey, JSON.stringify(next));
-    setMessages(next);
-  }
-
-  function handleSendMessageInput(value: string) {
-    if (!value.trim() || !currentUser) return;
-    const newMsg: ActivityMessage = {
-      id: (messages[messages.length - 1]?.id ?? 0) + 1,
-      user: currentUser.name,
-      avatar: getInitials(currentUser.name),
-      message: value.trim(),
-      timestamp: new Date().toISOString(),
-      isCurrentUser: true,
-    };
-    const next = [...messages, newMsg];
-    saveMessages(next);
+  async function handleSendMessageInput(value: string) {
+    if (!value.trim() || !currentUser || !taskId) return;
+    try {
+      await insertTaskMessage(taskId, currentUser.id, currentUser.name, value.trim());
+      // Message will appear via realtime subscription
+    } catch (e) {
+      setError('Failed to send message.');
+    }
   }
 
   return (
@@ -121,35 +82,35 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
 
       {/* Message List */}
       <div ref={messageListRef} className="flex-1 overflow-y-auto p-3 space-y-6 max-h-full">
-        {messages.map((msg) => (
+        {loading && <div>Loading messages...</div>}
+        {error && <div className="text-red-500 text-xs">{error}</div>}
+        {!loading && !error && messages.map((msg) => (
           <div key={msg.id} className="space-y-2">
-            <div className={`flex gap-3 ${msg.user === currentUser?.name ? 'justify-end' : 'justify-start'}`}>
-              {/* Other user (left) */}
-              {msg.user !== currentUser?.name && (
+            <div className={`flex gap-3 ${msg.user_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}>
+              {msg.user_id !== currentUser?.id && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="bg-blue-500 text-white text-xs font-medium">
-                    {msg.avatar}
+                    {getInitials(msg.user_name)}
                   </AvatarFallback>
                 </Avatar>
               )}
-              <div className={`max-w-xs ${msg.user === currentUser?.name ? 'order-first' : ''}`}>
-                {msg.user !== currentUser?.name && (
-                  <div className="text-xs font-medium mb-1">{msg.user}</div>
+              <div className={`max-w-xs ${msg.user_id === currentUser?.id ? 'order-first' : ''}`}>
+                {msg.user_id !== currentUser?.id && (
+                  <div className="text-xs font-medium mb-1">{msg.user_name}</div>
                 )}
                 <div className={`p-2 rounded-lg text-xs break-words ${
-                  msg.user === currentUser?.name
+                  msg.user_id === currentUser?.id
                     ? 'bg-blue-500 text-white ml-auto'
                     : 'bg-muted'
                 }`}>
                   {msg.message}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.timestamp)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.created_at)}</div>
               </div>
-              {/* Current user (right) */}
-              {msg.user === currentUser?.name && (
+              {msg.user_id === currentUser?.id && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="bg-green-500 text-white text-xs font-medium">
-                    {msg.avatar}
+                    {getInitials(msg.user_name)}
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -158,8 +119,8 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
         ))}
       </div>
 
-      {/* ChatGPT-style Message Input - now a separate component */}
-      <TaskChatInput onSendMessage={handleSendMessageInput} disabled={!currentUser} />
+      {/* Chat Message Input */}
+      <TaskChatInput onSendMessage={handleSendMessageInput} disabled={!currentUser || !taskId} />
     </div>
   );
 };

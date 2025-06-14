@@ -29,9 +29,9 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
           </div>
         </div>
 
-        {/* Activity Sidebar - smaller proportionally scaling width */}
+        {/* Activity Sidebar */}
         <div className="w-[25vw] min-w-[280px] max-w-[600px] border-l border-border flex-shrink-0">
-          <TaskDetailActivity />
+          <TaskDetailActivity taskId={task.taskId} />
         </div>
       </div>
     </div>
