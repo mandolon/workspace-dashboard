@@ -137,18 +137,14 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             Assigned to
           </label>
           <div className="text-xs">
-            {/* If assigned, show avatar and remove button, else show circular "+" Users button */}
             {task.assignee ? (
               <div className="flex items-center gap-1 relative min-h-[24px]">
                 <div className="relative group/avatar w-6 h-6">
-                  {/* AVATAR CIRCLE WITH INITIALS */}
                   <div
                     className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name, task.assignee.avatarColor)} text-white font-medium text-xs`}
                   >
-                    {/* FIX: Show initials based on fullName if present */}
                     {getInitials(task.assignee.fullName ?? task.assignee.name)}
                   </div>
-                  {/* Small red X in the top-left */}
                   <button
                     className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
                     onClick={handleRemove}
@@ -160,17 +156,16 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                     <X className="w-2 h-2" strokeWidth="2" />
                   </button>
                 </div>
-                {/* No name next to avatar */}
               </div>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-7 h-7 flex items-center justify-center rounded-full bg-muted hover:bg-accent border-none p-0 focus:outline-none transition-colors"
+                    className="w-6 h-6 flex items-center justify-center rounded-full bg-muted hover:bg-accent p-0 focus:outline-none transition-colors"
                     type="button"
                     aria-label="Assign user"
                   >
-                    <Users className="w-4 h-4 text-muted-foreground" strokeWidth="2" />
+                    <Users className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40 bg-popover z-50">
