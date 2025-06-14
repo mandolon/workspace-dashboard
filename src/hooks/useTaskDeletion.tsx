@@ -31,19 +31,21 @@ export const useTaskDeletion = () => {
         title: "Task deleted",
         description: `"${taskToDelete.title}" has been deleted.`,
         action: (
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+          <div className="flex items-center gap-1 mt-1">
+            <Button
+              variant="ghost"
               size="sm"
               onClick={() => restoreDeletedTask(taskToDelete.id)}
+              className="text-muted-foreground px-2 py-0 h-7"
             >
               Undo
             </Button>
+            <span className="text-xs text-border mx-1 select-none">•</span>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/settings?tab=trash')}
-              className="ml-1"
+              className="text-muted-foreground px-2 py-0 h-7"
             >
               Go to Trash
             </Button>

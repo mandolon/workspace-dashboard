@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -46,27 +47,29 @@ export const useTaskOperations = () => {
   const deleteTask = useCallback(async (taskId: number) => {
     try {
       const deletedTask = softDeleteTask(taskId, "AL"); // Current user
-      
+
       if (deletedTask) {
         const taskTitle = deletedTask.title;
-        
+
         toast({
           title: "Task deleted",
           description: `"${taskTitle}" has been deleted.`,
           action: (
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
+            <div className="flex items-center gap-1 mt-1">
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => restoreDeletedTask(taskId)}
+                className="text-muted-foreground px-2 py-0 h-7"
               >
                 Undo
               </Button>
+              <span className="text-xs text-border mx-1 select-none">•</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/settings?tab=trash')}
-                className="ml-1"
+                className="text-muted-foreground px-2 py-0 h-7"
               >
                 Go to Trash
               </Button>
