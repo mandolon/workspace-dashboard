@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -18,20 +17,13 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
 
   const handleCreate = () => {
     if (!title.trim() || !projectId) return;
--    createWhiteboard({
--      title,
--      type: "pdf",
--      projectId,
--      createdBy: currentUser.id,
--      sharedWithClient: shared,
--    });
-+    createWhiteboard({
-+      title,
-+      type: "tldraw", // Use tldraw board as default
-+      projectId,
-+      createdBy: currentUser.id,
-+      sharedWithClient: shared,
-+    });
+    createWhiteboard({
+      title,
+      type: "tldraw", // Use tldraw board as default
+      projectId,
+      createdBy: currentUser.id,
+      sharedWithClient: shared,
+    });
     setTitle("");
     setProjectId("");
     setShared(true);
