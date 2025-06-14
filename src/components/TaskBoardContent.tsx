@@ -29,27 +29,32 @@ const TaskBoardContent = ({
   onTaskDeleted,
   onAddTask
 }: TaskBoardContentProps) => {
+  // Memoize the mapped TaskGroupSections for improved performance
+  const renderedGroups = React.useMemo(
+    () => taskGroups.map((group, groupIndex) => (
+      <TaskGroupSection
+        key={`${groupIndex}-${refreshTrigger}`}
+        group={group}
+        showQuickAdd={showQuickAdd}
+        onSetShowQuickAdd={onSetShowQuickAdd}
+        onQuickAddSave={onQuickAddSave}
+        onTaskClick={onTaskClick}
+        onTaskArchive={onTaskArchive}
+        onTaskDeleted={onTaskDeleted}
+      />
+    )),
+    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted]
+  );
+
   return (
     <div className="flex-1 bg-background pl-2">
       <div className="h-full flex flex-col">
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={onAddTask} />
 
-        {/* Task Groups with ScrollArea */}
         <ScrollArea className="flex-1">
-          <div className="p-4 space-y-6"> {/* Changed space-y-4 to space-y-6 */}
-            {taskGroups.map((group, groupIndex) => (
-              <TaskGroupSection
-                key={`${groupIndex}-${refreshTrigger}`}
-                group={group}
-                showQuickAdd={showQuickAdd}
-                onSetShowQuickAdd={onSetShowQuickAdd}
-                onQuickAddSave={onQuickAddSave}
-                onTaskClick={onTaskClick}
-                onTaskArchive={onTaskArchive}
-                onTaskDeleted={onTaskDeleted}
-              />
-            ))}
+          <div className="p-4 space-y-6">
+            {renderedGroups}
           </div>
         </ScrollArea>
       </div>
@@ -58,3 +63,4 @@ const TaskBoardContent = ({
 };
 
 export default TaskBoardContent;
+

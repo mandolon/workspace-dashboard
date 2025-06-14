@@ -13,19 +13,17 @@ const TaskBoard = React.memo(() => {
     archiveTask,
     triggerRefresh
   } = useTaskContext();
-
   const { navigateToTaskDetail } = useTaskNavigation();
 
   const [isTaskDialogOpen, setIsTaskDialogOpen] = React.useState(false);
   const [showQuickAdd, setShowQuickAdd] = React.useState<string | null>(null);
 
-  const taskGroups = useMemo((): TaskGroup[] => {
+  // Memoize taskGroups to prevent unnecessary recomputation
+  const taskGroups = React.useMemo((): TaskGroup[] => {
     const redlineTasks = getTasksByStatus('redline');
     const progressTasks = getTasksByStatus('progress');
     const completedTasks = getTasksByStatus('completed');
-
     const groups: TaskGroup[] = [];
-
     if (redlineTasks.length > 0) {
       groups.push({
         title: "TASK/ REDLINE",
@@ -35,7 +33,6 @@ const TaskBoard = React.memo(() => {
         tasks: redlineTasks
       });
     }
-
     if (progressTasks.length > 0) {
       groups.push({
         title: "PROGRESS/ UPDATE",
@@ -45,7 +42,6 @@ const TaskBoard = React.memo(() => {
         tasks: progressTasks
       });
     }
-
     if (completedTasks.length > 0) {
       groups.push({
         title: "COMPLETED",
@@ -55,7 +51,6 @@ const TaskBoard = React.memo(() => {
         tasks: completedTasks
       });
     }
-
     return groups;
   }, [getTasksByStatus, refreshTrigger]);
 
@@ -103,7 +98,6 @@ const TaskBoard = React.memo(() => {
         onTaskDeleted={triggerRefresh}
         onAddTask={handleOpenTaskDialog}
       />
-
       <TaskDialog
         isOpen={isTaskDialogOpen}
         onClose={handleCloseTaskDialog}
@@ -114,5 +108,4 @@ const TaskBoard = React.memo(() => {
 });
 
 TaskBoard.displayName = "TaskBoard";
-
 export default TaskBoard;
