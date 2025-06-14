@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Paperclip, Mic, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
 
@@ -25,7 +25,9 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const { currentUser } = useUser();
   const [messages, setMessages] = useState<ActivityMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
+  const [inputHeight, setInputHeight] = useState(0);
   const messageListRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const storageKey = taskId ? `lovable-task-activity-${taskId}` : null;
 
@@ -93,6 +95,17 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     }
   }, [messages]);
 
+  // Automatically adjust textarea height like ChatGPT
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = 160; // pixels, for up to 8 rows
+      textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + "px";
+      setInputHeight(Math.min(scrollHeight, maxHeight));
+    }
+  }, [messageInput]);
+
   function saveMessages(next: ActivityMessage[]) {
     if (storageKey)
       window.localStorage.setItem(storageKey, JSON.stringify(next));
@@ -113,6 +126,11 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     const next = [...messages, newMsg];
     saveMessages(next);
     setMessageInput('');
+    setInputHeight(0);
+    // Refocus input after send
+    setTimeout(() => {
+      if (textareaRef.current) textareaRef.current.focus();
+    }, 100);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -168,36 +186,53 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
         ))}
       </div>
 
-      {/* Message Input */}
-      <div className="p-3 border-t border-border bg-background">
-        <div className="flex items-center gap-2">
-          <textarea
-            value={messageInput}
-            onChange={e => setMessageInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message and press Enter"
-            className="flex-1 border border-border rounded-md px-3 py-2 text-xs min-h-[36px] max-h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={1}
-            autoFocus={false}
-          />
-          <button
-            className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
-            onClick={() => {/* handle attachment or file */}}
-            type="button"
-            tabIndex={-1}
-            title="Attach file"
-          >
-            <Paperclip className="w-3 h-3" />
-          </button>
-          <button
-            className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
-            type="button"
-            onClick={handleSendMessage}
-            disabled={!messageInput.trim()}
-            title="Send"
-          >
-            <Send className="w-3 h-3" />
-          </button>
+      {/* ChatGPT-style Message Input */}
+      <div className="p-4 border-t border-border bg-background">
+        <div
+          className="relative w-full mx-auto max-w-2xl"
+        >
+          <div className="flex flex-col">
+            <div
+              className={
+                "relative flex items-end w-full rounded-2xl bg-muted/60 shadow-sm border border-border px-3 py-2 focus-within:ring-2 focus-within:ring-primary transition"
+              }
+            >
+              <textarea
+                ref={textareaRef}
+                value={messageInput}
+                onChange={e => setMessageInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your message... (Shift+Enter for newline)"
+                className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[36px] max-h-40 font-sans rounded-2xl placeholder:text-muted-foreground disabled:opacity-50"
+                rows={1}
+                spellCheck={true}
+                autoFocus={false}
+                style={{height: inputHeight ? `${inputHeight}px` : undefined}}
+                aria-label="Send message"
+              />
+              {/* Send Button (ChatGPT style) */}
+              <button
+                type="button"
+                onClick={handleSendMessage}
+                disabled={!messageInput.trim()}
+                className={
+                  "absolute right-2 bottom-2 transition duration-200 " +
+                  (messageInput.trim()
+                    ? "bg-green-500 hover:bg-green-600 active:bg-green-700 text-white shadow-md"
+                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60") +
+                  " rounded-full w-9 h-9 flex items-center justify-center focus:outline-none"
+                }
+                aria-label="Send message"
+                tabIndex={0}
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+            {/* Optional helper text below input */}
+            <div className="text-[11px] text-muted-foreground text-center pt-2 pb-0">
+              Press <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Shift</kbd>+<kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> for newline
+            </div>
+          </div>
         </div>
       </div>
     </div>
