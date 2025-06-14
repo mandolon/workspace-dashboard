@@ -119,3 +119,11 @@ export function toggleShareWithClient(whiteboardId: string, value: boolean) {
   const wb = whiteboards.find(w => w.id === whiteboardId);
   if (wb) wb.sharedWithClient = value;
 }
+
+// Delete a whiteboard by id
+export function deleteWhiteboard(id: string) {
+  const idx = whiteboards.findIndex(wb => wb.id === id);
+  if (idx !== -1) {
+    whiteboards.splice(idx, 1);
+  }
+}
