@@ -20,7 +20,7 @@ const ClientTab = ({ onDataChange }: ClientTabProps) => {
   return (
     <ClientTabLayout
       formData={form.formData}
-      onStatusChange={(value) => form.handleInputChange('status', value)}
+      onStatusChange={() => {}}
       onSave={form.handleSave}
     >
       {form.sections}
