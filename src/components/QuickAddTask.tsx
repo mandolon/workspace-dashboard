@@ -21,6 +21,14 @@ interface QuickAddTaskProps {
   defaultStatus: string;
 }
 
+// Define the type for people used in assignment popover/assignee
+type QuickAddTaskPerson = {
+  name: string;
+  avatar: string;
+  fullName?: string;
+  avatarColor?: string;
+};
+
 // Helper to get absolute coordinates of an element (for positioning the dropdown)
 function getAbsoluteRect(element: HTMLElement) {
   const rect = element.getBoundingClientRect();
