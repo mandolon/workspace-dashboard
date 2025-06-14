@@ -1,7 +1,13 @@
-
 import React, { useState } from "react";
-import { CheckCircle, Circle, ChevronRight, ChevronDown, Dot } from "lucide-react";
+import { CheckCircle, Circle, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 // New minimalist timeline indicator colors
 const STATUS_COLORS = {
@@ -179,12 +185,14 @@ const PhaseTimelineItem: React.FC<{
 };
 
 const ProjectTimeline: React.FC = () => (
-  <div className="w-full max-w-2xl mx-auto py-2">
-    <div className="mb-6">
-      <h3 className="font-semibold text-lg text-foreground mb-2">Project Timeline</h3>
-      <p className="text-xs text-gray-500">Current and past project milestones</p>
-    </div>
-    <div className="pl-3 border-l border-gray-200 dark:border-gray-700">
+  <Card className="w-full max-w-2xl mx-auto">
+    <CardHeader>
+      <CardTitle className="text-lg">Project Timeline</CardTitle>
+      <CardDescription className="text-xs">
+        Current and past project milestones
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="pt-0 pl-3 border-l border-gray-200 dark:border-gray-700">
       {projectPhases.map((phase, idx) => (
         <PhaseTimelineItem
           key={phase.id}
@@ -193,8 +201,8 @@ const ProjectTimeline: React.FC = () => (
           defaultOpen={idx === 0}
         />
       ))}
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 );
 
 export default ProjectTimeline;
