@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Users, MapPin, IdCard } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -10,10 +9,15 @@ import ProjectTabForm from './client/ProjectTabForm';
 const ProjectTab = () => {
   const { projectId } = useParams();
   const clientData = getClientData(projectId);
-  const form = ProjectTabForm({ onSave: () => {} });
 
-  // Full address string (e.g., 123 Main St, Sacramento, CA)
-  const fullAddress = `${form.formData.projectAddress}, ${form.formData.city}, ${form.formData.state}`;
+  // This now needs to be calculated using a local state, or
+  // you can still just render the address from the clientData like before.
+  const fullAddress = `${clientData.projectAddress}, ${clientData.city}, ${clientData.state}`;
+
+  // Save action wrapper (for button)
+  const handleSave = () => {
+    // Could trigger some refresh logic if needed
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -46,7 +50,7 @@ const ProjectTab = () => {
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="p-4 space-y-4">
-            {form.sections}
+            <ProjectTabForm onSave={handleSave} />
           </div>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
@@ -55,7 +59,7 @@ const ProjectTab = () => {
       {/* Fixed Save Button - Always Visible */}
       <div className="flex-shrink-0 p-4 border-t border-border bg-background/95 backdrop-blur-sm">
         <div className="flex justify-end">
-          <Button onClick={form.handleSave} className="px-6 py-2">
+          <Button onClick={handleSave} className="px-6 py-2">
             Save Changes
           </Button>
         </div>
@@ -65,4 +69,3 @@ const ProjectTab = () => {
 };
 
 export default ProjectTab;
-
