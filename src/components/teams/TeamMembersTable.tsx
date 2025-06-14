@@ -9,7 +9,7 @@ interface TeamMembersTableProps {
   onRoleChange: (memberId: string, newTitleRole: string) => void;
   isMobile?: boolean;
   visibleCount?: number;
-  totalCount?: number; // for showing loader in infinite scroll
+  totalCount?: number;
 }
 
 const TeamMembersTable = ({
@@ -21,7 +21,7 @@ const TeamMembersTable = ({
   totalCount,
 }: TeamMembersTableProps) => {
   if (isMobile) {
-    // Mobile: stack list vertically
+    // Mobile: stack list vertically, shows all
     return (
       <div className="flex flex-col gap-2 mb-2">
         {members.map(member => (
@@ -59,7 +59,7 @@ const TeamMembersTable = ({
           isMobile={false}
         />
       ))}
-      {/* Loader handled by parent (TeamsContent) if needed */}
+      {/* Loader handled by parent */}
     </div>
   );
 };

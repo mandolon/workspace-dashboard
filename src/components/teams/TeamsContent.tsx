@@ -20,20 +20,20 @@ const getCrmRoleForTab = (tab: "admin" | "team" | "client") => {
   return [];
 };
 
-const CLIENTS_BATCH = 10; // Show 10 clients per batch
+const MEMBERS_BATCH = 10;
 
 const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
   const isMobile = useIsMobile();
 
-  // For desktop infinite scrolling in client tab
-  const [visibleCount, setVisibleCount] = useState(CLIENTS_BATCH);
+  // For infinite scrolling
+  const [visibleCount, setVisibleCount] = useState(MEMBERS_BATCH);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reset visibleCount if teamMembers/filters change
   useEffect(() => {
-    setVisibleCount(CLIENTS_BATCH);
+    setVisibleCount(MEMBERS_BATCH);
   }, [tab, searchTerm, selectedUserId, teamMembers.length]);
 
   const roles: ArchitectureRole[] = [
@@ -65,24 +65,22 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     displayedMembers = displayedMembers.filter(m => m.id === selectedUserId);
   }
 
-  // Infinite scroll handler (desktop, only for clients tab)
+  // Infinite scroll handler (desktop, all tabs)
   const handleScroll = useCallback(() => {
     if (
       scrollContainerRef.current &&
-      tab === "client" &&
       !isMobile &&
       visibleCount < displayedMembers.length
     ) {
       const { scrollTop, clientHeight, scrollHeight } = scrollContainerRef.current;
-      // Within 60px of bottom, load more
       if (scrollTop + clientHeight >= scrollHeight - 60) {
-        setVisibleCount(count => Math.min(count + CLIENTS_BATCH, displayedMembers.length));
+        setVisibleCount(count => Math.min(count + MEMBERS_BATCH, displayedMembers.length));
       }
     }
-  }, [tab, isMobile, visibleCount, displayedMembers.length]);
+  }, [isMobile, visibleCount, displayedMembers.length]);
 
   useEffect(() => {
-    if (tab === "client" && !isMobile && scrollContainerRef.current) {
+    if (!isMobile && scrollContainerRef.current) {
       scrollContainerRef.current.addEventListener('scroll', handleScroll);
       return () => {
         if (scrollContainerRef.current) {
@@ -90,8 +88,9 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         }
       }
     }
-  }, [tab, isMobile, handleScroll]);
+  }, [isMobile, handleScroll]);
 
+  // Desktop: Infinite scroll + loader for all tabs
   return (
     <div className={`flex-1 overflow-y-auto ${isMobile ? "px-2 py-3" : "p-6"}`}>
       <TeamsSearchBar
@@ -99,7 +98,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         onSearchChange={setSearchTerm}
         isMobile={isMobile}
       />
-      {(tab === 'client' && !isMobile) ? (
+      {(!isMobile) ? (
         <ScrollArea className="h-96 w-full" type="always">
           <div ref={scrollContainerRef} style={{ maxHeight: 384, overflowY: 'auto' }}>
             <TeamMembersTable
@@ -112,7 +111,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
             />
             {visibleCount < displayedMembers.length && (
               <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
-                Loading more clients...
+                Loading more...
               </div>
             )}
           </div>
