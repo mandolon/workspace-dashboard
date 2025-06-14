@@ -28,7 +28,7 @@ interface TaskTableProps {
   onAssignedToFilterClick?: (e: React.MouseEvent) => void;
 }
 
-const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
+const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
   tasks,
   editingTaskId,
   editingValue,
@@ -51,7 +51,6 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onAssignedToFilterClick,
 }, ref) => {
   const memoizedTasks = React.useMemo(() => tasks, [tasks]);
-  // Which column is sorted and direction? Used for triangle orientation/fill
   const isDateActive = currentSortBy === 'dateCreated';
   const isAssigneeActive = currentSortBy === 'assignee';
 
@@ -59,15 +58,15 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
     <div ref={ref}>
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8 transition-colors hover:bg-blue-50 cursor-pointer">
+          <TableRow className="border-b border-border transition-colors hover:bg-accent/50 group">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Name
             </TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%] transition-colors hover:bg-blue-50 cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Files
             </TableHead>
             {/* Date Created - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%] transition-colors hover:bg-blue-50 cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
                 <button
@@ -92,7 +91,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
               </div>
             </TableHead>
             {/* Assigned to - functional filter triangle */}
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%] transition-colors hover:bg-blue-50 cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
                 <button
