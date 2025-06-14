@@ -78,7 +78,9 @@ export async function updateTaskSupabase(taskId: string, updates: Partial<Task>)
     else if (k === "createdBy") toSend["created_by"] = v;
     else if (k === "collaborators") toSend["collaborators"] = v;
     else if (k === "assignee") toSend["assignee"] = v;
-    else if (k === "description") toSend["description"] = v; // <-- handle description
+    else if (k === "description") toSend["description"] = v;
+    else if (k === "deletedAt") toSend["deleted_at"] = v; // FIX added mapping
+    else if (k === "deletedBy") toSend["deleted_by"] = v; // FIX added mapping
     else toSend[k] = v;
   });
   const { data, error } = await supabase
