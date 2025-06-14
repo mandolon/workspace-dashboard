@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { User, UserContextType } from '@/types/user';
 import { TEAM_USERS } from '@/utils/teamUsers';
@@ -23,7 +24,7 @@ export const useUser = () => {
 const LOCAL_STORAGE_KEY = 'lovable-demo-auth-userid';
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Utility to find a user by id
+  // Use avatarColor from TEAM_USERS (never from 'avatar' field!)
   const findUserById = (userId: string): User | null => {
     const u = TEAM_USERS.find(u => u.id === userId);
     if (!u) return null;
@@ -31,7 +32,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: u.id,
       name: u.fullName,
       email: u.email,
-      avatar: u.name,
+      avatar: u.avatar,
       status: u.status === "Active" ? "online" : u.status === "Inactive" ? "offline" : "away",
       bio: "",
       company: "",
@@ -40,7 +41,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       notificationsMuted: false,
       showOnlineStatus: true,
       showLastActive: true,
-      avatarColor: u.avatar || undefined
+      avatarColor: u.avatarColor || 'bg-gray-600'
     };
   };
 
