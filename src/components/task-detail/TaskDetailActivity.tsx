@@ -1,9 +1,9 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
 import TaskChatInput from './TaskChatInput';
 import { fetchTaskMessages, insertTaskMessage, subscribeToTaskMessages, TaskMessage } from '@/data/taskMessagesSupabase';
+import { supabase } from "@/integrations/supabase/client";
 
 interface TaskDetailActivityProps {
   taskId?: string;
@@ -53,7 +53,7 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
         return [...prev, msg];
       });
     });
-    return () => { window?.supabase?.removeChannel?.(channel); };
+    return () => { supabase.removeChannel(channel); };
   }, [taskId]);
 
   // Scroll to bottom on new messages
