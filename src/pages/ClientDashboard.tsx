@@ -43,6 +43,9 @@ const ClientDashboard = () => {
                 <TabsTrigger value="overview" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
+                <TabsTrigger value="timeline" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Project Timeline
+                </TabsTrigger>
                 <TabsTrigger value="team" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Team
                 </TabsTrigger>
@@ -52,6 +55,9 @@ const ClientDashboard = () => {
               </TabsList>
               <TabsContent value="overview" className="space-y-6 pt-2">
                 <ActivityFeed />
+                <ProjectTimeline />
+              </TabsContent>
+              <TabsContent value="timeline" className="pt-2">
                 <ProjectTimeline />
               </TabsContent>
               <TabsContent value="team" className="space-y-6 pt-2">
@@ -70,4 +76,3 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
-
