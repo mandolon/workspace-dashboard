@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import TaskRow from './TaskRow';
@@ -23,6 +22,33 @@ interface TaskTableProps {
   onTaskDeleted?: () => void;
 }
 
+const columns = [
+  {
+    key: "name",
+    label: "Name",
+    headClassName: "w-1/2 pl-8 text-muted-foreground font-medium text-xs py-2",
+    cellClassName: "w-1/2 pl-8",
+  },
+  {
+    key: "files",
+    label: "Files",
+    headClassName: "w-[8%] text-muted-foreground font-medium text-xs py-2",
+    cellClassName: "w-[8%]",
+  },
+  {
+    key: "dateCreated",
+    label: "Date Created",
+    headClassName: "w-[17%] text-muted-foreground font-medium text-xs py-2",
+    cellClassName: "w-[17%]",
+  },
+  {
+    key: "assignedTo",
+    label: "Assigned to",
+    headClassName: "w-[25%] text-muted-foreground font-medium text-xs py-2",
+    cellClassName: "w-[25%]",
+  },
+];
+
 const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
   tasks,
   editingTaskId,
@@ -46,10 +72,11 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-1/2 pl-8">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
+            {columns.map((col) => (
+              <TableHead key={col.key} className={col.headClassName}>
+                {col.label}
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,6 +99,8 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
               onAssignPerson={onAssignPerson}
               onAddCollaborator={onAddCollaborator}
               onTaskDeleted={onTaskDeleted}
+              columnConfig={columns}
+              // Pass columns, so the row could use className for correct alignment if it supports it
             />
           ))}
         </TableBody>
