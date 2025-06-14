@@ -1,9 +1,10 @@
+
 import React from "react";
 import {
   Pen, Highlighter, RectangleHorizontal, Circle,
   Text as TextIcon, Eraser, CircleArrowUp, ZoomIn, ZoomOut, icons
 } from "lucide-react";
-import { useEditor } from "@tldraw/tldraw";
+import { useEditor, colorStyle, sizeStyle, opacityStyle } from "@tldraw/tldraw";
 import { cn } from "@/lib/utils";
 
 const TOOL_BUTTONS: Array<{
@@ -46,8 +47,8 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setStyleForNextShapes('color', color);
-      editor.setStyleForNextShapes('size', stroke);
+      editor.setStyleForNextShapes('color', colorStyle(color));
+      editor.setStyleForNextShapes('size', sizeStyle(stroke));
     }
   }, [color, stroke, editor]);
 
@@ -68,9 +69,9 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setStyleForNextShapes('color', "#fff176");
-      editor.setStyleForNextShapes('opacity', 0.32);
-      editor.setStyleForNextShapes('size', 6);
+      editor.setStyleForNextShapes('color', colorStyle("#fff176"));
+      editor.setStyleForNextShapes('opacity', opacityStyle(0.32));
+      editor.setStyleForNextShapes('size', sizeStyle(6));
       setColor("#fff176");
       setStroke(6);
     }
