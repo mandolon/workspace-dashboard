@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Tldraw } from "@tldraw/tldraw";
 import "@tldraw/tldraw/tldraw.css";
@@ -10,7 +9,7 @@ interface Props {
 
 const TldrawWhiteboard: React.FC<Props> = ({ roomId }) => {
   return (
-    <div className="border rounded-lg overflow-hidden bg-white shadow mb-8 h-[80vh] min-h-[500px] flex flex-col">
+    <div className="w-full border rounded-lg overflow-hidden bg-white shadow mb-8 h-[80vh] min-h-[500px] flex flex-col">
       {/* Custom Toolbar */}
       <CustomTldrawToolbar />
       <div className="flex-1 min-h-0">

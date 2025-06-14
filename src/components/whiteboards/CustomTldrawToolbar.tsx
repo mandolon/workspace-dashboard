@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Pen, Highlighter, RectangleHorizontal, Circle,
@@ -161,4 +160,3 @@ const CustomTldrawToolbar: React.FC = () => {
 };
 
 export default CustomTldrawToolbar;
-
