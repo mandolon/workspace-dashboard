@@ -17,7 +17,7 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 160; // 8 rows
+      const maxHeight = 200; // Slightly taller (e.g. 10 rows)
       textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + "px";
       setInputHeight(Math.min(scrollHeight, maxHeight));
     }
@@ -55,12 +55,13 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
               value={messageInput}
               onChange={e => setMessageInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type your message..."
-              className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[60px] max-h-40 font-sans rounded-2xl placeholder:text-muted-foreground disabled:opacity-50"
-              rows={2}
+              // Removed helper text from placeholder as requested
+              placeholder=""
+              className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[80px] max-h-[200px] font-sans rounded-lg placeholder:text-muted-foreground disabled:opacity-50"
+              rows={3}
               spellCheck={true}
               autoFocus={false}
-              style={{height: inputHeight ? `${inputHeight}px` : undefined}}
+              style={{height: inputHeight ? `${inputHeight}px` : undefined, paddingTop: '0.75rem'}}
               aria-label="Send message"
               disabled={disabled}
             />
@@ -81,7 +82,7 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
               <Send className="w-4 h-4" />
             </button>
           </div>
-          {/* Helper text removed */}
+          {/* No helper text, as requested */}
         </div>
       </div>
     </div>
@@ -89,4 +90,3 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
 };
 
 export default TaskChatInput;
-
