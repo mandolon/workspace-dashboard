@@ -16,7 +16,7 @@ const TaskBoardFilters = ({ onAddTask }: TaskBoardFiltersProps) => {
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
 
   return (
-    <div className="px-4 py-2 border-b border-border">
+    <div className="px-4 py-2 border-b border-border group relative">
       <div className="flex items-center gap-2">
         <button className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
           Group: Status
@@ -34,13 +34,23 @@ const TaskBoardFilters = ({ onAddTask }: TaskBoardFiltersProps) => {
             <Button
               variant="ghost"
               size="sm"
-              className={`flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700 ${
+              className={`relative flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700 ${
                 selectedDate ? 'bg-blue-50 text-blue-600' : ''
               }`}
               title="Filter by date created"
             >
-              <Calendar className="w-3 h-3" />
-              Date Created
+              <span
+                className="hidden group-hover:inline-flex"
+                // Only show calendar icon on hover
+              >
+                <Calendar className="w-3 h-3" />
+              </span>
+              <span className="hidden group-hover:inline-flex">
+                <Filter className="w-3 h-3" />
+              </span>
+              <span className="ml-0 group-hover:ml-1 transition-all duration-150">
+                Date Created
+              </span>
               {selectedDate && (
                 <span className="ml-1 text-xs text-blue-600">
                   {selectedDate.toLocaleDateString()}
@@ -68,10 +78,19 @@ const TaskBoardFilters = ({ onAddTask }: TaskBoardFiltersProps) => {
         </Popover>
 
         {/* Assignee Filter Popover */}
-        <AssigneeFilterPopover
-          selectedPeople={selectedAssignees}
-          onChange={setSelectedAssignees}
-        />
+        <div className="relative">
+          <span
+            className="hidden group-hover:inline-flex absolute left-[-20px] top-1/2 -translate-y-1/2"
+          >
+            <Filter className="w-3 h-3 text-gray-400" />
+          </span>
+          <AssigneeFilterPopover
+            selectedPeople={selectedAssignees}
+            onChange={setSelectedAssignees}
+            buttonClassName="relative"
+            showIconOnHover={true}
+          />
+        </div>
 
         <div className="ml-auto flex items-center gap-2">
           <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
@@ -81,7 +100,6 @@ const TaskBoardFilters = ({ onAddTask }: TaskBoardFiltersProps) => {
           <button className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-gray-700 text-xs">
             Closed
           </button>
-          {/* Old Assignee button replaced by assignee filter above */}
           <div className="relative">
             <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
@@ -104,4 +122,3 @@ const TaskBoardFilters = ({ onAddTask }: TaskBoardFiltersProps) => {
 };
 
 export default TaskBoardFilters;
-

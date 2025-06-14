@@ -1,11 +1,10 @@
 
 import React, { useState } from "react";
-import { User, Users } from "lucide-react";
+import { User, Users, Filter } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-// Dummy people list for the demonstration
 const TEAM_MEMBERS = [
   { name: "Alice", avatar: "bg-blue-500" },
   { name: "Bob", avatar: "bg-pink-500" },
@@ -18,9 +17,16 @@ type Person = { name: string; avatar: string; };
 interface AssigneeFilterPopoverProps {
   selectedPeople: string[];
   onChange: (people: string[]) => void;
+  buttonClassName?: string;
+  showIconOnHover?: boolean;
 }
 
-const AssigneeFilterPopover = ({ selectedPeople, onChange }: AssigneeFilterPopoverProps) => {
+const AssigneeFilterPopover = ({
+  selectedPeople,
+  onChange,
+  buttonClassName = "",
+  showIconOnHover = false,
+}: AssigneeFilterPopoverProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -42,9 +48,15 @@ const AssigneeFilterPopover = ({ selectedPeople, onChange }: AssigneeFilterPopov
         <Button
           size="sm"
           variant="ghost"
-          className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700"
+          className={`flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-700 relative ${buttonClassName}`}
         >
-          <Users className="w-3 h-3" />
+          {showIconOnHover ? (
+            <span className="hidden group-hover:inline-flex absolute left-[-20px] top-1/2 -translate-y-1/2">
+              <Filter className="w-3 h-3 text-gray-400" />
+            </span>
+          ) : (
+            <Users className="w-3 h-3" />
+          )}
           Assignee
         </Button>
       </PopoverTrigger>
@@ -87,4 +99,3 @@ const AssigneeFilterPopover = ({ selectedPeople, onChange }: AssigneeFilterPopov
 };
 
 export default AssigneeFilterPopover;
-
