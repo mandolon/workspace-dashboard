@@ -27,6 +27,9 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  // For assignee and collaborators, attempt to check if "avatarColor" is available
+  // Note: adapt as needed if the data shape for assignee/collaborator includes avatarColor
+
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
       {/* Checkbox and Task Info */}
@@ -71,7 +74,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <div className="flex items-center -space-x-1"> {/* Consider -space-x-1.5 or -space-x-2 if avatars overlap too much */}
           <div className={cn(
             "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium",
-            getRandomColor(task.assignee.name)
+            getRandomColor(
+              task.assignee.name, 
+              task.assignee.avatarColor // Pass color if available
+            )
           )}>
             {getInitials(task.assignee.name)}
           </div>
@@ -80,7 +86,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
               key={index}
               className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-background",
-                getRandomColor(collaborator.name)
+                getRandomColor(
+                  collaborator.name,
+                  collaborator.avatarColor // Pass color if available
+                )
               )}
             >
               {getInitials(collaborator.name)}
@@ -94,5 +103,4 @@ const TaskCard = ({ task }: TaskCardProps) => {
     </div>
   );
 };
-
 export default TaskCard;

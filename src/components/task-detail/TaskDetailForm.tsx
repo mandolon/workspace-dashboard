@@ -143,7 +143,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                 <div className="relative group/avatar w-6 h-6">
                   {/* AVATAR CIRCLE WITH INITIALS */}
                   <div
-                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name)} text-white font-medium text-xs`}
+                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name, task.assignee.avatarColor)} text-white font-medium text-xs`}
                   >
                     {getInitials(task.assignee.name)}
                   </div>
@@ -178,7 +178,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                       onClick={() => handleAssign(person)}
                       className="flex items-center gap-2 cursor-pointer"
                     >
-                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name, person.avatarColor)}`}>
                         {person.name}
                       </div>
                       <span>{person.name}</span>

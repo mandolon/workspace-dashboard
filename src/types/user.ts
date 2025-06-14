@@ -1,4 +1,3 @@
-
 import { ArchitectureRole } from './roles';
 
 // TeamUser for demo
@@ -8,6 +7,7 @@ export interface TeamUser {
   fullName: string;
   role: ArchitectureRole;
   avatar: string;
+  avatarColor?: string; // ADDED for consistency if needed
 }
 
 export interface User {
@@ -23,6 +23,7 @@ export interface User {
   notificationsMuted: boolean;
   showOnlineStatus: boolean;
   showLastActive: boolean;
+  avatarColor?: string; // ADDED
 }
 
 export interface UserContextType {

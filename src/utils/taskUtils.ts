@@ -1,5 +1,6 @@
 
-export const getRandomColor = (name: string) => {
+export const getRandomColor = (name: string, userColor?: string) => {
+  if (userColor) return userColor;
   const colors = [
     'bg-red-500',
     'bg-blue-500', 

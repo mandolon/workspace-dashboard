@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { User, UserContextType } from '@/types/user';
 
@@ -25,7 +24,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     lastActive: new Date().toISOString(),
     notificationsMuted: false,
     showOnlineStatus: true,
-    showLastActive: true
+    showLastActive: true,
+    avatarColor: 'bg-blue-500' // Default avatar color for first time
   });
 
   const updateUserStatus = (status: User['status']) => {
