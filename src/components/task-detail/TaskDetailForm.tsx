@@ -147,7 +147,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                 <div className="relative group/avatar w-6 h-6">
                   <div
                     className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${
-                      canonicalAssignee.avatar ?? canonicalAssignee.avatarColor ?? getRandomColor(canonicalAssignee.name)
+                      canonicalAssignee.avatar || getRandomColor(canonicalAssignee.name)
                     } text-white font-medium text-xs`}
                   >
                     {getInitials(
@@ -185,7 +185,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                       className="flex items-center gap-2 cursor-pointer"
                     >
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${
-                        person.avatar ?? person.avatarColor ?? getRandomColor(person.name)
+                        person.avatar || getRandomColor(person.name)
                       }`}>
                         {getInitials(person.fullName ?? person.name)}
                       </div>
