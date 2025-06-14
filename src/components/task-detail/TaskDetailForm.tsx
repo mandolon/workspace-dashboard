@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
-import { Task } from '@/types/task'; // <-- Ensure Task type is imported
+import { Task } from '@/types/task'; 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { getRandomColor, availablePeople } from '@/utils/taskUtils';
+import { X, UserPlus } from 'lucide-react';
 
 interface TaskDetailFormProps {
-  task: Task; // <-- Use full Task type here
+  task: Task;
 }
 
 const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
@@ -18,14 +21,13 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     setEditingValue,
     startEditingTask,
     saveTaskEdit,
-    cancelTaskEdit
+    cancelTaskEdit,
+    assignPerson,
+    removeAssignee,
   } = useTaskContext();
 
-  // Determine if this task is currently being edited
+  // Check if this task is currently being edited
   const isEditing = editingTaskId === task.id;
-
-  // Debug log to force component refresh
-  console.log('TaskDetailForm rendering with task:', task.title);
 
   const formatCreatedDate = (dateString: string) => {
     try {
@@ -37,11 +39,9 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
   };
 
   const getCreatedByName = (createdBy: string) => {
-    // Map initials to full name using current user context
     if (createdBy === "AL" || createdBy === currentUser.name) {
       return currentUser.name;
     }
-    // Fallback to showing the initials if no mapping found
     return createdBy;
   };
 
@@ -59,11 +59,24 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     saveTaskEdit(task.id);
   };
 
+  // Assignee UI logic
+  const availableForAssignment = useMemo(() => {
+    return availablePeople;
+  }, []);
+
+  const handleAssign = useCallback((person: { name: string; avatar: string; fullName?: string }) => {
+    assignPerson(task.id, person);
+  }, [assignPerson, task.id]);
+
+  const handleRemove = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    removeAssignee(task.id);
+  }, [removeAssignee, task.id]);
+
   return (
     <div className="space-y-3">
-      {/* Task Title with Status Badge - fix overlap and alignment */}
+      {/* Task Title with Status Badge */}
       <div className="flex items-center justify-between">
-        {/* Title input or text, wrapper gets max-w to avoid badge overlap */}
         <div className="flex-1 min-w-0 max-w-[calc(100%-130px)] mr-4">
           {isEditing ? (
             <input
@@ -119,12 +132,55 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
           </div>
         </div>
 
+        {/* ------- ASSIGNEE UI ------ */}
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">
             Assigned to
           </label>
-          <div className="text-xs text-muted-foreground">
-            Select User
+          <div className="text-xs">
+            {/* If assigned, show avatar+name and remove button, else show dropdown */}
+            {task.assignee ? (
+              <div className="flex items-center gap-1">
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-[2.2px] border-background ${getRandomColor(task.assignee.name)}`}>
+                  {task.assignee.name}
+                </div>
+                <span className="truncate">{task.assignee.fullName || task.assignee.name}</span>
+                <button 
+                  className="ml-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+                  onClick={handleRemove}
+                  title="Remove assignee"
+                  type="button"
+                  aria-label="Remove assignee"
+                >
+                  <X className="w-3 h-3" strokeWidth="2" />
+                </button>
+              </div>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
+                    type="button"
+                  >
+                    <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-40 bg-popover">
+                  {availableForAssignment.map((person) => (
+                    <DropdownMenuItem
+                      key={person.name}
+                      onClick={() => handleAssign(person)}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
+                        {person.name}
+                      </div>
+                      <span>{person.fullName || person.name}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
