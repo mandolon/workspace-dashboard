@@ -1,14 +1,14 @@
-
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Task } from '@/types/task';
 import { getTasksByStatus, addTask, updateTask, softDeleteTask, restoreTask } from '@/data/taskData';
+import { Undo, X } from 'lucide-react';
 
 export const useTaskOperations = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { toast, dismiss } = useToast();
   
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
@@ -52,18 +52,51 @@ export const useTaskOperations = () => {
         const taskTitle = deletedTask.title;
         
         toast({
-          title: "Task deleted",
-          description: `"${taskTitle}" has been deleted.`,
-          action: (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => restoreDeletedTask(taskId)}
-            >
-              Undo
-            </Button>
+          title: (
+            <div className="flex items-center gap-2 w-full">
+              <span className="font-semibold">Task</span>
+              <span>moved to</span>
+              <button
+                type="button"
+                className="underline decoration-dotted underline-offset-4 text-blue-700 hover:text-blue-600 transition-colors"
+                tabIndex={0}
+                onClick={() => {
+                  navigate('/settings?tab=trash');
+                  dismiss();
+                }}
+                style={{ fontWeight: 500 }}
+              >
+                trash
+              </button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="pl-1 pr-2 py-0.5 h-7 flex items-center gap-1 group"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  restoreDeletedTask(taskId);
+                  dismiss();
+                }}
+              >
+                <Undo className="w-4 h-4 mr-1 text-muted-foreground group-hover:text-foreground" strokeWidth={2.2}/>
+                Undo
+              </Button>
+              {/* Separator line */}
+              <span className="mx-2 h-5 border-l border-border inline-block self-center" />
+              <button
+                type="button"
+                onClick={dismiss}
+                className="text-muted-foreground hover:text-foreground focus:outline-none p-1 ml-1 rounded"
+                aria-label="Close"
+                style={{ lineHeight: 0 }}
+                tabIndex={0}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           ),
           duration: 5000,
+          className: 'p-3 pr-2 w-auto min-w-[340px]',
         });
 
         triggerRefresh();
@@ -75,7 +108,7 @@ export const useTaskOperations = () => {
         variant: "destructive",
       });
     }
-  }, [toast, triggerRefresh]);
+  }, [toast, triggerRefresh, navigate, dismiss]);
 
   const restoreDeletedTask = useCallback((taskId: number) => {
     const restoredTask = restoreTask(taskId);
