@@ -50,15 +50,15 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     onSave();
   };
 
-  // Project Information Form Fields: Address, City (left), State (right)
-  const projectInformationFields = [
+  // Left Column: Project Address, City, State
+  const addressFields = [
     {
       label: 'Project Address',
       value: formData.projectAddress,
       onChange: (value: string) => handleInputChange('projectAddress', value),
       type: 'input' as const,
       placeholder: 'Enter project address...',
-      onKeyDown: handleKeyDown
+      onKeyDown: handleKeyDown,
     },
     {
       label: 'City',
@@ -66,8 +66,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('city', value),
       type: 'input' as const,
       placeholder: 'Enter city...',
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
+      onKeyDown: handleKeyDown,
     },
     {
       label: 'State',
@@ -75,16 +74,19 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('state', value),
       type: 'input' as const,
       placeholder: 'Enter state...',
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
+      onKeyDown: handleKeyDown,
     },
+  ];
+
+  // Right Column: Project Name, Scope, Notes
+  const projectDetailFields = [
     {
       label: 'Project Name',
       value: formData.projectName,
       onChange: (value: string) => handleInputChange('projectName', value),
       type: 'textarea' as const,
       placeholder: 'Enter project name...',
-      onKeyDown: handleKeyDown
+      onKeyDown: handleKeyDown,
     },
     {
       label: 'Project Scope',
@@ -92,7 +94,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('projectScope', value),
       type: 'textarea' as const,
       placeholder: 'Describe the project scope...',
-      onKeyDown: handleKeyDown
+      onKeyDown: handleKeyDown,
     },
     {
       label: 'Project Notes',
@@ -100,22 +102,57 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('projectNotes', value),
       type: 'textarea' as const,
       placeholder: 'Add any additional project notes...',
-      onKeyDown: handleKeyDown
-    }
+      onKeyDown: handleKeyDown,
+    },
   ];
 
   return {
     formData,
     handleSave,
     handleInputChange,
-    projectInformationFields,
+    projectInformationFields: [...addressFields, ...projectDetailFields], // (legacy - unused in UI, left for compatibility)
     sections: (
-      <>
-        <InformationSection
-          title="Project Information"
-          fields={projectInformationFields}
-        />
-      </>
+      <div>
+        <h3 className="text-xs font-medium text-gray-900 mb-3">Project Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Left column: Address info */}
+          <div className="space-y-4">
+            {addressFields.map((field, idx) => (
+              <div key={field.label}>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  {field.label}
+                </label>
+                <input
+                  value={field.value}
+                  onChange={e => field.onChange?.(e.target.value)}
+                  placeholder={field.placeholder}
+                  onKeyDown={field.onKeyDown}
+                  className="h-8 text-xs px-2 border rounded w-full"
+                  type="text"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Right column: Project detail fields */}
+          <div className="space-y-4">
+            {projectDetailFields.map((field, idx) => (
+              <div key={field.label}>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  {field.label}
+                </label>
+                <textarea
+                  value={field.value}
+                  onChange={e => field.onChange?.(e.target.value)}
+                  placeholder={field.placeholder}
+                  onKeyDown={field.onKeyDown}
+                  className="min-h-[38px] text-xs px-2 border rounded w-full py-1"
+                  rows={2}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     )
   };
 };
