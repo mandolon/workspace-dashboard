@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
@@ -63,11 +62,12 @@ interface TaskProviderProps {
 }
 
 export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
-  // Should not pass any arguments (default usage for custom hooks)
+  // Correct usage: no arguments for useTaskOperations
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
   const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
 
+  // Properly pass required args!
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,
@@ -75,6 +75,7 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
   );
   const crmRole = useCRMRole();
 
+  // All task state/operations must come from taskOperations, not taskStatusOperations
   const value = React.useMemo((): TaskContextType => ({
     // Task state
     customTasks: taskOperations.customTasks,
