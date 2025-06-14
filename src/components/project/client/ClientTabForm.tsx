@@ -43,7 +43,8 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
       toast({ title: "Missing info", description: "First & last name required" });
       return;
     }
-    const id = generateClientId(newClient.firstName, newClient.lastName);
+    // Generate unique Cxxxx ID
+    const id = generateClientId();
     const client: Client = { ...newClient, clientId: id, isPrimary: false };
     const updated = [...clients, client];
 
