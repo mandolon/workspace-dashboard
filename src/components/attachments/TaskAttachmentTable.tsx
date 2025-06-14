@@ -2,6 +2,20 @@
 import React from "react";
 import { X } from "lucide-react";
 import { TaskAttachment } from "@/contexts/TaskAttachmentContext";
+import { TEAM_USERS } from "@/utils/teamUsers";
+import { formatFirstNameLastInitial } from "@/utils/taskUtils";
+
+// Util for mapping author string to a Team User object to match tasks table logic
+function findTeamUserByCreatedBy(createdBy: string): { fullName?: string; name?: string; email?: string } | null {
+  if (!createdBy) return null;
+  const match = TEAM_USERS.find(
+    user =>
+      user.fullName?.toLowerCase() === createdBy.toLowerCase() ||
+      user.name?.toLowerCase() === createdBy.toLowerCase() ||
+      user.email?.toLowerCase() === createdBy.toLowerCase()
+  );
+  return match || null;
+}
 
 interface TaskAttachmentTableProps {
   attachments: TaskAttachment[];
@@ -21,7 +35,7 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
             <th className="py-2 px-3 text-left font-medium whitespace-nowrap">
               Date Created
             </th>
-            <th className="py-2 px-3 text-left font-medium">by</th>
+            <th className="py-2 px-3 text-left font-medium whitespace-nowrap">Created by</th>
             {onRemove && <th className="py-2 px-3 text-right font-medium">Action</th>}
           </tr>
         </thead>
@@ -33,39 +47,58 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
               </td>
             </tr>
           ) : (
-            attachments.map((attachment) => (
-              <tr
-                key={attachment.id}
-                className="hover:bg-muted/50 border-b transition-colors"
-              >
-                <td className="px-3 py-2 max-w-[220px] truncate">
-                  <span className="inline-block align-middle mr-2">📄</span>
-                  <a
-                    href={attachment.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline cursor-pointer truncate"
-                    title={attachment.name}
-                    download={attachment.name}
-                  >
-                    {attachment.name}
-                  </a>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">{attachment.dateCreated}</td>
-                <td className="px-3 py-2">{attachment.author}</td>
-                {onRemove && (
-                  <td className="px-3 py-2 text-right">
-                    <button
-                      onClick={() => onRemove(attachment.id)}
-                      className="p-1 hover:bg-accent rounded"
-                      aria-label="Remove attachment"
+            attachments.map((attachment) => {
+              // Format author to "FirstName L." using same logic as tasks table
+              const teamUser = findTeamUserByCreatedBy(attachment.author);
+              let displayAuthor = "";
+              if (teamUser?.fullName) {
+                displayAuthor = formatFirstNameLastInitial(teamUser.fullName);
+              } else if (teamUser?.name) {
+                displayAuthor = formatFirstNameLastInitial(teamUser.name);
+              } else if (attachment.author) {
+                displayAuthor = formatFirstNameLastInitial(attachment.author);
+              } else {
+                displayAuthor = "Unknown";
+              }
+
+              return (
+                <tr
+                  key={attachment.id}
+                  className="hover:bg-muted/50 border-b transition-colors"
+                >
+                  <td className="px-3 py-2 max-w-[220px] truncate">
+                    <span className="inline-block align-middle mr-2">📄</span>
+                    <a
+                      href={attachment.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline cursor-pointer truncate"
+                      title={attachment.name}
+                      download={attachment.name}
                     >
-                      <X className="w-3 h-3 text-destructive" />
-                    </button>
+                      {attachment.name}
+                    </a>
                   </td>
-                )}
-              </tr>
-            ))
+                  <td className="px-3 py-2 whitespace-nowrap">{attachment.dateCreated}</td>
+                  <td className="px-3 py-2">
+                    <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                      {displayAuthor}
+                    </span>
+                  </td>
+                  {onRemove && (
+                    <td className="px-3 py-2 text-right">
+                      <button
+                        onClick={() => onRemove(attachment.id)}
+                        className="p-1 hover:bg-accent rounded"
+                        aria-label="Remove attachment"
+                      >
+                        <X className="w-3 h-3 text-destructive" />
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>
@@ -74,3 +107,4 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
 };
 
 export default TaskAttachmentTable;
+
