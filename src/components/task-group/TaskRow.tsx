@@ -98,15 +98,15 @@ const TaskRow = React.memo(({
               onDeleteClick={handleDeleteClickInternal}
             />
           </TableCell>
-          {/* Border highlight only on individual FILES cell hover */}
-          <TableCell className="py-2 w-[8%] hover:border hover:border-blue-300 border-transparent transition-colors">
+          {/* Border highlight only on individual FILES cell hover, with no movement */}
+          <TableCell className="py-2 w-[8%] border border-transparent hover:border-blue-300 transition-colors">
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
           </TableCell>
-          {/* Border highlight only on individual ASSIGNED TO cell hover */}
-          <TableCell className="py-2 w-[25%] hover:border hover:border-blue-300 border-transparent transition-colors">
+          {/* Border highlight only on individual ASSIGNED TO cell hover, with no movement */}
+          <TableCell className="py-2 w-[25%] border border-transparent hover:border-blue-300 transition-colors">
             <TaskRowAssignees
               task={task}
               onRemoveAssignee={onRemoveAssignee}
