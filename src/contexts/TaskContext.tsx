@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
@@ -79,36 +80,36 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     editingTaskId: taskEditing.editingTaskId,
     editingValue: taskEditing.editingValue,
     refreshTrigger: taskOperations.refreshTrigger,
-    
+
     // Task operations
     createTask: taskOperations.createTask,
     updateTaskById: taskOperations.updateTaskById,
     deleteTask: taskOperations.deleteTask,
     restoreDeletedTask: taskOperations.restoreDeletedTask,
     archiveTask: taskOperations.archiveTask,
-    
+
     // Edit operations
     startEditingTask: taskEditing.startEditingTask,
     saveTaskEdit: taskEditing.saveTaskEdit,
     cancelTaskEdit: taskEditing.cancelTaskEdit,
     setEditingValue: taskEditing.setEditingValue,
-    
+
     // Status operations
     toggleTaskStatus: taskStatusOperations.toggleTaskStatus,
-    
+
     // Assignment operations
     assignPerson: taskAssignments.assignPerson,
     removeAssignee: taskAssignments.removeAssignee,
     addCollaborator: taskAssignments.addCollaborator,
     removeCollaborator: taskAssignments.removeCollaborator,
-    
+
     // Navigation
     navigateToTask: taskOperations.navigateToTask,
-    
+
     // Data getters
     getTasksByStatus: taskOperations.getTasksByStatus,
-    getAllTasks: () => taskOperations.getAllTasks,
-    
+    getAllTasks: taskOperations.getAllTasks,
+
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
   }), [
