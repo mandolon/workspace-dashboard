@@ -1,6 +1,15 @@
 
 import { ArchitectureRole } from './roles';
 
+// TeamUser for demo
+export interface TeamUser {
+  id: string;
+  name: string;
+  fullName: string;
+  role: ArchitectureRole;
+  avatar: string;
+}
+
 export interface User {
   id: string;
   name: string;

@@ -1,6 +1,6 @@
-
 import { Task } from '@/types/task';
 import { getProjectDisplayName } from './projectClientData';
+import { TEAM_USERS } from '@/utils/teamUsers';
 
 // Counter for generating unique TaskIDs
 let nextTaskIdNumber = 5; // Starting from 5 since we have 4 existing tasks
@@ -20,18 +20,23 @@ export const getNextTaskId = (): string => {
 // Get today's date in ISO format
 const today = new Date().toISOString();
 
-// Centralized task data with proper project ID associations, TaskIDs, and audit fields
+// Helper to get a random TeamUser for assignment
+function getRandomTeamUser() {
+  return TEAM_USERS[Math.floor(Math.random() * TEAM_USERS.length)];
+}
+
+// Centralized task data with random TeamUser assignments
 export const allTasks: Task[] = [
   {
     id: 1,
     taskId: "T0001",
     title: "Planning set finalized, set up CD's",
     projectId: "piner-piner-haus-garage",
-    project: "", // Will be populated by helper function
+    project: "",
     estimatedCompletion: "—",
     dateCreated: "8/10/22",
     dueDate: "—",
-    assignee: { name: "MH", avatar: "bg-purple-500" },
+    assignee: getRandomTeamUser(),
     hasAttachment: true,
     status: "redline",
     createdBy: "AL",
@@ -47,9 +52,9 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "12/27/23",
     dueDate: "—",
-    assignee: { name: "AL", avatar: "bg-gray-600" },
+    assignee: getRandomTeamUser(),
     hasAttachment: true,
-    collaborators: [{ name: "MP", avatar: "bg-green-500" }],
+    collaborators: [getRandomTeamUser()],
     status: "progress",
     createdBy: "AL",
     createdAt: today,
@@ -64,7 +69,7 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "12/9/23",
     dueDate: "—",
-    assignee: { name: "AL", avatar: "bg-gray-600" },
+    assignee: getRandomTeamUser(),
     hasAttachment: true,
     status: "progress",
     createdBy: "AL",
@@ -80,7 +85,7 @@ export const allTasks: Task[] = [
     estimatedCompletion: "—",
     dateCreated: "9/13/23",
     dueDate: "9/22/23, 5...",
-    assignee: { name: "AL", avatar: "bg-gray-600" },
+    assignee: getRandomTeamUser(),
     hasAttachment: false,
     status: "progress",
     createdBy: "AL",
