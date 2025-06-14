@@ -1,37 +1,92 @@
 
-import React from 'react';
-import { Paperclip, Mic } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Paperclip, Mic, Send } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useUser } from '@/contexts/UserContext';
 
-const TaskDetailActivity = () => {
-  const activities = [
+interface TaskDetailActivityProps {
+  taskId?: string;
+}
+
+interface ActivityMessage {
+  id: number;
+  user: string;
+  avatar: string;
+  message: string;
+  timestamp: Date;
+  isCurrentUser: boolean;
+}
+
+/**
+ * Task activity/chat component for Task Detail.
+ * Keeps messages client-side (resets on refresh).
+ * UI similar to MessagesTab, per-task.
+ */
+const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
+  const { currentUser } = useUser();
+  const [messages, setMessages] = useState<ActivityMessage[]>([
     {
+      id: 1,
       user: "Kenneth A.",
-      action: "The shadcn/ui Kit for Figma uses the Lucide icons as its main icon library. If you want to use a different icon set for your project, follow the instructions below.",
-      time: "2h ago",
-      type: "comment"
+      avatar: "KA",
+      message: "Welcome to the Task Activity chat.",
+      timestamp: new Date(Date.now() - 60 * 60 * 1000 * 2),
+      isCurrentUser: false,
     },
     {
-      user: "You",
-      action: "The shadcn/ui Kit for Figma uses the Lucide icons as its main icon library. If you want to use a different icon set for your project, follow the instructions below.",
-      time: "4h ago",
-      type: "comment"
+      id: 2,
+      user: currentUser?.name || "You",
+      avatar: (currentUser?.name || "Y").split(' ').map((n) => n[0]).join('').toUpperCase(),
+      message: "Let's keep track of all task-related discussion here.",
+      timestamp: new Date(Date.now() - 60 * 60 * 1000),
+      isCurrentUser: true,
     },
-    {
-      user: "Matthew",
-      action: "moved task to REDLINE / TO DO",
-      time: "1d ago",
-      type: "status"
-    },
-    {
-      user: "Armando",
-      action: "uploaded CDO-0063-Planning-Entitlement",
-      time: "2d ago",
-      type: "upload"
-    }
-  ];
+  ]);
+  const [messageInput, setMessageInput] = useState('');
+  const messageListRef = useRef<HTMLDivElement>(null);
 
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  // Human friendly timestamp ("Just now", "2h ago")
+  function getRelativeTime(date: Date) {
+    const now = new Date();
+    const diffMillis = now.getTime() - date.getTime();
+    if (diffMillis < 60 * 1000) return 'Just now';
+    if (diffMillis < 60 * 60 * 1000) return `${Math.floor(diffMillis / (60 * 1000))}m ago`;
+    if (diffMillis < 24 * 60 * 60 * 1000) return `${Math.floor(diffMillis / (60 * 60 * 1000))}h ago`;
+    return date.toLocaleDateString();
+  }
+
+  const handleSendMessage = () => {
+    const trimmed = messageInput.trim();
+    if (!trimmed) return;
+    const user = currentUser?.name || "You";
+    const avatar = (currentUser?.name || "Y").split(' ').map((n) => n[0]).join('').toUpperCase();
+
+    setMessages((msgs) => [
+      ...msgs,
+      {
+        id: (msgs[msgs.length - 1]?.id ?? 0) + 1,
+        user,
+        avatar,
+        message: trimmed,
+        timestamp: new Date(),
+        isCurrentUser: true,
+      },
+    ]);
+    setMessageInput('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -41,38 +96,72 @@ const TaskDetailActivity = () => {
         <h3 className="text-sm font-semibold">Activity</h3>
       </div>
 
-      {/* Activity List */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3">
-        {activities.map((activity, index) => (
-          <div key={index} className="flex gap-2">
-            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
-              {getInitials(activity.user)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-medium text-xs">{activity.user}</div>
-              <div className="text-xs text-muted-foreground mt-0.5 break-words">{activity.action}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">{activity.time}</div>
+      {/* Message List */}
+      <div ref={messageListRef} className="flex-1 overflow-y-auto p-3 space-y-6 max-h-full">
+        {messages.map((msg, idx) => (
+          <div key={msg.id} className="space-y-2">
+            <div className={`flex gap-3 ${msg.isCurrentUser ? 'justify-end' : 'justify-start'}`}>
+              {!msg.isCurrentUser && (
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarFallback className="bg-blue-500 text-white text-xs font-medium">
+                    {msg.avatar}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <div className={`max-w-xs ${msg.isCurrentUser ? 'order-first' : ''}`}>
+                {!msg.isCurrentUser && (
+                  <div className="text-xs font-medium mb-1">{msg.user}</div>
+                )}
+                <div className={`p-2 rounded-lg text-xs break-words ${
+                  msg.isCurrentUser
+                    ? 'bg-blue-500 text-white ml-auto'
+                    : 'bg-muted'
+                }`}>
+                  {msg.message}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.timestamp)}</div>
+              </div>
+              {msg.isCurrentUser && (
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarFallback className="bg-green-500 text-white text-xs font-medium">
+                    {msg.avatar}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </div>
           </div>
         ))}
       </div>
 
       {/* Message Input */}
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-border bg-background">
         <div className="flex items-center gap-2">
-          <input 
-            type="text" 
-            placeholder="Type your message" 
-            className="flex-1 border border-border rounded-md px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <textarea
+            value={messageInput}
+            onChange={e => setMessageInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message and press Enter"
+            className="flex-1 border border-border rounded-md px-3 py-2 text-xs min-h-[36px] max-h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={1}
+            autoFocus={false}
           />
-          <button className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted">
+          <button
+            className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
+            onClick={() => {/* handle attachment or file */}}
+            type="button"
+            tabIndex={-1}
+            title="Attach file"
+          >
             <Paperclip className="w-3 h-3" />
           </button>
-          <button className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted">
-            <Mic className="w-3 h-3" />
-          </button>
-          <button className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs hover:bg-blue-700 transition-colors">
-            Send
+          <button
+            className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
+            type="button"
+            onClick={handleSendMessage}
+            disabled={!messageInput.trim()}
+            title="Send"
+          >
+            <Send className="w-3 h-3" />
           </button>
         </div>
       </div>
@@ -81,3 +170,4 @@ const TaskDetailActivity = () => {
 };
 
 export default TaskDetailActivity;
+
