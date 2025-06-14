@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
 import InboxHeader from './InboxHeader';
@@ -56,17 +57,19 @@ const InboxContent = React.memo(({
   return (
     <div className="h-full flex flex-col">
       {/* InboxHeader is now rendered at the page level for consistent layout */}
-      <InboxToolbar
-        selectedEmails={selectedEmails}
-        totalEmails={filteredEmails.length}
-        onSelectAll={onSelectAll}
-      />
-      <EmailList
-        emails={filteredEmails}
-        selectedEmails={selectedEmails}
-        onSelectEmail={onSelectEmail}
-        onEmailClick={onEmailClick}
-      />
+      <div className="px-6 flex-1 flex flex-col">
+        <InboxToolbar
+          selectedEmails={selectedEmails}
+          totalEmails={filteredEmails.length}
+          onSelectAll={onSelectAll}
+        />
+        <EmailList
+          emails={filteredEmails}
+          selectedEmails={selectedEmails}
+          onSelectEmail={onSelectEmail}
+          onEmailClick={onEmailClick}
+        />
+      </div>
     </div>
   );
 });
@@ -74,3 +77,4 @@ const InboxContent = React.memo(({
 InboxContent.displayName = 'InboxContent';
 
 export default InboxContent;
+
