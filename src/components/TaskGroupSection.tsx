@@ -139,7 +139,7 @@ const TaskGroupSection = React.memo(({
   }, [onSetShowQuickAdd]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5"> {/* Changed space-y-2 to space-y-1.5 */}
       <TaskGroupHeader
         group={group}
         isExpanded={isExpanded}
