@@ -105,6 +105,48 @@ export type Database = {
         }
         Relationships: []
       }
+      whiteboards: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          last_modified: string
+          project_id: string
+          shared_with_client: boolean
+          thumbnail: string | null
+          title: string
+          tldraw_data: Json | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id: string
+          last_modified?: string
+          project_id: string
+          shared_with_client?: boolean
+          thumbnail?: string | null
+          title: string
+          tldraw_data?: Json | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          last_modified?: string
+          project_id?: string
+          shared_with_client?: boolean
+          thumbnail?: string | null
+          title?: string
+          tldraw_data?: Json | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
