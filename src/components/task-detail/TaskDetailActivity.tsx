@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
@@ -18,7 +17,7 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const [error, setError] = useState<string | null>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
 
-  // Util
+  // Util to get initials if needed
   function getInitials(name: string) {
     return name.split(' ').map((n) => n[0]).join('').toUpperCase();
   }
@@ -33,22 +32,26 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     return date.toLocaleDateString();
   }
 
-  // Find the CRM user by user_id if possible, otherwise by user_name
+  // Find the CRM user by user_id or user_name, and always expose both avatar & full name
   function lookupChatUser(msg: TaskMessage) {
-    // Support matching by id if possible
-    let crmUser = getCRMUser({ id: msg.user_id, name: msg.user_name, avatar: undefined, fullName: msg.user_name });
-    // Fallback: just use the TaskMessage user_name if not found
-    if (!crmUser) {
+    const crmUser = getCRMUser({
+      id: msg.user_id, // try to match by id (for internal users)
+      name: msg.user_name, // fallback to name
+      avatar: undefined,
+      fullName: undefined,
+    });
+    if (crmUser) {
       return {
-        avatar: getInitials(msg.user_name),
-        avatarColor: 'bg-gray-400',
-        fullName: msg.user_name
+        avatar: crmUser.avatar ?? getInitials(msg.user_name),
+        avatarColor: crmUser.avatarColor ?? 'bg-gray-400',
+        fullName: crmUser.fullName ?? msg.user_name,
       };
     }
+    // Fallback for unknown user
     return {
-      avatar: crmUser.avatar ?? getInitials(crmUser.fullName ?? crmUser.name),
-      avatarColor: crmUser.avatarColor ?? 'bg-gray-400',
-      fullName: crmUser.fullName ?? crmUser.name
+      avatar: getInitials(msg.user_name),
+      avatarColor: 'bg-gray-400',
+      fullName: msg.user_name
     };
   }
 
@@ -88,7 +91,6 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     if (!value.trim() || !currentUser || !taskId) return;
     try {
       await insertTaskMessage(taskId, currentUser.id, currentUser.name, value.trim());
-      // Message will appear via realtime subscription
     } catch (e) {
       setError('Failed to send message.');
     }
@@ -108,20 +110,22 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
         {!loading && !error && messages.map((msg) => {
           const isSelf = msg.user_id === currentUser?.id;
           const chatUser = lookupChatUser(msg);
+
           return (
             <div key={msg.id} className="space-y-2">
               <div className={`flex gap-3 ${isSelf ? 'justify-end' : 'justify-start'}`}>
                 {!isSelf && (
-                  <Avatar className="w-8 h-8 flex-shrink-0">
-                    <AvatarFallback className={`${chatUser.avatarColor} text-white text-xs font-medium`}>
-                      {chatUser.avatar}
-                    </AvatarFallback>
-                  </Avatar>
+                  <>
+                    <Avatar className="w-8 h-8 flex-shrink-0">
+                      <AvatarFallback className={`${chatUser.avatarColor} text-white text-xs font-medium`}>
+                        {chatUser.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                  </>
                 )}
                 <div className={`max-w-xs ${isSelf ? 'order-first' : ''}`}>
-                  {!isSelf && (
-                    <div className="text-xs font-medium mb-1">{chatUser.fullName}</div>
-                  )}
+                  {/* Always show full name for ALL users */}
+                  <div className="text-xs font-medium mb-1">{chatUser.fullName}</div>
                   <div className={`p-2 rounded-lg text-xs break-words ${
                     isSelf
                       ? 'bg-blue-500 text-white ml-auto'
@@ -151,4 +155,3 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
 };
 
 export default TaskDetailActivity;
-
