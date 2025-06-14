@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
@@ -24,9 +25,8 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
       <div className="px-4 py-3 border-b border-sidebar-border flex flex-col items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center hover:bg-accent rounded-md transition-colors">
-            {/* Avatar shown in collapsed mode */}
-            {/* Uncommented below line for collapsed mode */}
-            <UserAvatar user={currentUser} size="sm" />
+            {/* Avatar shown in collapsed mode, status DOT hidden */}
+            <UserAvatar user={currentUser} size="sm" showStatus={false} />
           </DropdownMenuTrigger>
           <UserDropdownMenu 
             user={currentUser}
