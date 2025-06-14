@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Search, RotateCcw, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -8,7 +7,7 @@ import { formatDate } from '@/utils/taskUtils';
 import { restoreTask, softDeleteTask } from '@/data/taskHelpers';
 import { updateTaskSupabase, deleteTaskSupabase, fetchAllTasks } from '@/data/taskSupabase';
 import { useRealtimeTasks } from '@/hooks/useRealtimeTasks';
-import { useNavigate } from 'react-router-dom'; // <-- ADDED
+import { useNavigate } from 'react-router-dom';
 
 const TrashTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,7 +15,7 @@ const TrashTab = () => {
   const [restoringIds, setRestoringIds] = useState<string[]>([]);
   const { tasks: allTasks, loading } = useRealtimeTasks();
   const [optimisticallyRestored, setOptimisticallyRestored] = useState<string[]>([]);
-  const navigate = useNavigate(); // <-- ADDED
+  const navigate = useNavigate();
 
   const deletedTasks = useMemo(() => {
     return (allTasks ?? []).filter(
@@ -33,10 +32,10 @@ const TrashTab = () => {
     );
   }, [deletedTasks, searchQuery]);
 
+  // Fix logic: Supabase task is true if taskId matches expected format and id is a number
   function isSupabaseTask(task) {
-    return typeof task.taskId === "string" && task.taskId.startsWith("T") && typeof task.id === "number"
-      ? false
-      : true;
+    // A Supabase task will have a taskId as "T####" and a numeric id (not legacy weird combos)
+    return typeof task.taskId === "string" && /^T\d+/.test(task.taskId) && typeof task.id === "number";
   }
 
   const handleRestore = async (taskId) => {
@@ -50,6 +49,7 @@ const TrashTab = () => {
     }
 
     if (isSupabaseTask(task)) {
+      console.log("[TrashTab] Restoring SUPABASE task via updateTaskSupabase", task);
       try {
         const result = await updateTaskSupabase(task.taskId, { deletedAt: null, deletedBy: null });
         setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
@@ -77,6 +77,7 @@ const TrashTab = () => {
         setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
       }
     } else {
+      console.log("[TrashTab] Restoring LEGACY task via restoreTask", task);
       try {
         restoreTask(taskId);
         setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
@@ -232,4 +233,3 @@ const TrashTab = () => {
 };
 
 export default TrashTab;
-
