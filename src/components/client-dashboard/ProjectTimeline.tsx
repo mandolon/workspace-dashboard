@@ -1,12 +1,21 @@
 
 import React, { useState } from "react";
-import { CheckCircle, Circle, ChevronDown, ChevronRight, Dot } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { CheckCircle, Circle, ChevronRight, ChevronDown, Dot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// --- DATA STRUCTURE ---
-// Each project can define its own phases + milestones array.
+// New minimalist timeline indicator colors
+const STATUS_COLORS = {
+  complete: "bg-green-500 border-green-500",
+  current: "bg-blue-500 border-blue-500",
+  upcoming: "bg-gray-300 border-gray-300",
+};
+
+const TEXT_COLORS = {
+  complete: "text-green-700 dark:text-green-400",
+  current: "text-blue-700 dark:text-blue-400",
+  upcoming: "text-gray-500 dark:text-gray-400",
+};
+
 const projectPhases = [
   {
     id: "phase-1",
@@ -50,94 +59,142 @@ const projectPhases = [
   }
 ];
 
-// --- SUBCOMPONENT: MilestoneItem ---
-const MilestoneItem: React.FC<{ milestone: { name: string; complete: boolean } }> = ({ milestone }) => (
-  <div className="flex items-center gap-2 py-1 pl-1">
-    {milestone.complete ? (
-      <CheckCircle className="w-4 h-4 text-green-500" aria-label="Completed" />
-    ) : (
-      <Circle className="w-4 h-4 text-gray-400" aria-label="Not completed" />
-    )}
-    <span className={cn("text-sm", milestone.complete ? "text-muted-foreground line-through" : "text-foreground")}>
-      {milestone.name}
-    </span>
-  </div>
-);
-
-// --- SUBCOMPONENT: PhaseCard ---
-const PhaseCard: React.FC<{
-  phase: typeof projectPhases[number];
-  defaultOpen?: boolean;
-}> = ({ phase, defaultOpen }) => {
-  const [open, setOpen] = useState(defaultOpen || phase.complete); // Completed phases open by default
-
-  // Progress = % milestones complete
-  const completedCount = phase.milestones.filter(m => m.complete).length;
-  const percentComplete = Math.round((completedCount / phase.milestones.length) * 100);
-
+// Minimal Timeline Milestone
+const MilestoneTimelineItem: React.FC<{
+  milestone: { name: string; complete: boolean };
+  isLast: boolean;
+}> = ({ milestone, isLast }) => {
+  const color = milestone.complete ? STATUS_COLORS.complete : STATUS_COLORS.upcoming;
+  const text = milestone.complete ? TEXT_COLORS.complete : TEXT_COLORS.upcoming;
   return (
-    <Card className={cn("mb-4 border-l-4", 
-      phase.complete ? "border-green-500 bg-green-50 dark:bg-green-900/10"
-      : completedCount > 0 ? "border-blue-500 bg-blue-50 dark:bg-blue-900/10"
-      : "border-gray-200 dark:bg-neutral-900/20"
-    )}>
-      <CardHeader className="flex flex-row items-center p-4 cursor-pointer select-none" onClick={() => setOpen(o => !o)}>
-        <div className="flex items-center gap-2 w-full">
-          {/* Expand/collapse arrow */}
-          {open 
-            ? <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
-          {/* Phase completion icon */}
-          {phase.complete ? (
-            <CheckCircle className="w-5 h-5 text-green-500" />
-          ) : completedCount > 0 ? (
-            <Dot className="w-5 h-5 text-blue-500" />
-          ) : (
-            <Circle className="w-5 h-5 text-gray-300" />
-          )}
-          <div>
-            <CardTitle className="text-base font-semibold">{phase.title}</CardTitle>
-            <div className="flex items-center gap-2 text-xs mt-0.5">
-              <span>
-                {phase.complete
-                  ? "Complete"
-                  : completedCount > 0
-                    ? `${completedCount} of ${phase.milestones.length} milestones complete`
-                    : "Not started"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      {open && (
-        <CardContent className="py-2 pt-0 pl-4">
-          <Progress className="mb-2" value={percentComplete} />
-          <div>
-            {phase.milestones.map(milestone => (
-              <MilestoneItem key={milestone.name} milestone={milestone} />
-            ))}
-          </div>
-        </CardContent>
+    <div className="flex items-start relative pl-7 pb-2 last:pb-0 group">
+      <span
+        className={cn(
+          "absolute left-1 top-1 w-3 h-3 border-2 rounded-full",
+          color
+        )}
+        aria-hidden="true"
+      />
+      {!isLast && (
+        <span className="absolute left-[7.5px] top-4 w-px h-4 bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
       )}
-    </Card>
+      <span className={cn("text-xs sm:text-sm", text, "pl-1")}>
+        {milestone.complete ? (
+          <span className="mr-1 inline-block align-middle"><CheckCircle className="w-3 h-3 inline text-green-500" /></span>
+        ) : (
+          <span className="mr-1 inline-block align-middle"><Circle className="w-3 h-3 inline text-gray-400" /></span>
+        )}
+        {milestone.name}
+      </span>
+    </div>
   );
 };
 
-// --- MAIN EXPORT: ProjectTimeline ---
-const ProjectTimeline: React.FC = () => (
-  <div className="w-full py-2 flex flex-col gap-2">
-    <div className="mb-2">
-      <h3 className="font-semibold text-base text-foreground mb-4">Project Timeline</h3>
+// Minimal Timeline Phase
+const PhaseTimelineItem: React.FC<{
+  phase: typeof projectPhases[number];
+  isLast: boolean;
+  defaultOpen?: boolean;
+}> = ({ phase, isLast, defaultOpen }) => {
+  // In progress if any milestone complete but not all
+  const completedCount = phase.milestones.filter(m => m.complete).length;
+  const isCurrent = completedCount > 0 && !phase.complete;
+  const dotColor = phase.complete
+    ? STATUS_COLORS.complete
+    : isCurrent
+    ? STATUS_COLORS.current
+    : STATUS_COLORS.upcoming;
+
+  const textColor = phase.complete
+    ? TEXT_COLORS.complete
+    : isCurrent
+    ? TEXT_COLORS.current
+    : TEXT_COLORS.upcoming;
+
+  const statusText = phase.complete
+    ? "Complete"
+    : isCurrent
+    ? `${completedCount} of ${phase.milestones.length} complete`
+    : "Not started";
+
+  const [open, setOpen] = useState(defaultOpen || isCurrent);
+
+  return (
+    <div className="relative flex gap-4">
+      {/* Main vertical timeline dot/line */}
+      <div className="flex flex-col items-center">
+        <span
+          className={cn(
+            "w-4 h-4 rounded-full border-2",
+            dotColor,
+            open ? "" : "opacity-80"
+          )}
+          aria-label={statusText}
+        />
+        {!isLast && (
+          <span
+            className="w-px flex-1 bg-gray-200 dark:bg-gray-700"
+            style={{ minHeight: '32px' }}
+            aria-hidden="true"
+          />
+        )}
+      </div>
+      {/* Phase Content */}
+      <div className="flex-1 pb-5">
+        <button
+          type="button"
+          onClick={() => setOpen(o => !o)}
+          className={cn(
+            "flex items-center gap-2 py-1 group bg-transparent text-left w-full",
+            open ? "" : "opacity-80"
+          )}
+          aria-expanded={open}
+        >
+          {open ? (
+            <ChevronDown className={cn("w-4 h-4 text-gray-400 transition-transform", open && "rotate-180")} />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          )}
+          <span className={cn("font-medium text-sm sm:text-base", textColor)}>
+            {phase.title}
+          </span>
+          <span className="ml-2 text-xs text-gray-400 hidden sm:inline">
+            {statusText}
+          </span>
+        </button>
+        {open && (
+          <div className="mt-2 pl-1">
+            {phase.milestones.map((milestone, idx) => (
+              <MilestoneTimelineItem
+                key={milestone.id}
+                milestone={milestone}
+                isLast={idx === phase.milestones.length - 1}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-    {projectPhases.map((phase, idx) => (
-      <PhaseCard
-        key={phase.id}
-        phase={phase}
-        defaultOpen={idx === 0}
-      />
-    ))}
+  );
+};
+
+const ProjectTimeline: React.FC = () => (
+  <div className="w-full max-w-2xl mx-auto py-2">
+    <div className="mb-6">
+      <h3 className="font-semibold text-lg text-foreground mb-2">Project Timeline</h3>
+      <p className="text-xs text-gray-500">Current and past project milestones</p>
+    </div>
+    <div className="pl-3 border-l border-gray-200 dark:border-gray-700">
+      {projectPhases.map((phase, idx) => (
+        <PhaseTimelineItem
+          key={phase.id}
+          phase={phase}
+          isLast={idx === projectPhases.length - 1}
+          defaultOpen={idx === 0}
+        />
+      ))}
+    </div>
   </div>
 );
 
 export default ProjectTimeline;
-
