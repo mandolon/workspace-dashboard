@@ -22,10 +22,10 @@ export const useTaskOperations = () => {
   const createTask = useCallback((taskData: any) => {
     console.log('Creating task via context:', taskData);
 
-    // Always use the centralized addTask
+    // Always use the centralized addTask with explicit createdBy
     addTask({
       ...taskData,
-      createdBy: currentUser?.name ?? "Unknown",
+      createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });

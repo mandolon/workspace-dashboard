@@ -57,16 +57,18 @@ export const getTaskByTaskId = (taskId: string): Task | undefined => {
   return undefined;
 };
 
-export const addTask = (taskData: Omit<Task, 'id' | 'taskId' | 'createdBy' | 'createdAt' | 'updatedAt'>): Task => {
+export const addTask = (
+  taskData: Omit<Task, "id" | "taskId" | "createdAt" | "updatedAt">
+): Task => {
   const now = new Date().toISOString();
   const newTask: Task = {
     ...taskData,
     id: Date.now(),
     taskId: generateTaskId(),
     project: getProjectDisplayName(taskData.projectId),
-    createdBy: "AL",
+    createdBy: taskData.createdBy,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
   baseTasks.push(newTask);
   return newTask;
