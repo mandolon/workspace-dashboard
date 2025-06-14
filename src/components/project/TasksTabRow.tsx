@@ -51,7 +51,7 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
             <div className="flex items-center -space-x-1">
               {task.assignee && (
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                  {getInitials(task.assignee.name)}
+                  {getInitials(task.assignee.fullName ?? task.assignee.name)}
                 </div>
               )}
             </div>

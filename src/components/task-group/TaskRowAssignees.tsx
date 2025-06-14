@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,7 +22,7 @@ const TaskRowAssignees = React.memo(({
   onAddCollaborator
 }: TaskRowAssigneesProps) => {
   const assigneeColor = useMemo(() =>
-    task.assignee ? getRandomColor(task.assignee.name) : '',
+    task.assignee ? getRandomColor(task.assignee.fullName ?? task.assignee.name) : '',
     [task.assignee]
   );
   const collaboratorColors = useMemo(() =>
@@ -71,7 +70,7 @@ const TaskRowAssignees = React.memo(({
         <div className="relative group/avatar">
           {/* Avatar WITH initials */}
           <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${assigneeColor}`}>
-            <span className="text-white text-xs font-medium">{getInitials(task.assignee.name)}</span>
+            <span className="text-white text-xs font-medium">{getInitials(task.assignee.fullName ?? task.assignee.name)}</span>
           </div>
           {/* Remove Assignee (X) - top left, small */}
           {canAssign && (
@@ -107,9 +106,9 @@ const TaskRowAssignees = React.memo(({
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
-                    {getInitials(person.name)}
+                    {getInitials(person.fullName ?? person.name)}
                   </div>
-                  <span>{person.name}</span>
+                  <span>{person.fullName ?? person.name}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -120,7 +119,7 @@ const TaskRowAssignees = React.memo(({
       {task.collaborators?.map((collaborator, index) => (
         <div key={index} className="relative group/collaborator">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${collaboratorColors[index]}`}>
-            <span className="text-white text-xs font-medium">{getInitials(collaborator.name)}</span>
+            <span className="text-white text-xs font-medium">{getInitials(collaborator.fullName ?? collaborator.name)}</span>
           </div>
           {canAssign && (
             <button
@@ -154,9 +153,9 @@ const TaskRowAssignees = React.memo(({
                 className="flex items-center gap-2 cursor-pointer"
               >
                 <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
-                  {getInitials(person.name)}
+                  {getInitials(person.fullName ?? person.name)}
                 </div>
-                <span>{person.fullName}</span>
+                <span>{person.fullName ?? person.name}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

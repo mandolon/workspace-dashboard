@@ -60,7 +60,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
               task.assignee?.avatarColor // Optional chaining in case assignee is null
             )
           )}>
-            {getInitials(task.assignee?.name ?? '')}
+            {getInitials(task.assignee?.fullName ?? task.assignee?.name ?? '')}
           </div>
           {/* COLLABORATORS */}
           {task.collaborators?.map((collaborator, index) => (
@@ -74,7 +74,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 )
               )}
             >
-              {getInitials(collaborator.name)}
+              {getInitials(collaborator.fullName ?? collaborator.name)}
             </div>
           ))}
         </div>
