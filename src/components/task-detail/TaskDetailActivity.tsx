@@ -1,59 +1,41 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Paperclip, Mic, Send } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
 
-interface TaskDetailActivityProps {
-  taskId?: string;
-}
-
+// Shared interface for messages
 interface ActivityMessage {
   id: number;
   user: string;
   avatar: string;
   message: string;
-  timestamp: Date;
+  timestamp: string; // store as ISO string for localStorage
   isCurrentUser: boolean;
 }
 
+interface TaskDetailActivityProps {
+  taskId?: string;
+}
+
 /**
- * Task activity/chat component for Task Detail.
- * Keeps messages client-side (resets on refresh).
- * UI similar to MessagesTab, per-task.
+ * Chat panel visible to users with permission (logic handled at page level).
+ * Messages are stored and read from localStorage by taskId, simulating shared chat for allowed users in the browser.
  */
 const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
   const { currentUser } = useUser();
-  const [messages, setMessages] = useState<ActivityMessage[]>([
-    {
-      id: 1,
-      user: "Kenneth A.",
-      avatar: "KA",
-      message: "Welcome to the Task Activity chat.",
-      timestamp: new Date(Date.now() - 60 * 60 * 1000 * 2),
-      isCurrentUser: false,
-    },
-    {
-      id: 2,
-      user: currentUser?.name || "You",
-      avatar: (currentUser?.name || "Y").split(' ').map((n) => n[0]).join('').toUpperCase(),
-      message: "Let's keep track of all task-related discussion here.",
-      timestamp: new Date(Date.now() - 60 * 60 * 1000),
-      isCurrentUser: true,
-    },
-  ]);
+  const [messages, setMessages] = useState<ActivityMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
   const messageListRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-    }
-  }, [messages]);
+  const storageKey = taskId ? `lovable-task-activity-${taskId}` : null;
 
-  // Human friendly timestamp ("Just now", "2h ago")
-  function getRelativeTime(date: Date) {
+  // Util
+  function getInitials(name: string) {
+    return name.split(' ').map((n) => n[0]).join('').toUpperCase();
+  }
+
+  function getRelativeTime(dateIso: string) {
+    const date = new Date(dateIso);
     const now = new Date();
     const diffMillis = now.getTime() - date.getTime();
     if (diffMillis < 60 * 1000) return 'Just now';
@@ -62,23 +44,74 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     return date.toLocaleDateString();
   }
 
+  // On mount, load messages for this task from localStorage or set default
+  useEffect(() => {
+    if (!storageKey) return;
+    let stored: ActivityMessage[] = [];
+    try {
+      const raw = window.localStorage.getItem(storageKey);
+      if (raw) stored = JSON.parse(raw) as ActivityMessage[];
+    } catch {}
+    if (!stored.length) {
+      // First use: set builtin intro message
+      stored = [
+        {
+          id: 1,
+          user: "Kenneth A.",
+          avatar: "KA",
+          message: "Welcome to the Task Activity chat.",
+          timestamp: new Date(Date.now() - 60 * 60 * 1000 * 2).toISOString(),
+          isCurrentUser: false,
+        },
+        {
+          id: 2,
+          user: currentUser?.name || "You",
+          avatar: getInitials(currentUser?.name || "You"),
+          message: "Let's keep track of all task-related discussion here.",
+          timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+          isCurrentUser: true,
+        },
+      ];
+      window.localStorage.setItem(storageKey, JSON.stringify(stored));
+    }
+    setMessages(stored);
+    // Listen for storage updates (in other tabs)
+    function storageHandler(e: StorageEvent) {
+      if (e.key === storageKey && e.newValue) {
+        setMessages(JSON.parse(e.newValue));
+      }
+    }
+    window.addEventListener('storage', storageHandler);
+    return () => window.removeEventListener('storage', storageHandler);
+    // eslint-disable-next-line
+  }, [storageKey, currentUser?.name]);
+
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  function saveMessages(next: ActivityMessage[]) {
+    if (storageKey)
+      window.localStorage.setItem(storageKey, JSON.stringify(next));
+    setMessages(next);
+  }
+
   const handleSendMessage = () => {
     const trimmed = messageInput.trim();
-    if (!trimmed) return;
-    const user = currentUser?.name || "You";
-    const avatar = (currentUser?.name || "Y").split(' ').map((n) => n[0]).join('').toUpperCase();
-
-    setMessages((msgs) => [
-      ...msgs,
-      {
-        id: (msgs[msgs.length - 1]?.id ?? 0) + 1,
-        user,
-        avatar,
-        message: trimmed,
-        timestamp: new Date(),
-        isCurrentUser: true,
-      },
-    ]);
+    if (!trimmed || !currentUser) return;
+    const newMsg: ActivityMessage = {
+      id: (messages[messages.length - 1]?.id ?? 0) + 1,
+      user: currentUser.name,
+      avatar: getInitials(currentUser.name),
+      message: trimmed,
+      timestamp: new Date().toISOString(),
+      isCurrentUser: true,
+    };
+    const next = [...messages, newMsg];
+    saveMessages(next);
     setMessageInput('');
   };
 
@@ -98,22 +131,23 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
 
       {/* Message List */}
       <div ref={messageListRef} className="flex-1 overflow-y-auto p-3 space-y-6 max-h-full">
-        {messages.map((msg, idx) => (
+        {messages.map((msg) => (
           <div key={msg.id} className="space-y-2">
-            <div className={`flex gap-3 ${msg.isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-              {!msg.isCurrentUser && (
+            <div className={`flex gap-3 ${msg.user === currentUser?.name ? 'justify-end' : 'justify-start'}`}>
+              {/* Other user (left) */}
+              {msg.user !== currentUser?.name && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="bg-blue-500 text-white text-xs font-medium">
                     {msg.avatar}
                   </AvatarFallback>
                 </Avatar>
               )}
-              <div className={`max-w-xs ${msg.isCurrentUser ? 'order-first' : ''}`}>
-                {!msg.isCurrentUser && (
+              <div className={`max-w-xs ${msg.user === currentUser?.name ? 'order-first' : ''}`}>
+                {msg.user !== currentUser?.name && (
                   <div className="text-xs font-medium mb-1">{msg.user}</div>
                 )}
                 <div className={`p-2 rounded-lg text-xs break-words ${
-                  msg.isCurrentUser
+                  msg.user === currentUser?.name
                     ? 'bg-blue-500 text-white ml-auto'
                     : 'bg-muted'
                 }`}>
@@ -121,7 +155,8 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.timestamp)}</div>
               </div>
-              {msg.isCurrentUser && (
+              {/* Current user (right) */}
+              {msg.user === currentUser?.name && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="bg-green-500 text-white text-xs font-medium">
                     {msg.avatar}
@@ -170,4 +205,3 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
 };
 
 export default TaskDetailActivity;
-
