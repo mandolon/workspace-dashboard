@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 
 interface ExcalidrawData {
-  elements: any[];
+  elements: readonly any[];
   appState: any;
   files?: Record<string, any>;
 }
@@ -17,8 +17,11 @@ const ExcalidrawWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [excalidrawData, setExcalidrawData] = useState<ExcalidrawData | null>(null);
-  const excalidrawAPIRef = useRef<any>(null); // This will be set via onReady
-  const [scene, setScene] = useState<{ elements: any[]; appState: any; files?: any }>({ elements: [], appState: {}, files: {} });
+  const [scene, setScene] = useState<ExcalidrawData>({
+    elements: [],
+    appState: {},
+    files: {},
+  });
   const { currentUser } = useUser();
 
   // Load whiteboard data from Supabase
@@ -46,20 +49,14 @@ const ExcalidrawWhiteboard: React.FC = () => {
 
   // Save handler
   const handleSave = async () => {
-    let newData = scene;
-    // If possible, get the full API's state (in case)
-    if (excalidrawAPIRef.current) {
-      const api = excalidrawAPIRef.current;
-      try {
-        newData = {
-          elements: api.getSceneElements(),
-          appState: api.getAppState(),
-          files: api.getFiles ? api.getFiles() : {},
-        };
-      } catch (e) {
-        // fallback to current scene
-      }
-    }
+    // Save current scene
+    const { elements, appState, files } = scene;
+    // Store as plain JS arrays/objects
+    const newData = {
+      elements: Array.isArray(elements) ? elements : Array.from(elements ?? []),
+      appState,
+      files: files ?? {},
+    };
     const { error } = await supabase
       .from("whiteboards")
       .update({ excalidraw_data: newData, updated_at: new Date().toISOString() })
@@ -85,7 +82,6 @@ const ExcalidrawWhiteboard: React.FC = () => {
         <Excalidraw
           initialData={excalidrawData ?? undefined}
           onChange={(elements, appState, files) => setScene({ elements, appState, files })}
-          onReady={(api) => { excalidrawAPIRef.current = api; }}
         />
       </div>
     </div>
@@ -93,3 +89,4 @@ const ExcalidrawWhiteboard: React.FC = () => {
 };
 
 export default ExcalidrawWhiteboard;
+
