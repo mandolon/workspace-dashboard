@@ -39,8 +39,7 @@ const TaskRowFiles = ({
 
   return (
     <div className="flex items-center relative select-none">
-      <div className="w-6 h-6 rounded flex items-center justify-center relative group border border-transparent hover:border-accent transition-colors bg-white">
-
+      <div className="w-6 h-6 rounded flex items-center justify-center relative group border border-transparent hover:border-accent transition-colors bg-background">
         {hasFiles ? (
           <>
             {attachments.length === 1 ? (
@@ -69,7 +68,7 @@ const TaskRowFiles = ({
                 </button>
                 {showDropdown && (
                   <div
-                    className="absolute left-0 top-7 z-20 bg-white border rounded shadow-lg min-w-[180px] py-1"
+                    className="absolute left-0 top-7 z-20 bg-background border rounded shadow-lg min-w-[180px] py-1"
                     onClick={e => e.stopPropagation()}
                     onMouseLeave={() => setShowDropdown(false)}
                   >
@@ -79,7 +78,7 @@ const TaskRowFiles = ({
                         href={att.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block px-3 py-1 text-xs text-gray-800 hover:bg-accent truncate"
+                        className="block px-3 py-1 text-xs text-foreground hover:bg-accent truncate"
                         title={att.name}
                         style={{ maxWidth: 160 }}
                         download={att.name}
@@ -100,24 +99,24 @@ const TaskRowFiles = ({
             </span>
             {/* Show the plus button to add more files */}
             <button
-              className="absolute bottom-0.5 -right-2 bg-white border border-gray-200 rounded-full p-[2px] shadow hover:bg-accent z-30 transition-colors"
+              className="absolute bottom-0.5 -right-2 bg-background border border-border rounded-full p-[2px] shadow hover:bg-accent z-30 transition-colors"
               style={{ minWidth: 18, minHeight: 18 }}
               onClick={handleUploadClick}
               aria-label="Add file"
               tabIndex={0}
             >
-              <Plus className="w-3 h-3 text-gray-900" strokeWidth="2" />
+              <Plus className="w-3 h-3 text-foreground" strokeWidth="2" />
             </button>
           </>
         ) : (
           // If no files, only show plus
           <button
-            className="w-full h-full flex items-center justify-center rounded-full hover:bg-accent transition-colors"
+            className="w-full h-full flex items-center justify-center rounded-full bg-background border border-border hover:bg-accent transition-colors"
             onClick={handleUploadClick}
             aria-label="Add file"
             tabIndex={0}
           >
-            <Plus className="w-4 h-4 text-gray-900" strokeWidth="2" />
+            <Plus className="w-4 h-4 text-foreground" strokeWidth="2" />
           </button>
         )}
 
