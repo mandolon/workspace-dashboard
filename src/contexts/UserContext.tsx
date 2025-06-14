@@ -13,7 +13,7 @@ export const useUser = () => {
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>({
-    id: 'user-1',
+    id: 't0', // CHANGED from "user-1" to "t0" to match TeamUser id for Armando Lopez
     name: 'Armando Lopez',
     email: 'armando@company.com',
     avatar: 'AL',
