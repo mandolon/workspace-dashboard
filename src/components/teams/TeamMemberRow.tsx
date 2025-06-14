@@ -21,24 +21,14 @@ interface TeamMemberRowProps {
 }
 
 const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'text-green-600 bg-green-100';
-      case 'Inactive':
-        return 'text-gray-600 bg-gray-100';
-      case 'Pending':
-        return 'text-yellow-600 bg-yellow-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
-    }
-  };
+  // Helper for consistent color: use avatarColor if present
+  const getColor = (member: any) => member.avatarColor || getRandomColor(member.id);
 
   return (
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
       <div className="col-span-3">
         <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 ${getRandomColor(member.id)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
+          <div className={`w-8 h-8 ${getColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
             {getInitials(member.fullName ?? member.name)}
           </div>
           <span className="font-medium">{member.fullName ?? member.name}</span>

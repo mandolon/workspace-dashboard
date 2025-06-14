@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getRandomColor, getInitials } from '@/utils/taskUtils';
@@ -17,11 +18,14 @@ const TaskRowAssignees = ({
   onAssignPerson,
   onAddCollaborator,
 }: TaskRowAssigneesProps) => {
+  // Helper to pick color: use avatarColor if present, else generate
+  const getColor = (person: any) => person.avatarColor || getRandomColor(person.name);
+
   return (
     <div className="flex items-center -space-x-1">
       {task.assignee && (
         <div
-          className={`${getRandomColor(task.assignee.name, task.assignee.avatarColor)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background`}
+          className={`${getColor(task.assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background`}
         >
           {getInitials(task.assignee.fullName ?? task.assignee.name)}
         </div>
@@ -29,7 +33,7 @@ const TaskRowAssignees = ({
       {task.collaborators?.map((collaborator: any, idx: number) => (
         <div
           key={idx}
-          className={`${getRandomColor(collaborator.name, collaborator.avatarColor)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background`}
+          className={`${getColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background`}
         >
           {getInitials(collaborator.fullName ?? collaborator.name)}
         </div>

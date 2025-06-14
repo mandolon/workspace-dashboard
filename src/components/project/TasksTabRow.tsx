@@ -21,6 +21,9 @@ interface TasksTabRowProps {
 const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: TasksTabRowProps) => {
   const formattedDate = formatDate(task.dateCreated);
 
+  // Helper for consistent color: use avatarColor if present
+  const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
+
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
@@ -50,7 +53,7 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
           <div className="col-span-3 flex items-center justify-between">
             <div className="flex items-center -space-x-1">
               {task.assignee && (
-                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getRandomColor(task.assignee.name)}`}>
+                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getColor(task.assignee)}`}>
                   {getInitials(task.assignee.fullName ?? task.assignee.name)}
                 </div>
               )}

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Circle } from 'lucide-react';
 import { User } from '@/types/user';
@@ -29,9 +30,12 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
     md: 'w-3 h-3'
   };
 
+  // Always use user.avatarColor if present, fallback to gray
+  const avatarBg = user.avatarColor || 'bg-gray-600';
+
   return (
     <div className="relative">
-      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white ${AVATAR_INITIALS_CLASSNAMES}`}>
+      <div className={`${sizeClasses[size]} ${avatarBg} rounded-full flex items-center justify-center text-white ${AVATAR_INITIALS_CLASSNAMES}`}>
         {user.avatar}
       </div>
       {showStatus && (

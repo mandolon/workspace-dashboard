@@ -10,6 +10,9 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  // Helper for consistent color: use avatarColor if present
+  const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
+
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
       {/* Checkbox and Task Info */}
@@ -53,28 +56,16 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div className="col-span-1 flex items-center justify-end gap-1">
         <div className="flex items-center -space-x-1">
           {/* ASSIGNEE */}
-          <div className={cn(
-            "w-7 h-7 rounded-full text-white",
-            AVATAR_INITIALS_CLASSNAMES,
-            getRandomColor(
-              task.assignee?.name ?? '',
-              task.assignee?.avatarColor 
-            )
-          )}>
-            {getInitials(task.assignee?.fullName ?? task.assignee?.name ?? '')}
-          </div>
+          {task.assignee && (
+            <div className={`w-7 h-7 rounded-full text-white ${AVATAR_INITIALS_CLASSNAMES} ${getColor(task.assignee)}`}>
+              {getInitials(task.assignee.fullName ?? task.assignee.name)}
+            </div>
+          )}
           {/* COLLABORATORS */}
           {task.collaborators?.map((collaborator, index) => (
             <div
               key={index}
-              className={cn(
-                "w-7 h-7 rounded-full text-white border-2 border-background",
-                AVATAR_INITIALS_CLASSNAMES,
-                getRandomColor(
-                  collaborator.name,
-                  collaborator.avatarColor
-                )
-              )}
+              className={`w-7 h-7 rounded-full text-white border-2 border-background ${AVATAR_INITIALS_CLASSNAMES} ${getColor(collaborator)}`}
             >
               {getInitials(collaborator.fullName ?? collaborator.name)}
             </div>
