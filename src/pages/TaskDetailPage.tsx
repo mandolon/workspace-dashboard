@@ -6,13 +6,15 @@ import TaskDetail from '@/components/TaskDetail';
 import { getTaskById, getTaskByTaskId } from '@/data/taskData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskContext } from '@/contexts/TaskContext';
-import { Task } from '@/types/task';
+import { useUser } from '@/contexts/UserContext';
+import { TaskUser, Task } from '@/types/task';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { refreshTrigger, customTasks } = useTaskContext();
+  const { currentUser } = useUser();
 
   const { returnTo, returnToName, returnToTab } = location.state || {};
 
@@ -61,6 +63,16 @@ const TaskDetailPage = () => {
     }
   };
 
+  // Authorization: Only assignee can view
+  const isCurrentUserAssignee = React.useMemo(() => {
+    if (!currentTask || !currentTask.assignee) return false;
+    // Compare by name or email (if available)
+    const userNameMatch = currentUser.name && currentTask.assignee.name && currentUser.name === currentTask.assignee.name;
+    const userFullNameMatch = currentUser.name && currentTask.assignee.fullName && currentUser.name === currentTask.assignee.fullName;
+    const userEmailMatch = currentUser.email && 'email' in currentTask.assignee && currentUser.email === (currentTask.assignee as any).email;
+    return userNameMatch || userFullNameMatch || userEmailMatch;
+  }, [currentTask, currentUser]);
+
   if (!currentTask) {
     return (
       <AppLayout>
@@ -68,6 +80,26 @@ const TaskDetailPage = () => {
           <div className="text-center">
             <h2 className="text-lg font-semibold">Loading task...</h2>
             <p className="text-muted-foreground">If this persists, the task may not exist.</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!isCurrentUserAssignee) {
+    // Access denied state
+    return (
+      <AppLayout>
+        <div className="h-full flex items-center justify-center">
+          <div className="text-center max-w-sm mx-auto">
+            <h2 className="text-lg font-semibold">Access Denied</h2>
+            <p className="text-muted-foreground mb-4">You are not assigned to this task and cannot view the details or participate in activity.</p>
+            <button
+              onClick={handleBack}
+              className="mt-2 px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+            >
+              Go Back
+            </button>
           </div>
         </div>
       </AppLayout>
@@ -91,3 +123,4 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
+
