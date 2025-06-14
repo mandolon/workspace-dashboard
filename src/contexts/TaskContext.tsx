@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
@@ -14,36 +13,36 @@ interface TaskContextType {
   editingTaskId: number | null;
   editingValue: string;
   refreshTrigger: number;
-
+  
   // Task operations
   createTask: (taskData: any) => void;
   updateTaskById: (taskId: number, updates: Partial<Task>) => void;
   deleteTask: (taskId: number) => Promise<void>;
   restoreDeletedTask: (taskId: number) => void;
   archiveTask: (taskId: number) => void;
-
+  
   // Edit operations
   startEditingTask: (task: Task) => void;
   saveTaskEdit: (taskId: number) => void;
   cancelTaskEdit: () => void;
   setEditingValue: (value: string) => void;
-
+  
   // Status operations
   toggleTaskStatus: (taskId: number) => void;
-
+  
   // Assignment operations
   assignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   removeAssignee: (taskId: number) => void;
   addCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   removeCollaborator: (taskId: number, collaboratorIndex: number) => void;
-
+  
   // Navigation
   navigateToTask: (task: Task) => void;
-
+  
   // Data getters
   getTasksByStatus: (status: string) => Task[];
   getAllTasks: () => Task[];
-
+  
   // Refresh trigger
   triggerRefresh: () => void;
 }
@@ -63,12 +62,9 @@ interface TaskProviderProps {
 }
 
 export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
-  // Correct usage: no arguments for useTaskOperations
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
   const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
-
-  // Properly pass required args!
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,
@@ -76,7 +72,6 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
   );
   const crmRole = useCRMRole();
 
-  // All task state/operations must come from taskOperations, not taskStatusOperations
   const value = React.useMemo((): TaskContextType => ({
     // Task state
     customTasks: taskOperations.customTasks,
@@ -84,62 +79,43 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     editingTaskId: taskEditing.editingTaskId,
     editingValue: taskEditing.editingValue,
     refreshTrigger: taskOperations.refreshTrigger,
-
+    
     // Task operations
     createTask: taskOperations.createTask,
     updateTaskById: taskOperations.updateTaskById,
     deleteTask: taskOperations.deleteTask,
     restoreDeletedTask: taskOperations.restoreDeletedTask,
     archiveTask: taskOperations.archiveTask,
-
+    
     // Edit operations
     startEditingTask: taskEditing.startEditingTask,
     saveTaskEdit: taskEditing.saveTaskEdit,
     cancelTaskEdit: taskEditing.cancelTaskEdit,
     setEditingValue: taskEditing.setEditingValue,
-
+    
     // Status operations
     toggleTaskStatus: taskStatusOperations.toggleTaskStatus,
-
+    
     // Assignment operations
     assignPerson: taskAssignments.assignPerson,
     removeAssignee: taskAssignments.removeAssignee,
     addCollaborator: taskAssignments.addCollaborator,
     removeCollaborator: taskAssignments.removeCollaborator,
-
+    
     // Navigation
     navigateToTask: taskOperations.navigateToTask,
-
+    
     // Data getters
     getTasksByStatus: taskOperations.getTasksByStatus,
-    getAllTasks: taskOperations.getAllTasks,
-
+    getAllTasks: () => taskOperations.getAllTasks,
+    
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
   }), [
-    taskOperations.customTasks,
-    taskOperations.archivedTasks,
-    taskEditing.editingTaskId,
-    taskEditing.editingValue,
-    taskOperations.refreshTrigger,
-    taskOperations.createTask,
-    taskOperations.updateTaskById,
-    taskOperations.deleteTask,
-    taskOperations.restoreDeletedTask,
-    taskOperations.archiveTask,
-    taskEditing.startEditingTask,
-    taskEditing.saveTaskEdit,
-    taskEditing.cancelTaskEdit,
-    taskEditing.setEditingValue,
-    taskStatusOperations.toggleTaskStatus,
-    taskAssignments.assignPerson,
-    taskAssignments.removeAssignee,
-    taskAssignments.addCollaborator,
-    taskAssignments.removeCollaborator,
-    taskOperations.navigateToTask,
-    taskOperations.getTasksByStatus,
-    taskOperations.getAllTasks,
-    taskOperations.triggerRefresh,
+    taskOperations,
+    taskEditing,
+    taskAssignments,
+    taskStatusOperations
   ]);
 
   return (
