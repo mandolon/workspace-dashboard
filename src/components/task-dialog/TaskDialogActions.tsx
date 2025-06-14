@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { TEAM_USERS } from '@/utils/teamUsers';
 
 interface TaskDialogActionsProps {
   assignedTo: string;
@@ -50,15 +51,22 @@ const TaskDialogActions = ({
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
-        <Select value={assignedTo} onValueChange={setAssignedTo}>
+        <Select 
+          value={assignedTo && assignedTo.id ? assignedTo.id : assignedTo} 
+          onValueChange={value => {
+            // Always set full TEAM_USERS object as assignee
+            const found = TEAM_USERS.find(u => u.id === value);
+            setAssignedTo(found || value);
+          }}
+        >
           <SelectTrigger className="w-28 h-7 text-xs">
             <User className="w-3 h-3 mr-1" />
             <SelectValue placeholder="Assignee" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="MH">MH</SelectItem>
-            <SelectItem value="AL">AL</SelectItem>
-            <SelectItem value="MP">MP</SelectItem>
+            {TEAM_USERS.map(u => (
+              <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
         

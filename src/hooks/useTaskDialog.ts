@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { addTask } from '@/data/taskData';
 import { getProjectDisplayName } from '@/data/projectClientData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
+import { TEAM_USERS } from '@/utils/teamUsers';
 
 export const useTaskDialog = () => {
   const [taskName, setTaskName] = useState('');
@@ -10,7 +11,7 @@ export const useTaskDialog = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [addDescription, setAddDescription] = useState(false);
   const [description, setDescription] = useState('');
-  const [assignedTo, setAssignedTo] = useState('');
+  const [assignedTo, setAssignedTo] = useState<any>('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
   const handleCreateTask = (onCreateTask: (taskData: any) => void, onClose: () => void) => {
@@ -24,18 +25,20 @@ export const useTaskDialog = () => {
     const projectId = getProjectIdFromDisplayName(selectedProject);
     console.log('Converted to project ID:', projectId);
 
+    // If assignedTo is a string (like 'AL'), find the TEAM_USERS entry
+    let assigneeObj = assignedTo;
+    if (typeof assignedTo === 'string') {
+      assigneeObj = TEAM_USERS.find(u => u.id === assignedTo || u.name === assignedTo || u.fullName === assignedTo) 
+        || { name: assignedTo, avatar: '', id: assignedTo };
+    }
+
     const taskData = {
       title: taskName,
       projectId: projectId,
       project: getProjectDisplayName(projectId),
       status: selectedStatus || 'progress',
       description: addDescription ? description : '',
-      assignee: assignedTo ? {
-        name: assignedTo,
-        avatar: assignedTo === 'MH' ? 'bg-purple-500' : 
-                assignedTo === 'AL' ? 'bg-gray-600' : 
-                assignedTo === 'MP' ? 'bg-green-500' : 'bg-blue-500'
-      } : null,
+      assignee: assigneeObj,
       dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '—',
       dateCreated: format(new Date(), 'MM/dd/yy'),
       estimatedCompletion: '—',

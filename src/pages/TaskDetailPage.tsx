@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -66,11 +65,11 @@ const TaskDetailPage = () => {
   // Authorization: Only assignee can view
   const isCurrentUserAssignee = React.useMemo(() => {
     if (!currentTask || !currentTask.assignee) return false;
-    // Compare by name or email (if available)
-    const userNameMatch = currentUser.name && currentTask.assignee.name && currentUser.name === currentTask.assignee.name;
-    const userFullNameMatch = currentUser.name && currentTask.assignee.fullName && currentUser.name === currentTask.assignee.fullName;
-    const userEmailMatch = currentUser.email && 'email' in currentTask.assignee && currentUser.email === (currentTask.assignee as any).email;
-    return userNameMatch || userFullNameMatch || userEmailMatch;
+    // Compare by id (new logic)
+    if ('id' in currentTask.assignee && currentTask.assignee.id && currentUser.id) {
+      return currentTask.assignee.id === currentUser.id;
+    }
+    return false;
   }, [currentTask, currentUser]);
 
   if (!currentTask) {
@@ -123,4 +122,3 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
-

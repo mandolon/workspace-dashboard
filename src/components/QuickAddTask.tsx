@@ -84,7 +84,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   }, []);
 
   const handleSave = () => {
-    if (!canSave) return;
+    if (!canSave || !assignee) return;
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
     const newTask = {
       id: Date.now(),
@@ -98,6 +98,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit'
       }),
       dueDate: '—',
+      // assign full team user object, including 'id'
       assignee: assignee,
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,

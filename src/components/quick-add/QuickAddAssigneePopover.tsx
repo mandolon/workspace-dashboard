@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -22,12 +21,7 @@ interface QuickAddAssigneePopoverProps {
   setShowAssigneePopover: (show: boolean) => void;
 }
 
-const availableAssignees: QuickAddTaskPerson[] = TEAM_USERS.map(member => ({
-  name: member.name,
-  avatar: member.avatar,
-  fullName: member.fullName,
-  avatarColor: member.avatar,
-}));
+const availableAssignees = TEAM_USERS;
 
 const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
   assignee,
@@ -68,7 +62,6 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
                 </button>
               </>
             ) : (
-              // +/Users icon is nearly circular and SIZED slightly smaller than avatar
               <span className="w-7 h-7 flex items-center justify-center rounded-full bg-muted">
                 <Users className="w-4 h-4 text-muted-foreground" />
               </span>
@@ -80,7 +73,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
           <div className="flex flex-col">
             {availableAssignees.map(person => (
               <button
-                key={person.name}
+                key={person.id}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
                 onClick={(e) => { e.stopPropagation(); setAssignee(person); setShowAssigneePopover(false); }}
                 type="button"
@@ -99,4 +92,3 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
-
