@@ -48,10 +48,11 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%] pl-8">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
+            {/* Adjusted padding py-1 for header cells */}
+            <TableHead className="text-muted-foreground font-medium text-xs py-1 w-[50%] pl-8">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1 w-[8%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1 w-[17%]">Date Created</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1 w-[25%]">Assigned to</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -85,3 +86,4 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
 TaskTable.displayName = "TaskTable";
 
 export default TaskTable;
+
