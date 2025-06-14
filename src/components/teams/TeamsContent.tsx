@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -29,11 +28,12 @@ export type TeamMember = {
 
 interface TeamsContentProps {
   tab: "admin" | "team";
+  selectedUserId?: string;
 }
 
 const ADMIN_NAME = 'Armando Lopez';
 
-const TeamsContent = ({ tab }: TeamsContentProps) => {
+const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Map TEAM_USERS into full table records for the CRM
@@ -85,10 +85,15 @@ const TeamsContent = ({ tab }: TeamsContentProps) => {
   }
 
   // Apply search filter
-  const displayedMembers = filteredMembers.filter(member =>
+  let displayedMembers = filteredMembers.filter(member =>
     member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // NEW: Filter by selected user if any
+  if (selectedUserId) {
+    displayedMembers = displayedMembers.filter(m => m.id === selectedUserId);
+  }
 
   return (
     <div className="flex-1 overflow-y-auto p-6">

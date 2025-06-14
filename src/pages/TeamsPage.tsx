@@ -1,9 +1,9 @@
-
 import React, { useState, createContext, useContext } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import PageSectionHeader from '@/components/shared/PageSectionHeader';
 import RoleSwitcher from '@/components/teams/RoleSwitcher';
 import TeamsContent from '@/components/teams/TeamsContent';
+import SelectUserDropdown from "@/components/teams/SelectUserDropdown";
 
 // Provide CRM role through context
 export type CRMRoles = "admin" | "team" | "client";
@@ -19,13 +19,23 @@ const tabs = [
 const TeamsPage = () => {
   const [role, setRole] = useState<CRMRoles>("admin");
   const [activeTab, setActiveTab] = useState<CRMRoles>("admin");
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
 
   return (
     <CRMRoleContext.Provider value={role}>
       <AppLayout>
         <div className="flex flex-col h-full">
           <PageSectionHeader title="Teams CRM">
-            <RoleSwitcher role={role} setRole={(newRole) => { setRole(newRole); setActiveTab(newRole); }} />
+            <div className="flex items-center gap-4">
+              <RoleSwitcher
+                role={role}
+                setRole={(newRole) => { setRole(newRole); setActiveTab(newRole); }}
+              />
+              <SelectUserDropdown
+                selectedUserId={selectedUserId}
+                onChange={setSelectedUserId}
+              />
+            </div>
           </PageSectionHeader>
           {/* Tabs */}
           <div className="flex w-full border-b border-border mb-2 px-6">
@@ -45,7 +55,7 @@ const TeamsPage = () => {
           </div>
           <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full">
             {(activeTab === "admin" || activeTab === "team") && (
-              <TeamsContent tab={activeTab} />
+              <TeamsContent tab={activeTab} selectedUserId={selectedUserId} />
             )}
             {activeTab === "client" && (
               <div className="flex-1 overflow-y-auto p-6">
