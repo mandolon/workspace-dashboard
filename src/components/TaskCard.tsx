@@ -3,6 +3,7 @@ import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getRandomColor, getInitials, formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task'; // <-- IMPORT correct task interface
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface TaskCardProps {
   task: Task;
@@ -53,7 +54,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <div className="flex items-center -space-x-1">
           {/* ASSIGNEE */}
           <div className={cn(
-            "w-7 h-7 rounded-full flex items-center justify-center text-white text-xs tracking-tight font-medium",
+            "w-7 h-7 rounded-full text-white",
+            AVATAR_INITIALS_CLASSNAMES,
             getRandomColor(
               task.assignee?.name ?? '',
               task.assignee?.avatarColor 
@@ -66,7 +68,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <div
               key={index}
               className={cn(
-                "w-7 h-7 rounded-full flex items-center justify-center text-white text-xs tracking-tight font-medium border-2 border-background",
+                "w-7 h-7 rounded-full text-white border-2 border-background",
+                AVATAR_INITIALS_CLASSNAMES,
                 getRandomColor(
                   collaborator.name,
                   collaborator.avatarColor

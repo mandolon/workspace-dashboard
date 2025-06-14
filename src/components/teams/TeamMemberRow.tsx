@@ -2,6 +2,7 @@ import React from 'react';
 import { MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getRandomColor, getInitials } from '@/utils/taskUtils';
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface TeamMember {
   id: string;
@@ -37,7 +38,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
       <div className="col-span-3">
         <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 ${getRandomColor(member.id)} rounded-full flex items-center justify-center text-white text-xs tracking-tight font-medium`}>
+          <div className={`w-8 h-8 ${getRandomColor(member.id)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
             {getInitials(member.fullName ?? member.name)}
           </div>
           <span className="font-medium">{member.fullName ?? member.name}</span>

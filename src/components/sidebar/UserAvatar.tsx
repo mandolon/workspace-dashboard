@@ -1,6 +1,7 @@
 import React from 'react';
 import { Circle } from 'lucide-react';
 import { User } from '@/types/user';
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface UserAvatarProps {
   user: User;
@@ -30,7 +31,7 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
 
   return (
     <div className="relative">
-      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white tracking-tight font-medium`}>
+      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white ${AVATAR_INITIALS_CLASSNAMES}`}>
         {user.avatar}
       </div>
       {showStatus && (

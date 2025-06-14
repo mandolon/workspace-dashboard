@@ -2,6 +2,7 @@ import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
 import { cn } from "@/lib/utils"
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 // Slightly increase default avatar size
 const Avatar = React.forwardRef<
@@ -38,7 +39,8 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted text-xs font-medium",
+      AVATAR_INITIALS_CLASSNAMES,
+      "flex h-full w-full rounded-full bg-muted",
       className
     )}
     {...props}

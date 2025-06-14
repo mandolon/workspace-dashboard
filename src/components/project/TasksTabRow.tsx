@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/context-menu';
 import TasksTabStatusIcon from './TasksTabStatusIcon';
 import { getRandomColor, formatDate, getInitials } from '@/utils/taskUtils';
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface TasksTabRowProps {
   task: any; // Consider defining a more specific type for task if possible
@@ -49,7 +50,7 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
           <div className="col-span-3 flex items-center justify-between">
             <div className="flex items-center -space-x-1">
               {task.assignee && (
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs tracking-tight font-medium ${getRandomColor(task.assignee.name)}`}>
+                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getRandomColor(task.assignee.name)}`}>
                   {getInitials(task.assignee.fullName ?? task.assignee.name)}
                 </div>
               )}
