@@ -68,11 +68,9 @@ const TaskRowAssignees = React.memo(({
     <div className="flex items-center -space-x-1">
       {task.assignee ? (
         <div className="relative group/avatar">
-          {/* Remove font-semibold */}
-          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-xs tracking-tight ${assigneeColor}`}>
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-xs tracking-tight font-medium ${assigneeColor}`}>
             <span>{getInitials(task.assignee.fullName ?? task.assignee.name)}</span>
           </div>
-          {/* Remove Assignee (X) - top left, small */}
           {canAssign && (
             <button
               onClick={handleRemoveAssignee}
@@ -118,7 +116,7 @@ const TaskRowAssignees = React.memo(({
 
       {task.collaborators?.map((collaborator, index) => (
         <div key={index} className="relative group/collaborator">
-          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-xs tracking-tight ${collaboratorColors[index]}`}>
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-xs tracking-tight font-medium ${collaboratorColors[index]}`}>
             <span>{getInitials(collaborator.fullName ?? collaborator.name)}</span>
           </div>
           {canAssign && (

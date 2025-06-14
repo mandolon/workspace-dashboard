@@ -30,7 +30,7 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
 
   return (
     <div className="relative">
-      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white tracking-tight`}>
+      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white tracking-tight font-medium`}>
         {user.avatar}
       </div>
       {showStatus && (
