@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
@@ -7,6 +8,14 @@ import { Task } from '@/types/task';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
 import { X, UserPlus, Users } from 'lucide-react';
+
+// Helper: get canonical CRM/TEAM_USERS assignee for styling
+const getCRMUser = (person) => {
+  if (!person) return null;
+  return availablePeople.find(
+    p => p.name === person.name || p.fullName === person.fullName
+  ) || person;
+};
 
 interface TaskDetailFormProps {
   task: Task;
@@ -71,6 +80,9 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     e.stopPropagation();
     removeAssignee(task.id);
   }, [removeAssignee, task.id]);
+
+  // Enforce CRM/TEAM_USERS colors/info for assignee
+  const canonicalAssignee = getCRMUser(task.assignee);
 
   return (
     <div className="space-y-3">
@@ -137,13 +149,18 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
             Assigned to
           </label>
           <div className="text-xs">
-            {task.assignee ? (
+            {canonicalAssignee ? (
               <div className="flex items-center gap-1 relative min-h-[24px]">
                 <div className="relative group/avatar w-6 h-6">
                   <div
-                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name, task.assignee.avatarColor)} text-white font-medium text-xs`}
+                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${
+                      canonicalAssignee.avatarColor ??
+                      getRandomColor(canonicalAssignee.name)
+                    } text-white font-medium text-xs`}
                   >
-                    {getInitials(task.assignee.fullName ?? task.assignee.name)}
+                    {getInitials(
+                      canonicalAssignee.fullName ?? canonicalAssignee.name
+                    )}
                   </div>
                   <button
                     className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
@@ -175,10 +192,12 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                       onClick={() => handleAssign(person)}
                       className="flex items-center gap-2 cursor-pointer"
                     >
-                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name, person.avatarColor)}`}>
-                        {person.name}
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${
+                        person.avatarColor ?? getRandomColor(person.name)
+                      }`}>
+                        {getInitials(person.fullName ?? person.name)}
                       </div>
-                      <span>{person.name}</span>
+                      <span>{person.fullName ?? person.name}</span>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -201,3 +220,5 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
+
+// ...end of file
