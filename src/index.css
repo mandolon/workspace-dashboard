@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,13 +77,13 @@
     --ring: 212.7 26.8% 83.9%;
 
     /* Updated sidebar colors for dark mode */
-    --sidebar-background: 217 33% 18%; /* Updated as per request */
+    --sidebar-background: hsl(var(--secondary)); /* Was 240 5.9% 10% */
     --sidebar-foreground: 240 4.8% 95.9%; /* Unchanged, should still provide good contrast */
     --sidebar-primary: 224.3 76.3% 48%; /* Unchanged */
     --sidebar-primary-foreground: 0 0% 100%; /* Unchanged */
-    --sidebar-accent: hsl(217.2, 32.6%, 22.5%); /* Unchanged, slightly lighter than new background */
+    --sidebar-accent: hsl(217.2, 32.6%, 22.5%); /* Was 240 3.7% 15.9%, now slightly lighter than new background */
     --sidebar-accent-foreground: 240 4.8% 95.9%; /* Unchanged, should still provide good contrast */
-    --sidebar-border: hsl(var(--border)); /* Unchanged */
+    --sidebar-border: hsl(var(--border)); /* Was 240 3.7% 15.9% */
     --sidebar-ring: 217.2 91.2% 59.8%; /* Unchanged */
   }
 }
