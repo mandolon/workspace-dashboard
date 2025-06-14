@@ -82,8 +82,8 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                       ${isDateActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
-                      ${isDateActive ? 'text-blue-500 fill-blue-400' : 'text-gray-400 fill-gray-200'}`}
-                    fill={isDateActive ? "currentColor" : "#E5E7EB"}
+                      text-gray-400 fill-gray-200`}
+                    fill="#E5E7EB"
                     aria-hidden="true"
                   />
                   <span className="sr-only">Filter by date created</span>
@@ -107,8 +107,8 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
                       ${isAssigneeActive ? 
                         (currentSortDirection === 'desc' ? 'rotate-180' : '') 
                         : 'rotate-180 opacity-50'}
-                      ${isAssigneeActive ? 'text-blue-500 fill-blue-400' : 'text-gray-400 fill-gray-200'}`}
-                    fill={isAssigneeActive ? "currentColor" : "#E5E7EB"}
+                      text-gray-400 fill-gray-200`}
+                    fill="#E5E7EB"
                     aria-hidden="true"
                   />
                   <span className="sr-only">Filter by assignee</span>
