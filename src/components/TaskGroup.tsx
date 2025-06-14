@@ -1,25 +1,7 @@
-
 import React from 'react';
 import { ChevronDown, Plus, MoreHorizontal } from 'lucide-react';
 import TaskCard from './TaskCard';
-
-interface Task {
-  id: number;
-  title: string;
-  project: string;
-  estimatedCompletion: string;
-  dateCreated: string;
-  dueDate: string;
-  assignee: {
-    name: string;
-    avatar: string;
-  };
-  hasAttachment: boolean;
-  collaborators?: Array<{
-    name: string;
-    avatar: string;
-  }>;
-}
+import { Task, TaskGroup as TaskGroupType } from '@/types/task';
 
 interface TaskGroupProps {
   title: string;
