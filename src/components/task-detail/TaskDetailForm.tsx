@@ -81,6 +81,7 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
   };
 
   // Description save/dirty state logic (refactored out)
+  // Pass setTask as a React state setter (accepts both Task and updater function)
   const {
     desc,
     descLoading,
@@ -118,4 +119,3 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
-
