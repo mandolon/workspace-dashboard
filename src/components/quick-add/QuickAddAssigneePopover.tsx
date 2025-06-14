@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -87,7 +86,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
               <button
                 key={person.name}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
-                onClick={(e) => { e.stopPropagation(); setAssignee(person); setShowAssigneePopover(false); }}
+                onClick={(e) => { e.stopPropagation(); setAssignee(person); }}
                 type="button"
               >
                 <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
