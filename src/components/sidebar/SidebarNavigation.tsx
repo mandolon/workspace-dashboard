@@ -148,9 +148,12 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
           ) : (
             <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
           )}
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
-            Navigation
-          </span>
+          {/* Hide Navigation label for clients */}
+          {!clientMode && (
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
+              Navigation
+            </span>
+          )}
         </CollapsibleTrigger>
         <CollapsibleContent>
           <nav className="space-y-0 mt-2">

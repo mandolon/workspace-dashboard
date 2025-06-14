@@ -6,6 +6,7 @@ import SidebarNavigation from './sidebar/SidebarNavigation';
 import SidebarProjects from './sidebar/SidebarProjects';
 import SidebarFooter from './sidebar/SidebarFooter';
 import { useProjectData } from '@/contexts/ProjectDataContext';
+import { useUser } from '@/contexts/UserContext';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -17,6 +18,12 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
     mainNav: true,
     projects: true
   });
+  const { currentUser, isImpersonating, impersonatedUser } = useUser();
+
+  // Detect client mode
+  const clientMode =
+    (isImpersonating && impersonatedUser && impersonatedUser.role === 'Client') ||
+    (!isImpersonating && currentUser.role === 'Client');
 
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections(prev => ({
@@ -47,12 +54,14 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
               isOpen={openSections.mainNav}
               onToggle={() => toggleSection('mainNav')}
             />
-            
-            <SidebarProjects 
-              isOpen={openSections.projects}
-              onToggle={() => toggleSection('projects')}
-              refreshTrigger={refreshTrigger}
-            />
+            {/* Hide Projects section for clients */}
+            {!clientMode && (
+              <SidebarProjects 
+                isOpen={openSections.projects}
+                onToggle={() => toggleSection('projects')}
+                refreshTrigger={refreshTrigger}
+              />
+            )}
           </div>
         </ScrollArea>
       )}
@@ -63,3 +72,4 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
 };
 
 export default Sidebar;
+
