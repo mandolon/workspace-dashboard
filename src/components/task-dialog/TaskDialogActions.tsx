@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -45,6 +44,8 @@ const TaskDialogActions = ({
     }
   };
   const handleRemoveFile = (idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
+
+  const isCreateDisabled = !taskName.trim() || !assignedTo;
 
   return (
     <div className="flex items-center justify-between gap-3">
@@ -125,7 +126,7 @@ const TaskDialogActions = ({
       </div>
       <Button 
         onClick={() => onCreateTask(attachedFiles)}
-        disabled={!taskName.trim()}
+        disabled={isCreateDisabled}
         className="h-7 px-4 text-xs bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
       >
         Create Task

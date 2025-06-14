@@ -30,6 +30,7 @@ const QuickAddTaskActions: React.FC<QuickAddTaskActionsProps> = ({
   onSave,
   canSave
 }) => {
+  const finalCanSave = canSave && !!assignee; // Save only enabled when assignee is selected
   return (
     <div className={`col-span-${colSpan} flex items-center justify-end gap-2 overflow-visible`}>
       <QuickAddAttachments files={attachedFiles} setFiles={setAttachedFiles} />
@@ -52,7 +53,7 @@ const QuickAddTaskActions: React.FC<QuickAddTaskActionsProps> = ({
         size="sm"
         onClick={onSave}
         className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-400"
-        disabled={!canSave}
+        disabled={!finalCanSave}
       >
         Save
       </Button>
@@ -61,3 +62,4 @@ const QuickAddTaskActions: React.FC<QuickAddTaskActionsProps> = ({
 };
 
 export default QuickAddTaskActions;
+

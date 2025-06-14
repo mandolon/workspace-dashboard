@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -40,7 +39,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
 
   const { addAttachments } = useTaskAttachmentContext();
-  const canSave = !!taskName.trim() && !!selectedProject;
+  const canSave = !!taskName.trim() && !!selectedProject && !!assignee;
 
   useEffect(() => {
     if (showProjectDropdown && projectDropdownAnchor.current) {
@@ -99,7 +98,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit'
       }),
       dueDate: '—',
-      assignee: assignee ? assignee : { name: 'ME', avatar: 'bg-gray-500' },
+      assignee: assignee,
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,
       status: defaultStatus,

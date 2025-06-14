@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { addTask } from '@/data/taskData';
@@ -15,8 +14,8 @@ export const useTaskDialog = () => {
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
   const handleCreateTask = (onCreateTask: (taskData: any) => void, onClose: () => void) => {
-    if (!taskName.trim()) {
-      return;
+    if (!taskName.trim() || !assignedTo) {
+      return; // Cannot create if no name or assignee
     }
 
     console.log('Creating task with selected project:', selectedProject);

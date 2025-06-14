@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -42,8 +43,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             size="sm"
             variant="ghost"
             className={
-              `flex items-center gap-1 h-8 rounded-full text-xs text-muted-foreground hover:text-foreground border border-border bg-background transition-colors
-               ${assignee ? 'px-1.5' : 'w-8 justify-center min-w-0 min-h-0 px-0 py-0'}`
+              `flex items-center justify-center h-8 w-8 min-w-0 min-h-0 rounded-full text-xs text-muted-foreground hover:text-foreground border border-border bg-background transition-colors px-0 py-0`
             }
             type="button"
             aria-label={assignee ? `Assigned to ${assignee.fullName || assignee.name}` : "Assign user"}
@@ -52,14 +52,13 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             {assignee ? (
               <>
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assignee)}`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assignee)}`}
                 >
                   {assignee.name}
                 </div>
-                <span className="max-w-[64px] truncate">{assignee.fullName || assignee.name}</span>
                 <button
                   type="button"
-                  className="ml-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
+                  className="absolute -top-1.5 -right-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
                   style={{ lineHeight: 1, fontSize: 13 }}
                   onClick={e => { e.stopPropagation(); setAssignee(null); }}
                   tabIndex={-1}
@@ -100,3 +99,4 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
+
