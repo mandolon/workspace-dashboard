@@ -177,7 +177,8 @@ export const useTaskOperations = () => {
     return filterTasksForUser(combined);
   }, [customTasks, currentUser]);
 
-  const getAllTasks = useMemo(() => {
+  // Fix: getAllTasks should be a function, not an array
+  const getAllTasks = useCallback(() => {
     // Use a backend utility to get all, then filter for user
     if (!currentUser) return [];
     const allCentralizedTasks = getAllTasksRaw().filter(task => !task.deletedAt);
@@ -197,7 +198,7 @@ export const useTaskOperations = () => {
     archiveTask,
     navigateToTask,
     getTasksByStatus: getTasksByStatusFromContext,
-    getAllTasks,
+    getAllTasks, // now a function (the fix)
     triggerRefresh
   };
 };
