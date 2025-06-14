@@ -9,7 +9,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskBoardContent from './TaskBoardContent';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task, TaskGroup } from '@/types/task';
@@ -90,30 +89,23 @@ const DragDropTaskBoard = ({
     setActiveTask(null);
   };
 
-  // Get all task IDs for sortable context
-  const allTaskIds = taskGroups.flatMap(group => 
-    group.tasks.map(task => task.id)
-  );
-
   return (
     <DndContext
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={allTaskIds} strategy={verticalListSortingStrategy}>
-        <TaskBoardContent
-          taskGroups={taskGroups}
-          showQuickAdd={showQuickAdd}
-          refreshTrigger={refreshTrigger}
-          onSetShowQuickAdd={onSetShowQuickAdd}
-          onQuickAddSave={onQuickAddSave}
-          onTaskClick={onTaskClick}
-          onTaskArchive={onTaskArchive}
-          onTaskDeleted={onTaskDeleted}
-          onAddTask={onAddTask}
-        />
-      </SortableContext>
+      <TaskBoardContent
+        taskGroups={taskGroups}
+        showQuickAdd={showQuickAdd}
+        refreshTrigger={refreshTrigger}
+        onSetShowQuickAdd={onSetShowQuickAdd}
+        onQuickAddSave={onQuickAddSave}
+        onTaskClick={onTaskClick}
+        onTaskArchive={onTaskArchive}
+        onTaskDeleted={onTaskDeleted}
+        onAddTask={onAddTask}
+      />
       
       <DragOverlay>
         {activeTask ? (

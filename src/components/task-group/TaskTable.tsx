@@ -57,7 +57,7 @@ const TaskTable = forwardRef<HTMLDivElement, TaskTableProps>(({
       <TaskTableHeader />
       <div 
         ref={setNodeRef} 
-        className={`min-h-[20px] transition-colors ${isOver ? 'bg-accent/20' : ''}`}
+        className={`min-h-[100px] transition-colors ${isOver ? 'bg-accent/20' : ''} rounded-md`}
       >
         <Table>
           <TableBody>
