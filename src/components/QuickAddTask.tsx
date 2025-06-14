@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { Users, Search, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import TaskStatusIcon from './TaskStatusIcon';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
+import { createPortal } from 'react-dom';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
   onCancel: () => void;
   defaultStatus: string;
+}
+
+// Helper to get absolute coordinates of an element (for positioning the dropdown)
+function getAbsoluteRect(element: HTMLElement) {
+  const rect = element.getBoundingClientRect();
+  return {
+    top: rect.top + window.scrollY,
+    left: rect.left + window.scrollX,
+    width: rect.width,
+    height: rect.height
+  };
 }
 
 const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) => {
@@ -26,14 +39,59 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
   const canSave = !!taskName.trim() && !!selectedProject;
 
+  const projectDropdownAnchor = useRef<HTMLButtonElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<{top: number; left: number; width: number} | null>(null);
+
+  // Handle smart positioning for the dropdown (ensure it is visible in the viewport)
+  useEffect(() => {
+    if (showProjectDropdown && projectDropdownAnchor.current) {
+      const anchorRect = getAbsoluteRect(projectDropdownAnchor.current);
+      const dropdownWidth = anchorRect.width < 280 ? 280 : anchorRect.width;
+      let top = anchorRect.top + anchorRect.height + 5;
+      let left = anchorRect.left;
+
+      const rightEdge = left + dropdownWidth;
+      const viewportWidth = window.innerWidth;
+
+      if (rightEdge > viewportWidth - 8) {
+        left = viewportWidth - dropdownWidth - 8; // 8px padding
+      }
+      if (left < 8) left = 8;
+
+      setDropdownStyle({ top, left, width: dropdownWidth });
+    }
+  }, [showProjectDropdown]);
+
+  // Focus the search input when dropdown opens
+  useEffect(() => {
+    if (showProjectDropdown && searchInputRef.current) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 40);
+    }
+  }, [showProjectDropdown]);
+
+  // Scroll dropdown into view if needed
+  useEffect(() => {
+    if (showProjectDropdown && dropdownStyle) {
+      const el = document.getElementById('quick-add-project-list-dropdown');
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if(rect.bottom > window.innerHeight) {
+          window.scrollBy({ top: rect.bottom - window.innerHeight + 12, behavior: "smooth" });
+        } else if (rect.top < 0) {
+          window.scrollBy({ top: rect.top - 12, behavior: "smooth" });
+        }
+      }
+    }
+  }, [showProjectDropdown, dropdownStyle]);
+
   const handleSave = () => {
     if (!canSave) return;
 
-    console.log('Quick add saving with selected project:', selectedProject);
-
     // Convert display name to project ID
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
-    console.log('Quick add converted to project ID:', projectId);
 
     const newTask = {
       id: Date.now(),
@@ -52,7 +110,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       status: defaultStatus
     };
 
-    console.log('Quick add final task data:', newTask);
     onSave(newTask);
     setTaskName('');
     setSelectedProject('');
@@ -68,7 +125,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   const handleProjectSelect = (project: { displayName: string; projectId: string }) => {
-    console.log('Quick add project selected:', project);
     setSelectedProject(project.displayName);
     setShowProjectDropdown(false);
     setSearchTerm('');
@@ -76,20 +132,65 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
   const handleStatusIconClick = () => {
     // Do nothing for quick add - the status is set and not changeable during quick add
-    console.log('Status icon clicked in quick add');
+  };
+
+  // Render the dropdown in a portal (to body)
+  const renderProjectDropdown = () => {
+    if (!showProjectDropdown || !dropdownStyle) return null;
+    return createPortal(
+      <div
+        id="quick-add-project-list-dropdown"
+        className="bg-background border border-border rounded-md shadow-lg z-[1000] max-h-60 overflow-auto"
+        style={{
+          position: 'absolute',
+          top: dropdownStyle.top,
+          left: dropdownStyle.left,
+          width: dropdownStyle.width,
+          minWidth: 240,
+        }}
+      >
+        <div className="p-2 border-b border-border">
+          <div className="relative">
+            <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
+              ref={searchInputRef}
+            />
+          </div>
+        </div>
+        <div className="max-h-32 overflow-y-auto">
+          {filteredProjects.map((project) => (
+            <button
+              key={project.projectId}
+              className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
+              onClick={() => handleProjectSelect(project)}
+            >
+              {project.displayName}
+            </button>
+          ))}
+          {filteredProjects.length === 0 && (
+            <div className="text-xs text-muted-foreground px-3 py-2">No lists found.</div>
+          )}
+        </div>
+      </div>,
+      document.body
+    );
   };
 
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
-      {/* Task Input Row - Aligned with table columns */}
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
         {/* Name column - made wider */}
         <div className="col-span-6 flex items-center gap-2 pl-4">
           <TaskStatusIcon status={defaultStatus} onClick={handleStatusIconClick} />
           <div className="flex-1 relative">
             <button
+              ref={projectDropdownAnchor}
               className="block text-left text-xs text-blue-600 hover:text-blue-700 mb-1"
-              onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+              onClick={() => setShowProjectDropdown((prev) => !prev)}
             >
               {selectedProject || 'Select List...'}
             </button>
@@ -101,33 +202,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:font-medium placeholder:text-xs placeholder:text-muted-foreground"
               autoFocus
             />
-
-            {showProjectDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-50">
-                <div className="p-2 border-b border-border">
-                  <div className="relative">
-                    <Search className="w-3 h-3 absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      placeholder="Search"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
-                    />
-                  </div>
-                </div>
-                <div className="max-h-32 overflow-y-auto">
-                  {filteredProjects.map((project) => (
-                    <button
-                      key={project.projectId}
-                      className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent border-b border-border/30 last:border-b-0"
-                      onClick={() => handleProjectSelect(project)}
-                    >
-                      {project.displayName}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            {renderProjectDropdown()}
           </div>
         </div>
 
