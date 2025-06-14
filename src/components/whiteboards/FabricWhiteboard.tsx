@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef } from "react";
-import { fabric } from "fabric";
+import { Canvas, Rect, Circle, IText } from "fabric";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,13 +12,13 @@ const DEFAULT_HEIGHT = 700;
 const FabricWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fabricRef = useRef<fabric.Canvas | null>(null);
+  const fabricRef = useRef<Canvas | null>(null);
   // In-memory loading & save fallback
   const loadedOnce = useRef(false);
 
   // Load whiteboard data from Supabase
   useEffect(() => {
-    let localCanvas: fabric.Canvas | null = null;
+    let localCanvas: Canvas | null = null;
     let unsub = false;
 
     async function loadBoard() {
@@ -37,7 +37,7 @@ const FabricWhiteboard: React.FC = () => {
       }
 
       if (!canvasRef.current) return;
-      const canvas = new fabric.Canvas(canvasRef.current, {
+      const canvas = new Canvas(canvasRef.current, {
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
         backgroundColor: "#fff",
@@ -109,7 +109,7 @@ const FabricWhiteboard: React.FC = () => {
   function addRect() {
     const canvas = fabricRef.current;
     if (!canvas) return;
-    const rect = new fabric.Rect({
+    const rect = new Rect({
       left: 120,
       top: 100,
       width: 100,
@@ -125,7 +125,7 @@ const FabricWhiteboard: React.FC = () => {
   function addCircle() {
     const canvas = fabricRef.current;
     if (!canvas) return;
-    const circ = new fabric.Circle({
+    const circ = new Circle({
       left: 240,
       top: 150,
       radius: 40,
@@ -140,7 +140,7 @@ const FabricWhiteboard: React.FC = () => {
   function addText() {
     const canvas = fabricRef.current;
     if (!canvas) return;
-    const text = new fabric.IText("Double-click to edit", {
+    const text = new IText("Double-click to edit", {
       left: 300,
       top: 200,
       fontFamily: "system-ui",
