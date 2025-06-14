@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -124,21 +123,20 @@ export const useTaskOperations = () => {
   // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created
   function filterTasksForUser(tasks: Task[]) {
     if (
-      currentUser.fullName === "Armando Lopez"
+      currentUser.name === "Armando Lopez"
       || currentUser.name === "AL"
       || currentUser.email === "armando@company.com"
     ) {
       return tasks;
     }
-    const myName = currentUser.fullName || currentUser.name;
+    const myName = currentUser.name;
     return tasks.filter(
       t =>
-        t.assignee?.fullName === currentUser.fullName
-        || t.assignee?.name === currentUser.name
+        t.assignee?.fullName === myName
+        || t.assignee?.name === myName
         || t.collaborators?.some(c =>
-             c.fullName === currentUser.fullName || c.name === currentUser.name)
-        || t.createdBy === currentUser.name
-        || t.createdBy === currentUser.fullName
+             c.fullName === myName || c.name === myName)
+        || t.createdBy === myName
         || t.createdBy === currentUser.email // fallback just in case
     );
   }
