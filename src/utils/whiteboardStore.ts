@@ -10,7 +10,7 @@ export interface Whiteboard {
   projectId: string;
   createdBy: string; // userId
   sharedWithClient: boolean;
-  excalidraw_data?: any; // <-- new
+  tldrawRoomId?: string; // ADDED: unique per-board ID if type === 'tldraw'
 }
 
 // Simple mock DB for whiteboards (in-memory)
@@ -88,20 +88,21 @@ export function createWhiteboard({
   projectId,
   createdBy,
   sharedWithClient,
-  id,
-  excalidraw_data,
 }: {
   title: string;
   type: string;
   projectId: string;
   createdBy: string;
   sharedWithClient: boolean;
-  id?: string;
-  excalidraw_data?: any;
 }) {
-  const newId = id ? id : Date.now().toString();
+  const id = Date.now().toString();
+  let tldrawRoomId;
+  if (type === "tldraw") {
+    // Generate a unique room id (for now: use generated id)
+    tldrawRoomId = "room-" + id;
+  }
   whiteboards.unshift({
-    id: newId,
+    id,
     title,
     type,
     lastModified: "just now",
@@ -109,7 +110,7 @@ export function createWhiteboard({
     projectId,
     createdBy,
     sharedWithClient,
-    excalidraw_data: excalidraw_data || null,
+    ...(tldrawRoomId ? { tldrawRoomId } : {}),
   });
 }
 
@@ -117,4 +118,12 @@ export function createWhiteboard({
 export function toggleShareWithClient(whiteboardId: string, value: boolean) {
   const wb = whiteboards.find(w => w.id === whiteboardId);
   if (wb) wb.sharedWithClient = value;
+}
+
+// Delete a whiteboard by id
+export function deleteWhiteboard(id: string) {
+  const idx = whiteboards.findIndex(wb => wb.id === id);
+  if (idx !== -1) {
+    whiteboards.splice(idx, 1);
+  }
 }

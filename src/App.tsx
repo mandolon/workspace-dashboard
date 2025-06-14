@@ -23,7 +23,7 @@ import ClientDashboard from "./pages/ClientDashboard";
 import AdminHelpPage from "./pages/AdminHelpPage";
 import TeamHelpPage from "./pages/TeamHelpPage";
 import ClientHelpPage from "./pages/ClientHelpPage";
-import WhiteboardViewPage from "./pages/WhiteboardViewPage";
+import WhiteboardPage from "./pages/WhiteboardPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -91,7 +91,6 @@ const App = () => {
                               <Route path="/client/dashboard" element={<ClientDashboard />} />
                               <Route path="/invoices" element={<InvoicePage />} />
                               <Route path="/timesheets" element={<TimesheetsPage />} />
-                              <Route path="/whiteboard/:id" element={<WhiteboardViewPage />} />
                               <Route path="/whiteboards" element={<WhiteboardsPage />} />
                               <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
                               <Route path="/settings" element={<SettingsPage />} />
@@ -100,6 +99,7 @@ const App = () => {
                               <Route path="/help/admin" element={<AdminHelpPage />} />
                               <Route path="/help/team" element={<TeamHelpPage />} />
                               <Route path="/help/client" element={<ClientHelpPage />} />
+                              <Route path="/whiteboard/:whiteboardId" element={<WhiteboardPage />} />
                               <Route path="*" element={<NotFound />} />
                             </Routes>
                           </ProtectedRoute>
