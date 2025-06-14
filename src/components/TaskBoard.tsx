@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -57,8 +58,8 @@ const TaskBoard: React.FC = React.memo(() => {
   }, [handleQuickAddSave, addAttachments, getTaskGroups, setShowQuickAdd]);
 
   // Dialog open/close helper
-  const onDialogOpen = React.useCallback(() => setIsTaskDialogOpen(true), [setIsTaskDialogOpen]); // fix: pass true
-  const onDialogClose = React.useCallback(() => setIsTaskDialogOpen(false), [setIsTaskDialogOpen]); // fix: pass false
+  const onDialogOpen = React.useCallback(() => setIsTaskDialogOpen(true), [setIsTaskDialogOpen]);
+  const onDialogClose = React.useCallback(() => setIsTaskDialogOpen(false), [setIsTaskDialogOpen]);
 
   return (
     <>
@@ -70,7 +71,7 @@ const TaskBoard: React.FC = React.memo(() => {
         onQuickAddSave={onQuickAddSave}
         onTaskClick={handleTaskClick}
         onTaskArchive={handleTaskArchive}
-        onTaskDeleted={() => {}} 
+        onTaskDeleted={handleTaskDeleted} {/* <-- IMPORTANT: Use the real delete */}
         onAddTask={onDialogOpen}
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}

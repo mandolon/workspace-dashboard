@@ -1,23 +1,30 @@
+
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task';
-import { Undo, X } from 'lucide-react';
+import { Undo } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { updateTaskSupabase } from '@/data/taskSupabase';
 
 export const useTaskDeletion = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
   const { deleteTask, restoreDeletedTask } = useTaskContext();
   const { toast, dismiss } = useToast();
   const navigate = useNavigate();
 
+  // Helper to check if this is a Supabase task (has taskId string, id: number, etc.)
+  function isSupabaseTask(task: Task) {
+    // Supabase tasks have updatedAt and/or typical UUID taskId, legacy ones usually have simple numbers
+    return !!task.taskId && !!task.updatedAt;
+  }
+
   const handleDeleteClick = useCallback((task: Task, e?: React.MouseEvent) => {
-    if (e) {
-      e.stopPropagation();
-    }
+    if (e) e.stopPropagation();
     setTaskToDelete(task);
     setShowDeleteDialog(true);
   }, []);
@@ -26,7 +33,16 @@ export const useTaskDeletion = () => {
     if (!taskToDelete) return;
     setIsDeleting(true);
     try {
-      await deleteTask(taskToDelete.id);
+      if (isSupabaseTask(taskToDelete)) {
+        // SOFT DELETE: Set deletedAt
+        await updateTaskSupabase(taskToDelete.taskId, {
+          deletedAt: new Date().toISOString(),
+          deletedBy: undefined // Optionally set user if needed
+        });
+      } else {
+        // Legacy deletion
+        await deleteTask(taskToDelete.id);
+      }
 
       toast({
         description: (
@@ -45,15 +61,22 @@ export const useTaskDeletion = () => {
             >
               trash
             </button>
-            {/* Spacing between trash and Undo button */}
             <span className="ml-6" />
             <Button
               variant="ghost"
               size="sm"
               className="pl-1 pr-2 py-0.5 h-7 flex items-center gap-1 group"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
-                restoreDeletedTask(taskToDelete.id);
+                // UNDO:
+                if (isSupabaseTask(taskToDelete)) {
+                  await updateTaskSupabase(taskToDelete.taskId, {
+                    deletedAt: null,
+                    deletedBy: null
+                  });
+                } else {
+                  restoreDeletedTask(taskToDelete.id);
+                }
                 dismiss();
               }}
             >
@@ -61,7 +84,6 @@ export const useTaskDeletion = () => {
               Undo
             </Button>
             <span className="mx-2 h-5 border-l border-border inline-block self-center" />
-            {/* Removed the extra close button: the shadcn close button will be used instead */}
           </div>
         ),
         duration: 5000,
