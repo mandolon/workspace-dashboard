@@ -1,100 +1,314 @@
-
 // Client data mapping for all projects - using LastName - Address format
-export const projectClientData: Record<string, any> = {
-  'adams-1063-40th-street': {
-    firstName: 'Robert', lastName: 'Adams', projectAddress: '1063 40th Street',
-    city: 'Sacramento', state: 'CA', projectId: '00001',
-    secondaryFirstName: '', secondaryLastName: ''
+export interface Client {
+  clientId: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  isPrimary: boolean;
+}
+
+export type ProjectClientMap = Record<string, {
+  clients: Client[];
+  projectAddress: string;
+  city: string;
+  state: string;
+  projectId: string;
+}>;
+
+// Generate deterministic clientId based on first/last (real app should use uuid, for now just simple)
+function makeClientId(firstName: string, lastName: string) {
+  return (
+    firstName.toLowerCase().replace(/[^a-z0-9]/g, "") +
+    "-" +
+    lastName.toLowerCase().replace(/[^a-z0-9]/g, "")
+  );
+}
+
+export const projectClientData: ProjectClientMap = {
+  "adams-1063-40th-street": {
+    clients: [
+      {
+        clientId: makeClientId('Robert', 'Adams'),
+        firstName: "Robert",
+        lastName: "Adams",
+        email: "robert.adams@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: '1063 40th Street',
+    city: 'Sacramento',
+    state: 'CA',
+    projectId: '00001',
   },
-  'ogden-thew-2709-t-street': {
-    firstName: 'Margaret', lastName: 'Ogden-Thew', projectAddress: '2709 T Street',
-    city: 'Sacramento', state: 'CA', projectId: '00002',
-    secondaryFirstName: '', secondaryLastName: ''
+  "ogden-thew-2709-t-street": {
+    clients: [
+      {
+        clientId: makeClientId('Margaret', 'Ogden-Thew'),
+        firstName: "Margaret",
+        lastName: "Ogden-Thew",
+        email: "margaret.ogden-thew@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2709 T Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00002",
   },
-  'henderson-1524-tiverton': {
-    firstName: 'James', lastName: 'Henderson', projectAddress: '1524 Tiverton',
-    city: 'Sacramento', state: 'CA', projectId: '00003',
-    secondaryFirstName: '', secondaryLastName: ''
+  "henderson-1524-tiverton": {
+    clients: [
+      {
+        clientId: makeClientId('James', 'Henderson'),
+        firstName: "James",
+        lastName: "Henderson",
+        email: "james.henderson@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "1524 Tiverton",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00003",
   },
-  'peterson-2015-10th-street': {
-    firstName: 'Linda', lastName: 'Peterson', projectAddress: '2015 10th Street',
-    city: 'Sacramento', state: 'CA', projectId: '00004',
-    secondaryFirstName: '', secondaryLastName: ''
+  "peterson-2015-10th-street": {
+    clients: [
+      {
+        clientId: makeClientId('Linda', 'Peterson'),
+        firstName: "Linda",
+        lastName: "Peterson",
+        email: "linda.peterson@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2015 10th Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00004",
   },
-  'johnson-2200-i-street': {
-    firstName: 'Michael', lastName: 'Johnson', projectAddress: '2200 I Street',
-    city: 'Sacramento', state: 'CA', projectId: '00005',
-    secondaryFirstName: '', secondaryLastName: ''
+  "johnson-2200-i-street": {
+    clients: [
+      {
+        clientId: makeClientId('Michael', 'Johnson'),
+        firstName: "Michael",
+        lastName: "Johnson",
+        email: "michael.johnson@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2200 I Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00005",
   },
-  'adamo-6605-s-land-park-dr': {
-    firstName: 'Anthony', lastName: 'Adamo', projectAddress: '6605 S. Land Park Dr.',
-    city: 'Sacramento', state: 'CA', projectId: '00006',
-    secondaryFirstName: '', secondaryLastName: ''
+  "adamo-6605-s-land-park-dr": {
+    clients: [
+      {
+        clientId: makeClientId('Anthony', 'Adamo'),
+        firstName: "Anthony",
+        lastName: "Adamo",
+        email: "anthony.adamo@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "6605 S. Land Park Dr.",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00006",
   },
-  'mcvarish-salmina-6251-el-dorado-street': {
-    firstName: 'Patricia', lastName: 'McVarish-Salmina', projectAddress: '6251 El Dorado Street',
-    city: 'Sacramento', state: 'CA', projectId: '00007',
-    secondaryFirstName: '', secondaryLastName: ''
+  "mcvarish-salmina-6251-el-dorado-street": {
+    clients: [
+      {
+        clientId: makeClientId('Patricia', 'McVarish-Salmina'),
+        firstName: "Patricia",
+        lastName: "McVarish-Salmina",
+        email: "patricia.mcvarish-salmina@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "6251 El Dorado Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00007",
   },
-  'andre-2119-h-street': {
-    firstName: 'David', lastName: 'Andre', projectAddress: '2119 H Street',
-    city: 'Sacramento', state: 'CA', projectId: '00008',
-    secondaryFirstName: '', secondaryLastName: ''
+  "andre-2119-h-street": {
+    clients: [
+      {
+        clientId: makeClientId('David', 'Andre'),
+        firstName: "David",
+        lastName: "Andre",
+        email: "david.andre@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2119 H Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00008",
   },
-  'fleming-veisze-1111-33rd-street': {
-    firstName: 'Sarah', lastName: 'Fleming-Veisze', projectAddress: '1111 33rd Street',
-    city: 'Sacramento', state: 'CA', projectId: '00009',
-    secondaryFirstName: '', secondaryLastName: ''
+  "fleming-veisze-1111-33rd-street": {
+    clients: [
+      {
+        clientId: makeClientId('Sarah', 'Fleming-Veisze'),
+        firstName: "Sarah",
+        lastName: "Fleming-Veisze",
+        email: "sarah.fleming-veisze@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "1111 33rd Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00009",
   },
-  'ganson-2125-i-street': {
-    firstName: 'William', lastName: 'Ganson', projectAddress: '2125 I Street',
-    city: 'Sacramento', state: 'CA', projectId: '00010',
-    secondaryFirstName: '', secondaryLastName: ''
+  "ganson-2125-i-street": {
+    clients: [
+      {
+        clientId: makeClientId('William', 'Ganson'),
+        firstName: "William",
+        lastName: "Ganson",
+        email: "william.ganson@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2125 I Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00010",
   },
-  'decarlo-1141-swanston-dr': {
-    firstName: 'Maria', lastName: 'DeCarlo', projectAddress: '1141 Swanston Dr',
-    city: 'Sacramento', state: 'CA', projectId: '00011',
-    secondaryFirstName: '', secondaryLastName: ''
+  "decarlo-1141-swanston-dr": {
+    clients: [
+      {
+        clientId: makeClientId('Maria', 'DeCarlo'),
+        firstName: "Maria",
+        lastName: "DeCarlo",
+        email: "maria.decarlo@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "1141 Swanston Dr",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00011",
   },
-  'green-920-u-street': {
-    firstName: 'Christopher', lastName: 'Green', projectAddress: '920 U Street',
-    city: 'Sacramento', state: 'CA', projectId: '00012',
-    secondaryFirstName: '', secondaryLastName: ''
+  "green-920-u-street": {
+    clients: [
+      {
+        clientId: makeClientId('Christopher', 'Green'),
+        firstName: "Christopher",
+        lastName: "Green",
+        email: "christopher.green@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "920 U Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00012",
   },
-  'kubein-plymouth-project': {
-    firstName: 'Jennifer', lastName: 'Kubein', projectAddress: 'Plymouth Project',
-    city: 'Sacramento', state: 'CA', projectId: '00013',
-    secondaryFirstName: '', secondaryLastName: ''
+  "kubein-plymouth-project": {
+    clients: [
+      {
+        clientId: makeClientId('Jennifer', 'Kubein'),
+        firstName: "Jennifer",
+        lastName: "Kubein",
+        email: "jennifer.kubein@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "Plymouth Project",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00013",
   },
-  'mcleod-joffe-2436-59th-street': {
-    firstName: 'Thomas', lastName: 'McLeod-Joffe', projectAddress: '2436 59th Street',
-    city: 'Sacramento', state: 'CA', projectId: '00014',
-    secondaryFirstName: '', secondaryLastName: ''
+  "mcleod-joffe-2436-59th-street": {
+    clients: [
+      {
+        clientId: makeClientId('Thomas', 'McLeod-Joffe'),
+        firstName: "Thomas",
+        lastName: "McLeod-Joffe",
+        email: "thomas.mcleod-joffe@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2436 59th Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00014",
   },
-  'piner-piner-haus-garage': {
-    firstName: 'Richard', lastName: 'Piner', projectAddress: 'Piner Haus Garage',
-    city: 'Sacramento', state: 'CA', projectId: '00015',
-    secondaryFirstName: '', secondaryLastName: ''
+  "piner-piner-haus-garage": {
+    clients: [
+      {
+        clientId: makeClientId('Richard', 'Piner'),
+        firstName: "Richard",
+        lastName: "Piner",
+        email: "richard.piner@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "Piner Haus Garage",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00015",
   },
-  'rathbun-usfs-cabin': {
-    firstName: 'Barbara', lastName: 'Rathbun', projectAddress: 'USFS Cabin',
-    city: 'Sacramento', state: 'CA', projectId: '00016',
-    secondaryFirstName: '', secondaryLastName: ''
+  "rathbun-usfs-cabin": {
+    clients: [
+      {
+        clientId: makeClientId('Barbara', 'Rathbun'),
+        firstName: "Barbara",
+        lastName: "Rathbun",
+        email: "barbara.rathbun@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "USFS Cabin",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00016",
   },
-  'vasquez-gutierrez-2508-55th-street': {
-    firstName: 'Carlos', lastName: 'Vasquez-Gutierrez', projectAddress: '2508 55th Street',
-    city: 'Sacramento', state: 'CA', projectId: '00017',
-    secondaryFirstName: '', secondaryLastName: ''
+  "vasquez-gutierrez-2508-55th-street": {
+    clients: [
+      {
+        clientId: makeClientId('Carlos', 'Vasquez-Gutierrez'),
+        firstName: "Carlos",
+        lastName: "Vasquez-Gutierrez",
+        email: "carlos.vasquez-gutierrez@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2508 55th Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00017",
   },
-  'wilcox-1808-u-street': {
-    firstName: 'Nancy', lastName: 'Wilcox', projectAddress: '1808 U Street',
-    city: 'Sacramento', state: 'CA', projectId: '00018',
-    secondaryFirstName: '', secondaryLastName: ''
+  "wilcox-1808-u-street": {
+    clients: [
+      {
+        clientId: makeClientId('Nancy', 'Wilcox'),
+        firstName: "Nancy",
+        lastName: "Wilcox",
+        email: "nancy.wilcox@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "1808 U Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00018",
   },
-  'donaldson-2717-58th-street': {
-    firstName: 'Celine', lastName: 'Donaldson', projectAddress: '2717 58th Street',
-    city: 'Sacramento', state: 'CA', projectId: '00019',
-    secondaryFirstName: '', secondaryLastName: ''
+  "donaldson-2717-58th-street": {
+    clients: [
+      {
+        clientId: makeClientId('Celine', 'Donaldson'),
+        firstName: "Celine",
+        lastName: "Donaldson",
+        email: "celine.donaldson@email.com",
+        isPrimary: true,
+      },
+    ],
+    projectAddress: "2717 58th Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00019",
   }
 };
 
@@ -104,21 +318,49 @@ export const getClientData = (projectId?: string) => {
   }
   // Default fallback
   return {
-    firstName: 'John', lastName: 'Doe', projectAddress: 'Unknown Address',
-    city: 'Sacramento', state: 'CA', projectId: '00000'
+    clients: [
+      {
+        clientId: "default-johndoe",
+        firstName: "John",
+        lastName: "Doe",
+        isPrimary: true
+      }
+    ],
+    projectAddress: "Unknown Address",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00000"
   };
 };
 
-export const updateClientData = (projectId: string, updatedData: any) => {
+// Get all clients across all projects
+export const getAllClients = (): Client[] => {
+  return Object.values(projectClientData).flatMap(p => p.clients);
+};
+
+export const updateClientData = (projectId: string, updatedClients: Client[]) => {
   if (projectId && projectClientData[projectId]) {
-    projectClientData[projectId] = {
-      ...projectClientData[projectId],
-      ...updatedData
-    };
+    projectClientData[projectId].clients = updatedClients;
+  }
+};
+
+export const addClientToProject = (projectId: string, newClient: Client) => {
+  if (projectId && projectClientData[projectId]) {
+    projectClientData[projectId].clients.push(newClient);
+  }
+};
+
+// Set one client in the array as primary
+export const setPrimaryClient = (projectId: string, clientId: string) => {
+  if (projectId && projectClientData[projectId]) {
+    projectClientData[projectId].clients.forEach(c => {
+      c.isPrimary = c.clientId === clientId;
+    });
   }
 };
 
 export const getProjectDisplayName = (projectId?: string) => {
-  const clientData = getClientData(projectId);
-  return `${clientData.lastName} - ${clientData.projectAddress}`;
+  const project = getClientData(projectId);
+  const primary = project.clients.find(c => c.isPrimary) || project.clients[0];
+  return `${primary.lastName} - ${project.projectAddress}`;
 };

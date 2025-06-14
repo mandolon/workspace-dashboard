@@ -1,196 +1,155 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getClientData, updateClientData } from '@/data/projectClientData';
+import { 
+  getClientData, 
+  updateClientData, 
+  addClientToProject, 
+  setPrimaryClient,
+  Client 
+} from '@/data/projectClientData';
 import { useToast } from '@/hooks/use-toast';
+import { generateClientId } from '@/utils/clientHelpers';
 import InformationSection from './InformationSection';
+import { Button } from '@/components/ui/button';
 
 interface ClientTabFormProps {
   onSave: () => void;
 }
 
+const emptyClient = (): Client => ({
+  clientId: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  isPrimary: false,
+});
+
 const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
   const { projectId } = useParams();
   const { toast } = useToast();
 
-  const [formData, setFormData] = useState(() => {
-    const clientData = getClientData(projectId);
-    return {
-      firstName: clientData.firstName,
-      lastName: clientData.lastName,
-      secondaryFirstName: clientData.secondaryFirstName || '',
-      secondaryLastName: clientData.secondaryLastName || '',
-      projectAddress: clientData.projectAddress,
-      city: clientData.city,
-      state: clientData.state,
-      billingAddress: clientData.projectAddress,
-      billingCity: clientData.city,
-      billingState: clientData.state,
-      status: 'in-progress',
-      startDate: '5/8/23',
-      duration: '5 Weeks'
-    };
-  });
+  const [clients, setClients] = useState<Client[]>([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newClient, setNewClient] = useState<Client>(emptyClient());
 
-  // Update form data when project changes
   useEffect(() => {
-    const clientData = getClientData(projectId);
-    setFormData(prev => ({
-      ...prev,
-      firstName: clientData.firstName,
-      lastName: clientData.lastName,
-      secondaryFirstName: clientData.secondaryFirstName || '',
-      secondaryLastName: clientData.secondaryLastName || '',
-      projectAddress: clientData.projectAddress,
-      city: clientData.city,
-      state: clientData.state,
-      billingAddress: clientData.projectAddress,
-      billingCity: clientData.city,
-      billingState: clientData.state,
-    }));
+    const project = getClientData(projectId);
+    setClients([...project.clients]);
   }, [projectId]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSave();
+  // Add new client handler
+  const handleAddClient = () => {
+    if (!newClient.firstName || !newClient.lastName) {
+      toast({ title: "Missing info", description: "First & last name required" });
+      return;
     }
-  };
+    const id = generateClientId(newClient.firstName, newClient.lastName);
+    const client: Client = { ...newClient, clientId: id, isPrimary: false };
+    const updated = [...clients, client];
 
-  const handleSave = () => {
-    if (!projectId) return;
-    
-    const updatedClientData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      secondaryFirstName: formData.secondaryFirstName,
-      secondaryLastName: formData.secondaryLastName,
-      projectAddress: formData.projectAddress,
-      city: formData.city,
-      state: formData.state,
-    };
-    
-    updateClientData(projectId, updatedClientData);
-    
-    // Update billing address to match project address
-    setFormData(prev => ({
-      ...prev,
-      billingAddress: formData.projectAddress,
-      billingCity: formData.city,
-      billingState: formData.state,
-    }));
-    
-    toast({
-      title: "Changes saved",
-      description: "Client information has been updated successfully.",
-    });
-
+    setClients(updated);
+    addClientToProject(projectId!, client);
+    setShowAdd(false);
+    setNewClient(emptyClient());
+    toast({ title: "Client added", description: "New client added to project." });
     onSave();
   };
 
-  const clientInformationFields = [
-    {
-      label: 'Primary First Name',
-      value: formData.firstName,
-      onChange: (value: string) => handleInputChange('firstName', value),
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'Secondary First Name',
-      value: formData.secondaryFirstName,
-      onChange: (value: string) => handleInputChange('secondaryFirstName', value),
-      placeholder: 'Optional',
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'Primary Last Name',
-      value: formData.lastName,
-      onChange: (value: string) => handleInputChange('lastName', value),
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'Secondary Last Name',
-      value: formData.secondaryLastName,
-      onChange: (value: string) => handleInputChange('secondaryLastName', value),
-      placeholder: 'Optional',
-      span: 'half' as const,
-      onKeyDown: handleKeyDown
-    }
-  ];
+  // Make a client primary
+  const handleSetPrimary = (id: string) => {
+    setPrimaryClient(projectId!, id);
+    setClients(clients.map(c => ({ ...c, isPrimary: c.clientId === id })));
+    toast({ title: "Primary Contact Changed" });
+    onSave();
+  };
 
-  const projectAddressFields = [
-    {
-      label: 'Address',
-      value: formData.projectAddress,
-      onChange: (value: string) => handleInputChange('projectAddress', value),
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'City',
-      value: formData.city,
-      onChange: (value: string) => handleInputChange('city', value),
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'State',
-      value: formData.state,
-      onChange: (value: string) => handleInputChange('state', value),
-      onKeyDown: handleKeyDown
-    }
-  ];
+  // Remove client
+  const handleRemove = (id: string) => {
+    if (clients.length === 1) return;
+    const updated = clients.filter(c => c.clientId !== id);
+    setClients(updated);
+    updateClientData(projectId!, updated);
+    toast({ title: "Client Removed" });
+    onSave();
+  };
 
-  const billingAddressFields = [
-    {
-      label: 'Address',
-      value: formData.billingAddress,
-      onChange: (value: string) => handleInputChange('billingAddress', value),
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'City',
-      value: formData.billingCity,
-      onChange: (value: string) => handleInputChange('billingCity', value),
-      onKeyDown: handleKeyDown
-    },
-    {
-      label: 'State',
-      value: formData.billingState,
-      onChange: (value: string) => handleInputChange('billingState', value),
-      onKeyDown: handleKeyDown
-    }
-  ];
+  // UI to edit/add a new client
+  const addForm = (
+    <div className="mb-4 p-3 border rounded bg-muted/30">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="First name"
+          value={newClient.firstName}
+          onChange={e => setNewClient(c => ({ ...c, firstName: e.target.value }))}
+          className="border px-2 py-1 rounded text-xs w-32"
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          value={newClient.lastName}
+          onChange={e => setNewClient(c => ({ ...c, lastName: e.target.value }))}
+          className="border px-2 py-1 rounded text-xs w-32"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={newClient.email}
+          onChange={e => setNewClient(c => ({ ...c, email: e.target.value }))}
+          className="border px-2 py-1 rounded text-xs w-48"
+        />
+        <Button size="sm" onClick={handleAddClient}>Add</Button>
+        <Button size="sm" variant="secondary" onClick={() => setShowAdd(false)}>Cancel</Button>
+      </div>
+    </div>
+  );
+
+  // The client list view
+  const clientList = (
+    <>
+      <div className="mb-2 text-sm font-semibold">Project Contacts</div>
+      <div className="space-y-2 mb-4">
+        {clients.map(client => (
+          <div key={client.clientId} className={`border rounded px-3 py-2 flex items-center gap-3 ${client.isPrimary ? 'bg-green-50 border-green-300' : 'bg-background'}`}>
+            <div className="flex-1">
+              <div className="font-medium">{client.firstName} {client.lastName} <span className="text-xs text-muted-foreground">({client.email})</span></div>
+              <div className="text-xs text-muted-foreground">{client.isPrimary ? "Primary Contact" : "Secondary Contact"}</div>
+            </div>
+            {!client.isPrimary && (
+              <Button size="sm" variant="ghost" onClick={() => handleSetPrimary(client.clientId)}>Make Primary</Button>
+            )}
+            {clients.length > 1 && (
+              <Button size="sm" variant="destructive" onClick={() => handleRemove(client.clientId)}>Remove</Button>
+            )}
+          </div>
+        ))}
+      </div>
+      <Button size="sm" variant="outline" onClick={() => setShowAdd(true)}>
+        Add Another Client
+      </Button>
+      {showAdd && addForm}
+    </>
+  );
 
   return {
-    formData,
-    handleSave,
-    handleInputChange,
-    clientInformationFields,
-    projectAddressFields,
-    billingAddressFields,
+    clients,
     sections: (
-      <>
-        <InformationSection
-          title="Client Information"
-          fields={clientInformationFields}
-        />
-
-        <InformationSection
-          title="Project Address"
-          fields={projectAddressFields}
-        />
-
-        <InformationSection
-          title="Billing Address"
-          fields={billingAddressFields}
-        />
-      </>
-    )
+      <div>
+        {clientList}
+      </div>
+    ),
+    // For Project tab compatibility (project address etc.) we keep fake methods
+    formData: {
+      projectAddress: getClientData(projectId).projectAddress,
+      startDate: "5/8/23",
+      duration: "5 weeks",
+      status: "",
+    },
+    handleSave: () => {},
+    handleInputChange: () => {},
+    clientInformationFields: [],
+    projectAddressFields: [],
+    billingAddressFields: [],
   };
 };
 

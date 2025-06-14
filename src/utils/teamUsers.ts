@@ -1,5 +1,6 @@
 
 import { ArchitectureRole } from '@/types/roles';
+import { getAllClients } from '@/data/projectClientData';
 
 // Central TeamMember type definition
 export interface TeamMember {
@@ -8,13 +9,14 @@ export interface TeamMember {
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
   titleRole: ArchitectureRole;
-  lastActive: string; // Now required
-  status: 'Active' | 'Inactive' | 'Pending'; // Now required
+  lastActive: string;
+  status: 'Active' | 'Inactive' | 'Pending';
   avatar: string;
-  email: string; // used in Teams UI
-  role: ArchitectureRole; // for compatibility with other user types
+  email: string;
+  role: ArchitectureRole;
 }
 
+// Admin and Team remain static for now
 export const TEAM_USERS: TeamMember[] = [
   {
     id: 't0',
@@ -76,28 +78,17 @@ export const TEAM_USERS: TeamMember[] = [
     role: 'Team Lead',
     avatar: 'bg-orange-500'
   },
-  {
-    id: 't5',
-    name: 'RH',
-    fullName: 'Rhonda Hill',
-    crmRole: 'Client',
-    titleRole: 'Client',
-    lastActive: '—',
-    status: 'Pending',
-    email: 'rhonda.hill@example.com',
-    role: 'Client',
-    avatar: 'bg-pink-500'
-  },
-  {
-    id: 't6',
-    name: 'JH',
-    fullName: 'James Hall',
+  // ... add client rows dynamically below
+  ...getAllClients().map(client => ({
+    id: client.clientId,
+    name: (client.firstName[0] + (client.lastName[0] ?? "")).toUpperCase(),
+    fullName: `${client.firstName} ${client.lastName}`,
     crmRole: 'Client',
     titleRole: 'Client',
     lastActive: '—',
     status: 'Active',
-    email: 'james.hall@example.com',
+    email: client.email || 'unknown@email.com',
     role: 'Client',
     avatar: 'bg-gray-500'
-  }
+  }))
 ];
