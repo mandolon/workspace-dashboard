@@ -1,6 +1,6 @@
 
-import React, { useEffect, useRef, useState } from "react";
-import { Excalidraw, exportToBlob, serializeAsJSON, restore } from "@excalidraw/excalidraw";
+import React, { useEffect, useState, useRef } from "react";
+import { Excalidraw } from "@excalidraw/excalidraw";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -17,7 +17,8 @@ const ExcalidrawWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [excalidrawData, setExcalidrawData] = useState<ExcalidrawData | null>(null);
-  const excalidrawRef = useRef<any>(null);
+  const excalidrawAPIRef = useRef<any>(null); // This will be set via onReady
+  const [scene, setScene] = useState<{ elements: any[]; appState: any; files?: any }>({ elements: [], appState: {}, files: {} });
   const { currentUser } = useUser();
 
   // Load whiteboard data from Supabase
@@ -28,13 +29,15 @@ const ExcalidrawWhiteboard: React.FC = () => {
         .from("whiteboards")
         .select("excalidraw_data,title")
         .eq("id", id)
-        .single();
+        .maybeSingle();
       if (error || !data) {
         toast.error("Failed to load whiteboard.");
         setLoading(false);
         return;
       }
-      setExcalidrawData(data.excalidraw_data || { elements: [], appState: { viewBackgroundColor: "#fff" } });
+      const safeData = data.excalidraw_data || { elements: [], appState: { viewBackgroundColor: "#fff" } };
+      setExcalidrawData(safeData);
+      setScene(safeData);
       setLoading(false);
     };
     fetchWhiteboard();
@@ -43,11 +46,20 @@ const ExcalidrawWhiteboard: React.FC = () => {
 
   // Save handler
   const handleSave = async () => {
-    if (!excalidrawRef.current) return;
-    const scene = await excalidrawRef.current.getSceneElements();
-    const appState = excalidrawRef.current.getAppState();
-    // Excalidraw export: elements, appState
-    const newData = { elements: scene, appState };
+    let newData = scene;
+    // If possible, get the full API's state (in case)
+    if (excalidrawAPIRef.current) {
+      const api = excalidrawAPIRef.current;
+      try {
+        newData = {
+          elements: api.getSceneElements(),
+          appState: api.getAppState(),
+          files: api.getFiles ? api.getFiles() : {},
+        };
+      } catch (e) {
+        // fallback to current scene
+      }
+    }
     const { error } = await supabase
       .from("whiteboards")
       .update({ excalidraw_data: newData, updated_at: new Date().toISOString() })
@@ -71,8 +83,9 @@ const ExcalidrawWhiteboard: React.FC = () => {
       </div>
       <div className="border rounded-lg overflow-hidden bg-background shadow h-[70vh]">
         <Excalidraw
-          ref={excalidrawRef}
           initialData={excalidrawData ?? undefined}
+          onChange={(elements, appState, files) => setScene({ elements, appState, files })}
+          onReady={(api) => { excalidrawAPIRef.current = api; }}
         />
       </div>
     </div>
