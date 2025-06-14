@@ -1,17 +1,7 @@
 
 import React from 'react';
 import TeamMemberRow from './TeamMemberRow';
-
-interface TeamMember {
-  id: string;
-  name: string;
-  email: string;
-  crmRole: 'Admin' | 'Team' | 'Client';
-  titleRole: string;
-  lastActive: string;
-  status: 'Active' | 'Inactive' | 'Pending';
-  avatar: string;
-}
+import { TeamMember } from '@/utils/teamUsers';
 
 interface TeamMembersTableProps {
   members: TeamMember[];

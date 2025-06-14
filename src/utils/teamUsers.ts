@@ -1,16 +1,19 @@
 
 import { ArchitectureRole } from '@/types/roles';
 
-export interface TeamUser {
+// Central TeamMember type definition
+export interface TeamMember {
   id: string;
   name: string;
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
   titleRole: ArchitectureRole;
+  lastActive?: string; // Only added in the Teams page layer
+  status?: 'Active' | 'Inactive' | 'Pending'; // Only added in the Teams page layer
   avatar: string;
 }
 
-export const TEAM_USERS: TeamUser[] = [
+export const TEAM_USERS: TeamMember[] = [
   {
     id: 't0',
     name: 'AL',
@@ -68,4 +71,3 @@ export const TEAM_USERS: TeamUser[] = [
     avatar: 'bg-gray-500'
   }
 ];
-

@@ -6,19 +6,7 @@ import { getInitials } from '@/utils/taskUtils';
 import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
-
-// Updated TeamMember with crmRole + titleRole
-interface TeamMember {
-  id: string;
-  name: string;
-  fullName?: string;
-  email: string;
-  crmRole: 'Admin' | 'Team' | 'Client';
-  titleRole: string;
-  lastActive: string;
-  status: 'Active' | 'Inactive' | 'Pending';
-  avatar: string;
-}
+import { TeamMember } from '@/utils/teamUsers';
 
 interface TeamMemberRowProps {
   member: TeamMember;
@@ -98,7 +86,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
           <span>{member.lastActive}</span>
         </div>
         <div className="col-span-2 flex items-center justify-between">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status as any)}`}>
             {member.status}
           </span>
           <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">

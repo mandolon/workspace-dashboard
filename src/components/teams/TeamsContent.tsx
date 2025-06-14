@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
 import TeamMembersSummary from './TeamMembersSummary';
-import { TEAM_USERS } from '@/utils/teamUsers';
+import { TEAM_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 
 // Helper for last active/ status for demo purposes
@@ -13,19 +14,6 @@ const memberStatus: Record<string, { lastActive: string; status: 'Active' | 'Ina
   'JJ': { lastActive: 'Jun 1, 2025', status: 'Inactive' },
   'RH': { lastActive: 'May 30, 2025', status: 'Pending' },
   'JH': { lastActive: 'May 29, 2025', status: 'Active' }
-};
-
-// Only these fields are present
-export type TeamMember = {
-  id: string;
-  name: string;
-  fullName: string;
-  email: string;
-  crmRole: 'Admin' | 'Team' | 'Client';
-  titleRole: ArchitectureRole;
-  lastActive: string;
-  status: 'Active' | 'Inactive' | 'Pending';
-  avatar: string;
 };
 
 interface TeamsContentProps {
@@ -46,15 +34,10 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   // Store team members as local state so we can update titleRole
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() =>
     TEAM_USERS.map(user => ({
-      id: user.id,
-      name: user.name,
-      fullName: user.fullName,
+      ...user,
       email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
-      crmRole: user.crmRole,
-      titleRole: user.titleRole,
       lastActive: memberStatus[user.name]?.lastActive || '—',
       status: memberStatus[user.name]?.status || 'Active',
-      avatar: user.avatar
     }))
   );
 
