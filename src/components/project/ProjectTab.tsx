@@ -20,7 +20,7 @@ const ProjectTab = () => {
           <div className="flex items-center gap-3">
             <MapPin className="w-4 h-4 text-blue-700" />
             <span className="text-sm font-semibold">
-              {clientData.projectAddress}
+              {form.formData.projectAddress}
             </span>
           </div>
           {/* Right side - Agents and Actions */}
@@ -60,3 +60,4 @@ const ProjectTab = () => {
 };
 
 export default ProjectTab;
+

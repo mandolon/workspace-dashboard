@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { getClientData } from '@/data/projectClientData';
+import { getClientData, updateClientData } from '@/data/projectClientData';
 import InformationSection from './InformationSection';
 
 interface ProjectTabFormProps {
@@ -37,6 +36,11 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   };
 
   const handleSave = () => {
+    // Update the address in projectClientData
+    if (projectId && formData.projectAddress) {
+      // only update the address
+      updateClientData(projectId, undefined, formData.projectAddress);
+    }
     toast({
       title: "Changes saved",
       description: "Project information has been updated successfully.",
@@ -75,6 +79,14 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('projectNotes', value),
       type: 'textarea' as const,
       placeholder: 'Add any additional project notes...',
+      onKeyDown: handleKeyDown
+    },
+    {
+      label: 'Project Address',
+      value: formData.projectAddress,
+      onChange: (value: string) => handleInputChange('projectAddress', value),
+      type: 'input' as const,
+      placeholder: 'Enter project address...',
       onKeyDown: handleKeyDown
     }
   ];

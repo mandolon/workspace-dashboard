@@ -338,9 +338,15 @@ export const getAllClients = (): Client[] => {
   return Object.values(projectClientData).flatMap(p => p.clients);
 };
 
-export const updateClientData = (projectId: string, updatedClients: Client[]) => {
+// Update to accept optional address (so we can update just the address for the project):
+export const updateClientData = (projectId: string, updatedClients?: Client[], updatedAddress?: string) => {
   if (projectId && projectClientData[projectId]) {
-    projectClientData[projectId].clients = updatedClients;
+    if (updatedClients) {
+      projectClientData[projectId].clients = updatedClients;
+    }
+    if (updatedAddress) {
+      projectClientData[projectId].projectAddress = updatedAddress;
+    }
   }
 };
 
