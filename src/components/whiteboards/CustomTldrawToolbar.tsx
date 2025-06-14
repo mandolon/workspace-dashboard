@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Pen, Highlighter, RectangleHorizontal, Circle,
@@ -47,8 +46,8 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setStyleForNextShape({ color });
-      editor.setStyleForNextShape({ size: stroke });
+      editor.setStyleForNextShapes({ color });
+      editor.setStyleForNextShapes({ size: stroke });
     }
   }, [color, stroke, editor]);
 
@@ -69,7 +68,7 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setStyleForNextShape({ color: "#fff176", opacity: 0.32, size: 6 });
+      editor.setStyleForNextShapes({ color: "#fff176", opacity: 0.32, size: 6 });
       setColor("#fff176");
       setStroke(6);
     }
@@ -152,4 +151,3 @@ const CustomTldrawToolbar: React.FC = () => {
 };
 
 export default CustomTldrawToolbar;
-
