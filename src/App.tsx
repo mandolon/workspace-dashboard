@@ -33,7 +33,6 @@ import ImpersonationGate from "./components/ImpersonationGate";
 import LoginPage from "./components/auth/LoginPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
-// Move all providers OUTSIDE BrowserRouter to avoid context hook errors in route children!
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <QueryClientProvider client={new QueryClient({
@@ -45,17 +44,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       },
     })}>
       <TooltipProvider>
-        <UserProvider>
-          <SidebarProvider>
-            <ProjectDataProvider>
-              <TaskAttachmentProvider>
-                <TaskProvider>
-                  {children}
-                </TaskProvider>
-              </TaskAttachmentProvider>
-            </ProjectDataProvider>
-          </SidebarProvider>
-        </UserProvider>
+        {children}
       </TooltipProvider>
     </QueryClientProvider>
   </ThemeProvider>
@@ -70,47 +59,58 @@ const LocationLogger = () => {
 };
 
 const App = () => {
-  // Any state/hooks must not be at this level, should be under the provider tree for correct context.
+  // Providers that do NOT require router context (ThemeProvider, QueryClientProvider, TooltipProvider) are at the top level.
+  // Providers that REQUIRE router context (UserProvider, TaskProvider, etc.) go INSIDE BrowserRouter.
   return (
     <AppProviders>
       <BrowserRouter>
-        <Toaster />
-        <Sonner />
-        <LocationLogger />
-        <ImpersonationGate>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/tasks" element={<TasksPage />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/project/:projectId" element={<ProjectPage />} />
-                    <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                    <Route path="/inbox" element={<InboxPage />} />
-                    <Route path="/teams" element={<TeamsPage />} />
-                    <Route path="/client/account" element={<ClientAccountPage />} />
-                    <Route path="/client/dashboard" element={<ClientDashboard />} />
-                    <Route path="/invoices" element={<InvoicePage />} />
-                    <Route path="/timesheets" element={<TimesheetsPage />} />
-                    <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                    <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/settings/notifications" element={<SettingsPage />} />
-                    <Route path="/help" element={<HelpRedirector />} />
-                    <Route path="/help/admin" element={<AdminHelpPage />} />
-                    <Route path="/help/team" element={<TeamHelpPage />} />
-                    <Route path="/help/client" element={<ClientHelpPage />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </ImpersonationGate>
+        <UserProvider>
+          <SidebarProvider>
+            <ProjectDataProvider>
+              <TaskAttachmentProvider>
+                <TaskProvider>
+                  <Toaster />
+                  <Sonner />
+                  <LocationLogger />
+                  <ImpersonationGate>
+                    <Routes>
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route
+                        path="/*"
+                        element={
+                          <ProtectedRoute>
+                            <Routes>
+                              <Route path="/" element={<Index />} />
+                              <Route path="/tasks" element={<TasksPage />} />
+                              <Route path="/dashboard" element={<Dashboard />} />
+                              <Route path="/project/:projectId" element={<ProjectPage />} />
+                              <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                              <Route path="/inbox" element={<InboxPage />} />
+                              <Route path="/teams" element={<TeamsPage />} />
+                              <Route path="/client/account" element={<ClientAccountPage />} />
+                              <Route path="/client/dashboard" element={<ClientDashboard />} />
+                              <Route path="/invoices" element={<InvoicePage />} />
+                              <Route path="/timesheets" element={<TimesheetsPage />} />
+                              <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                              <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
+                              <Route path="/settings" element={<SettingsPage />} />
+                              <Route path="/settings/notifications" element={<SettingsPage />} />
+                              <Route path="/help" element={<HelpRedirector />} />
+                              <Route path="/help/admin" element={<AdminHelpPage />} />
+                              <Route path="/help/team" element={<TeamHelpPage />} />
+                              <Route path="/help/client" element={<ClientHelpPage />} />
+                              <Route path="*" element={<NotFound />} />
+                            </Routes>
+                          </ProtectedRoute>
+                        }
+                      />
+                    </Routes>
+                  </ImpersonationGate>
+                </TaskProvider>
+              </TaskAttachmentProvider>
+            </ProjectDataProvider>
+          </SidebarProvider>
+        </UserProvider>
       </BrowserRouter>
     </AppProviders>
   );
