@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface TaskStatusIconProps {
   status: string;
   onClick: () => void;
+  isDashed?: boolean; // Added isDashed prop
 }
 
-const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
+const TaskStatusIcon = ({ status, onClick, isDashed }: TaskStatusIconProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Reset animation state if status changes externally
@@ -72,14 +73,12 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
           baseClasses,
           borderColor,
           hoverBg,
-          "border-dashed", // Apply dashed border to non-completed states
+          isDashed && "border-dashed", // Apply dashed border conditionally
         )} />
     );
   };
 
   return (
-    // Removed extra button wrapper, click handled directly on the icon div or its parts
-    // The p-0.5 hover:bg-accent was creating an outer clickable area, now click is on the icon itself
     <div onClick={handleClick} className="flex items-center justify-center w-5 h-5"> 
       {getStatusIcon()}
     </div>

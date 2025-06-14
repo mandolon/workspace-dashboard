@@ -3,8 +3,7 @@ import { Edit, Check, X, GripVertical } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Task } from '@/types/task';
-import { DraggableAttributes } from '@dnd-kit/core';
-import type { SyntheticListenerMap } from '@dnd-kit/core';
+import { DraggableAttributes, DraggableSyntheticListeners } from '@dnd-kit/core';
 
 interface TaskRowContentProps {
   task: Task;
@@ -20,7 +19,7 @@ interface TaskRowContentProps {
   onDeleteClick: (e: React.MouseEvent) => void;
   isDragging?: boolean;
   dragAttributes?: DraggableAttributes;
-  dragListeners?: SyntheticListenerMap;
+  dragListeners?: DraggableSyntheticListeners;
 }
 
 const TaskRowContent = React.memo(({
@@ -132,7 +131,6 @@ const TaskRowContent = React.memo(({
         ) : (
           <div 
             className="py-0.5 leading-tight" // Adjusted leading for tighter spacing
-            // onClick={handleTaskClick} // Moved onClick to parent div for broader click area when not editing
           >
             {/* Project name above task title */}
             <div className="text-xs text-muted-foreground truncate">{task.project}</div>
