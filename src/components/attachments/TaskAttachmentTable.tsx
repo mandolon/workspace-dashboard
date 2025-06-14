@@ -31,12 +31,10 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
       <table className="w-full text-xs">
         <thead>
           <tr className="border-b text-muted-foreground">
-            <th className="py-2 px-3 text-left font-medium">Name</th>
-            <th className="py-2 px-3 text-left font-medium whitespace-nowrap">
-              Date Created
-            </th>
-            <th className="py-2 px-3 text-left font-medium whitespace-nowrap">Created by</th>
-            {onRemove && <th className="py-2 px-3 text-right font-medium">Action</th>}
+            <th className="py-2 px-3 text-left font-medium w-[60%] min-w-[130px]">Name</th>
+            <th className="py-2 px-2 text-left font-medium whitespace-nowrap w-[16%] min-w-[90px]">Date Created</th>
+            <th className="py-2 px-2 text-left font-medium whitespace-nowrap w-[14%] min-w-[80px]">Created by</th>
+            {onRemove && <th className="py-2 px-2 text-right font-medium w-[10%] min-w-[56px]">Action</th>}
           </tr>
         </thead>
         <tbody>
@@ -66,7 +64,7 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
                   key={attachment.id}
                   className="hover:bg-muted/50 border-b transition-colors"
                 >
-                  <td className="px-3 py-2 max-w-[220px] truncate">
+                  <td className="px-3 py-2 max-w-[220px] truncate w-[60%]">
                     <span className="inline-block align-middle mr-2">📄</span>
                     <a
                       href={attachment.url}
@@ -79,14 +77,14 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
                       {attachment.name}
                     </a>
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap">{attachment.dateCreated}</td>
-                  <td className="px-3 py-2">
+                  <td className="px-2 py-2 whitespace-nowrap w-[16%] text-muted-foreground">{attachment.dateCreated}</td>
+                  <td className="px-2 py-2 w-[14%]">
                     <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
                       {displayAuthor}
                     </span>
                   </td>
                   {onRemove && (
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-2 py-2 text-right w-[10%]">
                       <button
                         onClick={() => onRemove(attachment.id)}
                         className="p-1 hover:bg-accent rounded"
@@ -107,4 +105,3 @@ const TaskAttachmentTable: React.FC<TaskAttachmentTableProps> = ({
 };
 
 export default TaskAttachmentTable;
-
