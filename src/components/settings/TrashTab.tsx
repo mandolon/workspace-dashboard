@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Search, RotateCcw, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -12,14 +11,21 @@ import { useRealtimeTasks } from '@/hooks/useRealtimeTasks';
 const TrashTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
+  const [restoringIds, setRestoringIds] = useState<string[]>([]); // Track tasks being restored
 
   // Use useRealtimeTasks to get all tasks (legacy + Supabase-backed)
   const { tasks: allTasks, loading } = useRealtimeTasks();
 
+  // Track local removal for optimistic update
+  const [optimisticallyRestored, setOptimisticallyRestored] = useState<string[]>([]);
+
   // Get all deleted tasks from all sources
   const deletedTasks = useMemo(() => {
-    return (allTasks ?? []).filter(task => !!task.deletedAt);
-  }, [allTasks]);
+    // Optimistically filter out tasks restored
+    return (allTasks ?? []).filter(
+      task => !!task.deletedAt && !optimisticallyRestored.includes(task.id?.toString() ?? '')
+    );
+  }, [allTasks, optimisticallyRestored]);
 
   // Filter tasks based on search query
   const filteredTasks = useMemo(() => {
@@ -40,20 +46,29 @@ const TrashTab = () => {
   }
 
   const handleRestore = async (taskId) => {
+    setRestoringIds((prev) => [...prev, taskId.toString()]);
     const task = allTasks.find(t => t.id === taskId);
-    if (!task) return;
+    if (!task) {
+      setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
+      return;
+    }
 
     if (isSupabaseTask(task)) {
       try {
         await updateTaskSupabase(task.taskId, { deletedAt: null, deletedBy: null });
+        setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
         toast({ title: 'Task Restored', description: 'Task has been restored.', duration: 3000 });
       } catch (e) {
         toast({ title: 'Error', description: 'Failed to restore task.', variant: 'destructive' });
+      } finally {
+        setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
       }
     } else {
       // Legacy task
       restoreTask(taskId);
+      setOptimisticallyRestored((prev) => [...prev, taskId.toString()]);
       toast({ title: 'Task Restored', description: 'Legacy task has been restored.', duration: 3000 });
+      setRestoringIds((prev) => prev.filter(id => id !== taskId.toString()));
     }
   };
 
@@ -164,6 +179,7 @@ const TrashTab = () => {
                     size="sm"
                     onClick={() => handleRestore(task.id)}
                     className="h-6 px-2"
+                    disabled={restoringIds.includes(task.id?.toString() ?? '')}
                   >
                     <RotateCcw className="w-3 h-3" />
                   </Button>
@@ -186,4 +202,3 @@ const TrashTab = () => {
 };
 
 export default TrashTab;
-
