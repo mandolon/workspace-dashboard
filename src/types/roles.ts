@@ -1,4 +1,3 @@
-
 export const ARCHITECTURE_ROLES = [
   'Architect',
   'Engineer', 
@@ -40,3 +39,6 @@ export const ROLE_DISPLAY_NAMES: Record<ArchitectureRole, string> = {
   'Contractor': 'Contractor',
   'Client': 'Client'
 };
+
+// Add standard roles for CRM demo:
+export type CRMRoles = "admin" | "team" | "client";
