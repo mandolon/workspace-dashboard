@@ -2,7 +2,7 @@
 import React from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
-import { Task } from '@/types/task'; 
+import { Task } from '@/types/task';
 import TaskDetailTitleSection from './TaskDetailTitleSection';
 import TaskDetailDescription from './TaskDetailDescription';
 import TaskDetailFields from './TaskDetailFields';
@@ -22,9 +22,28 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
     cancelTaskEdit,
     assignPerson,
     removeAssignee,
+    addCollaborator,
+    removeCollaborator,
   } = useTaskContext();
 
   const isEditing = editingTaskId === task.id;
+
+  // These wrappers ensure we always use string id (task.taskId)
+  const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+    assignPerson(taskId, person);
+  };
+
+  const handleRemoveAssignee = (taskId: string) => {
+    removeAssignee(taskId);
+  };
+
+  const handleAddCollaborator = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+    if (addCollaborator) addCollaborator(taskId, person);
+  };
+
+  const handleRemoveCollaborator = (taskId: string, idx: number) => {
+    if (removeCollaborator) removeCollaborator(taskId, idx);
+  };
 
   return (
     <div className="space-y-3">
@@ -41,8 +60,10 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
       <TaskDetailFields
         task={task}
         currentUser={currentUser}
-        assignPerson={assignPerson}
-        removeAssignee={removeAssignee}
+        assignPerson={handleAssignPerson}
+        removeAssignee={handleRemoveAssignee}
+        addCollaborator={handleAddCollaborator}
+        removeCollaborator={handleRemoveCollaborator}
       />
     </div>
   );
