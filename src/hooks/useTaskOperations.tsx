@@ -21,28 +21,17 @@ export const useTaskOperations = () => {
 
   const createTask = useCallback((taskData: any) => {
     console.log('Creating task via context:', taskData);
-    if (taskData.useCustomTasks) {
-      // For dialog-created custom tasks, ensure createdBy set to current user
-      setCustomTasks(prev => [
-        {
-          ...taskData,
-          createdBy: currentUser?.name ?? "Unknown",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        ...prev
-      ]);
-    } else {
-      // For quick add/centralized add, ensure current user is author
-      const newTask = addTask({
-        ...taskData,
-        createdBy: currentUser?.name ?? "Unknown",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      console.log('Quick add created task:', newTask);
-      triggerRefresh();
-    }
+
+    // Always use the centralized addTask
+    addTask({
+      ...taskData,
+      createdBy: currentUser?.name ?? "Unknown",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    // Immediately trigger refresh so the UI updates everywhere
+    triggerRefresh();
   }, [triggerRefresh, currentUser]);
 
   const updateTaskById = useCallback((taskId: number, updates: Partial<Task>) => {
