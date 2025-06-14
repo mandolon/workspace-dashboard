@@ -12,7 +12,7 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
   const [inputHeight, setInputHeight] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Automatically adjust textarea height, like ChatGPT style
+  // Automatically adjust textarea height
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -55,16 +55,15 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
               value={messageInput}
               onChange={e => setMessageInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type your message... (Shift+Enter for newline)"
-              className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[36px] max-h-40 font-sans rounded-2xl placeholder:text-muted-foreground disabled:opacity-50"
-              rows={1}
+              placeholder="Type your message..."
+              className="flex-1 resize-none bg-transparent border-none focus:ring-0 outline-none text-sm p-0 min-h-[60px] max-h-40 font-sans rounded-2xl placeholder:text-muted-foreground disabled:opacity-50"
+              rows={2}
               spellCheck={true}
               autoFocus={false}
               style={{height: inputHeight ? `${inputHeight}px` : undefined}}
               aria-label="Send message"
               disabled={disabled}
             />
-            {/* Send Button, ChatGPT style */}
             <button
               type="button"
               onClick={handleSendMessage}
@@ -82,12 +81,7 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
               <Send className="w-4 h-4" />
             </button>
           </div>
-          {/* Helper text */}
-          <div className="text-[11px] text-muted-foreground text-center pt-2 pb-0">
-            Press <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> to send,&nbsp;
-            <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Shift</kbd>
-            +<kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">Enter</kbd> for newline
-          </div>
+          {/* Helper text removed */}
         </div>
       </div>
     </div>
@@ -95,3 +89,4 @@ const TaskChatInput: React.FC<TaskChatInputProps> = ({ onSendMessage, disabled }
 };
 
 export default TaskChatInput;
+
