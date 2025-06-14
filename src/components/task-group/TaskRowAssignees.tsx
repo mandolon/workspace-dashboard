@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
@@ -24,7 +25,7 @@ const TaskRowAssignees = ({
 }: TaskRowAssigneesProps) => {
   const [open, setOpen] = useState(false);
 
-  // Canonical users
+  // Canonical users, with custom colors if present
   const assignee = getCRMUser(task.assignee);
   const collaborators = (task.collaborators || []).map(getCRMUser);
 
@@ -39,8 +40,10 @@ const TaskRowAssignees = ({
 
   const handleAdd = (person: any) => {
     if (!assignee) {
+      console.info("AssignPerson handler called with: ", person);
       onAssignPerson(task.id, person);
     } else {
+      console.info("AddCollaborator handler called with: ", person);
       onAddCollaborator(task.id, person);
     }
     setOpen(false);
@@ -105,19 +108,22 @@ const TaskRowAssignees = ({
           <div className="text-xs font-semibold pb-1 px-2 text-foreground">Add person</div>
           <div className="flex flex-col">
             {availablePeople.length > 0 ? (
-              availablePeople.map(person => (
+              availablePeople.map(person => {
+                const personWithColor = getCRMUser(person) || person;
+                return (
                 <button
                   key={person.name}
                   className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
-                  onClick={(e) => { e.stopPropagation(); handleAdd(person); }}
+                  onClick={(e) => { e.stopPropagation(); handleAdd(personWithColor); }}
                   type="button"
                 >
-                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
-                    {getInitials(person.fullName || person.name)}
+                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(personWithColor)}`}>
+                    {getInitials(personWithColor.fullName || personWithColor.name)}
                   </div>
-                  <span>{person.fullName || person.name}</span>
+                  <span>{personWithColor.fullName || personWithColor.name}</span>
                 </button>
-              ))
+                )
+              })
             ) : (
               <div className="text-xs text-muted-foreground px-2 py-1">Everyone assigned</div>
             )}

@@ -6,6 +6,7 @@ import { Users, X } from 'lucide-react';
 import { getInitials } from '@/utils/taskUtils';
 import { getAvatarColor } from '@/utils/avatarColors';
 import { TEAM_USERS } from '@/utils/teamUsers';
+import { getCRMUser } from '@/utils/taskUserCRM';
 
 type QuickAddTaskPerson = {
   id: string;
@@ -32,6 +33,9 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
   showAssigneePopover,
   setShowAssigneePopover
 }) => {
+  // Copy with always-fresh custom color
+  const assigneeWithColor = assignee ? getCRMUser(assignee) : null;
+
   return (
     <div className="relative z-10 flex items-center">
       <Popover open={showAssigneePopover} onOpenChange={setShowAssigneePopover}>
@@ -43,15 +47,15 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
               `flex items-center justify-center h-8 w-8 min-w-0 min-h-0 rounded-full text-xs text-muted-foreground hover:text-foreground border border-border bg-background transition-colors px-0 py-0`
             }
             type="button"
-            aria-label={assignee ? `Assigned to ${assignee.fullName || assignee.name}` : "Assign user"}
+            aria-label={assigneeWithColor ? `Assigned to ${assigneeWithColor.fullName || assigneeWithColor.name}` : "Assign user"}
             data-testid="assign-button"
           >
-            {assignee ? (
+            {assigneeWithColor ? (
               <>
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assignee)}`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
                 >
-                  {assignee.name}
+                  {assigneeWithColor.name}
                 </div>
                 <button
                   type="button"
@@ -74,23 +78,26 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
         <PopoverContent align="end" className="p-1 w-44 bg-popover z-50 border border-border rounded shadow-xl">
           <div className="text-xs font-semibold pb-1 px-2 text-foreground">Assign to...</div>
           <div className="flex flex-col">
-            {teamAssignees.map(person => (
-              <button
-                key={person.id}
-                className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAssignee({ ...person });
-                  setShowAssigneePopover(false);
-                }}
-                type="button"
-              >
-                <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
-                  {person.name}
-                </div>
-                <span>{person.fullName || person.name}</span>
-              </button>
-            ))}
+            {teamAssignees.map(person => {
+              const personWithColor = getCRMUser(person) || person;
+              return (
+                <button
+                  key={person.id}
+                  className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAssignee({ ...personWithColor });
+                    setShowAssigneePopover(false);
+                  }}
+                  type="button"
+                >
+                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(personWithColor)}`}>
+                    {personWithColor.name}
+                  </div>
+                  <span>{personWithColor.fullName || personWithColor.name}</span>
+                </button>
+              );
+            })}
           </div>
         </PopoverContent>
       </Popover>
@@ -99,4 +106,3 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
-

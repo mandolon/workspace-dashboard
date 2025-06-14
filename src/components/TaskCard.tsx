@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -12,7 +13,7 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
-  // Always reference TEAM_USERS for display
+  // Always reference CRM-user with color
   const assignee = getCRMUser(task.assignee);
   const collaborators = (task.collaborators || []).map(getCRMUser);
 
