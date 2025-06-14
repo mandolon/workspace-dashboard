@@ -9,6 +9,7 @@ import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils'
 import { X, UserPlus, Users } from 'lucide-react';
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';
+import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -146,9 +147,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
               <div className="flex items-center gap-1 relative min-h-[24px]">
                 <div className="relative group/avatar w-6 h-6">
                   <div
-                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${
-                      canonicalAssignee.avatar || getRandomColor(canonicalAssignee.name)
-                    } text-white font-medium text-xs`}
+                    className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getAvatarColor(canonicalAssignee)} text-white font-medium text-xs`}
                   >
                     {getInitials(
                       canonicalAssignee.fullName ?? canonicalAssignee.name
@@ -184,9 +183,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                       onClick={() => handleAssign(person)}
                       className="flex items-center gap-2 cursor-pointer"
                     >
-                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${
-                        person.avatar || getRandomColor(person.name)
-                      }`}>
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getAvatarColor(person)}`}>
                         {getInitials(person.fullName ?? person.name)}
                       </div>
                       <span>{person.fullName ?? person.name}</span>

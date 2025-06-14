@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getRandomColor, getInitials } from '@/utils/taskUtils';
@@ -6,6 +5,7 @@ import { X, Plus } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';
+import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TaskRowAssigneesProps {
   task: any;
@@ -28,8 +28,7 @@ const TaskRowAssignees = ({
   const assignee = getCRMUser(task.assignee);
   const collaborators = (task.collaborators || []).map(getCRMUser);
 
-  const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
-
+  // No more getColor (was: useRandomColor), use new avatar color logic
   const assignedIds = [
     ...(assignee ? [assignee.name] : []),
     ...(collaborators?.map((c: any) => c?.name) || [])
@@ -51,11 +50,11 @@ const TaskRowAssignees = ({
       {assignee && (
         <div className="relative group" title={assignee.fullName || assignee.name}>
           <div
-            className={`${getColor(assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
+            className={`${getAvatarColor(assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
           >
             {getInitials(assignee.fullName ?? assignee.name)}
           </div>
-          {/* Remove Assignee Button (X) - shows on hover */}
+          {/* Remove Assignee Button */}
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
@@ -71,11 +70,11 @@ const TaskRowAssignees = ({
       {collaborators?.map((collaborator: any, idx: number) => collaborator && (
         <div className="relative group" key={idx} title={collaborator.fullName || collaborator.name}>
           <div
-            className={`${getColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
+            className={`${getAvatarColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
           >
             {getInitials(collaborator.fullName ?? collaborator.name)}
           </div>
-          {/* Remove Collaborator Button (X) - shows on hover */}
+          {/* Remove Collaborator Button */}
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
@@ -111,7 +110,7 @@ const TaskRowAssignees = ({
                   onClick={(e) => { e.stopPropagation(); handleAdd(person); }}
                   type="button"
                 >
-                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${person.avatar || getRandomColor(person.name)}`}>
+                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
                     {getInitials(person.fullName || person.name)}
                   </div>
                   <span>{person.fullName || person.name}</span>

@@ -1,26 +1,4 @@
-
-export const getRandomColor = (name: string, userColor?: string) => {
-  if (userColor) return userColor;
-  const colors = [
-    'bg-red-500',
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-yellow-500',
-    'bg-purple-500',
-    'bg-pink-500',
-    'bg-indigo-500',
-    'bg-orange-500',
-    'bg-teal-500',
-    'bg-cyan-500'
-  ];
-  // Use a hash of the name to consistently assign the same color
-  const hash = name.split('').reduce((a, b) => {
-    a = ((a << 5) - a) + b.charCodeAt(0);
-    return a & a;
-  }, 0);
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
-};
+export { getAvatarColor } from './avatarColors';
 
 export const getInitials = (name: string) => {
   if (!name) return '';
@@ -53,4 +31,3 @@ export const availablePeople = [
   { name: "AL", avatar: "AL", fullName: "Alex Lopez", avatarColor: "bg-orange-500" },
   { name: "RT", avatar: "RT", fullName: "Ryan Taylor", avatarColor: "bg-red-500" }
 ];
-

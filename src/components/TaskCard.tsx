@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -6,6 +5,7 @@ import { getCRMUser } from '@/utils/taskUserCRM';
 import { getRandomColor, getInitials, formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
+import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TaskCardProps {
   task: Task;
@@ -15,8 +15,6 @@ const TaskCard = ({ task }: TaskCardProps) => {
   // Always reference TEAM_USERS for display
   const assignee = getCRMUser(task.assignee);
   const collaborators = (task.collaborators || []).map(getCRMUser);
-
-  const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
 
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
@@ -56,14 +54,14 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div className="col-span-1 flex items-center justify-end gap-1">
         <div className="flex items-center -space-x-1">
           {assignee && (
-            <div className={`w-7 h-7 rounded-full text-white ${AVATAR_INITIALS_CLASSNAMES} ${getColor(assignee)}`}>
+            <div className={`w-7 h-7 rounded-full text-white ${AVATAR_INITIALS_CLASSNAMES} ${getAvatarColor(assignee)}`}>
               {getInitials(assignee.fullName ?? assignee.name)}
             </div>
           )}
           {collaborators.map((collaborator, index) => collaborator && (
             <div
               key={index}
-              className={`w-7 h-7 rounded-full text-white border-2 border-background ${AVATAR_INITIALS_CLASSNAMES} ${getColor(collaborator)}`}
+              className={`w-7 h-7 rounded-full text-white border-2 border-background ${AVATAR_INITIALS_CLASSNAMES} ${getAvatarColor(collaborator)}`}
             >
               {getInitials(collaborator.fullName ?? collaborator.name)}
             </div>
