@@ -1,5 +1,6 @@
+
 import React, { useMemo, useCallback } from 'react';
-import { TableCell, TableRow as UiTableRow } from '@/components/ui/table'; // Renamed to avoid conflict
+import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
 import TaskRowAssignees from './TaskRowAssignees';
@@ -8,9 +9,6 @@ import DeleteTaskDialog from '../DeleteTaskDialog';
 import { useTaskDeletion } from '@/hooks/useTaskDeletion';
 import { formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { cn } from '@/lib/utils';
 
 interface TaskRowProps {
   task: Task;
@@ -18,7 +16,7 @@ interface TaskRowProps {
   editingValue: string;
   onSetEditingValue: (value: string) => void;
   onTaskClick: (task: Task) => void;
-  // onTaskNameClick: (task: Task, e: React.MouseEvent) => void; // Removed this line
+  onTaskNameClick: (task: Task, e: React.MouseEvent) => void;
   onEditClick: (task: Task, e: React.MouseEvent) => void;
   onSaveEdit: (taskId: number) => void;
   onCancelEdit: () => void;
@@ -37,7 +35,7 @@ const TaskRow = React.memo(({
   editingValue,
   onSetEditingValue,
   onTaskClick,
-  // onTaskNameClick, // Kept commented as it's removed from props
+  onTaskNameClick,
   onEditClick,
   onSaveEdit,
   onCancelEdit,
@@ -58,20 +56,6 @@ const TaskRow = React.memo(({
     handleCloseDeleteDialog
   } = useTaskDeletion();
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
   const formattedDate = useMemo(() => formatDate(task.dateCreated), [task.dateCreated]);
 
   const handleDeleteClickInternal = useCallback((e: React.MouseEvent) => {
@@ -89,71 +73,48 @@ const TaskRow = React.memo(({
       onTaskDeleted();
     }
   }, [handleDeleteTask, onTaskDeleted]);
-  
-  // Stop propagation for context menu trigger to prevent row click
-  const handleContextMenuTriggerClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
 
   return (
     <>
-      <UiTableRow 
-        ref={setNodeRef} 
-        style={style}
-        className={cn(
-          "hover:bg-accent/50 group",
-          isDragging && "opacity-50 shadow-lg"
-        )}
+      <TaskRowContextMenu
+        task={task}
+        onEditClick={onEditClick}
+        onTaskStatusClick={onTaskStatusClick}
+        onContextMenuDelete={handleContextMenuDelete}
       >
-        <TaskRowContextMenu
-          task={task}
-          onEditClick={onEditClick}
-          onTaskStatusClick={onTaskStatusClick}
-          onContextMenuDelete={handleContextMenuDelete}
-        >
-          {/* The TableRow itself is the context menu trigger, this div is for proper structure */}
-          <div onClick={handleContextMenuTriggerClick} className="contents"> 
-            <TableCell 
-              className="py-1.5 w-[50%] cursor-default" // Adjusted padding
-              // {...attributes} // Spread attributes for dnd-kit // Removed to apply only to handle
-              // {...listeners}  // Spread listeners for dnd-kit, this makes the whole row draggable via the handle // Removed
-            >
-              <TaskRowContent
-                task={task}
-                editingTaskId={editingTaskId}
-                editingValue={editingValue}
-                onSetEditingValue={onSetEditingValue}
-                onTaskClick={onTaskClick}
-                onEditClick={onEditClick}
-                onSaveEdit={onSaveEdit}
-                onCancelEdit={onCancelEdit}
-                onKeyDown={onKeyDown}
-                onTaskStatusClick={onTaskStatusClick}
-                onDeleteClick={handleDeleteClickInternal}
-                isDragging={isDragging}
-                dragAttributes={attributes} // Pass dnd attributes
-                dragListeners={listeners} // Pass dnd listeners
-              />
-            </TableCell>
-            <TableCell className="py-1.5 w-[8%] cursor-default" onClick={(e) => e.stopPropagation()}>
-              <TaskRowFiles hasAttachment={task.hasAttachment} />
-            </TableCell>
-            <TableCell className="text-xs text-muted-foreground py-1.5 w-[17%] cursor-default" onClick={(e) => e.stopPropagation()}>
-              {formattedDate}
-            </TableCell>
-            <TableCell className="py-1.5 w-[25%] cursor-default" onClick={(e) => e.stopPropagation()}>
-              <TaskRowAssignees
-                task={task}
-                onRemoveAssignee={onRemoveAssignee}
-                onRemoveCollaborator={onRemoveCollaborator}
-                onAssignPerson={onAssignPerson}
-                onAddCollaborator={onAddCollaborator}
-              />
-            </TableCell>
-          </div>
-        </TaskRowContextMenu>
-      </UiTableRow>
+        <TableRow key={task.id} className="hover:bg-accent/50 group">
+          <TableCell className="py-2 w-[50%]">
+            <TaskRowContent
+              task={task}
+              editingTaskId={editingTaskId}
+              editingValue={editingValue}
+              onSetEditingValue={onSetEditingValue}
+              onTaskClick={onTaskClick}
+              onEditClick={onEditClick}
+              onSaveEdit={onSaveEdit}
+              onCancelEdit={onCancelEdit}
+              onKeyDown={onKeyDown}
+              onTaskStatusClick={onTaskStatusClick}
+              onDeleteClick={handleDeleteClickInternal}
+            />
+          </TableCell>
+          <TableCell className="py-2 w-[8%]">
+            <TaskRowFiles hasAttachment={task.hasAttachment} />
+          </TableCell>
+          <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+            {formattedDate}
+          </TableCell>
+          <TableCell className="py-2 w-[25%]">
+            <TaskRowAssignees
+              task={task}
+              onRemoveAssignee={onRemoveAssignee}
+              onRemoveCollaborator={onRemoveCollaborator}
+              onAssignPerson={onAssignPerson}
+              onAddCollaborator={onAddCollaborator}
+            />
+          </TableCell>
+        </TableRow>
+      </TaskRowContextMenu>
 
       <DeleteTaskDialog
         isOpen={showDeleteDialog}

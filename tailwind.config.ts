@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -71,37 +70,25 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: { height: '0', opacity: '0' }, // Added opacity
-					to: { height: 'var(--radix-accordion-content-height)', opacity: '1' } // Added opacity
+					from: {
+						height: '0'
+					},
+					to: {
+						height: 'var(--radix-accordion-content-height)'
+					}
 				},
 				'accordion-up': {
-					from: { height: 'var(--radix-accordion-content-height)', opacity: '1' }, // Added opacity
-					to: { height: '0', opacity: '0' } // Added opacity
-				},
-        'scale-in': { // Ensure this is defined for TaskStatusIcon animation
-           "0%": {
-             transform: "scale(0.95)",
-             opacity: "0" // Added opacity
-           },
-           "100%": {
-             transform: "scale(1)",
-             opacity: "1" // Added opacity
-           }
-         },
-         'fade-in': { // Ensure this is defined for TaskStatusIcon animation
-           "0%": {
-             opacity: "0",
-           },
-           "100%": {
-             opacity: "1",
-           }
-         }
+					from: {
+						height: 'var(--radix-accordion-content-height)'
+					},
+					to: {
+						height: '0'
+					}
+				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-        'scale-in': 'scale-in 0.3s ease-out', // Ensure duration matches component
-        'fade-in': 'fade-in 0.2s ease-out 0.1s both' // Ensure duration matches component
+				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
