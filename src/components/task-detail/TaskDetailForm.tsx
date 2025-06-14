@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -7,8 +6,8 @@ import TaskDetailTitleSection from './TaskDetailTitleSection';
 import TaskDetailDescription from './TaskDetailDescription';
 import TaskDetailFields from './TaskDetailFields';
 import { updateTaskSupabase } from '@/data/taskSupabase';
-// NEW: Supabase assignment hook
 import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
+import { toast } from "@/hooks/use-toast";
 
 interface TaskDetailFormProps {
   task: Task;
@@ -27,7 +26,7 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     removeAssignee: legacyRemoveAssignee,
     addCollaborator: legacyAddCollaborator,
     removeCollaborator: legacyRemoveCollaborator,
-    changeTaskStatus
+    changeTaskStatus: legacyChangeTaskStatus
   } = useTaskContext();
 
   // Is this a Supabase-backed task? We'll check by presence of taskId (string) and maybe a recent updatedAt.
@@ -67,8 +66,46 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     if (handlerSet.removeCollaborator) handlerSet.removeCollaborator(taskId, idx);
   };
 
-  const handleChangeStatus = (newStatus: "redline" | "progress" | "completed") => {
-    changeTaskStatus(task.id, newStatus);
+  // This is the new status change handler with Supabase support.
+  const handleChangeStatus = async (newStatus: "redline" | "progress" | "completed") => {
+    if (!task) return;
+    if (isSupabaseTask) {
+      const oldStatus = task.status;
+      const wasArchived = !!task.archived;
+      const willArchive = newStatus === "completed";
+      const updates: Partial<Task> = {
+        status: newStatus,
+        archived: willArchive
+      };
+      // Optimistic update
+      setTask(prev => ({ ...prev, ...updates, updatedAt: new Date().toISOString() }));
+      try {
+        const updated = await updateTaskSupabase(task.taskId, updates);
+        setTask(updated);
+        toast({
+          title: "Status Updated",
+          description: `Task moved to "${newStatus === "redline"
+            ? "Redline / To Do"
+            : newStatus === "progress"
+              ? "In Progress"
+              : "Completed"
+            }".`
+        });
+      } catch (e) {
+        // Roll back
+        setTask(prev => ({
+          ...prev,
+          status: oldStatus,
+          archived: wasArchived,
+        }));
+        toast({
+          title: "Error updating status",
+          description: (e as any)?.message || "Failed to update task status.",
+        });
+      }
+    } else {
+      legacyChangeTaskStatus(task.id, newStatus);
+    }
   };
 
   // Save handler for description field
