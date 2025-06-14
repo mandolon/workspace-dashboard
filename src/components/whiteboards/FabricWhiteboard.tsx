@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Canvas, Rect, Circle, IText } from "fabric";
+import { Canvas, Rect, Circle, IText, Image as FabricImage } from "fabric";
 import { useParams } from "react-router-dom";
 import { toast } from "@/components/ui/sonner";
 import { WhiteboardToolbar } from "./WhiteboardToolbar";
@@ -8,7 +8,7 @@ const DEFAULT_WIDTH = 1100;
 const DEFAULT_HEIGHT = 700;
 
 // "draw" is freehand, "select" disables drawing mode, shapes/text insert, "clear"/"save" are actions
-type Tool = "draw" | "select" | "rectangle" | "circle" | "text" | "clear" | "save";
+type Tool = "draw" | "select" | "rectangle" | "circle" | "text" | "image" | "clear" | "save";
 
 const FabricWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,6 +77,9 @@ const FabricWhiteboard: React.FC = () => {
     };
   }, [id]);
 
+  // 1. Add ref for file input
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   // Update FabricJS for active tool
   useEffect(() => {
     const canvas = fabricRef.current;
@@ -113,6 +116,10 @@ const FabricWhiteboard: React.FC = () => {
     } else if (tool === "text") {
       addText();
       setActiveTool("select");
+    } else if (tool === "image") {
+      // When image tool is selected, trigger hidden file input
+      fileInputRef.current?.click();
+      // Do NOT switch to select yet; will handle after image loads
     } else if (tool === "clear") {
       handleClear();
     } else if (tool === "save") {
@@ -120,6 +127,35 @@ const FabricWhiteboard: React.FC = () => {
     } else {
       setActiveTool(tool);
     }
+  }
+
+  // Image insertion logic
+  function handleImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const canvas = fabricRef.current;
+    const file = e.target.files?.[0];
+    if (!canvas || !file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const dataUrl = event.target?.result as string;
+      if (!dataUrl) return;
+      // Use fabric.Image.fromURL to add the image
+      FabricImage.fromURL(dataUrl, (img) => {
+        img.set({
+          left: 150,
+          top: 150,
+          scaleX: 0.5,
+          scaleY: 0.5,
+        });
+        canvas.add(img);
+        canvas.setActiveObject(img);
+        canvas.renderAll();
+        setActiveTool("select");
+      }, { crossOrigin: 'anonymous' });
+    };
+    reader.readAsDataURL(file);
+    // Reset file input to allow uploading the same image again
+    e.target.value = "";
   }
 
   // Save/load logic same as before
@@ -202,6 +238,15 @@ const FabricWhiteboard: React.FC = () => {
           activeTool={activeTool}
           onToolChange={handleToolbarAction}
         />
+        {/* Hidden file input for images */}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageFileChange}
+          style={{ display: "none" }}
+          tabIndex={-1}
+        />
       </div>
       <div className="flex-1 flex flex-col">
         <div className="rounded-lg border bg-background shadow flex justify-center items-center">
@@ -213,7 +258,7 @@ const FabricWhiteboard: React.FC = () => {
           />
         </div>
         <div className="text-xs text-muted-foreground pl-1 pt-2">
-          <b>Tools:</b> Use toolbar. Draw mode: freehand. Select/move: pointer tool. Double click text to edit.
+          <b>Tools:</b> Use toolbar. Draw mode: freehand. Select/move: pointer tool. Add/upload images via image tool. Double click text to edit.
         </div>
       </div>
     </div>

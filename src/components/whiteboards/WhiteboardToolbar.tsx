@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Brush, 
@@ -8,7 +7,8 @@ import {
   Save, 
   Trash2, 
   SquareDashed, 
-  Eraser 
+  Eraser,
+  Image as ImageIcon,  // Import image icon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +19,7 @@ type Tool =
   | "rectangle"
   | "circle"
   | "text"
+  | "image"    // Add 'image' tool
   | "clear"
   | "save";
 
@@ -45,7 +46,7 @@ const toolList: {
   {
     key: "rectangle",
     label: "Rectangle",
-    icon: <RectangleHorizontal />,    // Updated to match import
+    icon: <RectangleHorizontal />,
   },
   {
     key: "circle",
@@ -56,6 +57,11 @@ const toolList: {
     key: "text",
     label: "Text",
     icon: <TextIcon />,
+  },
+  {
+    key: "image",
+    label: "Image",
+    icon: <ImageIcon />,      // Image icon in toolbar
   },
   {
     key: "clear",
