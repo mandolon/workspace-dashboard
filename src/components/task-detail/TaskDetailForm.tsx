@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -8,8 +9,6 @@ import TaskDetailFields from './TaskDetailFields';
 import { updateTaskSupabase } from '@/data/taskSupabase';
 import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
 import { toast } from "@/hooks/use-toast";
-import DeleteTaskDialog from "@/components/DeleteTaskDialog";
-import { Button } from "@/components/ui/button";
 
 interface TaskDetailFormProps {
   task: Task;
@@ -28,8 +27,8 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     removeAssignee: legacyRemoveAssignee,
     addCollaborator: legacyAddCollaborator,
     removeCollaborator: legacyRemoveCollaborator,
-    changeTaskStatus: legacyChangeTaskStatus,
-    deleteTask: legacyDeleteTask // legacy delete for local tasks
+    changeTaskStatus: legacyChangeTaskStatus
+    // deleteTask, // removed legacyDeleteTask from here
   } = useTaskContext();
 
   const isSupabaseTask = !!originalTask.taskId && !!originalTask.updatedAt;
@@ -41,10 +40,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
   const isEditing = editingTaskId === task.id;
   const [desc, setDesc] = useState(task.description ?? "");
   const [descLoading, setDescLoading] = useState(false);
-
-  // Delete dialog state
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Handler selection
   const handlerSet = isSupabaseTask ? supabaseAssignments : {
@@ -124,50 +119,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     }
   }, [task.description, task.taskId, isSupabaseTask]);
 
-  // Move to trash / soft delete handler
-  const handleTrashClick = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    setShowDeleteDialog(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    setIsDeleting(true);
-    try {
-      if (isSupabaseTask) {
-        // Soft-delete: set deleted_at to now
-        const deletedTask = await updateTaskSupabase(task.taskId, {
-          deletedAt: new Date().toISOString(),
-        });
-        setTask(deletedTask);
-        toast({
-          title: "Task Trashed",
-          description: "Task moved to trash.",
-          duration: 3000
-        });
-        setShowDeleteDialog(false);
-        // You might want to navigate away after deleting! (optional)
-      } else {
-        await legacyDeleteTask(task.id);
-        toast({
-          title: "Task Trashed",
-          description: "Task moved to trash.",
-          duration: 3000
-        });
-        setShowDeleteDialog(false);
-      }
-    } catch (err) {
-      toast({
-        title: "Delete Failed",
-        description: (err as any)?.message || "Could not move task to trash.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  const handleCloseDeleteDialog = () => setShowDeleteDialog(false);
-
   return (
     <div className="space-y-3 relative">
       <TaskDetailTitleSection
@@ -193,17 +144,10 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
         addCollaborator={handleAddCollaborator}
         removeCollaborator={handleRemoveCollaborator}
       />
-      {/* Attachments section will be rendered by the containing page, so after this form.
-          We want the trash button to be shown after the attachments, so nothing here. */}
-      <DeleteTaskDialog
-        isOpen={showDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-        onConfirm={handleConfirmDelete}
-        taskTitle={task.title}
-        isLoading={isDeleting}
-      />
+      {/* Attachments and Trash sections are outside this form */}
     </div>
   );
 };
 
 export default TaskDetailForm;
+
