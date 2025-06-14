@@ -4,7 +4,7 @@ import TaskGroupHeader from './task-group/TaskGroupHeader';
 import TaskTable from './task-group/TaskTable';
 import AddTaskButton from './task-group/AddTaskButton';
 import QuickAddTask from './QuickAddTask';
-import { useTaskManagement } from '@/hooks/useTaskManagement.tsx';
+import { useTaskContext } from '@/contexts/TaskContext';
 import { Task, TaskGroup } from '@/types/task';
 
 interface TaskGroupSectionProps {
@@ -31,21 +31,18 @@ const TaskGroupSection = ({
   const taskTableRef = useRef<HTMLDivElement>(null);
 
   const {
-    tasks,
     editingTaskId,
     editingValue,
     setEditingValue,
-    handleTaskNameClick,
-    handleEditClick,
-    handleSaveEdit,
-    handleCancelEdit,
-    handleKeyDown,
-    handleRemoveAssignee,
-    handleRemoveCollaborator,
-    handleAssignPerson,
-    handleAddCollaborator,
-    handleTaskStatusClick
-  } = useTaskManagement(group.tasks, onTaskArchive);
+    startEditingTask,
+    saveTaskEdit,
+    cancelTaskEdit,
+    toggleTaskStatus,
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator
+  } = useTaskContext();
 
   // Handle click outside to cancel quick add
   useEffect(() => {
@@ -68,7 +65,7 @@ const TaskGroupSection = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (editingTaskId && taskTableRef.current && !taskTableRef.current.contains(event.target as Node)) {
-        handleCancelEdit();
+        cancelTaskEdit();
       }
     };
 
@@ -79,10 +76,50 @@ const TaskGroupSection = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [editingTaskId, handleCancelEdit]);
+  }, [editingTaskId, cancelTaskEdit]);
+
+  const handleTaskNameClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    startEditingTask(task);
+  };
+
+  const handleEditClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    startEditingTask(task);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, taskId: number) => {
+    if (e.key === 'Enter') {
+      saveTaskEdit(taskId);
+    } else if (e.key === 'Escape') {
+      cancelTaskEdit();
+    }
+  };
+
+  const handleRemoveAssignee = (taskId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    removeAssignee(taskId);
+  };
+
+  const handleRemoveCollaborator = (taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    removeCollaborator(taskId, collaboratorIndex);
+  };
+
+  const handleAssignPerson = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
+    assignPerson(taskId, person);
+  };
+
+  const handleAddCollaborator = (taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
+    addCollaborator(taskId, person);
+  };
+
+  const handleTaskStatusClick = (taskId: number) => {
+    toggleTaskStatus(taskId);
+  };
 
   // Filter out archived and deleted tasks from display
-  const visibleTasks = tasks.filter(task => !task.archived && !task.deletedAt);
+  const visibleTasks = group.tasks.filter(task => !task.archived && !task.deletedAt);
 
   return (
     <div className="space-y-2">
@@ -103,8 +140,8 @@ const TaskGroupSection = ({
             onTaskClick={onTaskClick}
             onTaskNameClick={handleTaskNameClick}
             onEditClick={handleEditClick}
-            onSaveEdit={handleSaveEdit}
-            onCancelEdit={handleCancelEdit}
+            onSaveEdit={saveTaskEdit}
+            onCancelEdit={cancelTaskEdit}
             onKeyDown={handleKeyDown}
             onTaskStatusClick={handleTaskStatusClick}
             onRemoveAssignee={handleRemoveAssignee}

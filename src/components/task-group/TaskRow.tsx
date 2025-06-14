@@ -1,9 +1,6 @@
 
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
 import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
 import TaskRowAssignees from './TaskRowAssignees';
@@ -11,7 +8,7 @@ import TaskRowContextMenu from './TaskRowContextMenu';
 import DeleteTaskDialog from '../DeleteTaskDialog';
 import { formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
-import { softDeleteTask, restoreTask } from '@/data/taskData';
+import { useTaskContext } from '@/contexts/TaskContext';
 
 interface TaskRowProps {
   task: Task;
@@ -52,57 +49,19 @@ const TaskRow = ({
 }: TaskRowProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { toast } = useToast();
+  const { deleteTask } = useTaskContext();
 
   const handleDeleteTask = async () => {
     setIsDeleting(true);
     try {
-      const deletedTask = softDeleteTask(task.id, "AL"); // Current user
+      await deleteTask(task.id);
       
-      if (deletedTask) {
-        toast({
-          title: "Task deleted",
-          description: `"${task.title}" has been deleted.`,
-          action: (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handleUndoDelete()}
-            >
-              Undo
-            </Button>
-          ),
-          duration: 5000,
-        });
-
-        if (onTaskDeleted) {
-          onTaskDeleted();
-        }
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete task. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDeleting(false);
-      setShowDeleteDialog(false);
-    }
-  };
-
-  const handleUndoDelete = () => {
-    const restoredTask = restoreTask(task.id);
-    if (restoredTask) {
-      toast({
-        title: "Task restored",
-        description: "Task has been restored successfully.",
-        duration: 3000,
-      });
-
       if (onTaskDeleted) {
         onTaskDeleted();
       }
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
     }
   };
 

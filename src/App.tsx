@@ -20,6 +20,7 @@ import TasksPage from "./pages/TasksPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
+import { TaskProvider } from "./contexts/TaskContext";
 
 const LocationLogger = () => {
   const location = useLocation();
@@ -48,25 +49,27 @@ const App = () => {
         <UserProvider>
           <SidebarProvider>
             <ProjectDataProvider>
-              <Toaster />
-              <Sonner />
               <BrowserRouter>
-                <LocationLogger />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/tasks" element={<TasksPage />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/project/:projectId" element={<ProjectPage />} />
-                  <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                  <Route path="/inbox" element={<InboxPage />} />
-                  <Route path="/teams" element={<TeamsPage />} />
-                  <Route path="/invoices" element={<InvoicePage />} />
-                  <Route path="/timesheets" element={<TimesheetsPage />} />
-                  <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/settings/notifications" element={<SettingsPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <TaskProvider>
+                  <Toaster />
+                  <Sonner />
+                  <LocationLogger />
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/project/:projectId" element={<ProjectPage />} />
+                    <Route path="/task/:taskId" element={<TaskDetailPage />} />
+                    <Route path="/inbox" element={<InboxPage />} />
+                    <Route path="/teams" element={<TeamsPage />} />
+                    <Route path="/invoices" element={<InvoicePage />} />
+                    <Route path="/timesheets" element={<TimesheetsPage />} />
+                    <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/settings/notifications" element={<SettingsPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </TaskProvider>
               </BrowserRouter>
             </ProjectDataProvider>
           </SidebarProvider>
