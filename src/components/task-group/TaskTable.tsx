@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
@@ -59,7 +60,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border transition-colors hover:bg-accent/50 group">
-            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[50%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[78%] sm:w-[50%] pl-8 transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
               Name
             </TableHead>
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%] transition-colors group-hover:bg-accent/50 hover:bg-accent cursor-pointer">
@@ -147,3 +148,4 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, any>(({
 
 TaskTable.displayName = "TaskTable";
 export default TaskTable;
+
