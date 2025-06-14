@@ -36,9 +36,10 @@ export async function insertTask(task: Omit<Task, "id" | "createdAt" | "updatedA
     estimated_completion: task.estimatedCompletion,
     date_created: task.dateCreated,
     due_date: task.dueDate,
-    assignee: task.assignee,
+    // Explicitly cast to JSON (Supabase types), since TaskUser is not assignable to Json directly
+    assignee: task.assignee as any,
     has_attachment: task.hasAttachment,
-    collaborators: task.collaborators ?? [],
+    collaborators: (task.collaborators ?? []) as any,
     status: task.status,
     archived: !!task.archived,
     created_by: task.createdBy,

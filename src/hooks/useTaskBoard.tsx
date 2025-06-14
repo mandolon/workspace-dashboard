@@ -75,7 +75,8 @@ export const useTaskBoard = () => {
         taskId,
         createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       });
-      setShowQuickAdd(null);
+      // Do not pass a param since setShowQuickAdd is a noop and expects none
+      setShowQuickAdd();
     },
     [currentUser]
   );
