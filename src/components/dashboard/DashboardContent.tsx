@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import DashboardStats from './DashboardStats';
 import OpenTasksSummaryCard from "./OpenTasksSummaryCard";
+import OpenTasksListSummary from "./OpenTasksListSummary";
 
 const DashboardContent = () => {
   const monthlyData = [
@@ -30,7 +31,7 @@ const DashboardContent = () => {
   return (
     <div className="space-y-4">
       <OpenTasksSummaryCard />
-      <DashboardStats />
+      <OpenTasksListSummary />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
