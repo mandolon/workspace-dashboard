@@ -2,7 +2,7 @@ import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getCRMUser } from '@/utils/taskUserCRM';
-import { getRandomColor, getInitials, formatDate } from '@/utils/taskUtils';
+import { getInitials, formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getAvatarColor } from '@/utils/avatarColors';

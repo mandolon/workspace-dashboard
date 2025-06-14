@@ -5,7 +5,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task'; 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
+import { availablePeople, getInitials } from '@/utils/taskUtils';
 import { X, UserPlus, Users } from 'lucide-react';
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';

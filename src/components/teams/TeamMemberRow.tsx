@@ -1,7 +1,8 @@
 import React from 'react';
 import { MoreHorizontal, Mail } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getRandomColor, getInitials } from '@/utils/taskUtils';
+import { getInitials } from '@/utils/taskUtils';
+import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface TeamMember {
@@ -35,8 +36,8 @@ const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
 };
 
 const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
-  // Helper for consistent color: use avatarColor if present
-  const getColor = (member: any) => member.avatarColor || getRandomColor(member.id);
+  // Helper for consistent color: now use getAvatarColor for all avatars
+  const getColor = (member: any) => getAvatarColor(member);
 
   return (
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">

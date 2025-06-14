@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
-import { getRandomColor, getInitials } from '@/utils/taskUtils';
+import { getInitials } from '@/utils/taskUtils';
 import { X, Plus } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { TEAM_USERS } from "@/utils/teamUsers";

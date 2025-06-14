@@ -3,7 +3,9 @@ import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Users, X } from 'lucide-react';
-import { getRandomColor } from '@/utils/taskUtils';
+// REMOVE: import { getRandomColor } from '@/utils/taskUtils';
+import { getInitials } from '@/utils/taskUtils';
+import { getAvatarColor } from '@/utils/avatarColors';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 type QuickAddTaskPerson = {
@@ -54,7 +56,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             {assignee ? (
               <>
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${assignee.avatarColor ? assignee.avatarColor : getRandomColor(assignee.name)}`}
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assignee)}`}
                 >
                   {assignee.name}
                 </div>
@@ -88,7 +90,7 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
                 onClick={() => { setAssignee(person); setShowAssigneePopover(false); }}
                 type="button"
               >
-                <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${person.avatarColor ? person.avatarColor : getRandomColor(person.name)}`}>
+                <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>
                   {person.name}
                 </div>
                 <span>{person.fullName || person.name}</span>

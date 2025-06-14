@@ -8,7 +8,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import TasksTabStatusIcon from './TasksTabStatusIcon';
-import { getRandomColor, formatDate, getInitials } from '@/utils/taskUtils';
+import { formatDate, getInitials } from '@/utils/taskUtils';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getCRMUser } from '@/utils/taskUserCRM';
 import { getAvatarColor } from '@/utils/avatarColors';
