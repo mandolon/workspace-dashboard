@@ -22,7 +22,7 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
 
       <div className="flex-1 flex overflow-hidden">
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pr-4">
           <div className="max-w-4xl mx-auto p-3 space-y-4">
             <TaskDetailForm task={task} />
             <TaskDetailAttachments />
