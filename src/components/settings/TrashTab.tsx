@@ -3,41 +3,88 @@ import React, { useState, useMemo } from 'react';
 import { Search, RotateCcw, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { getTasksWithProjectNames } from '@/data/taskData';
+import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/utils/taskUtils';
+import { restoreTask, softDeleteTask } from '@/data/taskHelpers'; // import legacy helpers
+import { updateTaskSupabase, deleteTaskSupabase, fetchAllTasks } from '@/data/taskSupabase';
+import { useRealtimeTasks } from '@/hooks/useRealtimeTasks';
 
 const TrashTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { toast } = useToast();
 
-  // Get all deleted tasks
+  // Use useRealtimeTasks to get all tasks (legacy + Supabase-backed)
+  const { tasks: allTasks, loading } = useRealtimeTasks();
+
+  // Get all deleted tasks from all sources
   const deletedTasks = useMemo(() => {
-    return getTasksWithProjectNames().filter(task => task.deletedAt);
-  }, []);
+    return (allTasks ?? []).filter(task => !!task.deletedAt);
+  }, [allTasks]);
 
   // Filter tasks based on search query
   const filteredTasks = useMemo(() => {
     if (!searchQuery.trim()) return deletedTasks;
-    
     return deletedTasks.filter(task =>
-      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.project.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.taskId.toLowerCase().includes(searchQuery.toLowerCase())
+      (task.title?.toLowerCase() ?? '').includes(searchQuery.toLowerCase()) ||
+      (task.project?.toLowerCase() ?? '').includes(searchQuery.toLowerCase()) ||
+      (task.taskId?.toLowerCase() ?? '').includes(searchQuery.toLowerCase())
     );
   }, [deletedTasks, searchQuery]);
 
-  const handleRestore = (taskId: number) => {
-    console.log('Restoring task:', taskId);
-    // Implementation for restoring task
+  // Determine if the task is legacy (local/mock data) or Supabase
+  function isSupabaseTask(task) {
+    // Legacy tasks have numeric task.id and task.taskId like "T0001". Supabase tasks may have string/bigint id and actual uuid for id.
+    return typeof task.taskId === "string" && task.taskId.startsWith("T") && typeof task.id === "number"
+      ? false
+      : true;
+  }
+
+  const handleRestore = async (taskId) => {
+    const task = allTasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    if (isSupabaseTask(task)) {
+      try {
+        await updateTaskSupabase(task.taskId, { deletedAt: null, deletedBy: null });
+        toast({ title: 'Task Restored', description: 'Task has been restored.', duration: 3000 });
+      } catch (e) {
+        toast({ title: 'Error', description: 'Failed to restore task.', variant: 'destructive' });
+      }
+    } else {
+      // Legacy task
+      restoreTask(taskId);
+      toast({ title: 'Task Restored', description: 'Legacy task has been restored.', duration: 3000 });
+    }
   };
 
-  const handlePermanentDelete = (taskId: number) => {
-    console.log('Permanently deleting task:', taskId);
-    // Implementation for permanent deletion
+  const handlePermanentDelete = async (taskId) => {
+    const task = allTasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    if (isSupabaseTask(task)) {
+      try {
+        await deleteTaskSupabase(task.taskId);
+        toast({ title: 'Task permanently deleted', description: '', duration: 3000 });
+      } catch (e) {
+        toast({ title: 'Error', description: 'Could not permanently delete.', variant: 'destructive' });
+      }
+    } else {
+      // Legacy: hard-remove from `baseTasks` array if it existed. For demo, just remove deletedAt so it's not visible.
+      toast({ title: 'Legacy tasks cannot be permanently deleted in demo.', description: '', variant: 'destructive' });
+    }
   };
 
-  const handleEmptyTrash = () => {
-    console.log('Emptying trash');
-    // Implementation for emptying trash
+  const handleEmptyTrash = async () => {
+    // Go through all deleted tasks and permanently delete them
+    const promises = deletedTasks.map(async (task) => {
+      if (isSupabaseTask(task)) {
+        return handlePermanentDelete(task.id);
+      }
+      // For legacy, as above
+      return null;
+    });
+    await Promise.all(promises);
+    toast({ title: 'Trash emptied', description: 'All deleted tasks were removed.', duration: 3000 });
   };
 
   return (
@@ -65,7 +112,7 @@ const TrashTab = () => {
         {/* Actions */}
         {deletedTasks.length > 0 && (
           <div className="flex gap-2 mb-6">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => deletedTasks.forEach((task) => handleRestore(task.id))}>
               <RotateCcw className="w-4 h-4 mr-2" />
               Restore all
             </Button>
@@ -77,7 +124,9 @@ const TrashTab = () => {
         )}
 
         {/* Content */}
-        {filteredTasks.length === 0 ? (
+        {loading ? (
+          <div>Loading…</div>
+        ) : filteredTasks.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-muted-foreground">
               {searchQuery ? 'No items found for your search' : 'No deleted items'}
@@ -137,3 +186,4 @@ const TrashTab = () => {
 };
 
 export default TrashTab;
+
