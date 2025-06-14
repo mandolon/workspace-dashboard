@@ -31,10 +31,10 @@ interface TaskContextType {
   toggleTaskStatus: (taskId: number) => void;
   
   // Assignment operations
-  assignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
-  removeAssignee: (taskId: number) => void;
-  addCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
-  removeCollaborator: (taskId: number, collaboratorIndex: number) => void;
+  assignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
+  removeAssignee: (taskId: string) => void;
+  addCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
+  removeCollaborator: (taskId: string, collaboratorIndex: number) => void;
   
   // Navigation
   navigateToTask: (task: Task) => void;

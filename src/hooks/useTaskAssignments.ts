@@ -7,36 +7,41 @@ export const useTaskAssignments = (
   customTasks: Task[],
   updateTaskById: (taskId: number, updates: Partial<Task>) => void
 ) => {
-  const assignPerson = useCallback((taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
-    updateTaskById(taskId, { assignee: person });
+  // Accept taskId as string everywhere and handle both cases
+  const assignPerson = useCallback((taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+    const taskNumericId = Number(taskId);
+    updateTaskById(taskNumericId, { assignee: person });
     console.log(`Assigned ${person.fullName || person.name} to task ${taskId}`);
   }, [updateTaskById]);
 
-  const removeAssignee = useCallback((taskId: number) => {
-    updateTaskById(taskId, { assignee: null });
+  const removeAssignee = useCallback((taskId: string) => {
+    const taskNumericId = Number(taskId);
+    updateTaskById(taskNumericId, { assignee: null });
     console.log(`Removed assignee from task ${taskId}`);
   }, [updateTaskById]);
 
-  const addCollaborator = useCallback((taskId: number, person: { name: string; avatar: string; fullName?: string }) => {
-    const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskId);
-    const customTask = customTasks.find(t => t.id === taskId);
+  const addCollaborator = useCallback((taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+    const taskNumericId = Number(taskId);
+    const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskNumericId);
+    const customTask = customTasks.find(t => t.id === taskNumericId);
     const currentTask = centralizedTask || customTask;
     
     if (currentTask) {
       const updatedCollaborators = [...(currentTask.collaborators || []), person];
-      updateTaskById(taskId, { collaborators: updatedCollaborators });
+      updateTaskById(taskNumericId, { collaborators: updatedCollaborators });
     }
     console.log(`Added ${person.fullName || person.name} as collaborator to task ${taskId}`);
   }, [customTasks, updateTaskById]);
 
-  const removeCollaborator = useCallback((taskId: number, collaboratorIndex: number) => {
-    const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskId);
-    const customTask = customTasks.find(t => t.id === taskId);
+  const removeCollaborator = useCallback((taskId: string, collaboratorIndex: number) => {
+    const taskNumericId = Number(taskId);
+    const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskNumericId);
+    const customTask = customTasks.find(t => t.id === taskNumericId);
     const currentTask = centralizedTask || customTask;
     
     if (currentTask) {
       const updatedCollaborators = currentTask.collaborators?.filter((_, index) => index !== collaboratorIndex) || [];
-      updateTaskById(taskId, { collaborators: updatedCollaborators });
+      updateTaskById(taskNumericId, { collaborators: updatedCollaborators });
     }
     console.log(`Removed collaborator ${collaboratorIndex} from task ${taskId}`);
   }, [customTasks, updateTaskById]);
