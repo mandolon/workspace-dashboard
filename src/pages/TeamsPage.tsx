@@ -44,17 +44,8 @@ const TeamsPage = () => {
             ))}
           </div>
           <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full">
-            {activeTab === "admin" && (
-              <div className="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center">
-                <div className="text-lg font-medium mb-2">Admin CRM</div>
-                <p className="text-muted-foreground text-center">
-                  This section is reserved for admin dashboards, settings, and controls.
-                  <br />
-                  Team members are now listed in the <span className="font-semibold text-foreground">Team</span> tab.
-                </p>
-              </div>
-            )}
-            {activeTab === "team" && (
+            {/* Both 'admin' and 'team' now render the same TeamsContent */}
+            {(activeTab === "admin" || activeTab === "team") && (
               <TeamsContent />
             )}
             {activeTab === "client" && (
