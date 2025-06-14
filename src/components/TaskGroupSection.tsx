@@ -7,6 +7,39 @@ import QuickAddTask from './QuickAddTask';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task, TaskGroup } from '@/types/task';
 
+// Helper to sort by assignee name (nulls at end)
+function compareAssignee(a: Task, b: Task, direction: 'asc' | 'desc') {
+  const nameA = a.assignee?.name?.toLowerCase?.() ?? '';
+  const nameB = b.assignee?.name?.toLowerCase?.() ?? '';
+  if (!nameA && !nameB) return 0;
+  if (!nameA) return 1;
+  if (!nameB) return -1;
+  return direction === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+}
+
+// Helper to sort by simple date format MM/DD/YY (or ISO, fallback)
+function compareDateCreated(a: Task, b: Task, direction: 'asc' | 'desc') {
+  // Try to parse as MM/DD/YY (default US)
+  const parse = (date: string) => {
+    if (!date) return new Date(0);
+    const parts = date.split('/');
+    if (parts.length === 3) {
+      // mm/dd/yy or mm/dd/yyyy
+      let year = parseInt(parts[2], 10);
+      if (year < 100) year += 2000;
+      const month = parseInt(parts[0], 10) - 1;
+      const day = parseInt(parts[1], 10);
+      return new Date(year, month, day);
+    } else {
+      // Fallback to ISO
+      return new Date(date);
+    }
+  };
+  const dA = parse(a.dateCreated);
+  const dB = parse(b.dateCreated);
+  return direction === 'asc' ? dA.getTime() - dB.getTime() : dB.getTime() - dA.getTime();
+}
+
 interface TaskGroupSectionProps {
   group: TaskGroup;
   showQuickAdd: string | null;
@@ -29,6 +62,9 @@ const TaskGroupSection = React.memo(({
   const [isExpanded, setIsExpanded] = useState(true);
   const quickAddRef = useRef<HTMLDivElement>(null);
   const taskTableRef = useRef<HTMLDivElement>(null);
+  // --- Sorting state
+  const [sortBy, setSortBy] = useState<null | 'dateCreated' | 'assignee'>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc'); // Default DESC
 
   const {
     editingTaskId,
@@ -44,11 +80,35 @@ const TaskGroupSection = React.memo(({
     removeCollaborator
   } = useTaskContext();
 
-  // Memoize filtered tasks
-  const visibleTasks = useMemo(() => 
-    group.tasks.filter(task => !task.archived && !task.deletedAt),
-    [group.tasks]
-  );
+  // Create sorting callbacks
+  const handleDateCreatedFilterClick = useCallback(() => {
+    if (sortBy === 'dateCreated') {
+      setSortDirection(direction => (direction === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy('dateCreated');
+      setSortDirection('desc');
+    }
+  }, [sortBy]);
+
+  const handleAssignedToFilterClick = useCallback(() => {
+    if (sortBy === 'assignee') {
+      setSortDirection(direction => (direction === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy('assignee');
+      setSortDirection('asc');
+    }
+  }, [sortBy]);
+
+  // Memoize filtered & sorted tasks
+  const visibleTasks = useMemo(() => {
+    let filtered = group.tasks.filter(task => !task.archived && !task.deletedAt);
+    if (sortBy === 'dateCreated') {
+      filtered = [...filtered].sort((a, b) => compareDateCreated(a, b, sortDirection));
+    } else if (sortBy === 'assignee') {
+      filtered = [...filtered].sort((a, b) => compareAssignee(a, b, sortDirection));
+    }
+    return filtered;
+  }, [group.tasks, sortBy, sortDirection]);
 
   const isShowingQuickAdd = showQuickAdd === group.status;
 
@@ -139,11 +199,11 @@ const TaskGroupSection = React.memo(({
   }, [onSetShowQuickAdd]);
 
   return (
-    <div className="space-y-1.5"> {/* Changed space-y-2 to space-y-1.5 */}
+    <div className="space-y-1.5">
       <TaskGroupHeader
         group={group}
         isExpanded={isExpanded}
-        onToggleExpanded={handleToggleExpanded}
+        onToggleExpanded={useCallback(() => setIsExpanded(prev => !prev), [])}
       />
 
       {isExpanded && (
@@ -155,29 +215,37 @@ const TaskGroupSection = React.memo(({
             editingValue={editingValue}
             onSetEditingValue={setEditingValue}
             onTaskClick={onTaskClick}
-            onTaskNameClick={handleTaskNameClick}
-            onEditClick={handleEditClick}
+            onTaskNameClick={useCallback((task, e) => {e.stopPropagation(); startEditingTask(task);}, [startEditingTask])}
+            onEditClick={useCallback((task, e) => {e.stopPropagation(); startEditingTask(task);}, [startEditingTask])}
             onSaveEdit={saveTaskEdit}
             onCancelEdit={cancelTaskEdit}
-            onKeyDown={handleKeyDown}
-            onTaskStatusClick={handleTaskStatusClick}
-            onRemoveAssignee={handleRemoveAssignee}
-            onRemoveCollaborator={handleRemoveCollaborator}
-            onAssignPerson={handleAssignPerson}
-            onAddCollaborator={handleAddCollaborator}
+            onKeyDown={useCallback((e, tid) => {
+              if (e.key === 'Enter') saveTaskEdit(tid);
+              else if (e.key === 'Escape') cancelTaskEdit();
+            }, [saveTaskEdit, cancelTaskEdit])}
+            onTaskStatusClick={toggleTaskStatus}
+            onRemoveAssignee={useCallback((tid, e) => {e.stopPropagation(); removeAssignee(tid); }, [removeAssignee])}
+            onRemoveCollaborator={useCallback((tid, idx, e) => {e.stopPropagation(); removeCollaborator(tid, idx); }, [removeCollaborator])}
+            onAssignPerson={assignPerson}
+            onAddCollaborator={addCollaborator}
             onTaskDeleted={onTaskDeleted}
+            // Pass sort controls
+            currentSortBy={sortBy}
+            currentSortDirection={sortDirection}
+            onDateCreatedFilterClick={handleDateCreatedFilterClick}
+            onAssignedToFilterClick={handleAssignedToFilterClick}
           />
 
           {isShowingQuickAdd ? (
             <div ref={quickAddRef}>
               <QuickAddTask
                 onSave={onQuickAddSave}
-                onCancel={handleHideQuickAdd}
+                onCancel={useCallback(() => onSetShowQuickAdd(null), [onSetShowQuickAdd])}
                 defaultStatus={group.status}
               />
             </div>
           ) : (
-            <AddTaskButton onAddTask={handleShowQuickAdd} />
+            <AddTaskButton onAddTask={useCallback(() => onSetShowQuickAdd(group.status), [onSetShowQuickAdd, group.status])} />
           )}
         </>
       )}
@@ -186,5 +254,4 @@ const TaskGroupSection = React.memo(({
 });
 
 TaskGroupSection.displayName = "TaskGroupSection";
-
 export default TaskGroupSection;

@@ -22,8 +22,9 @@ interface TaskTableProps {
   onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onTaskDeleted?: () => void;
-
-  // New: Optional filter callback props
+  // For sorting
+  currentSortBy?: 'dateCreated' | 'assignee' | null;
+  currentSortDirection?: 'asc' | 'desc';
   onDateCreatedFilterClick?: (e: React.MouseEvent) => void;
   onAssignedToFilterClick?: (e: React.MouseEvent) => void;
 }
@@ -45,11 +46,18 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onAssignPerson,
   onAddCollaborator,
   onTaskDeleted,
+  currentSortBy,
+  currentSortDirection,
   onDateCreatedFilterClick,
   onAssignedToFilterClick,
 }, ref) => {
   const memoizedTasks = React.useMemo(() => tasks, [tasks]);
+  // Which column is sorted and direction? Used for triangle orientation/fill
+  const isDateActive = currentSortBy === 'dateCreated';
+  const isAssigneeActive = currentSortBy === 'assignee';
 
+  // Triangle settings: asc = not rotated, desc = rotated 180deg
+  // Filled if active, muted if not
   return (
     <div ref={ref}>
       <Table>
@@ -61,7 +69,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[8%]">
               Files
             </TableHead>
-            {/* Date Created - with functional filter triangle */}
+            {/* Date Created - functional filter triangle */}
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">
               <div className="flex items-center gap-1 relative w-fit select-none group/date">
                 Date Created
@@ -74,15 +82,19 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
                   tabIndex={0}
                 >
                   <Triangle
-                    className="w-2 h-2 text-gray-400 fill-current rotate-180 pointer-events-none"
-                    fill="currentColor"
+                    className={`w-2 h-2 pointer-events-none transition-transform duration-150 
+                      ${isDateActive ? 
+                        (currentSortDirection === 'desc' ? 'rotate-180' : '') 
+                        : 'rotate-180 opacity-50'}
+                      ${isDateActive ? 'text-blue-500 fill-blue-400' : 'text-gray-400 fill-gray-200'}`}
+                    fill={isDateActive ? "currentColor" : "#E5E7EB"}
                     aria-hidden="true"
                   />
                   <span className="sr-only">Filter by date created</span>
                 </button>
               </div>
             </TableHead>
-            {/* Assigned to - with functional filter triangle */}
+            {/* Assigned to - functional filter triangle */}
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">
               <div className="flex items-center gap-1 relative w-fit select-none group/assigned">
                 Assigned to
@@ -95,8 +107,12 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
                   tabIndex={0}
                 >
                   <Triangle
-                    className="w-2 h-2 text-gray-400 fill-current rotate-180 pointer-events-none"
-                    fill="currentColor"
+                    className={`w-2 h-2 pointer-events-none transition-transform duration-150 
+                      ${isAssigneeActive ? 
+                        (currentSortDirection === 'desc' ? 'rotate-180' : '') 
+                        : 'rotate-180 opacity-50'}
+                      ${isAssigneeActive ? 'text-blue-500 fill-blue-400' : 'text-gray-400 fill-gray-200'}`}
+                    fill={isAssigneeActive ? "currentColor" : "#E5E7EB"}
                     aria-hidden="true"
                   />
                   <span className="sr-only">Filter by assignee</span>
@@ -134,5 +150,4 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
 }));
 
 TaskTable.displayName = "TaskTable";
-
 export default TaskTable;
