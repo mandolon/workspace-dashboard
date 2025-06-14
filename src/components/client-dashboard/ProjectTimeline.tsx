@@ -1,5 +1,6 @@
 
 import React from "react";
+
 const phases = [
   { label: "Concept", complete: true },
   { label: "Design", complete: true },
@@ -8,17 +9,29 @@ const phases = [
   { label: "Construction", complete: false }
 ];
 
+/**
+ * Improved timeline with proper lines and mobile-friendly stacking
+ */
 const ProjectTimeline: React.FC = () => (
-  <div className="my-2">
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+  <div className="w-full max-w-full py-2 px-2">
+    <div className="flex flex-row flex-wrap items-center gap-4">
       {phases.map((phase, idx) => (
         <div key={phase.label} className="flex items-center">
-          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${phase.complete ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-500"}`}>
+          {/* Circle */}
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
+              phase.complete
+                ? "bg-blue-600 text-white shadow"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
             {idx + 1}
           </div>
+          {/* Label */}
           <div className="ml-2 text-xs font-medium">{phase.label}</div>
+          {/* Connector line -- show unless last */}
           {idx < phases.length - 1 && (
-            <div className="w-7 h-1 bg-gray-200 mx-1 rounded" />
+            <div className="w-6 h-1 bg-gray-200 mx-1 rounded" />
           )}
         </div>
       ))}
