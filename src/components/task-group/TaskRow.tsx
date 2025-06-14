@@ -126,7 +126,11 @@ const TaskRow = React.memo(({
             {rowContent}
           </TableCell>
           <TableCell className="py-2 w-[8%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
-            <TaskRowFiles hasAttachment={task.hasAttachment} />
+            <TaskRowFiles 
+              hasAttachment={task.hasAttachment}
+              attachmentCount={task.attachments?.length ?? 0}
+              taskId={task.taskId}
+            />
           </TableCell>
           <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
