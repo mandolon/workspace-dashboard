@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { CheckCircle, Circle, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -9,19 +10,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-// New minimalist timeline indicator colors
-const STATUS_COLORS = {
-  complete: "bg-green-500 border-green-500",
-  current: "bg-blue-500 border-blue-500",
-  upcoming: "bg-gray-300 border-gray-300",
-};
-
-const TEXT_COLORS = {
-  complete: "text-green-700 dark:text-green-400",
-  current: "text-blue-700 dark:text-blue-400",
-  upcoming: "text-gray-500 dark:text-gray-400",
-};
-
+// Remove all color usage, except system text-muted-foreground.
 const projectPhases = [
   {
     id: "phase-1",
@@ -65,111 +54,76 @@ const projectPhases = [
   }
 ];
 
-// Minimal Timeline Milestone
+// Minimal, compact milestone item (no colors)
 const MilestoneTimelineItem: React.FC<{
   milestone: { name: string; complete: boolean };
   isLast: boolean;
-}> = ({ milestone, isLast }) => {
-  const color = milestone.complete ? STATUS_COLORS.complete : STATUS_COLORS.upcoming;
-  const text = milestone.complete ? TEXT_COLORS.complete : TEXT_COLORS.upcoming;
-  return (
-    <div className="flex items-start relative pl-7 pb-2 last:pb-0 group">
+}> = ({ milestone, isLast }) => (
+  <div className="flex items-center relative pl-4 pb-0.5 last:pb-0 group">
+    <span className="absolute left-0 top-1">
+      {milestone.complete ? (
+        <CheckCircle className="w-3 h-3 text-muted-foreground" aria-label="Complete" />
+      ) : (
+        <Circle className="w-3 h-3 text-muted-foreground" aria-label="Incomplete" />
+      )}
+    </span>
+    <span className={cn("text-xs ml-5", milestone.complete ? "text-foreground" : "text-muted-foreground")}>
+      {milestone.name}
+    </span>
+    {!isLast && (
       <span
-        className={cn(
-          "absolute left-1 top-1 w-3 h-3 border-2 rounded-full",
-          color
-        )}
+        className="absolute left-[6px] top-4 w-px h-3 bg-muted"
         aria-hidden="true"
       />
-      {!isLast && (
-        <span className="absolute left-[7.5px] top-4 w-px h-4 bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
-      )}
-      <span className={cn("text-xs sm:text-sm", text, "pl-1")}>
-        {milestone.complete ? (
-          <span className="mr-1 inline-block align-middle"><CheckCircle className="w-3 h-3 inline text-green-500" /></span>
-        ) : (
-          <span className="mr-1 inline-block align-middle"><Circle className="w-3 h-3 inline text-gray-400" /></span>
-        )}
-        {milestone.name}
-      </span>
-    </div>
-  );
-};
+    )}
+  </div>
+);
 
-// Minimal Timeline Phase
+// Compact, colorless phase/timeline section
 const PhaseTimelineItem: React.FC<{
   phase: typeof projectPhases[number];
   isLast: boolean;
   defaultOpen?: boolean;
 }> = ({ phase, isLast, defaultOpen }) => {
-  // In progress if any milestone complete but not all
   const completedCount = phase.milestones.filter(m => m.complete).length;
   const isCurrent = completedCount > 0 && !phase.complete;
-  const dotColor = phase.complete
-    ? STATUS_COLORS.complete
-    : isCurrent
-    ? STATUS_COLORS.current
-    : STATUS_COLORS.upcoming;
-
-  const textColor = phase.complete
-    ? TEXT_COLORS.complete
-    : isCurrent
-    ? TEXT_COLORS.current
-    : TEXT_COLORS.upcoming;
 
   const statusText = phase.complete
     ? "Complete"
     : isCurrent
-    ? `${completedCount} of ${phase.milestones.length} complete`
-    : "Not started";
+      ? `${completedCount} of ${phase.milestones.length} done`
+      : "Not started";
 
   const [open, setOpen] = useState(defaultOpen || isCurrent);
 
   return (
-    <div className="relative flex gap-4">
-      {/* Main vertical timeline dot/line */}
-      <div className="flex flex-col items-center">
-        <span
-          className={cn(
-            "w-4 h-4 rounded-full border-2",
-            dotColor,
-            open ? "" : "opacity-80"
-          )}
-          aria-label={statusText}
-        />
-        {!isLast && (
-          <span
-            className="w-px flex-1 bg-gray-200 dark:bg-gray-700"
-            style={{ minHeight: '32px' }}
-            aria-hidden="true"
-          />
-        )}
-      </div>
-      {/* Phase Content */}
-      <div className="flex-1 pb-5">
+    <div className={cn("relative flex gap-3", !isLast && "mb-2")}>
+      {/* Vertical line and chevron */}
+      <div className="flex flex-col items-center min-w-[16px]">
         <button
           type="button"
+          aria-label={open ? "Collapse phase" : "Expand phase"}
           onClick={() => setOpen(o => !o)}
-          className={cn(
-            "flex items-center gap-2 py-1 group bg-transparent text-left w-full",
-            open ? "" : "opacity-80"
-          )}
-          aria-expanded={open}
+          className="bg-transparent border-none outline-none cursor-pointer p-0"
         >
           {open ? (
-            <ChevronDown className={cn("w-4 h-4 text-gray-400 transition-transform", open && "rotate-180")} />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           ) : (
-            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
           )}
-          <span className={cn("font-medium text-sm sm:text-base", textColor)}>
-            {phase.title}
-          </span>
-          <span className="ml-2 text-xs text-gray-400 hidden sm:inline">
-            {statusText}
-          </span>
         </button>
+        {!isLast && (
+          <span className="w-px flex-1 bg-muted" style={{ minHeight: '20px' }} />
+        )}
+      </div>
+      {/* Content */}
+      <div className="flex-1 min-w-0 pb-0.5">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-foreground truncate">{phase.title}</span>
+          <span className="text-xs text-muted-foreground">{statusText}</span>
+        </div>
         {open && (
-          <div className="mt-2 pl-1">
+          <div className="mt-1 space-y-0.5">
             {phase.milestones.map((milestone, idx) => (
               <MilestoneTimelineItem
                 key={milestone.id}
@@ -186,21 +140,23 @@ const PhaseTimelineItem: React.FC<{
 
 const ProjectTimeline: React.FC = () => (
   <Card className="w-full max-w-2xl mx-auto">
-    <CardHeader>
-      <CardTitle className="text-lg">Project Timeline</CardTitle>
-      <CardDescription className="text-xs">
+    <CardHeader className="pb-2 pt-4 px-4">
+      <CardTitle className="text-base font-semibold">Project Timeline</CardTitle>
+      <CardDescription className="text-xs text-muted-foreground">
         Current and past project milestones
       </CardDescription>
     </CardHeader>
-    <CardContent className="pt-0 pl-3 border-l border-gray-200 dark:border-gray-700">
-      {projectPhases.map((phase, idx) => (
-        <PhaseTimelineItem
-          key={phase.id}
-          phase={phase}
-          isLast={idx === projectPhases.length - 1}
-          defaultOpen={idx === 0}
-        />
-      ))}
+    <CardContent className="pt-0 px-4 pb-2">
+      <div className="border-l border-muted pl-2">
+        {projectPhases.map((phase, idx) => (
+          <PhaseTimelineItem
+            key={phase.id}
+            phase={phase}
+            isLast={idx === projectPhases.length - 1}
+            defaultOpen={idx === 0}
+          />
+        ))}
+      </div>
     </CardContent>
   </Card>
 );
