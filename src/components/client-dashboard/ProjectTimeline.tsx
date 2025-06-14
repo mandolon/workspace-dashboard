@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 
 // Project phases remain the same
 const projectPhases = [
@@ -111,14 +104,14 @@ const PhaseCollapsibleItem: React.FC<{
 };
 
 const ProjectTimeline: React.FC = () => (
-  <Card className="w-full max-w-2xl mx-auto">
-    <CardHeader className="pb-2 pt-4 px-4">
-      <CardTitle className="text-base font-semibold">Project Timeline</CardTitle>
-      <CardDescription className="text-xs text-muted-foreground">
+  <div className="w-full max-w-2xl mx-auto">
+    <div className="pb-2 pt-4 px-4">
+      <div className="text-base font-semibold">Project Timeline</div>
+      <div className="text-xs text-muted-foreground">
         Current and past project milestones
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="pt-0 px-2 sm:px-4 pb-2">
+      </div>
+    </div>
+    <div className="pt-0 px-2 sm:px-4 pb-2">
       <div>
         {projectPhases.map((phase, idx) => (
           <PhaseCollapsibleItem
@@ -128,8 +121,8 @@ const ProjectTimeline: React.FC = () => (
           />
         ))}
       </div>
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
 
 export default ProjectTimeline;
