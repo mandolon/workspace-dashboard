@@ -40,10 +40,13 @@ const TeamMembersTable = ({
   // Determine if all members are clients
   const allClients = members.every(member => member.crmRole === 'Client');
 
-  // Desktop: Use table header/row layout
+  // Desktop: Use table header/row layout with sticky header
   return (
     <div className="space-y-0.5">
-      <div className={`grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b`}>
+      <div
+        className={`grid grid-cols-12 gap-3 text-xs font-medium text-muted-foreground py-1.5 border-b sticky top-0 z-10 bg-background`}
+        style={{ backgroundClip: "padding-box" }}
+      >
         <div className="col-span-3">Name / CRM Role</div>
         <div className="col-span-3">Email</div>
         {!allClients && <div className="col-span-2">Title Role</div>}
