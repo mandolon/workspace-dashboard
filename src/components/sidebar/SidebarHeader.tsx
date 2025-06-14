@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
@@ -29,10 +28,10 @@ const SidebarHeader = ({ isCollapsed }: SidebarHeaderProps) => {
             <img
               src="/lovable-uploads/055f1e94-8aee-498f-b5c8-39455c83efc2.png"
               alt="Sidebar Logo"
-              className="block"
+              className="block dark:filter dark:invert dark:brightness-100"
               style={{
-                maxHeight: 32,
-                maxWidth: 32,
+                maxHeight: 28,
+                maxWidth: 28,
                 objectFit: 'contain',
                 display: 'block',
               }}
