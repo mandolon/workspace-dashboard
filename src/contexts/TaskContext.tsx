@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
 import { useTaskEditing } from '@/hooks/useTaskEditing';
@@ -118,6 +117,10 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
   };
+
+  React.useEffect(() => {
+    console.log("[TaskProvider] Mounted! Children type:", typeof children);
+  }, []);
 
   return (
     <TaskContext.Provider value={value}>
