@@ -14,18 +14,34 @@ interface ExcalidrawData {
 }
 
 const DEFAULT_ZOOM = 1;
+const MIN_ZOOM = 0.2;
+const MAX_ZOOM = 1.5;
+const DEFAULT_WIDTH = 1920;
+const DEFAULT_HEIGHT = 1080;
 
 function sanitizeAppState(appState: any): any {
   const safe = { ...appState };
-  if (typeof safe.zoom !== "number" || safe.zoom < 0.1 || safe.zoom > 4) {
+  // Sanitize zoom
+  if (typeof safe.zoom !== "number" || safe.zoom < MIN_ZOOM || safe.zoom > MAX_ZOOM) {
     safe.zoom = DEFAULT_ZOOM;
   }
-  // Optionally: Force sensible width/height if needed
-  if (typeof safe.width !== "number" || safe.width <= 0) {
-    safe.width = 1920;
+  // Sanitize width, height
+  if (typeof safe.width !== "number" || safe.width <= 50) {
+    safe.width = DEFAULT_WIDTH;
   }
-  if (typeof safe.height !== "number" || safe.height <= 0) {
-    safe.height = 1080;
+  if (typeof safe.height !== "number" || safe.height <= 50) {
+    safe.height = DEFAULT_HEIGHT;
+  }
+  // Sanitize scroll values
+  if (typeof safe.scrollX !== "number" || !isFinite(safe.scrollX)) {
+    safe.scrollX = 0;
+  }
+  if (typeof safe.scrollY !== "number" || !isFinite(safe.scrollY)) {
+    safe.scrollY = 0;
+  }
+  // Always have background color so interface doesn't break
+  if (typeof safe.viewBackgroundColor !== "string") {
+    safe.viewBackgroundColor = "#fff";
   }
   return safe;
 }
@@ -36,7 +52,7 @@ const ExcalidrawWhiteboard: React.FC = () => {
   const [excalidrawData, setExcalidrawData] = useState<ExcalidrawData | null>(null);
   const [scene, setScene] = useState<ExcalidrawData>({
     elements: [],
-    appState: {},
+    appState: { viewBackgroundColor: "#fff" },
     files: {},
   });
   // Track if we've hydrated with initialData yet
@@ -45,9 +61,8 @@ const ExcalidrawWhiteboard: React.FC = () => {
 
   // Fetch whiteboard from Supabase
   useEffect(() => {
-    // Reset flags for new board
     setLoading(true);
-    setSceneLoaded(false); // So new board can rehydrate
+    setSceneLoaded(false);
     const fetchWhiteboard = async () => {
       const { data, error } = await supabase
         .from("whiteboards")
@@ -60,11 +75,16 @@ const ExcalidrawWhiteboard: React.FC = () => {
         return;
       }
       let safeData = data.excalidraw_data || { elements: [], appState: { viewBackgroundColor: "#fff" } };
-      // Sanitize appState zoom to avoid blown-up UI
+      // Sanitize appState thoroughly
       if (safeData.appState) {
         safeData = {
           ...safeData,
           appState: sanitizeAppState(safeData.appState),
+        };
+      } else {
+        safeData = {
+          ...safeData,
+          appState: sanitizeAppState({}),
         };
       }
       setExcalidrawData(safeData);
@@ -77,18 +97,16 @@ const ExcalidrawWhiteboard: React.FC = () => {
 
   // After initial data is parsed into state, mark as loaded
   useEffect(() => {
-    // Only run when excalidrawData is freshly loaded from Supabase
     if (excalidrawData && !sceneLoaded) {
       setScene(excalidrawData);
       setSceneLoaded(true);
     }
-    // Don't rerun if sceneLoaded
   }, [excalidrawData, sceneLoaded]);
 
   // Save handler
   const handleSave = async () => {
     const { elements, appState, files } = scene;
-    // Ensure we don't save a weird zoom value
+    // Ensure we don't save a weird zoom or scroll value
     const cleanedAppState = sanitizeAppState(appState ?? {});
     const newData = {
       elements: elements,
@@ -120,9 +138,12 @@ const ExcalidrawWhiteboard: React.FC = () => {
         <Excalidraw
           initialData={!sceneLoaded ? excalidrawData ?? undefined : undefined}
           onChange={(elements, appState, files) => {
-            // Only save while interactive; ignore first `onChange` if not sceneLoaded
             if (!sceneLoaded) return;
-            setScene({ elements, appState, files });
+            setScene({
+              elements,
+              appState,
+              files,
+            });
           }}
         />
       </div>
