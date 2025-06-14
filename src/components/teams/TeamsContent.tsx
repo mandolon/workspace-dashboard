@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -7,6 +6,7 @@ import { TEAM_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useParams } from 'react-router-dom';
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -23,6 +23,7 @@ const getCrmRoleForTab = (tab: "admin" | "team" | "client") => {
 const MEMBERS_BATCH = 10;
 
 const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
+  const { projectId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
   const isMobile = useIsMobile();
@@ -108,6 +109,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
               isMobile={false}
               visibleCount={visibleCount}
               totalCount={displayedMembers.length}
+              projectId={projectId || "default-project"}
             />
             {visibleCount < displayedMembers.length && (
               <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
@@ -122,6 +124,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
           roles={roles}
           onRoleChange={handleRoleChange}
           isMobile={isMobile}
+          projectId={projectId || "default-project"}
         />
       )}
       <TeamMembersSummary
@@ -134,4 +137,3 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
 };
 
 export default TeamsContent;
-

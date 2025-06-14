@@ -10,6 +10,7 @@ interface TeamMembersTableProps {
   isMobile?: boolean;
   visibleCount?: number;
   totalCount?: number;
+  projectId: string;
 }
 
 const TeamMembersTable = ({
@@ -19,6 +20,7 @@ const TeamMembersTable = ({
   isMobile,
   visibleCount,
   totalCount,
+  projectId
 }: TeamMembersTableProps) => {
   if (isMobile) {
     // Mobile: stack list vertically, shows all
@@ -31,6 +33,7 @@ const TeamMembersTable = ({
             roles={roles}
             onRoleChange={onRoleChange}
             isMobile={true}
+            projectId={projectId}
           />
         ))}
       </div>
@@ -60,6 +63,7 @@ const TeamMembersTable = ({
           roles={roles}
           onRoleChange={onRoleChange}
           isMobile={false}
+          projectId={projectId}
         />
       ))}
       {/* Loader handled by parent */}
@@ -68,4 +72,3 @@ const TeamMembersTable = ({
 };
 
 export default TeamMembersTable;
-

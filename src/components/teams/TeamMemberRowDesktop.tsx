@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MoreHorizontal, Mail, Eye } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -6,11 +7,13 @@ import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 import { TeamMember } from '@/utils/teamUsers';
+import { useNavigate } from 'react-router-dom';
 
 interface TeamMemberRowDesktopProps {
   member: TeamMember;
   roles: string[];
   onRoleChange: (memberId: string, newTitleRole: string) => void;
+  projectId: string;
 }
 
 const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
@@ -30,7 +33,10 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
   member,
   roles,
   onRoleChange,
+  projectId,
 }) => {
+  const navigate = useNavigate();
+
   // Handlers
   const handleViewAsUser = () => {
     console.log(`View as user: ${member.fullName ?? member.name}`);
@@ -45,6 +51,13 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
     console.log(`Send message to user: ${member.fullName ?? member.name}`);
   };
 
+  // Navigate to client tab in project page if client row clicked (excluding action buttons)
+  const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (member.crmRole === 'Client') {
+      navigate(`/project/${projectId}`, { state: { returnToTab: "client" } });
+    }
+  };
+
   return (
     <TeamMemberContextMenu
       onViewAsUser={handleViewAsUser}
@@ -52,7 +65,12 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
       onRemoveUser={handleRemoveUser}
       onSendMessage={handleSendMessage}
     >
-      <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
+      <div
+        className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group"
+        onClick={handleRowClick}
+        role="button"
+        tabIndex={0}
+      >
         <div className="col-span-3">
           <div className="flex items-center gap-2">
             <div className={`w-8 h-8 ${getAvatarColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
@@ -111,3 +129,4 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
 };
 
 export default TeamMemberRowDesktop;
+

@@ -7,11 +7,13 @@ import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 import { TeamMember } from '@/utils/teamUsers';
+import { useNavigate } from 'react-router-dom';
 
 interface TeamMemberRowMobileProps {
   member: TeamMember;
   roles: string[];
   onRoleChange: (memberId: string, newTitleRole: string) => void;
+  projectId: string;
 }
 
 const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
@@ -27,7 +29,9 @@ const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
   }
 };
 
-const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles, onRoleChange }) => {
+const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles, onRoleChange, projectId }) => {
+  const navigate = useNavigate();
+
   // Handlers
   const handleViewAsUser = () => {
     console.log(`View as user: ${member.fullName ?? member.name}`);
@@ -42,6 +46,13 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
     console.log(`Send message to user: ${member.fullName ?? member.name}`);
   };
 
+  // Click client row to go to project client tab
+  const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (member.crmRole === 'Client') {
+      navigate(`/project/${projectId}`, { state: { returnToTab: "client" } });
+    }
+  };
+
   return (
     <TeamMemberContextMenu
       onViewAsUser={handleViewAsUser}
@@ -49,7 +60,12 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
       onRemoveUser={handleRemoveUser}
       onSendMessage={handleSendMessage}
     >
-      <div className="rounded border shadow px-3 py-2 bg-card flex flex-col gap-2">
+      <div
+        className="rounded border shadow px-3 py-2 bg-card flex flex-col gap-2"
+        onClick={handleRowClick}
+        role="button"
+        tabIndex={0}
+      >
         <div className="flex items-center gap-3">
           <div className={`w-9 h-9 ${getAvatarColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
             {getInitials(member.fullName ?? member.name)}
@@ -111,3 +127,4 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
 };
 
 export default TeamMemberRowMobile;
+
