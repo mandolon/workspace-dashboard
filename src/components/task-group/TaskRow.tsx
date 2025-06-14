@@ -1,14 +1,14 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
 import TaskRowAssignees from './TaskRowAssignees';
 import TaskRowContextMenu from './TaskRowContextMenu';
 import DeleteTaskDialog from '../DeleteTaskDialog';
+import { useTaskDeletion } from '@/hooks/useTaskDeletion';
 import { formatDate } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
-import { useTaskContext } from '@/contexts/TaskContext';
 
 interface TaskRowProps {
   task: Task;
@@ -47,41 +47,32 @@ const TaskRow = React.memo(({
   onAddCollaborator,
   onTaskDeleted
 }: TaskRowProps) => {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const { deleteTask } = useTaskContext();
+  const {
+    showDeleteDialog,
+    taskToDelete,
+    isDeleting,
+    handleDeleteClick,
+    handleDeleteTask,
+    handleCloseDeleteDialog
+  } = useTaskDeletion();
 
   const formattedDate = useMemo(() => formatDate(task.dateCreated), [task.dateCreated]);
 
-  const handleDeleteTask = useCallback(async () => {
-    setIsDeleting(true);
-    try {
-      await deleteTask(task.id);
-      
-      if (onTaskDeleted) {
-        onTaskDeleted();
-      }
-    } finally {
-      setIsDeleting(false);
-      setShowDeleteDialog(false);
-    }
-  }, [deleteTask, task.id, onTaskDeleted]);
+  const handleDeleteClickInternal = useCallback((e: React.MouseEvent) => {
+    handleDeleteClick(task, e);
+  }, [handleDeleteClick, task]);
 
   const handleContextMenuDelete = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-    console.log('Context menu delete clicked for task:', task.id);
-    setShowDeleteDialog(true);
-  }, [task.id]);
+    handleDeleteClick(task, e);
+  }, [handleDeleteClick, task]);
 
-  const handleDeleteClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteDialog(true);
-  }, []);
-
-  const handleCloseDeleteDialog = useCallback(() => {
-    setShowDeleteDialog(false);
-  }, []);
+  const handleDeleteTaskInternal = useCallback(async () => {
+    await handleDeleteTask();
+    if (onTaskDeleted) {
+      onTaskDeleted();
+    }
+  }, [handleDeleteTask, onTaskDeleted]);
 
   return (
     <>
@@ -104,7 +95,7 @@ const TaskRow = React.memo(({
               onCancelEdit={onCancelEdit}
               onKeyDown={onKeyDown}
               onTaskStatusClick={onTaskStatusClick}
-              onDeleteClick={handleDeleteClick}
+              onDeleteClick={handleDeleteClickInternal}
             />
           </TableCell>
           <TableCell className="py-2 w-[8%]">
@@ -128,8 +119,8 @@ const TaskRow = React.memo(({
       <DeleteTaskDialog
         isOpen={showDeleteDialog}
         onClose={handleCloseDeleteDialog}
-        onConfirm={handleDeleteTask}
-        taskTitle={task.title}
+        onConfirm={handleDeleteTaskInternal}
+        taskTitle={taskToDelete?.title || task.title}
         isLoading={isDeleting}
       />
     </>

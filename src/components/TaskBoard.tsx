@@ -1,8 +1,8 @@
-
 import React, { useMemo, useCallback } from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
 import { useTaskContext } from '@/contexts/TaskContext';
+import { useTaskNavigation } from '@/hooks/useTaskNavigation';
 import { TaskGroup } from '@/types/task';
 
 const TaskBoard = React.memo(() => {
@@ -10,10 +10,11 @@ const TaskBoard = React.memo(() => {
     getTasksByStatus,
     refreshTrigger,
     createTask,
-    navigateToTask,
     archiveTask,
     triggerRefresh
   } = useTaskContext();
+
+  const { navigateToTaskDetail } = useTaskNavigation();
 
   const [isTaskDialogOpen, setIsTaskDialogOpen] = React.useState(false);
   const [showQuickAdd, setShowQuickAdd] = React.useState<string | null>(null);
@@ -97,7 +98,7 @@ const TaskBoard = React.memo(() => {
         refreshTrigger={refreshTrigger}
         onSetShowQuickAdd={setShowQuickAdd}
         onQuickAddSave={handleQuickAddSave}
-        onTaskClick={navigateToTask}
+        onTaskClick={navigateToTaskDetail}
         onTaskArchive={archiveTask}
         onTaskDeleted={triggerRefresh}
         onAddTask={handleOpenTaskDialog}
