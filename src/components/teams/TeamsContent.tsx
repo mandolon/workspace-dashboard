@@ -20,7 +20,8 @@ export type TeamMember = {
   name: string;
   fullName: string;
   email: string;
-  role: ArchitectureRole;
+  crmRole: 'Admin' | 'Team' | 'Client';
+  titleRole: ArchitectureRole;
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
   avatar: string;
@@ -30,6 +31,13 @@ interface TeamsContentProps {
   tab: "admin" | "team";
   selectedUserId?: string;
 }
+
+// We will map CRM role to filter for tab
+const getCrmRoleForTab = (tab: "admin" | "team") => {
+  if (tab === "admin") return ["Admin"];
+  if (tab === "team") return ["Team"];
+  return [];
+};
 
 const ADMIN_NAME = 'Armando Lopez';
 
@@ -42,7 +50,8 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     name: user.name,
     fullName: user.fullName,
     email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
-    role: user.role,
+    crmRole: user.crmRole,
+    titleRole: user.titleRole,
     lastActive: memberStatus[user.name]?.lastActive || '—',
     status: memberStatus[user.name]?.status || 'Active',
     avatar: user.avatar
@@ -68,21 +77,19 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     'Client'
   ];
 
-  const handleRoleChange = (memberId: string, newRole: string) => {
-    console.log(`Role change requested for ${memberId}: ${newRole}`);
+  const handleRoleChange = (memberId: string, newTitleRole: string) => {
+    console.log(`Title role change requested for ${memberId}: ${newTitleRole}`);
+    // Here you would update the team user's title role in your data/store
   };
 
   const handleAddMember = () => {
     console.log('Add member clicked');
   };
 
-  // Filter based on tab: show only admin for Admin tab, only non-admins for Team tab
-  let filteredMembers: TeamMember[];
-  if (tab === "admin") {
-    filteredMembers = teamMembers.filter(m => m.fullName === ADMIN_NAME);
-  } else {
-    filteredMembers = teamMembers.filter(m => m.fullName !== ADMIN_NAME);
-  }
+  // Filter by CRM role for the current tab
+  let filteredMembers: TeamMember[] = teamMembers.filter(
+    m => getCrmRoleForTab(tab).includes(m.crmRole)
+  );
 
   // Apply search filter
   let displayedMembers = filteredMembers.filter(member =>
@@ -90,7 +97,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // NEW: Filter by selected user if any
+  // Filter by selected user if any
   if (selectedUserId) {
     displayedMembers = displayedMembers.filter(m => m.id === selectedUserId);
   }

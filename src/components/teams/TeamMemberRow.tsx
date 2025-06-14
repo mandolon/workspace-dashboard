@@ -7,23 +7,25 @@ import { getAvatarColor } from '@/utils/avatarColors';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 
+// Updated TeamMember with crmRole + titleRole
 interface TeamMember {
   id: string;
   name: string;
-  fullName?: string; // Make this optional for legacy compatibility
+  fullName?: string;
   email: string;
-  role: string;
+  crmRole: 'Admin' | 'Team' | 'Client';
+  titleRole: string;
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
+  avatar: string;
 }
 
 interface TeamMemberRowProps {
   member: TeamMember;
   roles: string[];
-  onRoleChange: (memberId: string, newRole: string) => void;
+  onRoleChange: (memberId: string, newTitleRole: string) => void;
 }
 
-// Add the getStatusColor helper:
 const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
   switch (status) {
     case 'Active':
@@ -38,14 +40,11 @@ const getStatusColor = (status: 'Active' | 'Inactive' | 'Pending') => {
 };
 
 const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
-  // Helper for consistent color: now use getAvatarColor for all avatars
   const getColor = (member: any) => getAvatarColor(member);
 
   // Placeholder handlers for demo (replace with real actions as needed)
   const handleViewAsUser = () => {
     console.log(`View as user: ${member.fullName ?? member.name}`);
-    // Implementation for "view as" could update context or route in CRM
-    // For demo, just log
   };
   const handleEditUser = () => {
     console.log(`Edit user: ${member.fullName ?? member.name}`);
@@ -72,13 +71,16 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
             </div>
             <span className="font-medium">{member.fullName ?? member.name}</span>
           </div>
+          <div className="mt-0.5 pl-10 text-[11px] text-gray-500">
+            CRM: <span className="font-semibold">{member.crmRole}</span>
+          </div>
         </div>
         <div className="col-span-3 flex items-center gap-1 text-muted-foreground">
           <Mail className="w-3 h-3" />
           <span className="text-blue-600 hover:underline">{member.email}</span>
         </div>
-        <div className="col-span-2 flex items-center">
-          <Select value={member.role} onValueChange={(value) => onRoleChange(member.id, value)}>
+        <div className="col-span-2 flex flex-col">
+          <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
             <SelectTrigger className="h-6 text-xs border-0 shadow-none focus:ring-0 bg-transparent p-0">
               <SelectValue />
             </SelectTrigger>
@@ -90,6 +92,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
               ))}
             </SelectContent>
           </Select>
+          <div className="text-[11px] text-gray-400 pt-0.5">Title Role</div>
         </div>
         <div className="col-span-2 flex items-center text-muted-foreground">
           <span>{member.lastActive}</span>
