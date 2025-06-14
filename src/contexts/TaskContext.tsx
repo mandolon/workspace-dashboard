@@ -106,7 +106,7 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     
     // Data getters
     getTasksByStatus: taskOperations.getTasksByStatus,
-    getAllTasks: taskOperations.getAllTasks,
+    getAllTasks: () => taskOperations.getAllTasks,
     
     // Refresh trigger
     triggerRefresh: taskOperations.triggerRefresh
