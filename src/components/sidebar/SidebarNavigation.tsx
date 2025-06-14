@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -12,8 +11,7 @@ import {
   Receipt,
   FileImage,
   ClipboardList,
-  Clock,
-  Whiteboard
+  Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -52,7 +50,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   // Client gets dashboard and Whiteboards
   const clientNavItems = [
     { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
-    { icon: Whiteboard, label: 'Whiteboards', active: false, onClick: handleNavigateClientWhiteboards },
+    { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateClientWhiteboards },
   ];
 
   // Admin/team: full nav, but no Help item (removed!)
@@ -173,4 +171,3 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
 SidebarNavigation.displayName = 'SidebarNavigation';
 
 export default SidebarNavigation;
-
