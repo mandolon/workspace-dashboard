@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
 import { Task } from '@/types/task';
-import { Filter } from 'lucide-react';
+import { Filter, Triangle } from 'lucide-react';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -58,8 +57,9 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[17%]">
               <div className="flex items-center gap-1">
                 Date Created
-                <Filter
-                  className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                <Triangle
+                  className="w-3 h-3 text-gray-400 fill-current opacity-0 group-hover:opacity-100 transition-opacity duration-150 rotate-180"
+                  fill="currentColor"
                   aria-label="Filter by date"
                 />
               </div>
@@ -67,8 +67,9 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">
               <div className="flex items-center gap-1">
                 Assigned to
-                <Filter
-                  className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                <Triangle
+                  className="w-3 h-3 text-gray-400 fill-current opacity-0 group-hover:opacity-100 transition-opacity duration-150 rotate-180"
+                  fill="currentColor"
                   aria-label="Filter by assignee"
                 />
               </div>
