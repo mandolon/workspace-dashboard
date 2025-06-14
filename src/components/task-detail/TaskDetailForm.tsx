@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
@@ -8,6 +7,7 @@ import { Task } from '@/types/task';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
 import { X, UserPlus, Users } from 'lucide-react';
+import { TEAM_USERS } from "@/utils/teamUsers"; // ADD: CRM/team user source of truth
 
 // Helper: get canonical CRM/TEAM_USERS assignee for styling
 const getCRMUser = (person) => {
@@ -220,5 +220,3 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
-
-// ...end of file
