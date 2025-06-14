@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { User, UserContextType } from '@/types/user';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
@@ -8,6 +7,9 @@ const UserContext = createContext<UserContextType & {
   impersonatedUser: User | null;
   impersonateAs: (userId: string) => void;
   exitImpersonation: () => void;
+  loginAs: (userId: string) => void;
+  logout: () => void;
+  isAuthenticated: boolean;
 } | undefined>(undefined);
 
 export const useUser = () => {
@@ -18,34 +20,13 @@ export const useUser = () => {
   return context;
 };
 
+const LOCAL_STORAGE_KEY = 'lovable-demo-auth-userid';
+
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Store true admin as originalUser, "currentUser" drives UI.
-  const [originalUser, setOriginalUser] = useState<User>({
-    id: 't0',
-    name: 'Armando Lopez',
-    email: 'armando@company.com',
-    avatar: 'AL',
-    status: 'online',
-    bio: 'Senior Architect & Project Manager',
-    company: 'PinerWorks',
-    role: 'Project Manager',
-    lastActive: new Date().toISOString(),
-    notificationsMuted: false,
-    showOnlineStatus: true,
-    showLastActive: true,
-    avatarColor: 'bg-blue-500'
-  });
-  const [currentUser, setCurrentUser] = useState<User>(originalUser);
-  const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
-
-  const isImpersonating = !!impersonatedUser;
-
-  // Find a user by their id from TEAM_USERS array (it covers team and client users)
+  // Utility to find a user by id
   const findUserById = (userId: string): User | null => {
     const u = TEAM_USERS.find(u => u.id === userId);
     if (!u) return null;
-    // Normalize TeamMember to User type
-    // For clients, titleRole may be undefined
     return {
       id: u.id,
       name: u.fullName,
@@ -63,44 +44,91 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   };
 
-  // Start impersonation: find user, set as currentUser and store impersonatedUser
+  // Load persisted userId
+  const persistedUserId = typeof window !== "undefined" ? window.localStorage.getItem(LOCAL_STORAGE_KEY) : null;
+  const defaultUser = persistedUserId ? findUserById(persistedUserId) : null;
+
+  // State: originalUser is the admin, currentUser is the logged-in user
+  const [originalUser, setOriginalUser] = useState<User | null>(defaultUser);
+  const [currentUser, setCurrentUser] = useState<User | null>(defaultUser);
+  const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
+
+  const isImpersonating = !!impersonatedUser;
+  const isAuthenticated = !!currentUser;
+
+  // Login as a given userId
+  const loginAs = useCallback((userId: string) => {
+    const user = findUserById(userId);
+    if (user) {
+      setOriginalUser(user);
+      setCurrentUser(user);
+      setImpersonatedUser(null);
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, userId);
+    }
+  }, []);
+
+  // Logout: clear auth and session
+  const logout = useCallback(() => {
+    setOriginalUser(null);
+    setCurrentUser(null);
+    setImpersonatedUser(null);
+    window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }, []);
+
+  // Impersonation
   const impersonateAs = useCallback((userId: string) => {
-    if (userId === originalUser.id) return; // Don't impersonate self!
+    if (!originalUser || userId === originalUser.id) return; // Don't impersonate self
     const user = findUserById(userId);
     if (user) {
       setImpersonatedUser(user);
       setCurrentUser(user);
     }
-  }, [originalUser.id]);
-
-  // Exit impersonation: revert to true admin
-  const exitImpersonation = useCallback(() => {
-    setImpersonatedUser(null);
-    setCurrentUser(originalUser);
   }, [originalUser]);
 
+  const exitImpersonation = useCallback(() => {
+    if (originalUser) {
+      setImpersonatedUser(null);
+      setCurrentUser(originalUser);
+    }
+  }, [originalUser]);
+
+  // Basic "update" logic as before
   const updateUserStatus = (status: User['status']) => {
-    setCurrentUser(prev => ({ ...prev, status }));
+    setCurrentUser(prev => prev ? { ...prev, status } : prev);
   };
 
   const toggleNotifications = () => {
-    setCurrentUser(prev => ({ ...prev, notificationsMuted: !prev.notificationsMuted }));
+    setCurrentUser(prev => prev ? { ...prev, notificationsMuted: !prev.notificationsMuted } : prev);
   };
 
   const updateUser = (updates: Partial<User>) => {
-    setCurrentUser(prev => ({ ...prev, ...updates }));
+    setCurrentUser(prev => prev ? { ...prev, ...updates } : prev);
   };
+
+  // Effect: Sync on mount with localStorage
+  useEffect(() => {
+    if (!currentUser && persistedUserId) {
+      const user = findUserById(persistedUserId);
+      if (user) {
+        setOriginalUser(user);
+        setCurrentUser(user);
+      }
+    }
+  }, []); // only run on mount
 
   return (
     <UserContext.Provider value={{
-      currentUser,
+      currentUser: currentUser!,
       updateUserStatus,
       toggleNotifications,
       updateUser,
       isImpersonating,
       impersonatedUser,
       impersonateAs,
-      exitImpersonation
+      exitImpersonation,
+      loginAs,
+      logout,
+      isAuthenticated,
     }}>
       {children}
     </UserContext.Provider>
