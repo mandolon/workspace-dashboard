@@ -1,18 +1,17 @@
-
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Home, 
-  Inbox, 
-  MessageSquare, 
-  Users, 
-  Receipt, 
-  FileImage, 
-  ClipboardList, 
-  Clock,
+import {
+  LayoutDashboard,
   ChevronDown,
   ChevronRight,
-  LayoutDashboard,
+  Home,
+  Inbox,
+  MessageSquare,
+  Users,
+  Receipt,
+  FileImage,
+  ClipboardList,
+  Clock,
   HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -38,6 +37,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     (isImpersonating && impersonatedUser && impersonatedUser.role === 'Client') ||
     (!isImpersonating && currentUser.role === 'Client');
 
+  const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
   const handleNavigateHome = useCallback(() => navigate('/'), [navigate]);
   const handleNavigateTasks = useCallback(() => navigate('/tasks'), [navigate]);
   const handleNavigateInbox = useCallback(() => navigate('/inbox'), [navigate]);
@@ -46,52 +46,20 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateInvoices = useCallback(() => navigate('/invoices'), [navigate]);
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
-  const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
-
-  // Utility to get the help page for the current role
-  const getHelpPagePath = () => {
-    const role = clientMode
-      ? 'Client'
-      : (isImpersonating && impersonatedUser)
-        ? impersonatedUser.role
-        : currentUser.role;
-    if (role === 'Admin') return '/help/admin';
-    if (
-      role === 'Team Lead' ||
-      role === 'Project Manager' ||
-      role === 'Engineer' ||
-      role === 'Designer' ||
-      role === 'Operations' ||
-      role === 'QA Tester' ||
-      role === 'Consultant' ||
-      role === 'CAD Tech' ||
-      role === 'Jr Designer' ||
-      role === 'Developer' ||
-      role === 'Marketing Manager' ||
-      role === 'Customer Support' ||
-      role === 'Interior Designer' ||
-      role === 'Contractor'
-    ) {
-      return '/help/team';
-    }
-    if (role === 'Client') return '/help/client';
-    // Fallback
-    return '/help/client';
-  };
-
   const handleNavigateHelp = useCallback(() => {
+    // Only used in non-client mode now
     navigate(getHelpPagePath());
   // eslint-disable-next-line
   }, [clientMode, isImpersonating, impersonatedUser, currentUser]);
 
-  // For admin/team: full nav; for client: only dashboard & help
+  // Client gets only dashboard
+  const clientNavItems = [
+    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
+  ];
+
+  // Admin/team: full nav
   const mainNavItems = useMemo(() => {
-    if (clientMode) {
-      return [
-        { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
-        { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
-      ];
-    }
+    if (clientMode) return clientNavItems;
     return [
       { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
       { icon: ClipboardList, label: 'Tasks', active: false, onClick: handleNavigateTasks },
@@ -118,6 +86,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateHelp,
   ]);
 
+  // Collapsed view (clients only show icon for dashboard)
   if (isCollapsed) {
     return (
       <nav className="flex-1 py-2 px-1 space-y-0">
@@ -126,8 +95,8 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
             key={index}
             className={cn(
               "flex items-center justify-center p-2 rounded text-sm cursor-pointer transition-colors my-0.5",
-              item.active 
-                ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+              item.active
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
                 : "text-sidebar-foreground hover:bg-sidebar-accent/50"
             )}
             onClick={item.onClick}
@@ -139,43 +108,66 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     );
   }
 
-  return (
-    <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <div className="px-2 mb-2">
-        <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
-          {isOpen ? (
-            <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-          ) : (
-            <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-          )}
-          {/* Hide Navigation label for clients */}
-          {!clientMode && (
+  // Show NON-client: collapsible nav
+  if (!clientMode) {
+    return (
+      <Collapsible open={isOpen} onOpenChange={onToggle}>
+        <div className="px-2 mb-2">
+          <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
+            {isOpen ? (
+              <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+            ) : (
+              <ChevronRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+            )}
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
               Navigation
             </span>
-          )}
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <nav className="space-y-0 mt-2">
-            {mainNavItems.map((item, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-1.5 rounded text-sm cursor-pointer transition-colors my-0",
-                  item.active 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-                )}
-                onClick={item.onClick}
-              >
-                <item.icon className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm truncate">{item.label}</span>
-              </div>
-            ))}
-          </nav>
-        </CollapsibleContent>
-      </div>
-    </Collapsible>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <nav className="space-y-0 mt-2">
+              {mainNavItems.map((item, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-1.5 rounded text-sm cursor-pointer transition-colors my-0",
+                    item.active
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+                  )}
+                  onClick={item.onClick}
+                >
+                  <item.icon className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-sm truncate">{item.label}</span>
+                </div>
+              ))}
+            </nav>
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
+    );
+  }
+
+  // Client mode (not collapsed): Only Dashboard, no nav label, no collapse arrow
+  return (
+    <div className="px-2 mb-2">
+      <nav className="space-y-0 mt-2">
+        {clientNavItems.map((item, index) => (
+          <div
+            key={index}
+            className={cn(
+              "flex items-center gap-3 px-3 py-1.5 rounded text-sm cursor-pointer transition-colors my-0",
+              item.active
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+            )}
+            onClick={item.onClick}
+          >
+            <item.icon className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm truncate">{item.label}</span>
+          </div>
+        ))}
+      </nav>
+    </div>
   );
 });
 
