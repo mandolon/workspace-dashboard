@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,8 @@ import { Switch } from "@/components/ui/switch";
 import { getAvailableProjects } from "@/utils/projectMapping";
 import { createWhiteboard } from "@/utils/whiteboardStore";
 import { useUser } from "@/contexts/UserContext";
+import PDFUploadField from "./PDFUploadField";
+import { supabase } from "@/integrations/supabase/client";
 
 const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated }) => {
   const [open, setOpen] = useState(false);
@@ -14,20 +15,42 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
   const [projectId, setProjectId] = useState("");
   const [shared, setShared] = useState(true);
   const { currentUser } = useUser();
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   const availableProjects = getAvailableProjects();
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!title.trim() || !projectId) return;
+
+    // If type is "pdf", require a file and upload to supabase storage
+    let pdf_url: string | undefined = undefined;
+    const type = "pdf";
+    if (type === "pdf") {
+      if (!pdfFile) return;
+      const ext = pdfFile.name.split(".").pop();
+      const key = `pdfs/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from("pdfs").upload(key, pdfFile);
+      if (!error) {
+        const { data: publicUrlData } = supabase
+          .storage
+          .from("pdfs")
+          .getPublicUrl(key);
+        pdf_url = publicUrlData?.publicUrl || "";
+      }
+    }
+
     createWhiteboard({
       title,
       type: "pdf",
       projectId,
       createdBy: currentUser.id,
       sharedWithClient: shared,
+      pdf_url,
     });
+
     setTitle("");
     setProjectId("");
+    setPdfFile(null);
     setShared(true);
     setOpen(false);
     onCreated();
@@ -62,6 +85,10 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
               ))}
             </select>
           </div>
+          {/* PDF upload field */}
+          <div className="flex items-center gap-3">
+            <PDFUploadField onUpload={setPdfFile} />
+          </div>
           <div className="flex items-center gap-3">
             <Switch
               id="share-client"
@@ -73,7 +100,7 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
             </label>
           </div>
           <div className="flex justify-end">
-            <Button variant="default" size="sm" onClick={handleCreate} disabled={!title.trim() || !projectId}>
+            <Button variant="default" size="sm" onClick={handleCreate} disabled={!title.trim() || !projectId || (type === "pdf" && !pdfFile)}>
               Create
             </Button>
           </div>
