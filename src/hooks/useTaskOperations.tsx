@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -122,6 +123,11 @@ export const useTaskOperations = () => {
 
   // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created
   function filterTasksForUser(tasks: Task[]) {
+    if (!currentUser) {
+      // If user is not logged in or hasn't loaded yet, return empty.
+      return [];
+    }
+
     if (
       currentUser.name === "Armando Lopez"
       || currentUser.name === "AL"
@@ -151,6 +157,7 @@ export const useTaskOperations = () => {
 
   const getAllTasks = useMemo(() => {
     // Use a backend utility to get all, then filter for user
+    if (!currentUser) return [];
     const allCentralizedTasks = getAllTasksRaw().filter(task => !task.deletedAt);
     const allCustomTasks = customTasks.filter(task => !task.archived && !task.deletedAt);
     const all = [...allCentralizedTasks, ...allCustomTasks];
@@ -172,3 +179,4 @@ export const useTaskOperations = () => {
     triggerRefresh
   };
 };
+
