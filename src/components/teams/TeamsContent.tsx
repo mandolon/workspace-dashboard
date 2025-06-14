@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -39,25 +40,25 @@ const getCrmRoleForTab = (tab: "admin" | "team") => {
   return [];
 };
 
-const ADMIN_NAME = 'Armando Lopez';
-
 const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Map TEAM_USERS into full table records for the CRM
-  const teamMembers: TeamMember[] = TEAM_USERS.map(user => ({
-    id: user.id,
-    name: user.name,
-    fullName: user.fullName,
-    email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
-    crmRole: user.crmRole,
-    titleRole: user.titleRole,
-    lastActive: memberStatus[user.name]?.lastActive || '—',
-    status: memberStatus[user.name]?.status || 'Active',
-    avatar: user.avatar
-  }));
+  // Store team members as local state so we can update titleRole
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() =>
+    TEAM_USERS.map(user => ({
+      id: user.id,
+      name: user.name,
+      fullName: user.fullName,
+      email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
+      crmRole: user.crmRole,
+      titleRole: user.titleRole,
+      lastActive: memberStatus[user.name]?.lastActive || '—',
+      status: memberStatus[user.name]?.status || 'Active',
+      avatar: user.avatar
+    }))
+  );
 
-  const roles = [
+  const roles: ArchitectureRole[] = [
     'Architect',
     'Engineer',
     'CAD Tech',
@@ -77,9 +78,12 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     'Client'
   ];
 
-  const handleRoleChange = (memberId: string, newTitleRole: string) => {
-    console.log(`Title role change requested for ${memberId}: ${newTitleRole}`);
-    // Here you would update the team user's title role in your data/store
+  const handleRoleChange = (memberId: string, newTitleRole: ArchitectureRole) => {
+    setTeamMembers(prev =>
+      prev.map(m =>
+        m.id === memberId ? { ...m, titleRole: newTitleRole } : m
+      )
+    );
   };
 
   const handleAddMember = () => {
@@ -123,3 +127,4 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
 };
 
 export default TeamsContent;
+
