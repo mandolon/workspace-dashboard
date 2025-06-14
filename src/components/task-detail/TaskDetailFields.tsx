@@ -15,6 +15,14 @@ interface TaskDetailFieldsProps {
   removeAssignee: (taskId: number | string) => void;
 }
 
+// Define a virtual "Team" assignee
+const VIRTUAL_TEAM_ASSIGNEE = {
+  name: "Team",
+  fullName: "Team",
+  avatar: "bg-black",
+  avatarColor: "bg-black"
+};
+
 const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
   task, currentUser, assignPerson, removeAssignee
 }) => {
@@ -51,6 +59,9 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
   // Enforce CRM/TEAM_USERS colors/info for assignee
   const canonicalAssignee = getCRMUser(task.assignee);
 
+  // Display support for "Team" assignment
+  const isTeamAssignee = canonicalAssignee && (canonicalAssignee.name === "Team" || canonicalAssignee.fullName === "Team");
+
   return (
     <div className="grid grid-cols-4 gap-3">
       <div className="space-y-1">
@@ -79,7 +90,10 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
             <div className="flex items-center gap-1 relative min-h-[24px]">
               <div className="relative group/avatar w-6 h-6">
                 <div
-                  className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getAvatarColor(canonicalAssignee)} text-white font-medium text-xs`}
+                  className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${
+                    isTeamAssignee ? 'bg-black' : getAvatarColor(canonicalAssignee)
+                  } text-white font-medium text-xs`}
+                  title={isTeamAssignee ? 'Assigned to Team' : canonicalAssignee.fullName ?? canonicalAssignee.name}
                 >
                   {getInitials(
                     canonicalAssignee.fullName ?? canonicalAssignee.name
@@ -96,6 +110,9 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
                   <X className="w-2 h-2" strokeWidth="2" />
                 </button>
               </div>
+              <span className={`ml-2 ${isTeamAssignee ? 'font-semibold text-black' : ''}`}>
+                {isTeamAssignee ? "Team" : (canonicalAssignee.fullName || canonicalAssignee.name)}
+              </span>
             </div>
           ) : (
             <DropdownMenu>
@@ -109,13 +126,25 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-popover z-50">
+                {/* Add "Assign to Team" at the top */}
+                <DropdownMenuItem
+                  onClick={() => handleAssign(VIRTUAL_TEAM_ASSIGNEE)}
+                  className="flex items-center gap-2 cursor-pointer font-semibold"
+                  data-testid="assign-team"
+                >
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold bg-black">
+                    T
+                  </div>
+                  <span>Assign to Team</span>
+                </DropdownMenuItem>
+                <div className="border-b border-muted my-1" />
                 {teamAssignees.map((person) => (
                   <DropdownMenuItem
                     key={person.name}
                     onClick={() => handleAssign(person)}
                     className="flex items-center gap-2 cursor-pointer"
                   >
-                    <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getAvatarColor(person)}`}>
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(person)}`}>
                       {getInitials(person.fullName ?? person.name)}
                     </div>
                     <span>{person.fullName ?? person.name}</span>
