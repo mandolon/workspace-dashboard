@@ -1,63 +1,27 @@
 
 import React from 'react';
 import WhiteboardCard from './WhiteboardCard';
+import { getVisibleWhiteboardsForUser } from "@/utils/whiteboardStore";
+import { useUser } from "@/contexts/UserContext";
+import { projectClientData } from "@/data/projectClientStaticData";
 
-interface WhiteboardsGridProps {
-  viewMode: 'grid' | 'list';
+// Helper
+function getProjectName(projectId: string) {
+  const p = projectClientData[projectId];
+  if (!p) return projectId;
+  const primaryClient = p.clients.find(c => c.isPrimary) || p.clients[0];
+  return `${primaryClient?.lastName ?? ""} • ${p.projectAddress}`;
 }
 
-const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
-  // Mock data for whiteboards with project associations
-  const whiteboards = [
-    {
-      id: '1',
-      title: 'Project Requirements.pdf',
-      type: 'pdf',
-      lastModified: '2 hours ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Adams • 1063 40th Street',
-    },
-    {
-      id: '2',
-      title: 'Design Mockups.pdf',
-      type: 'pdf',
-      lastModified: '1 day ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Ogden-Thew • 2709 T Street',
-    },
-    {
-      id: '3',
-      title: 'Client Feedback.pdf',
-      type: 'pdf',
-      lastModified: '3 days ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Henderson • 1524 Tiverton',
-    },
-    {
-      id: '4',
-      title: 'Technical Specifications.pdf',
-      type: 'pdf',
-      lastModified: '1 week ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Peterson • 2015 10th Street',
-    },
-    {
-      id: '5',
-      title: 'Meeting Notes.pdf',
-      type: 'pdf',
-      lastModified: '2 weeks ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Johnson • 2200 I Street',
-    },
-    {
-      id: '6',
-      title: 'Contract Review.pdf',
-      type: 'pdf',
-      lastModified: '1 month ago',
-      thumbnail: '/placeholder.svg',
-      projectName: 'Adamo • 6605 S. Land Park Dr.',
-    },
-  ];
+const WhiteboardsGrid = ({ viewMode }: { viewMode: 'grid' | 'list' }) => {
+  const { currentUser } = useUser();
+  const whiteboards = getVisibleWhiteboardsForUser(currentUser);
+
+  if (whiteboards.length === 0) return (
+    <div className="text-center text-muted-foreground italic py-8">
+      No whiteboards found for your projects.
+    </div>
+  );
 
   if (viewMode === 'list') {
     return (
@@ -67,8 +31,13 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
             <div key={whiteboard.id} className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-lg cursor-pointer">
               <div className="w-8 h-8 bg-muted rounded flex-shrink-0" />
               <div className="flex-1">
-                <div className="font-medium text-sm">{whiteboard.title}</div>
-                <div className="text-xs text-muted-foreground">{whiteboard.projectName}</div>
+                <div className="font-medium text-sm flex gap-2 items-center">
+                  {whiteboard.title}
+                  {whiteboard.sharedWithClient && (
+                    <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px]">Shared</span>
+                  )}
+                </div>
+                <div className="text-xs text-muted-foreground">{getProjectName(whiteboard.projectId)}</div>
                 <div className="text-xs text-muted-foreground">{whiteboard.lastModified}</div>
               </div>
             </div>
@@ -82,7 +51,14 @@ const WhiteboardsGrid = ({ viewMode }: WhiteboardsGridProps) => {
     <div className="px-6 py-4">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {whiteboards.map((whiteboard) => (
-          <WhiteboardCard key={whiteboard.id} whiteboard={whiteboard} />
+          <WhiteboardCard
+            key={whiteboard.id}
+            whiteboard={{
+              ...whiteboard,
+              projectName: getProjectName(whiteboard.projectId),
+            }}
+            showSharingStatus
+          />
         ))}
       </div>
     </div>
