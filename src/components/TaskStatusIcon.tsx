@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,13 +11,18 @@ interface TaskStatusIconProps {
 const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Reset animation state if status changes externally
+  useEffect(() => {
+    setIsAnimating(false);
+  }, [status]);
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (status !== 'completed') {
       setIsAnimating(true);
-      // Small delay to show the animation before calling onClick
       setTimeout(() => {
         onClick();
+        // setIsAnimating(false); // Reset animation after onClick if needed, or rely on status change
       }, 150);
     } else {
       onClick();
@@ -25,53 +30,59 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
   };
 
   const getStatusIcon = () => {
+    const baseClasses = "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer border-2";
+    const hoverBase = "hover:bg-gray-100 dark:hover:bg-gray-700";
+
     if (status === 'completed') {
       return (
-        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center transition-all duration-200">
+        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center transition-all duration-200 border-2 border-green-500">
           <Check className="w-2.5 h-2.5 text-white" strokeWidth="3" />
         </div>
       );
     }
 
-    if (status === 'redline') {
-      return (
-        <div className={cn(
-          "w-4 h-4 border-2 border-red-500 rounded-full cursor-pointer hover:bg-red-50 transition-all duration-200",
-          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500"
-        )}>
-          {isAnimating && (
-            <div className="w-full h-full flex items-center justify-center">
-              <Check className="w-2.5 h-2.5 text-white animate-[fade-in_0.2s_ease-out_0.1s_both]" strokeWidth="3" />
-            </div>
-          )}
-        </div>
-      );
+    const isRedline = status === 'redline';
+    const isProgress = status === 'progress';
+    
+    let borderColor = 'border-gray-400'; // Default for 'todo' or other statuses
+    let hoverBg = 'hover:bg-gray-50';
+    if (isRedline) {
+      borderColor = 'border-red-500';
+      hoverBg = 'hover:bg-red-50';
+    } else if (isProgress) {
+      borderColor = 'border-blue-500';
+      hoverBg = 'hover:bg-blue-50';
     }
 
-    if (status === 'progress') {
+    if (isAnimating) {
       return (
         <div className={cn(
-          "w-4 h-4 border-2 border-blue-500 rounded-full cursor-pointer hover:bg-blue-50 transition-all duration-200",
-          isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500"
+          baseClasses,
+          "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500"
         )}>
-          {isAnimating && (
-            <div className="w-full h-full flex items-center justify-center">
-              <Check className="w-2.5 h-2.5 text-white animate-[fade-in_0.2s_ease-out_0.1s_both]" strokeWidth="3" />
-            </div>
-          )}
+          <div className="w-full h-full flex items-center justify-center">
+            <Check className="w-2.5 h-2.5 text-white animate-[fade-in_0.2s_ease-out_0.1s_both]" strokeWidth="3" />
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="w-4 h-4 border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-50 transition-all duration-200" />
+       <div className={cn(
+          baseClasses,
+          borderColor,
+          hoverBg,
+          "border-dashed", // Apply dashed border to non-completed states
+        )} />
     );
   };
 
   return (
-    <button onClick={handleClick} className="p-0.5 hover:bg-accent rounded transition-colors">
+    // Removed extra button wrapper, click handled directly on the icon div or its parts
+    // The p-0.5 hover:bg-accent was creating an outer clickable area, now click is on the icon itself
+    <div onClick={handleClick} className="flex items-center justify-center w-5 h-5"> 
       {getStatusIcon()}
-    </button>
+    </div>
   );
 };
 

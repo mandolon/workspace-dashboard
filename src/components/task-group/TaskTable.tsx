@@ -10,7 +10,7 @@ interface TaskTableProps {
   editingValue: string;
   onSetEditingValue: (value: string) => void;
   onTaskClick: (task: Task) => void;
-  onTaskNameClick: (task: Task, e: React.MouseEvent) => void;
+  // onTaskNameClick: (task: Task, e: React.MouseEvent) => void; // Removed if not used from TaskRow
   onEditClick: (task: Task, e: React.MouseEvent) => void;
   onSaveEdit: (taskId: number) => void;
   onCancelEdit: () => void;
@@ -29,7 +29,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   editingValue,
   onSetEditingValue,
   onTaskClick,
-  onTaskNameClick,
+  // onTaskNameClick, // Removed
   onEditClick,
   onSaveEdit,
   onCancelEdit,
@@ -41,21 +41,23 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   onAddCollaborator,
   onTaskDeleted
 }, ref) => {
-  const memoizedTasks = React.useMemo(() => tasks, [tasks]);
+  // tasks prop already includes only visible tasks (filtered in TaskGroupSection)
+  // const memoizedTasks = React.useMemo(() => tasks, [tasks]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="pr-2"> {/* Added pr-2 to prevent horizontal scrollbar with GripVertical */}
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border">
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%] pl-8">Name</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
-            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
+            {/* Adjusted pl-8 to pl-12 to account for GripVertical and StatusIcon */}
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 w-[50%] pl-12">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 w-[8%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 w-[17%]">Date Created</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 w-[25%]">Assigned to</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {memoizedTasks.map((task) => (
+          {tasks.map((task) => (
             <TaskRow
               key={task.id}
               task={task}
@@ -63,7 +65,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
               editingValue={editingValue}
               onSetEditingValue={onSetEditingValue}
               onTaskClick={onTaskClick}
-              onTaskNameClick={onTaskNameClick}
+              // onTaskNameClick={onTaskNameClick} // Removed
               onEditClick={onEditClick}
               onSaveEdit={onSaveEdit}
               onCancelEdit={onCancelEdit}

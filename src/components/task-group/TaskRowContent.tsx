@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { Edit, Check, X } from 'lucide-react';
+import { Edit, Check, X, GripVertical } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Task } from '@/types/task';
@@ -17,6 +17,7 @@ interface TaskRowContentProps {
   onKeyDown: (e: React.KeyboardEvent, taskId: number) => void;
   onTaskStatusClick: (taskId: number) => void;
   onDeleteClick: (e: React.MouseEvent) => void;
+  isDragging?: boolean; // Added for D&D visual feedback
 }
 
 const TaskRowContent = React.memo(({
@@ -30,13 +31,16 @@ const TaskRowContent = React.memo(({
   onCancelEdit,
   onKeyDown,
   onTaskStatusClick,
-  onDeleteClick
+  onDeleteClick,
+  isDragging // Added for D&D visual feedback
 }: TaskRowContentProps) => {
   const isEditing = editingTaskId === task.id;
 
   const handleTaskClick = useCallback(() => {
-    onTaskClick(task);
-  }, [onTaskClick, task]);
+    if (!isEditing) { // Prevent navigation when editing
+      onTaskClick(task);
+    }
+  }, [onTaskClick, task, isEditing]);
 
   const handleStatusClick = useCallback(() => {
     onTaskStatusClick(task.id);
@@ -70,16 +74,20 @@ const TaskRowContent = React.memo(({
 
   return (
     <div 
-      className="flex items-center gap-2 cursor-pointer pl-4" 
+      className={`flex items-center gap-2 cursor-pointer pl-1 ${isDragging ? 'opacity-50' : ''}`}
       onClick={handleTaskClick}
     >
+      {/* Drag Handle placeholder - actual functionality will be in TaskRow */}
+      <div className="text-muted-foreground hover:text-foreground cursor-grab">
+        <GripVertical className="w-4 h-4" strokeWidth="1.5" />
+      </div>
       <TaskStatusIcon 
         status={task.status} 
         onClick={handleStatusClick}
       />
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         {isEditing ? (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 py-1">
             <Input
               value={editingValue}
               onChange={handleInputChange}
@@ -102,9 +110,10 @@ const TaskRowContent = React.memo(({
             </button>
           </div>
         ) : (
-          <div>
+          <div className="py-0.5"> {/* Adjusted padding for tighter spacing */}
+            <div className="text-xs text-muted-foreground truncate">{task.project}</div>
             <div className="flex items-center gap-1 group/title">
-              <div className="font-medium text-xs">
+              <div className="font-medium text-xs text-foreground truncate">
                 {task.title}
               </div>
               <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100">
@@ -122,7 +131,6 @@ const TaskRowContent = React.memo(({
                 </button>
               </div>
             </div>
-            <div className="text-xs text-muted-foreground">{task.project}</div>
           </div>
         )}
       </div>
