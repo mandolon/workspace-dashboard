@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -11,7 +12,8 @@ import {
   Receipt,
   FileImage,
   ClipboardList,
-  Clock
+  Clock,
+  Whiteboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -37,6 +39,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     (!isImpersonating && currentUser.role === 'Client');
 
   const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
+  const handleNavigateClientWhiteboards = useCallback(() => navigate('/client/whiteboards'), [navigate]);
   const handleNavigateHome = useCallback(() => navigate('/'), [navigate]);
   const handleNavigateTasks = useCallback(() => navigate('/tasks'), [navigate]);
   const handleNavigateInbox = useCallback(() => navigate('/inbox'), [navigate]);
@@ -46,9 +49,10 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
 
-  // Client gets only dashboard
+  // Client gets dashboard and Whiteboards
   const clientNavItems = [
-    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
+    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
+    { icon: Whiteboard, label: 'Whiteboards', active: false, onClick: handleNavigateClientWhiteboards },
   ];
 
   // Admin/team: full nav, but no Help item (removed!)
@@ -76,10 +80,11 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateInvoices,
     handleNavigateWhiteboards,
     handleNavigateTimesheets,
-    handleNavigateClientDashboard
+    handleNavigateClientDashboard,
+    handleNavigateClientWhiteboards,
   ]);
 
-  // Collapsed view (clients only show icon for dashboard)
+  // Collapsed view (clients only show icon for dashboard and new whiteboards)
   if (isCollapsed) {
     return (
       <nav className="flex-1 py-2 px-1 space-y-0">
@@ -141,7 +146,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     );
   }
 
-  // Client mode (not collapsed): Only Dashboard, no nav label, no collapse arrow
+  // Client mode (not collapsed): Dashboard and Whiteboards, no nav label, no collapse arrow
   return (
     <div className="px-2 mb-2">
       <nav className="space-y-0 mt-2">
@@ -168,3 +173,4 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
 SidebarNavigation.displayName = 'SidebarNavigation';
 
 export default SidebarNavigation;
+

@@ -14,6 +14,7 @@ import TeamsPage from "./pages/TeamsPage";
 import InvoicePage from "./pages/InvoicePage";
 import TimesheetsPage from "./pages/TimesheetsPage";
 import WhiteboardsPage from "./pages/WhiteboardsPage";
+import ClientWhiteboards from "./pages/ClientWhiteboards";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 import TasksPage from "./pages/TasksPage";
@@ -84,6 +85,7 @@ const App = () => {
                                   <Route path="/invoices" element={<InvoicePage />} />
                                   <Route path="/timesheets" element={<TimesheetsPage />} />
                                   <Route path="/whiteboards" element={<WhiteboardsPage />} />
+                                  <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
                                   <Route path="/settings" element={<SettingsPage />} />
                                   <Route path="/settings/notifications" element={<SettingsPage />} />
                                   <Route path="/help" element={<HelpRedirector />} />
