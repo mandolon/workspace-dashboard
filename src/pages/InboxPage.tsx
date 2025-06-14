@@ -1,6 +1,4 @@
 
-// Make the Inbox heading layout, tabs, and spacing 100% consistent with the Whiteboards page.
-
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import InboxHeader from "@/components/inbox/InboxHeader";
@@ -27,7 +25,7 @@ const InboxPage = () => {
 
   return (
     <AppLayout>
-      <div className="flex flex-col h-full">
+      <div className="w-full max-w-5xl mx-auto py-6 px-6 h-full flex flex-col">
         <InboxHeader
           activeTab={activeTab}
           onTabChange={handleTabChange}
