@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ export const useTaskOperations = () => {
   const navigate = useNavigate();
   const { toast, dismiss } = useToast();
   const { currentUser } = useUser();
+  const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -19,23 +19,39 @@ export const useTaskOperations = () => {
     setRefreshTrigger(prev => prev + 1);
   }, []);
 
-  // Always create in the shared backend, never locally
   const createTask = useCallback((taskData: any) => {
-    console.log('Creating task centrally:', taskData);
-
-    const newTask = addTask({
-      ...taskData,
-      createdBy: (currentUser?.name ?? "Unknown"),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-    console.log('Created task (central):', newTask);
-    triggerRefresh();
+    console.log('Creating task via context:', taskData);
+    if (taskData.useCustomTasks) {
+      // For dialog-created custom tasks, ensure createdBy set to current user
+      setCustomTasks(prev => [
+        {
+          ...taskData,
+          createdBy: currentUser?.name ?? "Unknown",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        ...prev
+      ]);
+    } else {
+      // For quick add/centralized add, ensure current user is author
+      const newTask = addTask({
+        ...taskData,
+        createdBy: currentUser?.name ?? "Unknown",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      console.log('Quick add created task:', newTask);
+      triggerRefresh();
+    }
   }, [triggerRefresh, currentUser]);
 
   const updateTaskById = useCallback((taskId: number, updates: Partial<Task>) => {
     const updatedTask = updateTask(taskId, updates);
+
     if (updatedTask) {
+      setCustomTasks(prev =>
+        prev.map(task => task.id === taskId ? { ...task, ...updates } : task)
+      );
       triggerRefresh();
     }
   }, [triggerRefresh]);
@@ -105,25 +121,21 @@ export const useTaskOperations = () => {
     }
   }, [toast, triggerRefresh, navigate, dismiss, restoreDeletedTask]);
 
-  // Archive and restore logics only apply to baseTasks now
   const archiveTask = useCallback((taskId: number) => {
-    const tasks = getAllTasksRaw().filter(task => !task.deletedAt);
-    const taskToArchive = tasks.find(task => task.id === taskId);
+    const taskToArchive = customTasks.find(task => task.id === taskId);
 
     if (taskToArchive) {
       setArchivedTasks(prev => [...prev, { ...taskToArchive, archived: true }]);
-      // Hard-archive: update the centralized backend (add archived: true)
-      updateTask(taskId, { archived: true });
-      triggerRefresh();
+      setCustomTasks(prev => prev.filter(task => task.id !== taskId));
       console.log(`Task ${taskId} archived and moved to project folder`);
     }
-  }, [triggerRefresh]);
+  }, [customTasks]);
 
   const navigateToTask = useCallback((task: Task) => {
     navigate(`/task/${task.taskId}`);
   }, [navigate]);
 
-  // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created/collab tasks
+  // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created
   function filterTasksForUser(tasks: Task[]) {
     if (!currentUser) {
       // If user is not logged in or hasn't loaded yet, return empty.
@@ -157,21 +169,26 @@ export const useTaskOperations = () => {
     );
   }
 
-  // Get centralized tasks only, filter for user
   const getTasksByStatusFromContext = useCallback((status: string) => {
+    // Centralized tasks (backend), plus customTasks (new/edited ones)
     const centralizedTasks = getTasksByStatus(status).filter(task => !task.deletedAt);
-    return filterTasksForUser(centralizedTasks);
-  }, [currentUser]);
+    const customTasksFiltered = customTasks.filter(task => task.status === status && !task.archived && !task.deletedAt);
+    const combined = [...centralizedTasks, ...customTasksFiltered];
+    return filterTasksForUser(combined);
+  }, [customTasks, currentUser]);
 
-  // All tasks (from the shared backend array)
+  // Fix: getAllTasks should be a function, not an array
   const getAllTasks = useCallback(() => {
+    // Use a backend utility to get all, then filter for user
     if (!currentUser) return [];
-    const allCentralizedTasks = getAllTasksRaw().filter(task => !task.deletedAt && !task.archived);
-    return filterTasksForUser(allCentralizedTasks);
-  }, [refreshTrigger, currentUser]);
+    const allCentralizedTasks = getAllTasksRaw().filter(task => !task.deletedAt);
+    const allCustomTasks = customTasks.filter(task => !task.archived && !task.deletedAt);
+    const all = [...allCentralizedTasks, ...allCustomTasks];
+    return filterTasksForUser(all);
+  }, [customTasks, refreshTrigger, currentUser]);
 
   return {
-    customTasks: [], // No longer used, provided for backward compatibility
+    customTasks,
     archivedTasks,
     refreshTrigger,
     createTask,
@@ -181,7 +198,7 @@ export const useTaskOperations = () => {
     archiveTask,
     navigateToTask,
     getTasksByStatus: getTasksByStatusFromContext,
-    getAllTasks,
+    getAllTasks, // now a function (the fix)
     triggerRefresh
   };
 };
