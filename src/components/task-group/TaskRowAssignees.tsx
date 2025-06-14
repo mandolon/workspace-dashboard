@@ -1,7 +1,8 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { getRandomColor, availablePeople } from '@/utils/taskUtils';
+import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
 // Import useCRMRole if available, but don't require it
 import { useCRMRole } from '@/pages/TeamsPage';
@@ -21,20 +22,20 @@ const TaskRowAssignees = React.memo(({
   onAssignPerson,
   onAddCollaborator
 }: TaskRowAssigneesProps) => {
-  const assigneeColor = useMemo(() => 
-    task.assignee ? getRandomColor(task.assignee.name) : '', 
+  const assigneeColor = useMemo(() =>
+    task.assignee ? getRandomColor(task.assignee.name) : '',
     [task.assignee]
   );
-  const collaboratorColors = useMemo(() => 
-    task.collaborators?.map(collab => getRandomColor(collab.name)) || [], 
+  const collaboratorColors = useMemo(() =>
+    task.collaborators?.map(collab => getRandomColor(collab.name)) || [],
     [task.collaborators]
   );
   const availableForAssignment = useMemo(() => availablePeople, []);
-  const availableForCollaboration = useMemo(() => 
-    availablePeople.filter(person => 
-      person.name !== task.assignee?.name && 
+  const availableForCollaboration = useMemo(() =>
+    availablePeople.filter(person =>
+      person.name !== task.assignee?.name &&
       !task.collaborators?.some(collab => collab.name === person.name)
-    ), 
+    ),
     [task.assignee, task.collaborators]
   );
 
@@ -68,9 +69,9 @@ const TaskRowAssignees = React.memo(({
     <div className="flex items-center -space-x-1">
       {task.assignee ? (
         <div className="relative group/avatar">
-          {/* Avatar WITHOUT initials or name */}
+          {/* Avatar WITH initials */}
           <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${assigneeColor}`}>
-            {/* No initials or name */}
+            <span className="text-white text-xs font-medium">{getInitials(task.assignee.name)}</span>
           </div>
           {/* Remove Assignee (X) - top left, small */}
           {canAssign && (
@@ -106,7 +107,7 @@ const TaskRowAssignees = React.memo(({
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
-                    {person.name}
+                    {getInitials(person.name)}
                   </div>
                   <span>{person.name}</span>
                 </DropdownMenuItem>
@@ -115,11 +116,11 @@ const TaskRowAssignees = React.memo(({
           </DropdownMenu>
         )
       )}
-      
+
       {task.collaborators?.map((collaborator, index) => (
         <div key={index} className="relative group/collaborator">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${collaboratorColors[index]}`}>
-            {/* No initials or name */}
+            <span className="text-white text-xs font-medium">{getInitials(collaborator.name)}</span>
           </div>
           {canAssign && (
             <button
@@ -134,7 +135,7 @@ const TaskRowAssignees = React.memo(({
           )}
         </div>
       ))}
-      
+
       {canAssign && task.assignee && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -153,7 +154,7 @@ const TaskRowAssignees = React.memo(({
                 className="flex items-center gap-2 cursor-pointer"
               >
                 <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
-                  {person.name}
+                  {getInitials(person.name)}
                 </div>
                 <span>{person.fullName}</span>
               </DropdownMenuItem>

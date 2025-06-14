@@ -9,7 +9,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import TasksTabStatusIcon from './TasksTabStatusIcon';
-import { getRandomColor, formatDate } from './TasksTabUtils'; // Ensure this formatDate is correct or use global one
+import { getRandomColor, formatDate, getInitials } from '@/utils/taskUtils';
 
 interface TasksTabRowProps {
   task: any; // Consider defining a more specific type for task if possible
@@ -19,8 +19,7 @@ interface TasksTabRowProps {
 }
 
 const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: TasksTabRowProps) => {
-  // Prefer using a robust date formatting utility, e.g., from date-fns or a shared util
-  const formattedDate = formatDate(task.dateCreated); // Assuming TasksTabUtils.formatDate is appropriate
+  const formattedDate = formatDate(task.dateCreated);
 
   return (
     <ContextMenu>
@@ -52,7 +51,7 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
             <div className="flex items-center -space-x-1">
               {task.assignee && (
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium ${getRandomColor(task.assignee.name)}`}>
-                  {task.assignee.name} 
+                  {getInitials(task.assignee.name)}
                 </div>
               )}
             </div>
@@ -95,4 +94,3 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
 };
 
 export default TasksTabRow;
-
