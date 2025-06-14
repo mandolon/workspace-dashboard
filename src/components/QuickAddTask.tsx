@@ -168,7 +168,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-7 text-xs h-7 border-0 shadow-none focus-visible:ring-0"
+              className="pl-6 text-[11px] h-6 py-1 border-0 shadow-none focus-visible:ring-0"  // made smaller font and height
               ref={searchInputRef}
               onMouseDown={e => e.stopPropagation()}
             />
