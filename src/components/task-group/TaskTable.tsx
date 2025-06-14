@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import TaskRow from './TaskRow';
@@ -22,30 +23,31 @@ interface TaskTableProps {
   onTaskDeleted?: () => void;
 }
 
+// Only width and padding, no text or flex on the cell itself
 const columns = [
   {
     key: "name",
     label: "Name",
-    headClassName: "w-1/2 pl-8 text-muted-foreground font-medium text-xs py-2",
-    cellClassName: "w-1/2 pl-8",
+    headClassName: "w-1/2 pl-8 py-2",
+    cellClassName: "w-1/2 pl-8 py-2",
   },
   {
     key: "files",
     label: "Files",
-    headClassName: "w-[8%] text-muted-foreground font-medium text-xs py-2",
-    cellClassName: "w-[8%]",
+    headClassName: "w-[8%] py-2",
+    cellClassName: "w-[8%] py-2",
   },
   {
     key: "dateCreated",
     label: "Date Created",
-    headClassName: "w-[17%] text-muted-foreground font-medium text-xs py-2",
-    cellClassName: "w-[17%]",
+    headClassName: "w-[17%] py-2",
+    cellClassName: "w-[17%] py-2",
   },
   {
     key: "assignedTo",
     label: "Assigned to",
-    headClassName: "w-[25%] text-muted-foreground font-medium text-xs py-2",
-    cellClassName: "w-[25%]",
+    headClassName: "w-[25%] py-2",
+    cellClassName: "w-[25%] py-2",
   },
 ];
 
@@ -73,7 +75,11 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
         <TableHeader>
           <TableRow className="border-b border-border">
             {columns.map((col) => (
-              <TableHead key={col.key} className={col.headClassName}>
+              <TableHead
+                key={col.key}
+                className={col.headClassName + " text-muted-foreground font-medium text-xs"}
+                style={{ minWidth: 0 }}
+              >
                 {col.label}
               </TableHead>
             ))}
@@ -100,7 +106,6 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
               onAddCollaborator={onAddCollaborator}
               onTaskDeleted={onTaskDeleted}
               columnConfig={columns}
-              // Pass columns, so the row could use className for correct alignment if it supports it
             />
           ))}
         </TableBody>
@@ -112,3 +117,4 @@ const TaskTable = React.forwardRef<HTMLDivElement, TaskTableProps>(({
 TaskTable.displayName = "TaskTable";
 
 export default TaskTable;
+
