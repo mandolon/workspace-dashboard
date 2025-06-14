@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -63,11 +64,12 @@ const TaskRow = React.memo(({
   }, [handleDeleteClick, task]);
 
   const handleContextMenuDelete = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    handleDeleteClick(task, e);
+    // Ensures context menu closes before opening dialog
+    setTimeout(() => {
+      handleDeleteClick(task, e);
+    }, 0);
   }, [handleDeleteClick, task]);
 
-  // Pass the task to delete!
   const handleDeleteTaskInternal = useCallback(async () => {
     await handleDeleteTask(task);
     if (onTaskDeleted) {
@@ -75,7 +77,6 @@ const TaskRow = React.memo(({
     }
   }, [handleDeleteTask, onTaskDeleted, task]);
 
-  // Memoize row content to prevent unnecessary re-renders
   const rowContent = useMemo(() => (
     <TaskRowContent
       task={task}

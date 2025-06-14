@@ -25,12 +25,22 @@ const TaskRowContextMenu = ({
   onTaskStatusClick,
   onContextMenuDelete
 }: TaskRowContextMenuProps) => {
+
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
   };
 
   const handleMarkComplete = () => {
     onTaskStatusClick(task.id);
+  };
+
+  // Use native event closing via pointerdown for Radix
+  // We ensure clicking "Delete" closes the menu before anything else
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // "onContextMenuDelete" will trigger dialog
+    onContextMenuDelete(e);
   };
 
   return (
@@ -53,7 +63,7 @@ const TaskRowContextMenu = ({
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem 
-          onClick={onContextMenuDelete}
+          onClick={handleDeleteClick}
           className="text-destructive focus:text-destructive"
         >
           <Trash2 className="w-4 h-4 mr-2" />
