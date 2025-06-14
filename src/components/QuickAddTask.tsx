@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Users, Search, Paperclip, X } from 'lucide-react';
+import { Users, Search, Paperclip, PaperclipIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -46,6 +46,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   // FILE UPLOAD state and handling
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Dropdown for file list display
+  const [showFilesDropdown, setShowFilesDropdown] = useState(false);
+  const filesDropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   // Handle smart positioning for the dropdown (ensure it is visible in the viewport)
   useEffect(() => {
@@ -112,7 +116,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       dueDate: '—',
       assignee: { name: 'ME', avatar: 'bg-gray-500' },
       hasAttachment: attachedFiles.length > 0,
-      attachments: attachedFiles,
+      attachments: attachedFiles, // <--- pass the files here!
       status: defaultStatus
     };
 
@@ -205,6 +209,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length) {
+      // Allow multiple selection, merge with current
       setAttachedFiles(prev => [...prev, ...Array.from(e.target.files)]);
       e.target.value = "";
     }
@@ -214,12 +219,59 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
   };
 
+  // Render list of attached files (dropdown)
+  const renderFilesDropdown = () => {
+    if (!showFilesDropdown || attachedFiles.length === 0) return null;
+    return createPortal(
+      <div
+        className="absolute right-0 mt-2 z-[1001] bg-white border shadow-lg rounded min-w-[180px] overflow-hidden animate-fade-in"
+        style={{
+          top: filesDropdownButtonRef.current
+            ? filesDropdownButtonRef.current.getBoundingClientRect().bottom + window.scrollY + 2
+            : undefined,
+          left: filesDropdownButtonRef.current
+            ? filesDropdownButtonRef.current.getBoundingClientRect().left + window.scrollX - 120
+            : undefined,
+        }}
+        onMouseLeave={() => setShowFilesDropdown(false)}
+      >
+        {attachedFiles.map((file, idx) => (
+          <div key={idx} className="flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent transition-colors border-b last:border-b-0">
+            <a
+              href={URL.createObjectURL(file)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="truncate flex-1 text-blue-600 hover:underline"
+              title={file.name}
+              download={file.name}
+              onClick={e => e.stopPropagation()}
+            >
+              {file.name}
+            </a>
+            <button
+              onClick={() => handleRemoveFile(idx)}
+              className="text-destructive hover:bg-destructive hover:text-white rounded p-0.5"
+              aria-label="Remove file"
+              type="button"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        ))}
+      </div>,
+      document.body
+    );
+  };
+
+  // Visual state: icon solid/fill when files attached
+  const hasFiles = attachedFiles.length > 0;
+
   return (
     <div className="px-4 py-2 bg-accent/50 border border-border rounded">
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
-        {/* Name column - made wider */}
+        {/* Name column */}
         <div className="col-span-6 flex items-center gap-2 pl-4">
-          <TaskStatusIcon status={defaultStatus} onClick={handleStatusIconClick} />
+          <TaskStatusIcon status={defaultStatus} onClick={() => {}} />
           <div className="flex-1 relative">
             <button
               ref={projectDropdownAnchor}
@@ -241,26 +293,54 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
           </div>
         </div>
 
-        {/* Empty space columns */}
+        {/* Empty space */}
         <div className="col-span-2"></div>
 
-        {/* Action buttons group */}
+        {/* Action buttons */}
         <div className="col-span-4 flex items-center justify-end gap-2">
           {/* File attachment and assign buttons */}
-          <div className="flex items-center gap-2">
-            <Button
+          <div className="flex items-center gap-2 relative">
+            {/* Paperclip label and badge */}
+            <button
+              ref={filesDropdownButtonRef}
               size="sm"
-              variant="ghost"
-              className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
-              onClick={(e) => {
-                e.stopPropagation();
-                fileInputRef.current?.click();
-              }}
-              title="Attach files"
+              type="button"
+              className={`flex items-center justify-center border border-border rounded px-2 py-1 h-6 bg-white relative transition-colors
+                ${hasFiles ? 'bg-accent hover:bg-accent/70 text-blue-700' : 'text-muted-foreground hover:text-blue-700 hover:bg-accent'}`}
+              title={hasFiles ? (attachedFiles.length === 1 ? attachedFiles[0].name : `${attachedFiles.length} files`) : "Attach files"}
+              onClick={hasFiles
+                ? (e) => {
+                    e.stopPropagation();
+                    // Show dropdown with list, but don't open file dialog (unless you want both)
+                    setShowFilesDropdown(v => !v);
+                  }
+                : (e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }
+              }
+              aria-label="Attach file(s)"
+              tabIndex={0}
+              onMouseDown={e => e.preventDefault()}
+              onDoubleClick={e => fileInputRef.current?.click()}
             >
-              <Paperclip className="w-3 h-3" />
-            </Button>
-            <input 
+              <Paperclip
+                className="w-3 h-3"
+                strokeWidth={hasFiles ? 2.5 : 2}
+                fill={hasFiles ? "currentColor" : "none"}
+                style={{
+                  color: hasFiles ? "#2563eb" : undefined, // tailwind blue-700
+                }}
+              />
+              {hasFiles && (
+                <span className="absolute -top-2 -right-2 bg-orange-600 text-white rounded-full text-[10px] px-1 leading-none z-10 border border-white">
+                  {attachedFiles.length}
+                </span>
+              )}
+            </button>
+
+            {/* Hidden file input, always allow multi */}
+            <input
               ref={fileInputRef}
               type="file"
               multiple
@@ -268,57 +348,47 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               onChange={handleFileChange}
               aria-label="Attach file(s)"
             />
-
+            {/* Show file names as inline chips if only one file, or if showFilesDropdown not used */}
+            {hasFiles && !showFilesDropdown && attachedFiles.length === 1 && (
+              <span
+                className="inline-flex items-center gap-0.5 bg-muted px-2 py-0.5 rounded text-xs font-medium"
+                title={attachedFiles[0].name}
+              >
+                {attachedFiles[0].name}
+                <button onClick={() => handleRemoveFile(0)} className="ml-0.5 text-destructive" type="button" aria-label="Remove file">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {renderFilesDropdown()}
             <Button
               size="sm"
               variant="ghost"
               className="flex items-center gap-1 text-xs px-2 py-1 h-6 text-muted-foreground hover:text-foreground border border-border rounded"
+              type="button"
             >
               <Users className="w-3 h-3" />
             </Button>
           </div>
 
-          {/* Show attached files (inline chips) */}
-          {attachedFiles.length > 0 && (
-            <div className="flex gap-1 flex-wrap items-center max-w-[120px] mr-1">
-              {attachedFiles.map((file, idx) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center gap-0.5 bg-muted px-2 py-0.5 rounded text-xs font-medium"
-                  title={file.name}
-                >
-                  {file.name}
-                  <button onClick={() => handleRemoveFile(idx)} className="ml-0.5 text-destructive" type="button" aria-label="Remove file">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Separator */}
+          {/* Separator, Cancel, Save buttons */}
           <Separator orientation="vertical" className="h-4" />
-
-          {/* Cancel and Save buttons */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onCancel}
-              className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
-            >
-              Cancel
-            </Button>
-            
-            <Button
-              size="sm"
-              onClick={handleSave}
-              className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
-              disabled={!canSave}
-            >
-              Save
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700"
+            disabled={!canSave}
+          >
+            Save
+          </Button>
         </div>
       </div>
     </div>
