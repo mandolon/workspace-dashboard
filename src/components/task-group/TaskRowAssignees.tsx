@@ -1,8 +1,10 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople } from '@/utils/taskUtils';
 import { Task } from '@/types/task';
+// Import useCRMRole if available, but don't require it
 import { useCRMRole } from '@/pages/TeamsPage';
 
 interface TaskRowAssigneesProps {
@@ -53,9 +55,15 @@ const TaskRowAssignees = React.memo(({
     e.stopPropagation();
   }, []);
 
-  // Only allow assignment if the current CRM role is 'team'
-  const currentCRMRole = useCRMRole();
-  const canAssign = currentCRMRole === 'team';
+  // Allow assignment everywhere unless explicitly locked by CRM logic
+  let currentCRMRole: string | undefined;
+  try {
+    currentCRMRole = useCRMRole();
+  } catch {
+    currentCRMRole = undefined;
+  }
+  // If CRMRole context is missing, default to true (show assign UI)
+  const canAssign = currentCRMRole === undefined || currentCRMRole === 'team' || currentCRMRole === 'admin';
 
   return (
     <div className="flex items-center -space-x-1">
