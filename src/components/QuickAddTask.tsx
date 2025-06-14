@@ -303,7 +303,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
             {/* Paperclip label and badge */}
             <button
               ref={filesDropdownButtonRef}
-              size="sm"
               type="button"
               className={`flex items-center justify-center border border-border rounded px-2 py-1 h-6 bg-white relative transition-colors
                 ${hasFiles ? 'bg-accent hover:bg-accent/70 text-blue-700' : 'text-muted-foreground hover:text-blue-700 hover:bg-accent'}`}
@@ -338,7 +337,6 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
                 </span>
               )}
             </button>
-
             {/* Hidden file input, always allow multi */}
             <input
               ref={fileInputRef}
