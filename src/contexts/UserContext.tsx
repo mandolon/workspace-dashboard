@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { User, UserContextType } from '@/types/user';
 import { TEAM_USERS } from '@/utils/teamUsers';
 import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
-import { syncSupabaseRLSUser } from "@/integrations/supabase/client";
 
 const UserContext = createContext<UserContextType & {
   isImpersonating: boolean;
@@ -69,7 +68,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentUser(user);
       setImpersonatedUser(null);
       window.localStorage.setItem(LOCAL_STORAGE_KEY, userId);
-      syncSupabaseRLSUser(user.email || user.name);
     }
     setLoading(false);
   }, []);
@@ -80,17 +78,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(null);
     setImpersonatedUser(null);
     window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-    syncSupabaseRLSUser(undefined);
   }, []);
 
   // Impersonation
   const impersonateAs = useCallback((userId: string) => {
-    if (!originalUser || userId === originalUser.id) return; // Don't impersonate self
+    if (!originalUser || userId === originalUser.id) return;
     const user = findUserById(userId);
     if (user) {
       setImpersonatedUser(user);
       setCurrentUser(user);
-      syncSupabaseRLSUser(user.email || user.name);
     }
   }, [originalUser]);
 
@@ -98,7 +94,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (originalUser) {
       setImpersonatedUser(null);
       setCurrentUser(originalUser);
-      syncSupabaseRLSUser(originalUser.email || originalUser.name);
     }
   }, [originalUser]);
 
@@ -129,12 +124,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (user) {
         setOriginalUser(user);
         setCurrentUser(user);
-        syncSupabaseRLSUser(user.email || user.name);
       }
     } else if (currentUser) {
-      syncSupabaseRLSUser(currentUser.email || currentUser.name);
     } else {
-      syncSupabaseRLSUser(undefined);
     }
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
