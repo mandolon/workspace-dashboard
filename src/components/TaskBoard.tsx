@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -20,6 +19,10 @@ const TaskBoard: React.FC = React.memo(() => {
     handleTaskClick,
     handleTaskArchive,
     handleTaskDeleted,
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator,
   } = useTaskBoard();
   const { addAttachments } = useTaskAttachmentContext();
 
@@ -69,6 +72,10 @@ const TaskBoard: React.FC = React.memo(() => {
         onTaskArchive={handleTaskArchive}
         onTaskDeleted={() => {}} 
         onAddTask={onDialogOpen}
+        assignPerson={assignPerson}
+        removeAssignee={removeAssignee}
+        addCollaborator={addCollaborator}
+        removeCollaborator={removeCollaborator}
       />
       <TaskDialog
         isOpen={isTaskDialogOpen}
@@ -81,4 +88,3 @@ const TaskBoard: React.FC = React.memo(() => {
 
 TaskBoard.displayName = "TaskBoard";
 export default TaskBoard;
-

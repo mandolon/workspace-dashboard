@@ -1,30 +1,32 @@
-
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Task, TaskGroup } from '@/types/task';
+import { Task, TaskGroup, TaskUser } from '@/types/task';
 import { useUser } from '@/contexts/UserContext';
 import { useRealtimeTasks } from './useRealtimeTasks';
 import { insertTask, updateTaskSupabase, deleteTaskSupabase } from '@/data/taskSupabase';
 import { nanoid } from "nanoid";
+
+// New: helper to deep copy and update list
+function updateTaskInList(tasks: Task[], taskId: string, updater: (t: Task) => Task) {
+  return tasks.map(t => t.taskId === taskId ? updater(t) : t);
+}
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
   const { currentUser } = useUser();
   const { tasks, setTasks } = useRealtimeTasks();
 
-  // Fix: Store dialog and quick add state locally
+  // Dialog/quick add state
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  // showQuickAdd can be null or a group status string ("redline", "progress", "completed")
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Task grouping (by status)
+  // Supabase powered task groups
   const getTaskGroups = (): TaskGroup[] => {
     const centralizedRedline = tasks.filter(task => task.status === 'redline' && !task.archived && !task.deletedAt);
     const centralizedProgress = tasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
     const centralizedCompleted = tasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
 
-    // Always show all groups, even if they have zero tasks
     const taskGroups: TaskGroup[] = [
       {
         title: "TASK/ REDLINE",
@@ -54,62 +56,31 @@ export const useTaskBoard = () => {
   // Generate a new taskId for every task insert
   const generateTaskId = () => "T" + Math.floor(Math.random() * 100000).toString().padStart(4, "0");
 
+  // --- No more optimistic update! Only insert, let realtime pull in
   const handleCreateTask = useCallback(
     async (newTask: any) => {
       const taskId = newTask.taskId ?? generateTaskId();
-      // Optimistically add to UI - build array and pass it directly
-      const optimisticTask: Task = {
-        ...newTask,
-        taskId,
-        id: Math.random(), // Temporary optimistic ID (will be replaced by real-time update)
-        status: newTask.status || "progress",
-        archived: false,
-        deletedAt: null,
-        deletedBy: null,
-        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-        hasAttachment: false,
-        collaborators: [],
-        // Date fields filled below
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setTasks([optimisticTask, ...tasks]);
       await insertTask({
         ...newTask,
         taskId,
         createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       });
-      setIsTaskDialogOpen(false); // Close dialog after creating a task
+      setIsTaskDialogOpen(false);
     },
-    [currentUser, setTasks, tasks]
+    [currentUser]
   );
 
   const handleQuickAddSave = useCallback(
     async (taskData: any) => {
       const taskId = taskData.taskId ?? generateTaskId();
-      const optimisticTask: Task = {
-        ...taskData,
-        taskId,
-        id: Math.random(),
-        status: taskData.status || "progress",
-        archived: false,
-        deletedAt: null,
-        deletedBy: null,
-        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-        hasAttachment: false,
-        collaborators: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setTasks([optimisticTask, ...tasks]);
       await insertTask({
         ...taskData,
         taskId,
         createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
       });
-      setShowQuickAdd(null); // Close quick add after save
+      setShowQuickAdd(null);
     },
-    [currentUser, setTasks, tasks]
+    [currentUser]
   );
 
   const handleTaskClick = (task: Task) => {
@@ -123,12 +94,37 @@ export const useTaskBoard = () => {
     }
   };
 
-  // Fix: find by .taskId (string), not .id (number)
   const handleTaskDeleted = async (taskId: string) => {
     const task = tasks.find(t => t.taskId === taskId);
     if (task) {
       await deleteTaskSupabase(task.taskId);
     }
+  };
+
+  // ------------- NEW ASSIGN PERSON (and collaborators) HANDLERS FOR SUPABASE --------------
+  // For consistent types, all handlers use .taskId as string
+
+  const assignPerson = async (taskId: string, person: TaskUser) => {
+    // Assign main assignee, set .assignee field to person, leave collaborators unchanged
+    await updateTaskSupabase(taskId, { assignee: person });
+    // Let real-time pull updated row
+  };
+  const removeAssignee = async (taskId: string) => {
+    await updateTaskSupabase(taskId, { assignee: null });
+  };
+  const addCollaborator = async (taskId: string, person: TaskUser) => {
+    const task = tasks.find(t => t.taskId === taskId);
+    const collabs = (task?.collaborators ?? []).slice();
+    if (!collabs.find(c => c.id === person.id)) {
+      collabs.push(person);
+    }
+    await updateTaskSupabase(taskId, { collaborators: collabs });
+  };
+  const removeCollaborator = async (taskId: string, collaboratorIndex: number) => {
+    const task = tasks.find(t => t.taskId === taskId);
+    const collabs = (task?.collaborators ?? []).slice();
+    collabs.splice(collaboratorIndex, 1);
+    await updateTaskSupabase(taskId, { collaborators: collabs });
   };
 
   return {
@@ -143,5 +139,11 @@ export const useTaskBoard = () => {
     handleTaskClick,
     handleTaskArchive,
     handleTaskDeleted,
+    // Assignment handlers for Supabase tasks only:
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator,
+    supabaseTasks: tasks, // expose realtime tasks for detail page
   };
 };

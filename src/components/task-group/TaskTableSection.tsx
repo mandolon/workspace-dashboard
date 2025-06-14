@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import TaskTable from "./TaskTable";
 import AddTaskButton from "./AddTaskButton";
@@ -48,7 +47,7 @@ const TaskTableSection = ({
   removeAssignee: propsRemoveAssignee,
   addCollaborator: propsAddCollaborator,
   removeCollaborator: propsRemoveCollaborator
-}: TaskTableSectionProps) => {
+}: any) => {
   const quickAddRef = useRef<HTMLDivElement>(null);
   const taskTableRef = useRef<HTMLDivElement>(null);
 
@@ -176,4 +175,3 @@ const TaskTableSection = ({
 };
 
 export default TaskTableSection;
-

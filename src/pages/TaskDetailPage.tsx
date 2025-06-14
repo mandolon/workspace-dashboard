@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import TaskDetail from '@/components/TaskDetail';
-import { getTaskById, getTaskByTaskId } from '@/data/taskData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { useUser } from '@/contexts/UserContext';
 import { TaskUser, Task } from '@/types/task';
+import { useTaskBoard } from '@/hooks/useTaskBoard';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams<{ taskId: string }>();
@@ -20,27 +19,32 @@ const TaskDetailPage = () => {
 
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
 
+  // NEW: Get realtime tasks from Supabase-powered board
+  const { supabaseTasks } = useTaskBoard();
+
   useEffect(() => {
-    // Find most up-to-date version from customTasks or fallback to backend data
     let fetchedTask: Task | null = null;
     if (taskId) {
-      // Try to find in customTasks context first (these are most up-to-date)
-      const taskFromCustom = customTasks.find(
-        t => t.taskId === taskId || t.id === Number(taskId)
-      );
-      if (taskFromCustom) {
-        fetchedTask = taskFromCustom;
-      } else if (taskId.startsWith('T')) {
-        fetchedTask = getTaskByTaskId(taskId) || null;
-      } else {
-        const numericId = parseInt(taskId, 10);
-        if (!isNaN(numericId)) {
-          fetchedTask = getTaskById(numericId) || null;
+      // 1. First look in Supabase-powered realtime tasks (if present)
+      if (supabaseTasks && supabaseTasks.length > 0) {
+        fetchedTask = supabaseTasks.find(
+          t => t.taskId === taskId || t.id === Number(taskId)
+        ) || null;
+      }
+      // 2. (Legacy fallback) Try customTasks from TaskContext
+      if (!fetchedTask) {
+        const taskFromCustom = customTasks.find(
+          t => t.taskId === taskId || t.id === Number(taskId)
+        );
+        if (taskFromCustom) {
+          fetchedTask = taskFromCustom;
         }
       }
+      // 3. (Optional: fallback to direct backend fetch)
+      // (removed getTaskByTaskId/getTaskById which are static/legacy)
     }
     setCurrentTask(fetchedTask);
-  }, [taskId, refreshTrigger, customTasks]);
+  }, [taskId, refreshTrigger, customTasks, supabaseTasks]);
 
   const handleBack = () => {
     if (returnTo) {
@@ -177,4 +181,3 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
-

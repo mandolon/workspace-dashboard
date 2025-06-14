@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -15,6 +16,11 @@ interface TaskBoardContentProps {
   onTaskArchive: (taskId: number) => void;
   onTaskDeleted: () => void;
   onAddTask: () => void;
+  // Handlers for assignment (Supabase only)
+  assignPerson: (taskId: string, person: any) => void;
+  removeAssignee: (taskId: string) => void;
+  addCollaborator: (taskId: string, person: any) => void;
+  removeCollaborator: (taskId: string, idx: number) => void;
 }
 
 const TaskBoardContent = ({
@@ -26,9 +32,12 @@ const TaskBoardContent = ({
   onTaskClick,
   onTaskArchive,
   onTaskDeleted,
-  onAddTask
+  onAddTask,
+  assignPerson,
+  removeAssignee,
+  addCollaborator,
+  removeCollaborator,
 }: any) => {
-  // Memoize the mapped TaskGroupSections for improved performance
   const renderedGroups = React.useMemo(
     () => taskGroups.map((group, groupIndex) => (
       <TaskGroupSection
@@ -40,10 +49,15 @@ const TaskBoardContent = ({
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
         onTaskDeleted={onTaskDeleted}
-        useContext={false} // Supabase-powered board disables context mode
+        useContext={false}
+        // Pass these down for assignment
+        assignPerson={assignPerson}
+        removeAssignee={removeAssignee}
+        addCollaborator={addCollaborator}
+        removeCollaborator={removeCollaborator}
       />
     )),
-    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted]
+    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted, assignPerson, removeAssignee, addCollaborator, removeCollaborator]
   );
 
   return (
