@@ -28,22 +28,22 @@ export const projectClientData: ProjectClientMap = {
   "adams-1063-40th-street": {
     clients: [
       {
-        clientId: makeClientId('Robert', 'Adams'),
+        clientId: makeClientId("Robert", "Adams"),
         firstName: "Robert",
         lastName: "Adams",
         email: "robert.adams@email.com",
         isPrimary: true,
       },
     ],
-    projectAddress: '1063 40th Street',
-    city: 'Sacramento',
-    state: 'CA',
-    projectId: '00001',
+    projectAddress: "1063 40th Street",
+    city: "Sacramento",
+    state: "CA",
+    projectId: "00001",
   },
   "ogden-thew-2709-t-street": {
     clients: [
       {
-        clientId: makeClientId('Margaret', 'Ogden-Thew'),
+        clientId: makeClientId("Margaret", "Ogden-Thew"),
         firstName: "Margaret",
         lastName: "Ogden-Thew",
         email: "margaret.ogden-thew@email.com",
@@ -58,7 +58,7 @@ export const projectClientData: ProjectClientMap = {
   "henderson-1524-tiverton": {
     clients: [
       {
-        clientId: makeClientId('James', 'Henderson'),
+        clientId: makeClientId("James", "Henderson"),
         firstName: "James",
         lastName: "Henderson",
         email: "james.henderson@email.com",
@@ -73,7 +73,7 @@ export const projectClientData: ProjectClientMap = {
   "peterson-2015-10th-street": {
     clients: [
       {
-        clientId: makeClientId('Linda', 'Peterson'),
+        clientId: makeClientId("Linda", "Peterson"),
         firstName: "Linda",
         lastName: "Peterson",
         email: "linda.peterson@email.com",
@@ -88,7 +88,7 @@ export const projectClientData: ProjectClientMap = {
   "johnson-2200-i-street": {
     clients: [
       {
-        clientId: makeClientId('Michael', 'Johnson'),
+        clientId: makeClientId("Michael", "Johnson"),
         firstName: "Michael",
         lastName: "Johnson",
         email: "michael.johnson@email.com",
@@ -103,7 +103,7 @@ export const projectClientData: ProjectClientMap = {
   "adamo-6605-s-land-park-dr": {
     clients: [
       {
-        clientId: makeClientId('Anthony', 'Adamo'),
+        clientId: makeClientId("Anthony", "Adamo"),
         firstName: "Anthony",
         lastName: "Adamo",
         email: "anthony.adamo@email.com",
@@ -118,7 +118,7 @@ export const projectClientData: ProjectClientMap = {
   "mcvarish-salmina-6251-el-dorado-street": {
     clients: [
       {
-        clientId: makeClientId('Patricia', 'McVarish-Salmina'),
+        clientId: makeClientId("Patricia", "McVarish-Salmina"),
         firstName: "Patricia",
         lastName: "McVarish-Salmina",
         email: "patricia.mcvarish-salmina@email.com",
@@ -133,7 +133,7 @@ export const projectClientData: ProjectClientMap = {
   "andre-2119-h-street": {
     clients: [
       {
-        clientId: makeClientId('David', 'Andre'),
+        clientId: makeClientId("David", "Andre"),
         firstName: "David",
         lastName: "Andre",
         email: "david.andre@email.com",
@@ -148,7 +148,7 @@ export const projectClientData: ProjectClientMap = {
   "fleming-veisze-1111-33rd-street": {
     clients: [
       {
-        clientId: makeClientId('Sarah', 'Fleming-Veisze'),
+        clientId: makeClientId("Sarah", "Fleming-Veisze"),
         firstName: "Sarah",
         lastName: "Fleming-Veisze",
         email: "sarah.fleming-veisze@email.com",
@@ -163,7 +163,7 @@ export const projectClientData: ProjectClientMap = {
   "ganson-2125-i-street": {
     clients: [
       {
-        clientId: makeClientId('William', 'Ganson'),
+        clientId: makeClientId("William", "Ganson"),
         firstName: "William",
         lastName: "Ganson",
         email: "william.ganson@email.com",
@@ -178,7 +178,7 @@ export const projectClientData: ProjectClientMap = {
   "decarlo-1141-swanston-dr": {
     clients: [
       {
-        clientId: makeClientId('Maria', 'DeCarlo'),
+        clientId: makeClientId("Maria", "DeCarlo"),
         firstName: "Maria",
         lastName: "DeCarlo",
         email: "maria.decarlo@email.com",
@@ -193,7 +193,7 @@ export const projectClientData: ProjectClientMap = {
   "green-920-u-street": {
     clients: [
       {
-        clientId: makeClientId('Christopher', 'Green'),
+        clientId: makeClientId("Christopher", "Green"),
         firstName: "Christopher",
         lastName: "Green",
         email: "christopher.green@email.com",
@@ -208,7 +208,7 @@ export const projectClientData: ProjectClientMap = {
   "kubein-plymouth-project": {
     clients: [
       {
-        clientId: makeClientId('Jennifer', 'Kubein'),
+        clientId: makeClientId("Jennifer", "Kubein"),
         firstName: "Jennifer",
         lastName: "Kubein",
         email: "jennifer.kubein@email.com",
@@ -223,7 +223,7 @@ export const projectClientData: ProjectClientMap = {
   "mcleod-joffe-2436-59th-street": {
     clients: [
       {
-        clientId: makeClientId('Thomas', 'McLeod-Joffe'),
+        clientId: makeClientId("Thomas", "McLeod-Joffe"),
         firstName: "Thomas",
         lastName: "McLeod-Joffe",
         email: "thomas.mcleod-joffe@email.com",
@@ -238,7 +238,7 @@ export const projectClientData: ProjectClientMap = {
   "piner-piner-haus-garage": {
     clients: [
       {
-        clientId: makeClientId('Richard', 'Piner'),
+        clientId: makeClientId("Richard", "Piner"),
         firstName: "Richard",
         lastName: "Piner",
         email: "richard.piner@email.com",
@@ -253,7 +253,7 @@ export const projectClientData: ProjectClientMap = {
   "rathbun-usfs-cabin": {
     clients: [
       {
-        clientId: makeClientId('Barbara', 'Rathbun'),
+        clientId: makeClientId("Barbara", "Rathbun"),
         firstName: "Barbara",
         lastName: "Rathbun",
         email: "barbara.rathbun@email.com",
@@ -268,7 +268,7 @@ export const projectClientData: ProjectClientMap = {
   "vasquez-gutierrez-2508-55th-street": {
     clients: [
       {
-        clientId: makeClientId('Carlos', 'Vasquez-Gutierrez'),
+        clientId: makeClientId("Carlos", "Vasquez-Gutierrez"),
         firstName: "Carlos",
         lastName: "Vasquez-Gutierrez",
         email: "carlos.vasquez-gutierrez@email.com",
@@ -283,7 +283,7 @@ export const projectClientData: ProjectClientMap = {
   "wilcox-1808-u-street": {
     clients: [
       {
-        clientId: makeClientId('Nancy', 'Wilcox'),
+        clientId: makeClientId("Nancy", "Wilcox"),
         firstName: "Nancy",
         lastName: "Wilcox",
         email: "nancy.wilcox@email.com",
@@ -298,7 +298,7 @@ export const projectClientData: ProjectClientMap = {
   "donaldson-2717-58th-street": {
     clients: [
       {
-        clientId: makeClientId('Celine', 'Donaldson'),
+        clientId: makeClientId("Celine", "Donaldson"),
         firstName: "Celine",
         lastName: "Donaldson",
         email: "celine.donaldson@email.com",

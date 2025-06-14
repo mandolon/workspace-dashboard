@@ -1,4 +1,3 @@
-
 import { ArchitectureRole } from '@/types/roles';
 import { getAllClients } from '@/data/projectClientData';
 
@@ -16,7 +15,7 @@ export interface TeamMember {
   role: ArchitectureRole;
 }
 
-// Admin and Team remain static for now
+// Admin and Team remain static, client rows are generated from actual clients per project
 export const TEAM_USERS: TeamMember[] = [
   {
     id: 't0',

@@ -37,7 +37,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     setClients([...project.clients]);
   }, [projectId]);
 
-  // Add new client handler
+  // Add new client handler (uses unique ID generator)
   const handleAddClient = () => {
     if (!newClient.firstName || !newClient.lastName) {
       toast({ title: "Missing info", description: "First & last name required" });
@@ -104,7 +104,7 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
     </div>
   );
 
-  // The client list view
+  // Client list (show clients, with their unique clientId, and option to add more)
   const clientList = (
     <>
       <div className="mb-2 text-sm font-semibold">Project Contacts</div>
@@ -112,7 +112,11 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
         {clients.map(client => (
           <div key={client.clientId} className={`border rounded px-3 py-2 flex items-center gap-3 ${client.isPrimary ? 'bg-green-50 border-green-300' : 'bg-background'}`}>
             <div className="flex-1">
-              <div className="font-medium">{client.firstName} {client.lastName} <span className="text-xs text-muted-foreground">({client.email})</span></div>
+              <div className="font-medium">
+                {client.firstName} {client.lastName}
+                <span className="ml-2 text-[10px] text-muted-foreground">(ID: {client.clientId})</span>
+                <span className="ml-2 text-xs text-muted-foreground">({client.email})</span>
+              </div>
               <div className="text-xs text-muted-foreground">{client.isPrimary ? "Primary Contact" : "Secondary Contact"}</div>
             </div>
             {!client.isPrimary && (
@@ -138,7 +142,6 @@ const ClientTabForm = ({ onSave }: ClientTabFormProps) => {
         {clientList}
       </div>
     ),
-    // For Project tab compatibility (project address etc.) we keep fake methods
     formData: {
       projectAddress: getClientData(projectId).projectAddress,
       startDate: "5/8/23",

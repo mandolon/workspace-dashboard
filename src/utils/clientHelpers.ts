@@ -1,7 +1,7 @@
 
 import { Client } from "@/data/projectClientData";
 
-// Quick random ID generator (you can later replace with uuid)
+// Generate unique ID per client (used on Add)
 export function generateClientId(firstName: string, lastName: string) {
   return (
     firstName.toLowerCase().replace(/[^a-z0-9]/g, "") +
