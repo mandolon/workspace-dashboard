@@ -1,10 +1,11 @@
+
 import React, { useState, createContext, useContext } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import PageSectionHeader from '@/components/shared/PageSectionHeader';
 import RoleSwitcher from '@/components/teams/RoleSwitcher';
 import TeamsContent from '@/components/teams/TeamsContent';
 import SelectUserDropdown from "@/components/teams/SelectUserDropdown";
-import ClientViewContent from "@/components/teams/ClientViewContent";
+// import ClientViewContent from "@/components/teams/ClientViewContent"; // Remove, now using TeamsContent
 
 // Provide CRM role through context
 export type CRMRoles = "admin" | "team" | "client";
@@ -21,9 +22,6 @@ const TeamsPage = () => {
   const [role, setRole] = useState<CRMRoles>("admin");
   const [activeTab, setActiveTab] = useState<CRMRoles>("admin");
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-
-  // When viewing as client, we could allow a "select project" or pick a demo projectId
-  // For now, leave projectId undefined to use the ClientViewContent fallback
 
   return (
     <CRMRoleContext.Provider value={role}>
@@ -58,11 +56,8 @@ const TeamsPage = () => {
             ))}
           </div>
           <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full">
-            {(activeTab === "admin" || activeTab === "team") && (
+            {(activeTab === "admin" || activeTab === "team" || activeTab === "client") && (
               <TeamsContent tab={activeTab} selectedUserId={selectedUserId} />
-            )}
-            {activeTab === "client" && (
-              <ClientViewContent />
             )}
           </div>
         </div>

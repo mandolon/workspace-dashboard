@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -5,25 +6,16 @@ import TeamMembersSummary from './TeamMembersSummary';
 import { TEAM_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 
-// Helper for last active/ status for demo purposes
-const memberStatus: Record<string, { lastActive: string; status: 'Active' | 'Inactive' | 'Pending' }> = {
-  'AL': { lastActive: 'Jun 2, 2025', status: 'Active' },
-  'MP': { lastActive: 'Jun 3, 2025', status: 'Active' },
-  'SS': { lastActive: 'May 28, 2025', status: 'Active' },
-  'JJ': { lastActive: 'Jun 1, 2025', status: 'Inactive' },
-  'RH': { lastActive: 'May 30, 2025', status: 'Pending' },
-  'JH': { lastActive: 'May 29, 2025', status: 'Active' }
-};
-
 interface TeamsContentProps {
-  tab: "admin" | "team";
+  tab: "admin" | "team" | "client";
   selectedUserId?: string;
 }
 
 // We will map CRM role to filter for tab
-const getCrmRoleForTab = (tab: "admin" | "team") => {
+const getCrmRoleForTab = (tab: "admin" | "team" | "client") => {
   if (tab === "admin") return ["Admin"];
   if (tab === "team") return ["Team"];
+  if (tab === "client") return ["Client"];
   return [];
 };
 
@@ -31,13 +23,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Store team members as local state so we can update titleRole
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() =>
-    TEAM_USERS.map(user => ({
-      ...user,
-      lastActive: memberStatus[user.name]?.lastActive || '—',
-      status: memberStatus[user.name]?.status || 'Active'
-    }))
-  );
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
 
   const roles: ArchitectureRole[] = [
     'Architect',

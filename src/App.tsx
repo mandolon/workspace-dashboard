@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,6 +17,8 @@ import WhiteboardsPage from "./pages/WhiteboardsPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 import TasksPage from "./pages/TasksPage";
+import ClientAccountPage from "./pages/ClientAccountPage";
+import ClientDashboard from "./pages/ClientDashboard";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -65,6 +66,8 @@ const App = () => {
                         <Route path="/task/:taskId" element={<TaskDetailPage />} />
                         <Route path="/inbox" element={<InboxPage />} />
                         <Route path="/teams" element={<TeamsPage />} />
+                        <Route path="/client/account" element={<ClientAccountPage />} />
+                        <Route path="/client/dashboard" element={<ClientDashboard />} />
                         <Route path="/invoices" element={<InvoicePage />} />
                         <Route path="/timesheets" element={<TimesheetsPage />} />
                         <Route path="/whiteboards" element={<WhiteboardsPage />} />
@@ -85,4 +88,3 @@ const App = () => {
 };
 
 export default App;
-
