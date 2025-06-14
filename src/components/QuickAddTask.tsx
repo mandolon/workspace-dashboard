@@ -29,6 +29,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const [selectedProject, setSelectedProject] = useState('');
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const taskNameInputRef = useRef<HTMLInputElement>(null);
 
   const availableProjects = getAvailableProjects();
 
@@ -123,11 +124,18 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
     }
   };
 
-  const handleProjectSelect = (project: { displayName: string; projectId: string }, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation(); // <--- prevent parent event from firing
+  const handleProjectSelect = (
+    project: { displayName: string; projectId: string },
+    e?: React.MouseEvent
+  ) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     setSelectedProject(project.displayName);
     setShowProjectDropdown(false);
     setSearchTerm('');
+    taskNameInputRef.current?.focus();
   };
 
   const handleStatusIconClick = () => {
@@ -201,6 +209,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
               onKeyDown={handleKeyDown}
               className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:font-medium placeholder:text-xs placeholder:text-muted-foreground"
               autoFocus
+              ref={taskNameInputRef}
             />
             {renderProjectDropdown()}
           </div>
