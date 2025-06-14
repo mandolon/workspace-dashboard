@@ -8,7 +8,8 @@ interface ClientTabProps {
 }
 
 const ClientTab = ({ onDataChange }: ClientTabProps) => {
-  const form = ClientTabForm({ 
+  // Only pass one argument here
+  const form = ClientTabForm({
     onSave: () => {
       if (onDataChange) {
         onDataChange();
@@ -28,4 +29,3 @@ const ClientTab = ({ onDataChange }: ClientTabProps) => {
 };
 
 export default ClientTab;
-
