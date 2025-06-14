@@ -49,9 +49,9 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
         lastSavedValue.current = desc;
       } finally {
         setSaving(false);
-        // Keep "Saving..." for 500ms after save finishes for better UX
+        // Show Auto-save... a bit longer (900ms) after save finishes
         if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
-        fadeTimeout.current = setTimeout(() => setShowSaving(false), 500);
+        fadeTimeout.current = setTimeout(() => setShowSaving(false), 900);
         setDirty(false);
       }
     }, 1800); // Save after 1.8 seconds inactivity
@@ -76,8 +76,9 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
         lastSavedValue.current = desc;
       } finally {
         setSaving(false);
+        // Show Auto-save... a bit longer (900ms) after save finishes
         if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
-        fadeTimeout.current = setTimeout(() => setShowSaving(false), 500);
+        fadeTimeout.current = setTimeout(() => setShowSaving(false), 900);
         setDirty(false);
       }
     }
@@ -105,7 +106,7 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
         disabled={disabled}
         aria-label="Task description"
       />
-      {/* Fixed height to avoid shifting layout; absolutely positioned 'Saving...' */}
+      {/* Fixed height to avoid shifting layout; absolutely positioned 'Auto-save...' */}
       <div className="relative" style={{ minHeight: 16, height: 16 }}>
         {showSaving && (
           <div
@@ -113,7 +114,7 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
             style={{ pointerEvents: 'none' }}
             aria-live="polite"
           >
-            Saving...
+            Auto-save...
           </div>
         )}
       </div>
