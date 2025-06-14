@@ -1,7 +1,6 @@
-
 import React, { useMemo, useCallback } from 'react';
 import TaskDialog from './TaskDialog';
-import DragDropTaskBoard from './DragDropTaskBoard';
+import TaskBoardContent from './TaskBoardContent';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { useTaskNavigation } from '@/hooks/useTaskNavigation';
 import { TaskGroup } from '@/types/task';
@@ -93,7 +92,7 @@ const TaskBoard = React.memo(() => {
 
   return (
     <>
-      <DragDropTaskBoard
+      <TaskBoardContent
         taskGroups={taskGroups}
         showQuickAdd={showQuickAdd}
         refreshTrigger={refreshTrigger}

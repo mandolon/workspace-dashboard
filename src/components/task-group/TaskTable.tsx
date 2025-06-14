@@ -1,9 +1,7 @@
 
-import React, { forwardRef } from 'react';
-import { Table, TableBody } from '@/components/ui/table';
-import { useDroppable } from '@dnd-kit/core';
-import TaskTableHeader from './TaskTableHeader';
-import DraggableTaskRow from './DraggableTaskRow';
+import React from 'react';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import TaskRow from './TaskRow';
 import { Task } from '@/types/task';
 
 interface TaskTableProps {
@@ -25,7 +23,7 @@ interface TaskTableProps {
   onTaskDeleted?: () => void;
 }
 
-const TaskTable = forwardRef<HTMLDivElement, TaskTableProps>(({
+const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
   tasks,
   editingTaskId,
   editingValue,
@@ -43,51 +41,46 @@ const TaskTable = forwardRef<HTMLDivElement, TaskTableProps>(({
   onAddCollaborator,
   onTaskDeleted
 }, ref) => {
-  // Get status from first task if available
-  const status = tasks.length > 0 ? tasks[0].status : 'unknown';
-  
-  const { setNodeRef, isOver } = useDroppable({
-    id: status,
-  });
-
-  console.log('TaskTable for status:', status, 'isOver:', isOver, 'tasks:', tasks.length);
+  const memoizedTasks = React.useMemo(() => tasks, [tasks]);
 
   return (
-    <div ref={ref} className="space-y-0">
-      <TaskTableHeader />
-      <div 
-        ref={setNodeRef} 
-        className={`min-h-[100px] transition-colors ${isOver ? 'bg-accent/20' : ''} rounded-md`}
-      >
-        <Table>
-          <TableBody>
-            {tasks.map((task) => (
-              <DraggableTaskRow
-                key={task.id}
-                task={task}
-                editingTaskId={editingTaskId}
-                editingValue={editingValue}
-                onSetEditingValue={onSetEditingValue}
-                onTaskClick={onTaskClick}
-                onTaskNameClick={onTaskNameClick}
-                onEditClick={onEditClick}
-                onSaveEdit={onSaveEdit}
-                onCancelEdit={onCancelEdit}
-                onKeyDown={onKeyDown}
-                onTaskStatusClick={onTaskStatusClick}
-                onRemoveAssignee={onRemoveAssignee}
-                onRemoveCollaborator={onRemoveCollaborator}
-                onAssignPerson={onAssignPerson}
-                onAddCollaborator={onAddCollaborator}
-                onTaskDeleted={onTaskDeleted}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+    <div ref={ref}>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[50%] pl-8">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[8%]">Files</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[17%]">Date Created</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-2 w-[25%]">Assigned to</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {memoizedTasks.map((task) => (
+            <TaskRow
+              key={task.id}
+              task={task}
+              editingTaskId={editingTaskId}
+              editingValue={editingValue}
+              onSetEditingValue={onSetEditingValue}
+              onTaskClick={onTaskClick}
+              onTaskNameClick={onTaskNameClick}
+              onEditClick={onEditClick}
+              onSaveEdit={onSaveEdit}
+              onCancelEdit={onCancelEdit}
+              onKeyDown={onKeyDown}
+              onTaskStatusClick={onTaskStatusClick}
+              onRemoveAssignee={onRemoveAssignee}
+              onRemoveCollaborator={onRemoveCollaborator}
+              onAssignPerson={onAssignPerson}
+              onAddCollaborator={onAddCollaborator}
+              onTaskDeleted={onTaskDeleted}
+            />
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
-});
+}));
 
 TaskTable.displayName = "TaskTable";
 
