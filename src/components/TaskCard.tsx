@@ -3,33 +3,13 @@ import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getRandomColor, getInitials, formatDate } from '@/utils/taskUtils';
-
-interface Task {
-  id: number;
-  title: string;
-  project: string;
-  estimatedCompletion: string;
-  dateCreated: string;
-  dueDate: string;
-  assignee: {
-    name: string;
-    avatar: string; // This seems to be a placeholder, actual avatar rendering uses initials/color
-  };
-  hasAttachment: boolean;
-  collaborators?: Array<{
-    name: string;
-    avatar: string; // Same as above
-  }>;
-}
+import { Task } from '@/types/task'; // <-- IMPORT correct task interface
 
 interface TaskCardProps {
   task: Task;
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
-  // For assignee and collaborators, attempt to check if "avatarColor" is available
-  // Note: adapt as needed if the data shape for assignee/collaborator includes avatarColor
-
   return (
     <div className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-accent/50 rounded-lg transition-colors group">
       {/* Checkbox and Task Info */}
@@ -53,7 +33,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       {/* Files */}
       <div className="col-span-1 flex items-center">
         {task.hasAttachment && (
-          <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center"> {/* Increased attachment icon container for consistency if desired, though not an avatar */}
+          <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
             <Paperclip className="w-3 h-3 text-orange-600" strokeWidth="2" />
           </div>
         )}
@@ -71,16 +51,18 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
       {/* Assignee */}
       <div className="col-span-1 flex items-center justify-end gap-1">
-        <div className="flex items-center -space-x-1"> {/* Consider -space-x-1.5 or -space-x-2 if avatars overlap too much */}
+        <div className="flex items-center -space-x-1">
+          {/* ASSIGNEE */}
           <div className={cn(
             "w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium",
             getRandomColor(
-              task.assignee.name, 
-              task.assignee.avatarColor // Pass color if available
+              task.assignee?.name ?? '',
+              task.assignee?.avatarColor // Optional chaining in case assignee is null
             )
           )}>
-            {getInitials(task.assignee.name)}
+            {getInitials(task.assignee?.name ?? '')}
           </div>
+          {/* COLLABORATORS */}
           {task.collaborators?.map((collaborator, index) => (
             <div
               key={index}
