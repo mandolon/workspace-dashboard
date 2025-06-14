@@ -1,13 +1,9 @@
 
 import React, { useMemo, useCallback } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { X, Users } from 'lucide-react';
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';
-import { getInitials } from '@/utils/taskUtils';
-import { getAvatarColor } from '@/utils/avatarColors';
 import { format } from 'date-fns';
-import TaskDetailAssignees from './TaskDetailAssignees';
+import TaskRowAssignees from '../task-group/TaskRowAssignees';
 
 interface TaskDetailFieldsProps {
   task: any;
@@ -18,16 +14,13 @@ interface TaskDetailFieldsProps {
   removeCollaborator?: (taskId: number | string, collaboratorIndex: number) => void;
 }
 
-// Define a virtual "Team" assignee
-const VIRTUAL_TEAM_ASSIGNEE = {
-  name: "Team",
-  fullName: "Team",
-  avatar: "bg-black",
-  avatarColor: "bg-black"
-};
-
 const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
-  task, currentUser, assignPerson, removeAssignee, addCollaborator, removeCollaborator
+  task,
+  currentUser,
+  assignPerson,
+  removeAssignee,
+  addCollaborator,
+  removeCollaborator
 }) => {
   const formatCreatedDate = (dateString: string) => {
     try {
@@ -45,25 +38,24 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
     return createdBy;
   };
 
-  // Assignee UI logic
-  const teamAssignees = useMemo(() => {
-    return TEAM_USERS.filter(member => member.crmRole === 'Team');
-  }, []);
-
-  const handleAssign = useCallback((person: { name: string; avatar: string; fullName?: string }) => {
-    assignPerson(task.id, person);
-  }, [assignPerson, task.id]);
-
-  const handleRemove = useCallback((e: React.MouseEvent) => {
+  // These handlers match TaskRowAssignees' expected signatures
+  const handleRemoveAssignee = useCallback((taskId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    removeAssignee(task.id);
-  }, [removeAssignee, task.id]);
+    removeAssignee(taskId);
+  }, [removeAssignee]);
 
-  // Enforce CRM/TEAM_USERS colors/info for assignee
-  const canonicalAssignee = getCRMUser(task.assignee);
+  const handleRemoveCollaborator = useCallback((taskId: number, collaboratorIndex: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (removeCollaborator) removeCollaborator(taskId, collaboratorIndex);
+  }, [removeCollaborator]);
 
-  // Display support for "Team" assignment
-  const isTeamAssignee = canonicalAssignee && (canonicalAssignee.name === "Team" || canonicalAssignee.fullName === "Team");
+  const handleAssignPerson = useCallback((taskId: number, person: any) => {
+    assignPerson(taskId, person);
+  }, [assignPerson]);
+
+  const handleAddCollaborator = useCallback((taskId: number, person: any) => {
+    if (addCollaborator) addCollaborator(taskId, person);
+  }, [addCollaborator]);
 
   return (
     <div className="grid grid-cols-4 gap-3">
@@ -71,30 +63,26 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
         <label className="text-xs text-muted-foreground">
           Created by
         </label>
-        <div className="text-xs">
-          {getCreatedByName(task.createdBy)}
-        </div>
+        <div className="text-xs">{getCreatedByName(task.createdBy)}</div>
       </div>
       <div className="space-y-1">
         <label className="text-xs text-muted-foreground">
           Date Created
         </label>
-        <div className="text-xs">
-          {formatCreatedDate(task.createdAt)}
-        </div>
+        <div className="text-xs">{formatCreatedDate(task.createdAt)}</div>
       </div>
-      {/* ------ ASSIGNEE & COLLABORATORS (now supports multiple assignees) ------ */}
+      {/* ASSIGNED TO - uses TaskRowAssignees for perfect consistency with table */}
       <div className="space-y-1">
         <label className="text-xs text-muted-foreground">
           Assigned to
         </label>
         <div className="text-xs">
-          <TaskDetailAssignees
+          <TaskRowAssignees
             task={task}
-            assignPerson={assignPerson}
-            addCollaborator={addCollaborator!}
-            removeAssignee={removeAssignee}
-            removeCollaborator={removeCollaborator!}
+            onRemoveAssignee={handleRemoveAssignee}
+            onRemoveCollaborator={handleRemoveCollaborator}
+            onAssignPerson={handleAssignPerson}
+            onAddCollaborator={handleAddCollaborator}
           />
         </div>
       </div>
@@ -102,9 +90,7 @@ const TaskDetailFields: React.FC<TaskDetailFieldsProps> = ({
         <label className="text-xs text-muted-foreground">
           Marked Complete
         </label>
-        <div className="text-xs text-muted-foreground">
-          —
-        </div>
+        <div className="text-xs text-muted-foreground">—</div>
       </div>
     </div>
   );
