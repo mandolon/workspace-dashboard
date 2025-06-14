@@ -22,12 +22,16 @@ const ExcalidrawWhiteboard: React.FC = () => {
     appState: {},
     files: {},
   });
+  // Track if we've hydrated with initialData yet
+  const [sceneLoaded, setSceneLoaded] = useState(false);
   const { currentUser } = useUser();
 
-  // Load whiteboard data from Supabase
+  // Fetch whiteboard from Supabase
   useEffect(() => {
+    // Reset flags for new board
+    setLoading(true);
+    setSceneLoaded(false); // So new board can rehydrate
     const fetchWhiteboard = async () => {
-      setLoading(true);
       const { data, error } = await supabase
         .from("whiteboards")
         .select("excalidraw_data,title")
@@ -47,13 +51,22 @@ const ExcalidrawWhiteboard: React.FC = () => {
     // eslint-disable-next-line
   }, [id]);
 
+  // After initial data is parsed into state, mark as loaded
+  useEffect(() => {
+    // Only run when excalidrawData is freshly loaded from Supabase
+    if (excalidrawData && !sceneLoaded) {
+      setScene(excalidrawData);
+      setSceneLoaded(true);
+    }
+    // Don't rerun if sceneLoaded
+  }, [excalidrawData, sceneLoaded]);
+
   // Save handler
   const handleSave = async () => {
-    // Save current scene
     const { elements, appState, files } = scene;
-    // Store as plain JS arrays/objects
     const newData = {
-      elements: Array.isArray(elements) ? elements : Array.from(elements ?? []),
+      // elements will already be readonly, that's fine to send to backend/Supabase
+      elements: elements,
       appState,
       files: files ?? {},
     };
@@ -80,8 +93,12 @@ const ExcalidrawWhiteboard: React.FC = () => {
       </div>
       <div className="border rounded-lg overflow-hidden bg-background shadow h-[70vh]">
         <Excalidraw
-          initialData={excalidrawData ?? undefined}
-          onChange={(elements, appState, files) => setScene({ elements, appState, files })}
+          initialData={!sceneLoaded ? excalidrawData ?? undefined : undefined}
+          onChange={(elements, appState, files) => {
+            // Only save while interactive; ignore first `onChange` if not sceneLoaded
+            if (!sceneLoaded) return;
+            setScene({ elements, appState, files });
+          }}
         />
       </div>
     </div>
