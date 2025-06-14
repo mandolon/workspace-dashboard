@@ -1,9 +1,8 @@
 
 import React from "react";
-import { select, line } from "lucide-react";
 import {
   Pen, Highlighter, RectangleHorizontal, Circle,
-  Text as TextIcon, Eraser, CircleArrowUp, ZoomIn, ZoomOut
+  Text as TextIcon, Eraser, CircleArrowUp, ZoomIn, ZoomOut, icons
 } from "lucide-react";
 import { useEditor } from "@tldraw/tldraw";
 import { cn } from "@/lib/utils";
@@ -13,12 +12,12 @@ const TOOL_BUTTONS: Array<{
   icon: React.ReactNode,
   label: string,
 }> = [
-  { key: "select", icon: React.createElement(select), label: "Select" },
+  { key: "select", icon: React.createElement(icons["select"]), label: "Select" },
   { key: "zoom-in", icon: <ZoomIn />, label: "Zoom In" },
   { key: "zoom-out", icon: <ZoomOut />, label: "Zoom Out" },
   { key: "draw", icon: <Pen />, label: "Pen" },
   { key: "highlight", icon: <Highlighter />, label: "Highlighter" },
-  { key: "line", icon: React.createElement(line), label: "Line" },
+  { key: "line", icon: React.createElement(icons["line"]), label: "Line" },
   { key: "rectangle", icon: <RectangleHorizontal />, label: "Rectangle" },
   { key: "ellipse", icon: <Circle />, label: "Ellipse" },
   { key: "text", icon: <TextIcon />, label: "Text" },
@@ -35,7 +34,6 @@ const STROKE_WIDTHS = [
   { w: 8, label: "Thick" },
 ];
 
-// Connects to the tldraw editor context and exposes tool/color/stroke controls
 const CustomTldrawToolbar: React.FC = () => {
   const editor = useEditor();
 
@@ -49,8 +47,8 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setCurrentStyle({ color });
-      editor.setCurrentStyle({ size: stroke });
+      editor.setStyleForNextShape({ color });
+      editor.setStyleForNextShape({ size: stroke });
     }
   }, [color, stroke, editor]);
 
@@ -71,7 +69,7 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setCurrentStyle({ color: "#fff176", opacity: 0.32, size: 6 });
+      editor.setStyleForNextShape({ color: "#fff176", opacity: 0.32, size: 6 });
       setColor("#fff176");
       setStroke(6);
     }
@@ -154,3 +152,4 @@ const CustomTldrawToolbar: React.FC = () => {
 };
 
 export default CustomTldrawToolbar;
+
