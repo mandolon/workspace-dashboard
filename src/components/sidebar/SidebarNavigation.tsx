@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -20,6 +21,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useUser } from '@/contexts/UserContext';
 
 interface SidebarNavigationProps {
   isCollapsed: boolean;
@@ -29,6 +31,12 @@ interface SidebarNavigationProps {
 
 const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: SidebarNavigationProps) => {
   const navigate = useNavigate();
+  const { currentUser, isImpersonating, impersonatedUser } = useUser();
+
+  // Determine if we are in "client mode"
+  const clientMode =
+    (isImpersonating && impersonatedUser && impersonatedUser.role === 'Client') ||
+    (!isImpersonating && currentUser.role === 'Client');
 
   const handleNavigateHome = useCallback(() => navigate('/'), [navigate]);
   const handleNavigateTasks = useCallback(() => navigate('/tasks'), [navigate]);
@@ -41,18 +49,28 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
   const handleNavigateHelp = useCallback(() => navigate('/help'), [navigate]);
 
-  const mainNavItems = useMemo(() => [
-    { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
-    { icon: ClipboardList, label: 'Tasks', active: false, onClick: handleNavigateTasks },
-    { icon: Inbox, label: 'Inbox', active: false, onClick: handleNavigateInbox },
-    { icon: MessageSquare, label: 'Chat', active: false, onClick: handleNavigateChat },
-    { icon: Users, label: 'Teams', active: false, onClick: handleNavigateTeams },
-    { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
-    { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
-    { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
-    { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
-    { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
-  ], [
+  // For admin/team: full nav; for client: only dashboard & help
+  const mainNavItems = useMemo(() => {
+    if (clientMode) {
+      return [
+        { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
+        { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
+      ];
+    }
+    return [
+      { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
+      { icon: ClipboardList, label: 'Tasks', active: false, onClick: handleNavigateTasks },
+      { icon: Inbox, label: 'Inbox', active: false, onClick: handleNavigateInbox },
+      { icon: MessageSquare, label: 'Chat', active: false, onClick: handleNavigateChat },
+      { icon: Users, label: 'Teams', active: false, onClick: handleNavigateTeams },
+      { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
+      { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
+      { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
+      { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
+      { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
+    ];
+  }, [
+    clientMode,
     handleNavigateHome,
     handleNavigateTasks,
     handleNavigateInbox,
