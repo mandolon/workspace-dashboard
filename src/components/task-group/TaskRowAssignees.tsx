@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
@@ -95,11 +94,11 @@ const TaskRowAssignees = ({
           <button
             type="button"
             aria-label="Add person"
-            className="ml-2 w-7 h-7 rounded-full flex items-center justify-center border-2 border-dashed border-muted-foreground hover:border-foreground transition text-muted-foreground hover:text-foreground bg-white dark:bg-background"
+            className="ml-2 w-5 h-5 rounded-full flex items-center justify-center border-2 border-dashed border-muted-foreground hover:border-foreground transition text-muted-foreground hover:text-foreground bg-white dark:bg-background"
             onClick={e => { e.stopPropagation(); setOpen(v => !v); }}
             tabIndex={0}
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3 h-3" />
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" className="p-1 w-40 bg-popover z-50 border border-border rounded shadow-xl">
