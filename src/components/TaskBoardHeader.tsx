@@ -6,11 +6,7 @@ const TaskBoardHeader = () => {
   return (
     <div className="border-b border-border px-4 py-2">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-base">Task Board</span>
-          </div>
-        </div>
+        <div /> {/* Title removed. Alignment preserved for consistency */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             <Users className="w-4 h-4" />
