@@ -50,7 +50,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     onSave();
   };
 
-  // Project Information Form Fields
+  // Project Information Form Fields: Address, City (left), State (right)
   const projectInformationFields = [
     {
       label: 'Project Address',
@@ -66,6 +66,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('city', value),
       type: 'input' as const,
       placeholder: 'Enter city...',
+      span: 'half' as const,
       onKeyDown: handleKeyDown
     },
     {
@@ -74,6 +75,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('state', value),
       type: 'input' as const,
       placeholder: 'Enter state...',
+      span: 'half' as const,
       onKeyDown: handleKeyDown
     },
     {
