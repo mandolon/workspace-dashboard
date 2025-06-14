@@ -44,6 +44,18 @@ export const useTaskOperations = () => {
     }
   }, [triggerRefresh]);
 
+  const restoreDeletedTask = useCallback((taskId: number) => {
+    const restoredTask = restoreTask(taskId);
+    if (restoredTask) {
+      toast({
+        title: "Task restored",
+        description: "Task has been restored successfully.",
+        duration: 3000,
+      });
+      triggerRefresh();
+    }
+  }, [toast, triggerRefresh]);
+
   const deleteTask = useCallback(async (taskId: number) => {
     try {
       const deletedTask = softDeleteTask(taskId, "AL");
@@ -98,18 +110,6 @@ export const useTaskOperations = () => {
       });
     }
   }, [toast, triggerRefresh, navigate, dismiss, restoreDeletedTask]);
-
-  const restoreDeletedTask = useCallback((taskId: number) => {
-    const restoredTask = restoreTask(taskId);
-    if (restoredTask) {
-      toast({
-        title: "Task restored",
-        description: "Task has been restored successfully.",
-        duration: 3000,
-      });
-      triggerRefresh();
-    }
-  }, [toast, triggerRefresh]);
 
   const archiveTask = useCallback((taskId: number) => {
     const taskToArchive = customTasks.find(task => task.id === taskId);
