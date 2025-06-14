@@ -1,17 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Paperclip } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import TaskStatusIcon from './TaskStatusIcon';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
-import QuickAddAttachments from './quick-add/QuickAddAttachments';
-import QuickAddAssigneePopover from './quick-add/QuickAddAssigneePopover';
-import QuickAddProjectDropdown from './quick-add/QuickAddProjectDropdown';
+import QuickAddTaskMainInput from './quick-add/QuickAddTaskMainInput';
+import QuickAddTaskActions from './quick-add/QuickAddTaskActions';
 import { TEAM_USERS } from '@/utils/teamUsers';
-import { getRandomColor } from '@/utils/taskUtils';
 
 interface QuickAddTaskPerson {
   name: string;
@@ -26,17 +19,8 @@ interface QuickAddTaskProps {
   defaultStatus: string;
 }
 
-function getAbsoluteRect(element: HTMLElement) {
-  const rect = element.getBoundingClientRect();
-  return {
-    top: rect.top + window.scrollY,
-    left: rect.left + window.scrollX,
-    width: rect.width,
-    height: rect.height
-  };
-}
-
 const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) => {
+  // Main state kept centralized
   const [taskName, setTaskName] = useState('');
   const [selectedProject, setSelectedProject] = useState('');
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
@@ -44,39 +28,30 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const taskNameInputRef = useRef<HTMLInputElement>(null);
 
   const availableProjects = getAvailableProjects();
-
-  const [assignee, setAssignee] = useState<QuickAddTaskPerson | null>(null);
-  const [showAssigneePopover, setShowAssigneePopover] = useState(false);
-
   const filteredProjects = availableProjects.filter(project =>
     project.displayName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const canSave = !!taskName.trim() && !!selectedProject;
-
+  const [assignee, setAssignee] = useState<QuickAddTaskPerson | null>(null);
+  const [showAssigneePopover, setShowAssigneePopover] = useState(false);
   const projectDropdownAnchor = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<{top: number; left: number; width: number} | null>(null);
-
+  const [dropdownStyle, setDropdownStyle] = useState<{ top: number; left: number; width: number } | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
 
   const { addAttachments } = useTaskAttachmentContext();
+  const canSave = !!taskName.trim() && !!selectedProject;
 
   useEffect(() => {
     if (showProjectDropdown && projectDropdownAnchor.current) {
-      const anchorRect = getAbsoluteRect(projectDropdownAnchor.current);
-      const dropdownWidth = anchorRect.width < 280 ? 280 : anchorRect.width;
-      let top = anchorRect.top + anchorRect.height + 5;
-      let left = anchorRect.left;
-
+      const rect = projectDropdownAnchor.current.getBoundingClientRect();
+      const dropdownWidth = rect.width < 280 ? 280 : rect.width;
+      let top = rect.top + window.scrollY + rect.height + 5;
+      let left = rect.left + window.scrollX;
       const rightEdge = left + dropdownWidth;
       const viewportWidth = window.innerWidth;
-
-      if (rightEdge > viewportWidth - 8) {
-        left = viewportWidth - dropdownWidth - 8;
-      }
+      if (rightEdge > viewportWidth - 8) left = viewportWidth - dropdownWidth - 8;
       if (left < 8) left = 8;
-
       setDropdownStyle({ top, left, width: dropdownWidth });
     }
   }, [showProjectDropdown]);
@@ -94,7 +69,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       const el = document.getElementById('quick-add-project-list-dropdown');
       if (el) {
         const rect = el.getBoundingClientRect();
-        if(rect.bottom > window.innerHeight) {
+        if (rect.bottom > window.innerHeight) {
           window.scrollBy({ top: rect.bottom - window.innerHeight + 12, behavior: "smooth" });
         } else if (rect.top < 0) {
           window.scrollBy({ top: rect.top - 12, behavior: "smooth" });
@@ -118,10 +93,10 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       projectId: projectId,
       project: selectedProject || 'No Project',
       estimatedCompletion: '—',
-      dateCreated: new Date().toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        year: '2-digit' 
+      dateCreated: new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: '2-digit'
       }),
       dueDate: '—',
       assignee: assignee ? assignee : { name: 'ME', avatar: 'bg-gray-500' },
@@ -129,9 +104,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
       attachments: attachedFiles,
       status: defaultStatus,
     };
-
     onSave(newTask);
-
     if (attachedFiles.length > 0) {
       addAttachments(String(newTask.id), attachedFiles, assignee?.name || "ME");
     }
@@ -151,8 +124,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   const handleProjectSelect = (
-    project: { displayName: string; projectId: string },
-    e?: React.MouseEvent
+    project: { displayName: string; projectId: string }, e?: React.MouseEvent
   ) => {
     if (e) {
       e.stopPropagation();
@@ -167,72 +139,39 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   return (
     <div className="px-4 py-2 bg-background border border-border rounded transition-colors duration-100">
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
-        {/* Name column */}
-        <div className="col-span-6 flex items-center gap-2 pl-4">
-          <TaskStatusIcon status={defaultStatus} onClick={() => {}} />
-          <div className="flex-1 relative">
-            <button
-              ref={projectDropdownAnchor}
-              className="block text-left text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-1 transition-colors"
-              onClick={() => setShowProjectDropdown((prev) => !prev)}
-              style={{ background: "transparent" }}
-            >
-              {selectedProject || 'Select List...'}
-            </button>
-            <Input
-              placeholder="Task Name or type '/' for commands"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="font-medium text-xs text-foreground h-auto p-0 border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:font-medium placeholder:text-xs placeholder:text-muted-foreground"
-              autoFocus
-              ref={taskNameInputRef}
-            />
-            <QuickAddProjectDropdown
-              show={showProjectDropdown}
-              dropdownStyle={dropdownStyle}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              filteredProjects={filteredProjects}
-              onSelect={handleProjectSelect}
-              searchInputRef={searchInputRef}
-              onMouseDown={e => e.stopPropagation()}
-            />
-          </div>
-        </div>
-        {/* Empty space */}
-        <div className="col-span-2"></div>
-        {/* Action buttons */}
-        <div className="col-span-4 flex items-center justify-end gap-2 overflow-visible">
-          <QuickAddAttachments files={attachedFiles} setFiles={setAttachedFiles} />
-          <QuickAddAssigneePopover
-            assignee={assignee}
-            setAssignee={setAssignee}
-            showAssigneePopover={showAssigneePopover}
-            setShowAssigneePopover={setShowAssigneePopover}
-          />
-          <Separator orientation="vertical" className="h-4 bg-border" />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => { onCancel(); setAssignee(null); }}
-            className="text-xs px-3 py-1 h-6 text-muted-foreground hover:text-foreground bg-background hover:bg-accent transition-colors"
-          >
-            Cancel
-          </Button>
-          <Button
-            size="sm"
-            onClick={handleSave}
-            className="text-xs px-3 py-1 h-6 bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-400"
-            disabled={!canSave}
-          >
-            Save
-          </Button>
-        </div>
+        <QuickAddTaskMainInput
+          colSpan={6}
+          taskName={taskName}
+          setTaskName={setTaskName}
+          selectedProject={selectedProject}
+          setShowProjectDropdown={setShowProjectDropdown}
+          showProjectDropdown={showProjectDropdown}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filteredProjects={filteredProjects}
+          onProjectSelect={handleProjectSelect}
+          taskNameInputRef={taskNameInputRef}
+          projectDropdownAnchor={projectDropdownAnchor}
+          searchInputRef={searchInputRef}
+          dropdownStyle={dropdownStyle}
+          handleKeyDown={handleKeyDown}
+        />
+        <div className="col-span-2" />
+        <QuickAddTaskActions
+          colSpan={4}
+          attachedFiles={attachedFiles}
+          setAttachedFiles={setAttachedFiles}
+          assignee={assignee}
+          setAssignee={setAssignee}
+          showAssigneePopover={showAssigneePopover}
+          setShowAssigneePopover={setShowAssigneePopover}
+          onCancel={() => { onCancel(); setAssignee(null); }}
+          onSave={handleSave}
+          canSave={canSave}
+        />
       </div>
     </div>
   );
 };
 
 export default QuickAddTask;
-
