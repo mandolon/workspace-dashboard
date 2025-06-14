@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -80,9 +79,11 @@ const TaskRowAssignees = React.memo(({
             <DropdownMenuTrigger asChild>
               <button
                 onClick={stopPropagation}
-                className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors"
+                className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors bg-transparent"
+                aria-label="Assign to"
+                type="button"
               >
-                <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
+                <UserPlus className="w-3 h-3 text-white dark:text-white" strokeWidth="2" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40 bg-popover">
@@ -95,7 +96,7 @@ const TaskRowAssignees = React.memo(({
                   <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
                     {person.name}
                   </div>
-                  <span>{person.fullName}</span>
+                  <span>{person.name}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
