@@ -1,20 +1,23 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Canvas, Rect, Circle, IText } from "fabric";
 import { useParams } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
+import { WhiteboardToolbar } from "./WhiteboardToolbar";
 
 const DEFAULT_WIDTH = 1100;
 const DEFAULT_HEIGHT = 700;
+
+// "draw" is freehand, "select" disables drawing mode, shapes/text insert, "clear"/"save" are actions
+type Tool = "draw" | "select" | "rectangle" | "circle" | "text" | "clear" | "save";
 
 const FabricWhiteboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<Canvas | null>(null);
-  // In-memory loading & save fallback
   const loadedOnce = useRef(false);
+
+  const [activeTool, setActiveTool] = useState<Tool>("draw");
 
   // Load whiteboard data from Supabase
   useEffect(() => {
@@ -23,11 +26,14 @@ const FabricWhiteboard: React.FC = () => {
 
     async function loadBoard() {
       toast("Loading whiteboard...");
-      const { data, error } = await supabase
-        .from("whiteboards")
-        .select("fabric_data, title")
-        .eq("id", id)
-        .maybeSingle();
+      const { data, error } = await import("@/integrations/supabase/client").then(
+        mod =>
+          mod.supabase
+            .from("whiteboards")
+            .select("fabric_data, title")
+            .eq("id", id)
+            .maybeSingle()
+      );
 
       if (unsub) return;
 
@@ -56,13 +62,11 @@ const FabricWhiteboard: React.FC = () => {
           toast.error("Failed to load whiteboard data.");
         }
       }
-
       // Register drawing events
       // Draw mode is on by default
       canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.width = 2;
       canvas.freeDrawingBrush.color = "#1a202c";
-
       loadedOnce.current = true;
     }
     loadBoard();
@@ -75,15 +79,63 @@ const FabricWhiteboard: React.FC = () => {
     };
   }, [id]);
 
-  // Save to Supabase
+  // Update FabricJS for active tool
+  useEffect(() => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    // Drawing/browsing mode
+    if (activeTool === "draw") {
+      canvas.isDrawingMode = true;
+      canvas.selection = false;
+      if (canvas.freeDrawingBrush) {
+        canvas.freeDrawingBrush.width = 2;
+        canvas.freeDrawingBrush.color = "#1a202c";
+      }
+    } else {
+      canvas.isDrawingMode = false;
+      canvas.selection = true;
+      canvas.discardActiveObject();
+      canvas.renderAll();
+    }
+
+    // Insert shapes/text on demand (handlers below)
+    // "clear" and "save" handled separately
+    // "select" just disables drawing mode
+  }, [activeTool]);
+
+  // Toolbar actions logic
+  function handleToolbarAction(tool: Tool) {
+    if (tool === "rectangle") {
+      addRect();
+      setActiveTool("select");
+    } else if (tool === "circle") {
+      addCircle();
+      setActiveTool("select");
+    } else if (tool === "text") {
+      addText();
+      setActiveTool("select");
+    } else if (tool === "clear") {
+      handleClear();
+    } else if (tool === "save") {
+      handleSave();
+    } else {
+      setActiveTool(tool);
+    }
+  }
+
+  // Save/load logic same as before
   async function handleSave() {
     const canvas = fabricRef.current;
     if (!canvas) return;
     const json = canvas.toJSON();
-    const { error } = await supabase
-      .from("whiteboards")
-      .update({ fabric_data: json, updated_at: new Date().toISOString() })
-      .eq("id", id);
+    const { error } = await import("@/integrations/supabase/client").then(
+      mod =>
+        mod.supabase
+          .from("whiteboards")
+          .update({ fabric_data: json, updated_at: new Date().toISOString() })
+          .eq("id", id)
+    );
     if (error) {
       toast.error("Failed to save whiteboard.");
     } else {
@@ -97,13 +149,6 @@ const FabricWhiteboard: React.FC = () => {
     canvas.clear();
     canvas.backgroundColor = "#fff";
     canvas.renderAll();
-  }
-
-  function toggleDrawMode() {
-    const canvas = fabricRef.current;
-    if (!canvas) return;
-    canvas.isDrawingMode = !canvas.isDrawingMode;
-    toast(`Draw mode ${canvas.isDrawingMode ? "enabled" : "disabled"}`);
   }
 
   function addRect() {
@@ -152,38 +197,26 @@ const FabricWhiteboard: React.FC = () => {
   }
 
   return (
-    <div className="h-[81vh] flex flex-col gap-4 mx-auto max-w-5xl pt-6 pb-3">
-      <div className="mb-2 flex items-center gap-2">
-        <h2 className="font-semibold flex-1 truncate text-lg">Project Whiteboard</h2>
-        <Button size="sm" variant="secondary" onClick={toggleDrawMode}>
-          Toggle Draw
-        </Button>
-        <Button size="sm" variant="ghost" onClick={addRect}>
-          Rectangle
-        </Button>
-        <Button size="sm" variant="ghost" onClick={addCircle}>
-          Circle
-        </Button>
-        <Button size="sm" variant="ghost" onClick={addText}>
-          Text
-        </Button>
-        <Button size="sm" variant="outline" onClick={handleClear}>
-          Clear
-        </Button>
-        <Button size="sm" variant="default" onClick={handleSave}>
-          Save
-        </Button>
-      </div>
-      <div className="rounded-lg border bg-background shadow flex justify-center items-center">
-        <canvas
-          ref={canvasRef}
-          width={DEFAULT_WIDTH}
-          height={DEFAULT_HEIGHT}
-          style={{ maxWidth: "100%", background: "#fff" }}
+    <div className="h-[81vh] flex flex-row md:gap-6 gap-2 mx-auto max-w-5xl pt-6 pb-3">
+      {/* Toolbar (docked left on desktop, top on mobile) */}
+      <div className="flex-none md:mr-4 mr-2">
+        <WhiteboardToolbar
+          activeTool={activeTool}
+          onToolChange={handleToolbarAction}
         />
       </div>
-      <div className="text-xs text-muted-foreground pl-1">
-        Freehand: draw with mouse or finger. Select and move with pointer.
+      <div className="flex-1 flex flex-col">
+        <div className="rounded-lg border bg-background shadow flex justify-center items-center">
+          <canvas
+            ref={canvasRef}
+            width={DEFAULT_WIDTH}
+            height={DEFAULT_HEIGHT}
+            style={{ maxWidth: "100%", background: "#fff" }}
+          />
+        </div>
+        <div className="text-xs text-muted-foreground pl-1 pt-2">
+          <b>Tools:</b> Use toolbar. Draw mode: freehand. Select/move: pointer tool. Double click text to edit.
+        </div>
       </div>
     </div>
   );
