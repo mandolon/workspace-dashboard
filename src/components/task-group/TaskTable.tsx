@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TaskRow from './TaskRow';
@@ -54,7 +53,7 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
             <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-[25%]">Assigned to</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&_tr:last-child]:border-b">
           {memoizedTasks.map((task) => (
             <TaskRow
               key={task.id}
@@ -85,4 +84,3 @@ const TaskTable = React.memo(React.forwardRef<HTMLDivElement, TaskTableProps>(({
 TaskTable.displayName = "TaskTable";
 
 export default TaskTable;
-
