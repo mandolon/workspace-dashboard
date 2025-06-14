@@ -37,7 +37,7 @@ const TaskBoardContent = ({
 
         {/* Task Groups with ScrollArea */}
         <ScrollArea className="flex-1">
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-6"> {/* Changed space-y-4 to space-y-6 */}
             {taskGroups.map((group, groupIndex) => (
               <TaskGroupSection
                 key={`${groupIndex}-${refreshTrigger}`}
