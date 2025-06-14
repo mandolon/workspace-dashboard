@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -14,14 +15,15 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   const clientData = getClientData(projectId);
 
   const [formData, setFormData] = useState({
-    projectId: clientData.projectId,
+    projectAddress: clientData.projectAddress,
+    city: clientData.city,
+    state: clientData.state,
     projectName: '',
     projectScope: '',
     projectNotes: '',
     status: 'in-progress',
     startDate: '5/8/23',
-    duration: '5 Weeks',
-    projectAddress: clientData.projectAddress
+    duration: '5 Weeks'
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -36,10 +38,9 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
   };
 
   const handleSave = () => {
-    // Update the address in projectClientData
-    if (projectId && formData.projectAddress) {
-      // only update the address
-      updateClientData(projectId, undefined, formData.projectAddress);
+    // Update address, city, state in projectClientData
+    if (projectId) {
+      updateClientData(projectId, undefined, formData.projectAddress, formData.city, formData.state);
     }
     toast({
       title: "Changes saved",
@@ -49,7 +50,7 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
     onSave();
   };
 
-  // Move project address to TOP, remove Project ID
+  // Project Information Form Fields
   const projectInformationFields = [
     {
       label: 'Project Address',
@@ -57,6 +58,22 @@ const ProjectTabForm = ({ onSave }: ProjectTabFormProps) => {
       onChange: (value: string) => handleInputChange('projectAddress', value),
       type: 'input' as const,
       placeholder: 'Enter project address...',
+      onKeyDown: handleKeyDown
+    },
+    {
+      label: 'City',
+      value: formData.city,
+      onChange: (value: string) => handleInputChange('city', value),
+      type: 'input' as const,
+      placeholder: 'Enter city...',
+      onKeyDown: handleKeyDown
+    },
+    {
+      label: 'State',
+      value: formData.state,
+      onChange: (value: string) => handleInputChange('state', value),
+      type: 'input' as const,
+      placeholder: 'Enter state...',
       onKeyDown: handleKeyDown
     },
     {

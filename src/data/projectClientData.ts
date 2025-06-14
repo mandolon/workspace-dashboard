@@ -339,13 +339,25 @@ export const getAllClients = (): Client[] => {
 };
 
 // Update to accept optional address (so we can update just the address for the project):
-export const updateClientData = (projectId: string, updatedClients?: Client[], updatedAddress?: string) => {
+export const updateClientData = (
+  projectId: string,
+  updatedClients?: Client[],
+  updatedAddress?: string,
+  updatedCity?: string,
+  updatedState?: string
+) => {
   if (projectId && projectClientData[projectId]) {
     if (updatedClients) {
       projectClientData[projectId].clients = updatedClients;
     }
-    if (updatedAddress) {
+    if (updatedAddress !== undefined) {
       projectClientData[projectId].projectAddress = updatedAddress;
+    }
+    if (updatedCity !== undefined) {
+      projectClientData[projectId].city = updatedCity;
+    }
+    if (updatedState !== undefined) {
+      projectClientData[projectId].state = updatedState;
     }
   }
 };
