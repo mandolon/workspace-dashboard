@@ -13,7 +13,8 @@ import {
   PopoverTrigger,
   PopoverContent
 } from '@/components/ui/popover';
-import { availablePeople, getRandomColor } from '@/utils/taskUtils';
+import { TEAM_USERS } from '@/utils/teamUsers';
+import { getRandomColor } from '@/utils/taskUtils';
 
 interface QuickAddTaskProps {
   onSave: (taskData: any) => void;
@@ -39,6 +40,14 @@ function getAbsoluteRect(element: HTMLElement) {
     height: rect.height
   };
 }
+
+// Build the available assignees from TEAM_USERS
+const availableAssignees: QuickAddTaskPerson[] = TEAM_USERS.map(member => ({
+  name: member.name,
+  avatar: member.avatar,
+  fullName: member.fullName,
+  avatarColor: member.avatar,
+}));
 
 const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) => {
   const [taskName, setTaskName] = useState('');
@@ -279,7 +288,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         <PopoverContent align="end" className="p-1 w-44 bg-popover z-50">
           <div className="text-xs font-semibold pb-1 px-2">Assign to...</div>
           <div className="flex flex-col">
-            {availablePeople.map(person => (
+            {availableAssignees.map(person => (
               <button
                 key={person.name}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent text-xs text-foreground"
