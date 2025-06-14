@@ -1,3 +1,4 @@
+
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import ProjectHero from "@/components/client-dashboard/ProjectHero";
@@ -34,23 +35,24 @@ const ClientDashboard = () => {
           {/* Project Health */}
           <ProjectHealth />
 
-          {/* Quick Actions */}
-          <QuickActions />
-
-          {/* Lower Section: Activity feed & documents; team */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
-            <div className="md:col-span-2 space-y-6">
+          {/* Two-column grid below Project Health */}
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 mt-2">
+            <div className="space-y-6 lg:col-span-2">
               {/* Activity Feed */}
               <ActivityFeed />
-              {/* Project Timeline placed directly under Activity Feed */}
+              {/* Project Timeline */}
               <ProjectTimeline />
-              {/* Documents */}
-              <DocumentsGallery />
             </div>
-            <div className="md:col-span-1">
+            <div className="space-y-6">
+              {/* QuickActions (Schedule Meeting, etc.) */}
+              <QuickActions />
+              {/* Team Information */}
               <ProjectTeam />
             </div>
           </div>
+
+          {/* Documents Gallery as full width below the grid */}
+          <DocumentsGallery />
         </div>
       </div>
     </AppLayout>
@@ -58,3 +60,4 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
+
