@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -46,6 +45,8 @@ export const useTaskDeletion = () => {
             >
               trash
             </button>
+            {/* Spacing between trash and Undo button */}
+            <span className="ml-6" />
             <Button
               variant="ghost"
               size="sm"
@@ -60,19 +61,7 @@ export const useTaskDeletion = () => {
               Undo
             </Button>
             <span className="mx-2 h-5 border-l border-border inline-block self-center" />
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                dismiss();
-              }}
-              className="text-muted-foreground hover:text-foreground focus:outline-none p-1 ml-1 rounded"
-              aria-label="Close"
-              style={{ lineHeight: 0 }}
-              tabIndex={0}
-            >
-              <X className="w-4 h-4" />
-            </button>
+            {/* Removed the extra close button: the shadcn close button will be used instead */}
           </div>
         ),
         duration: 5000,

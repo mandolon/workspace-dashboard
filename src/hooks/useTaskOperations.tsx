@@ -65,6 +65,8 @@ export const useTaskOperations = () => {
               >
                 trash
               </button>
+              {/* Spacing between trash and Undo button */}
+              <span className="ml-6" />
               <Button
                 variant="ghost"
                 size="sm"
@@ -79,19 +81,7 @@ export const useTaskOperations = () => {
                 Undo
               </Button>
               <span className="mx-2 h-5 border-l border-border inline-block self-center" />
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dismiss();
-                }}
-                className="text-muted-foreground hover:text-foreground focus:outline-none p-1 ml-1 rounded"
-                aria-label="Close"
-                style={{ lineHeight: 0 }}
-                tabIndex={0}
-              >
-                <X className="w-4 h-4" />
-              </button>
+              {/* Removed the extra close button: the shadcn close button will be used instead */}
             </div>
           ),
           duration: 5000,
@@ -107,7 +97,7 @@ export const useTaskOperations = () => {
         variant: "destructive",
       });
     }
-  }, [toast, triggerRefresh, navigate, dismiss]);
+  }, [toast, triggerRefresh, navigate, dismiss, restoreDeletedTask]);
 
   const restoreDeletedTask = useCallback((taskId: number) => {
     const restoredTask = restoreTask(taskId);
