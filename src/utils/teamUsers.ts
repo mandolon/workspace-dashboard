@@ -11,8 +11,15 @@ export interface TeamUser {
 
 export const TEAM_USERS: TeamUser[] = [
   {
-    id: 't1',
+    id: 't0',
     name: 'AL',
+    fullName: 'Armando Lopez',
+    role: 'Admin',
+    avatar: 'bg-blue-800'
+  },
+  {
+    id: 't1',
+    name: 'ALD',
     fullName: 'Alice Liddell',
     role: 'Team Lead',
     avatar: 'bg-purple-500'
@@ -51,5 +58,5 @@ export const TEAM_USERS: TeamUser[] = [
     fullName: 'James Hall',
     role: 'QA Tester',
     avatar: 'bg-gray-500'
-  },
+  }
 ];
