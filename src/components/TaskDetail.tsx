@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskDetailHeader from './task-detail/TaskDetailHeader';
 import TaskDetailForm from './task-detail/TaskDetailForm';
@@ -11,9 +12,10 @@ interface TaskDetailProps {
   onClose: () => void;
   onProjectClick?: () => void;
   task: Task | null;
+  onDeleted?: () => void; // <--- NEW
 }
 
-const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) => {
+const TaskDetail = ({ isOpen, onClose, onProjectClick, task, onDeleted }: TaskDetailProps) => {
   if (!task || !isOpen) return null;
 
   return (
@@ -27,7 +29,7 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
             <TaskDetailForm task={task} />
             <TaskDetailAttachments taskId={task.taskId} />
             {/* Trash Button moved below attachments */}
-            <TaskDetailTrashButton task={task} />
+            <TaskDetailTrashButton task={task} onDeleted={onDeleted} /> {/* <--- pass new prop */}
           </div>
         </div>
 
@@ -41,3 +43,4 @@ const TaskDetail = ({ isOpen, onClose, onProjectClick, task }: TaskDetailProps) 
 };
 
 export default TaskDetail;
+

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -66,6 +67,11 @@ const TaskDetailPage = () => {
         navigate(`/project/${projectId}`);
       }
     }
+  };
+
+  // NEW: After delete, always return to tasks page
+  const handleDeleted = () => {
+    navigate('/tasks');
   };
 
   // Unified Authorization (uses taskVisibility helper now!)
@@ -149,6 +155,7 @@ const TaskDetailPage = () => {
             onClose={handleBack}
             onProjectClick={handleProjectClick}
             task={currentTask}
+            onDeleted={handleDeleted} // <--- ADDED
           />
         </div>
       </div>
@@ -157,3 +164,4 @@ const TaskDetailPage = () => {
 };
 
 export default TaskDetailPage;
+

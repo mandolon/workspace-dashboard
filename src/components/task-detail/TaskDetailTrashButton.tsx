@@ -9,9 +9,10 @@ import { toast } from "@/hooks/use-toast";
 
 interface TaskDetailTrashButtonProps {
   task: Task; // fully hydrated task, as in TaskDetailForm
+  onDeleted?: () => void; // <--- NEW: callback for post-delete action
 }
 
-const TaskDetailTrashButton: React.FC<TaskDetailTrashButtonProps> = ({ task }) => {
+const TaskDetailTrashButton: React.FC<TaskDetailTrashButtonProps> = ({ task, onDeleted }) => {
   const isSupabaseTask = !!task.taskId && !!task.updatedAt;
   const { deleteTask: legacyDeleteTask } = useTaskContext();
 
@@ -37,7 +38,7 @@ const TaskDetailTrashButton: React.FC<TaskDetailTrashButtonProps> = ({ task }) =
           duration: 3000,
         });
         setShowDeleteDialog(false);
-        // Could navigate or refresh after deleting, if needed
+        if (onDeleted) onDeleted(); // <--- NEW: trigger close after delete
       } else {
         await legacyDeleteTask(task.id);
         toast({
@@ -46,6 +47,7 @@ const TaskDetailTrashButton: React.FC<TaskDetailTrashButtonProps> = ({ task }) =
           duration: 3000,
         });
         setShowDeleteDialog(false);
+        if (onDeleted) onDeleted(); // <--- NEW: trigger close after delete
       }
     } catch (err) {
       toast({
@@ -98,3 +100,4 @@ const TaskDetailTrashButton: React.FC<TaskDetailTrashButtonProps> = ({ task }) =
 };
 
 export default TaskDetailTrashButton;
+
