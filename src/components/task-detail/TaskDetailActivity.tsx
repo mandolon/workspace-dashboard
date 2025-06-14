@@ -1,9 +1,11 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/UserContext';
 import TaskChatInput from './TaskChatInput';
 import { fetchTaskMessages, insertTaskMessage, subscribeToTaskMessages, TaskMessage } from '@/data/taskMessagesSupabase';
 import { supabase } from "@/integrations/supabase/client";
+import { getCRMUser } from '@/utils/taskUserCRM';
 
 interface TaskDetailActivityProps {
   taskId?: string;
@@ -29,6 +31,25 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
     if (diffMillis < 60 * 60 * 1000) return `${Math.floor(diffMillis / (60 * 1000))}m ago`;
     if (diffMillis < 24 * 60 * 60 * 1000) return `${Math.floor(diffMillis / (60 * 60 * 1000))}h ago`;
     return date.toLocaleDateString();
+  }
+
+  // Find the CRM user by user_id if possible, otherwise by user_name
+  function lookupChatUser(msg: TaskMessage) {
+    // Support matching by id if possible
+    let crmUser = getCRMUser({ id: msg.user_id, name: msg.user_name, avatar: undefined, fullName: msg.user_name });
+    // Fallback: just use the TaskMessage user_name if not found
+    if (!crmUser) {
+      return {
+        avatar: getInitials(msg.user_name),
+        avatarColor: 'bg-gray-400',
+        fullName: msg.user_name
+      };
+    }
+    return {
+      avatar: crmUser.avatar ?? getInitials(crmUser.fullName ?? crmUser.name),
+      avatarColor: crmUser.avatarColor ?? 'bg-gray-400',
+      fullName: crmUser.fullName ?? crmUser.name
+    };
   }
 
   // Fetch messages from Supabase
@@ -84,39 +105,43 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
       <div ref={messageListRef} className="flex-1 overflow-y-auto p-3 space-y-6 max-h-full">
         {loading && <div>Loading messages...</div>}
         {error && <div className="text-red-500 text-xs">{error}</div>}
-        {!loading && !error && messages.map((msg) => (
-          <div key={msg.id} className="space-y-2">
-            <div className={`flex gap-3 ${msg.user_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}>
-              {msg.user_id !== currentUser?.id && (
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarFallback className="bg-blue-500 text-white text-xs font-medium">
-                    {getInitials(msg.user_name)}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div className={`max-w-xs ${msg.user_id === currentUser?.id ? 'order-first' : ''}`}>
-                {msg.user_id !== currentUser?.id && (
-                  <div className="text-xs font-medium mb-1">{msg.user_name}</div>
+        {!loading && !error && messages.map((msg) => {
+          const isSelf = msg.user_id === currentUser?.id;
+          const chatUser = lookupChatUser(msg);
+          return (
+            <div key={msg.id} className="space-y-2">
+              <div className={`flex gap-3 ${isSelf ? 'justify-end' : 'justify-start'}`}>
+                {!isSelf && (
+                  <Avatar className="w-8 h-8 flex-shrink-0">
+                    <AvatarFallback className={`${chatUser.avatarColor} text-white text-xs font-medium`}>
+                      {chatUser.avatar}
+                    </AvatarFallback>
+                  </Avatar>
                 )}
-                <div className={`p-2 rounded-lg text-xs break-words ${
-                  msg.user_id === currentUser?.id
-                    ? 'bg-blue-500 text-white ml-auto'
-                    : 'bg-muted'
-                }`}>
-                  {msg.message}
+                <div className={`max-w-xs ${isSelf ? 'order-first' : ''}`}>
+                  {!isSelf && (
+                    <div className="text-xs font-medium mb-1">{chatUser.fullName}</div>
+                  )}
+                  <div className={`p-2 rounded-lg text-xs break-words ${
+                    isSelf
+                      ? 'bg-blue-500 text-white ml-auto'
+                      : 'bg-muted'
+                  }`}>
+                    {msg.message}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.created_at)}</div>
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">{getRelativeTime(msg.created_at)}</div>
+                {isSelf && (
+                  <Avatar className="w-8 h-8 flex-shrink-0">
+                    <AvatarFallback className={`${chatUser.avatarColor} text-white text-xs font-medium`}>
+                      {chatUser.avatar}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
               </div>
-              {msg.user_id === currentUser?.id && (
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarFallback className="bg-green-500 text-white text-xs font-medium">
-                    {getInitials(msg.user_name)}
-                  </AvatarFallback>
-                </Avatar>
-              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Chat Message Input */}
@@ -126,3 +151,4 @@ const TaskDetailActivity = ({ taskId }: TaskDetailActivityProps) => {
 };
 
 export default TaskDetailActivity;
+
