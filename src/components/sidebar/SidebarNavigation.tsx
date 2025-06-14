@@ -11,8 +11,7 @@ import {
   Receipt,
   FileImage,
   ClipboardList,
-  Clock,
-  HelpCircle
+  Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -46,18 +45,13 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateInvoices = useCallback(() => navigate('/invoices'), [navigate]);
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
-  const handleNavigateHelp = useCallback(() => {
-    // Only used in non-client mode now
-    navigate(getHelpPagePath());
-  // eslint-disable-next-line
-  }, [clientMode, isImpersonating, impersonatedUser, currentUser]);
 
   // Client gets only dashboard
   const clientNavItems = [
     { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
   ];
 
-  // Admin/team: full nav
+  // Admin/team: full nav, but no Help item (removed!)
   const mainNavItems = useMemo(() => {
     if (clientMode) return clientNavItems;
     return [
@@ -69,8 +63,8 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
       { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
       { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
       { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
-      { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
-      { icon: HelpCircle, label: 'Help', active: false, onClick: handleNavigateHelp }
+      { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
+      // Help item removed!
     ];
   }, [
     clientMode,
@@ -82,8 +76,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateInvoices,
     handleNavigateWhiteboards,
     handleNavigateTimesheets,
-    handleNavigateClientDashboard,
-    handleNavigateHelp,
+    handleNavigateClientDashboard
   ]);
 
   // Collapsed view (clients only show icon for dashboard)
@@ -113,6 +106,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     return (
       <Collapsible open={isOpen} onOpenChange={onToggle}>
         <div className="px-2 mb-2">
+          {/* Navigation label and collapse arrow remain for non-client users */}
           <CollapsibleTrigger className="flex items-center gap-2 px-2 py-1.5 w-full text-left hover:bg-sidebar-accent/50 rounded">
             {isOpen ? (
               <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
