@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Paperclip, Plus } from 'lucide-react';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -111,7 +110,7 @@ const TaskRowFiles = ({
 
           {/* Overlapping "+" button bottom-right, like avatar add button */}
           <button
-            className="absolute bottom-0 -right-1.5 bg-white border border-gray-200 rounded-full p-[2px] shadow hover:bg-accent z-30 transition-colors"
+            className="absolute bottom-0.5 -right-2 bg-white border border-gray-200 rounded-full p-[2px] shadow hover:bg-accent z-30 transition-colors"
             style={{ minWidth: 18, minHeight: 18 }}
             onClick={handleUploadClick}
             aria-label="Add file"
@@ -136,4 +135,3 @@ const TaskRowFiles = ({
 };
 
 export default TaskRowFiles;
-
