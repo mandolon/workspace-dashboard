@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTasksWithProjectNames } from "@/data/taskData";
+import TaskStatusIcon from "@/components/TaskStatusIcon";
 
 const OpenTasksListSummary = () => {
   const tasks = getTasksWithProjectNames();
@@ -23,14 +24,22 @@ const OpenTasksListSummary = () => {
         {openTasks.length === 0 ? (
           <div className="text-muted-foreground text-xs">No open tasks</div>
         ) : (
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {openTasks.map((task) => (
               <li
                 key={task.taskId}
-                className="text-xs text-blue-700 truncate px-1 py-0.5 rounded hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-2 px-1 py-1 hover:bg-blue-100 rounded transition-colors group cursor-pointer"
                 title={task.title}
               >
-                {task.title}
+                <TaskStatusIcon status={task.status} />
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-xs text-blue-900 truncate">
+                    {task.title}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {task.project}
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
