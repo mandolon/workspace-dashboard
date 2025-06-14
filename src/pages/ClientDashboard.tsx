@@ -1,49 +1,57 @@
 
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
+import ProjectHero from "@/components/client-dashboard/ProjectHero";
+import ProjectTimeline from "@/components/client-dashboard/ProjectTimeline";
+import ActivityFeed from "@/components/client-dashboard/ActivityFeed";
+import DocumentsGallery from "@/components/client-dashboard/DocumentsGallery";
+import ProjectTeam from "@/components/client-dashboard/ProjectTeam";
+import QuickActions from "@/components/client-dashboard/QuickActions";
+import ProjectHealth from "@/components/client-dashboard/ProjectHealth";
 
 const activeProject = {
   name: "Adams - 1063 40th Street",
-  status: "In Progress",
-  manager: "Armando Lopez",
-  lastUpdate: "June 10, 2025",
+  address: "1063 40th Street, Sacramento, CA",
+  status: "Design Development",
+  imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 };
 
 const ClientDashboard = () => {
   return (
     <AppLayout>
-      <div className="max-w-2xl mx-auto p-8">
-        <h1 className="text-2xl font-bold mb-6">Welcome back!</h1>
-        <div className="bg-accent/40 rounded border border-border p-6 mb-8 shadow-sm">
-          <div className="mb-2">
-            <span className="text-lg font-semibold">Active Project</span>
-          </div>
-          <div className="text-sm space-y-2">
-            <div>
-              <span className="text-muted-foreground">Project Name: </span>
-              <span className="font-medium">{activeProject.name}</span>
+      <div className="max-w-5xl mx-auto py-6 px-4">
+        <div className="space-y-6">
+          {/* Project Hero Section */}
+          <ProjectHero
+            imageUrl={activeProject.imageUrl}
+            address={activeProject.address}
+            projectName={activeProject.name}
+            status={activeProject.status}
+          />
+
+          {/* Info Row: Timeline, Project Health, Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="col-span-1">
+              <ProjectTimeline />
             </div>
-            <div>
-              <span className="text-muted-foreground">Status: </span>
-              <span className="font-medium">{activeProject.status}</span>
+            <div className="col-span-1">
+              <ProjectHealth />
             </div>
-            <div>
-              <span className="text-muted-foreground">Project Manager: </span>
-              <span className="font-medium">{activeProject.manager}</span>
-            </div>
-            <div>
-              <span className="text-muted-foreground">Last Updated: </span>
-              <span className="font-medium">{activeProject.lastUpdate}</span>
+            <div className="col-span-1 flex flex-col items-end">
+              <QuickActions />
             </div>
           </div>
-        </div>
-        <div>
-          <div className="mb-2 font-semibold">What can you do?</div>
-          <ul className="list-disc list-inside text-sm text-muted-foreground">
-            <li>See project details and status updates</li>
-            <li>Contact your project manager</li>
-            <li>Download your invoice when available</li>
-          </ul>
+
+          {/* Lower Section: Activity feed & document gallery, team */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
+            <div className="md:col-span-2 space-y-6">
+              <ActivityFeed />
+              <DocumentsGallery />
+            </div>
+            <div className="md:col-span-1">
+              <ProjectTeam />
+            </div>
+          </div>
         </div>
       </div>
     </AppLayout>
