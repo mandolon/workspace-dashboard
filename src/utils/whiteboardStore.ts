@@ -1,4 +1,3 @@
-
 import { projectClientData } from "@/data/projectClientStaticData";
 
 // Types
@@ -11,6 +10,7 @@ export interface Whiteboard {
   projectId: string;
   createdBy: string; // userId
   sharedWithClient: boolean;
+  tldrawRoomId?: string; // ADDED: unique per-board ID if type === 'tldraw'
 }
 
 // Simple mock DB for whiteboards (in-memory)
@@ -96,6 +96,11 @@ export function createWhiteboard({
   sharedWithClient: boolean;
 }) {
   const id = Date.now().toString();
+  let tldrawRoomId;
+  if (type === "tldraw") {
+    // Generate a unique room id (for now: use generated id)
+    tldrawRoomId = "room-" + id;
+  }
   whiteboards.unshift({
     id,
     title,
@@ -105,6 +110,7 @@ export function createWhiteboard({
     projectId,
     createdBy,
     sharedWithClient,
+    ...(tldrawRoomId ? { tldrawRoomId } : {}),
   });
 }
 
@@ -113,4 +119,3 @@ export function toggleShareWithClient(whiteboardId: string, value: boolean) {
   const wb = whiteboards.find(w => w.id === whiteboardId);
   if (wb) wb.sharedWithClient = value;
 }
-

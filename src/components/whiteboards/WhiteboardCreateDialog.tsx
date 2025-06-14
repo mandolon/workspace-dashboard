@@ -14,18 +14,24 @@ const WhiteboardCreateDialog: React.FC<{ onCreated: () => void }> = ({ onCreated
   const [projectId, setProjectId] = useState("");
   const [shared, setShared] = useState(true);
   const { currentUser } = useUser();
-
   const availableProjects = getAvailableProjects();
 
   const handleCreate = () => {
     if (!title.trim() || !projectId) return;
-    createWhiteboard({
-      title,
-      type: "pdf",
-      projectId,
-      createdBy: currentUser.id,
-      sharedWithClient: shared,
-    });
+-    createWhiteboard({
+-      title,
+-      type: "pdf",
+-      projectId,
+-      createdBy: currentUser.id,
+-      sharedWithClient: shared,
+-    });
++    createWhiteboard({
++      title,
++      type: "tldraw", // Use tldraw board as default
++      projectId,
++      createdBy: currentUser.id,
++      sharedWithClient: shared,
++    });
     setTitle("");
     setProjectId("");
     setShared(true);
