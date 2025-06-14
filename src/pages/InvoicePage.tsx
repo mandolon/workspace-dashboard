@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import InvoiceHeader from '@/components/invoice/InvoiceHeader';
 import InvoiceTabs from '@/components/invoice/InvoiceTabs';
+import PageSectionHeader from '@/components/shared/PageSectionHeader';
 
 const InvoicePage = () => {
   const [lineItems, setLineItems] = useState([
@@ -30,9 +31,9 @@ const InvoicePage = () => {
 
   return (
     <AppLayout>
-      <div className="bg-background p-4 h-full overflow-hidden">
-        <div className="h-full flex flex-col max-w-6xl mx-auto">
-          <InvoiceHeader />
+      <div className="bg-background p-0 h-full overflow-hidden flex flex-col">
+        <PageSectionHeader title="Invoices" />
+        <div className="h-full flex flex-col max-w-6xl mx-auto flex-1 pt-0">
           <InvoiceTabs
             lineItems={lineItems}
             onAddLineItem={addLineItem}

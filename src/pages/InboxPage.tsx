@@ -3,6 +3,7 @@ import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import InboxContent from '@/components/inbox/InboxContent';
 import { useInboxState } from '@/hooks/useInboxState';
+import PageSectionHeader from '@/components/shared/PageSectionHeader';
 
 const InboxPage = () => {
   const {
@@ -24,23 +25,26 @@ const InboxPage = () => {
 
   return (
     <AppLayout>
-      <div className="h-full">
-        <InboxContent
-          selectedEmails={selectedEmails}
-          selectedEmail={selectedEmail}
-          activeTab={activeTab}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          filteredEmails={filteredEmails}
-          currentEmail={currentEmail}
-          unreadCount={unreadCount}
-          onSelectEmail={handleSelectEmail}
-          onSelectAll={handleSelectAll}
-          onEmailClick={handleEmailClick}
-          onBackToList={handleBackToList}
-          onTabChange={handleTabChange}
-          onPageChange={setCurrentPage}
-        />
+      <div className="h-full flex flex-col">
+        <PageSectionHeader title="Inbox" />
+        <div className="flex-1 flex flex-col">
+          <InboxContent
+            selectedEmails={selectedEmails}
+            selectedEmail={selectedEmail}
+            activeTab={activeTab}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            filteredEmails={filteredEmails}
+            currentEmail={currentEmail}
+            unreadCount={unreadCount}
+            onSelectEmail={handleSelectEmail}
+            onSelectAll={handleSelectAll}
+            onEmailClick={handleEmailClick}
+            onBackToList={handleBackToList}
+            onTabChange={handleTabChange}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
     </AppLayout>
   );
