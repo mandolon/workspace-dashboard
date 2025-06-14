@@ -80,13 +80,15 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
           <div className="flex flex-col">
             {teamAssignees.map(person => {
               const personWithColor = getCRMUser(person) || person;
+              // Ensure we always provide a string id:
+              const safeId = personWithColor.id ?? person.id ?? 'unknown';
               return (
                 <button
-                  key={person.id}
+                  key={safeId}
                   className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setAssignee({ ...personWithColor });
+                    setAssignee({ ...personWithColor, id: safeId });
                     setShowAssigneePopover(false);
                   }}
                   type="button"
@@ -106,3 +108,4 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
+
