@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -20,7 +21,7 @@ const TaskDetailPage = () => {
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
 
   // NEW: Get realtime tasks from Supabase-powered board
-  const { supabaseTasks } = useTaskBoard();
+  const { supabaseTasks, supabaseTasksLoading } = useTaskBoard();
 
   useEffect(() => {
     let fetchedTask: Task | null = null;
@@ -32,7 +33,7 @@ const TaskDetailPage = () => {
         ) || null;
       }
       // 2. (Legacy fallback) Try customTasks from TaskContext
-      if (!fetchedTask) {
+      if (!fetchedTask && customTasks.length > 0) {
         const taskFromCustom = customTasks.find(
           t => t.taskId === taskId || t.id === Number(taskId)
         );
@@ -131,13 +132,34 @@ const TaskDetailPage = () => {
     return allowed;
   }, [currentTask, currentUser]);
 
-  if (!currentTask) {
+  // Improved loading/error UI
+  if (supabaseTasksLoading) {
     return (
       <AppLayout>
         <div className="h-full flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-lg font-semibold">Loading task...</h2>
             <p className="text-muted-foreground">If this persists, the task may not exist.</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!currentTask) {
+    // Not found after loading is done
+    return (
+      <AppLayout>
+        <div className="h-full flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-lg font-semibold">Task Not Found</h2>
+            <p className="text-muted-foreground">This task does not exist or has been removed.</p>
+            <button
+              onClick={handleBack}
+              className="mt-2 px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+            >
+              Go Back
+            </button>
           </div>
         </div>
       </AppLayout>

@@ -8,6 +8,7 @@ import { filterTasksForUser } from "@/utils/taskVisibility";
 
 export function useRealtimeTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
   const loadingRef = useRef(false);
   const { currentUser } = useUser();
 
@@ -19,10 +20,12 @@ export function useRealtimeTasks() {
   useEffect(() => {
     if (loadingRef.current) return;
     loadingRef.current = true;
+    setLoading(true);
     fetchAllTasks()
       .then(secureSetTasks)
       .finally(() => {
         loadingRef.current = false;
+        setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
@@ -85,5 +88,5 @@ export function useRealtimeTasks() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-  return { tasks, setTasks: secureSetTasks };
+  return { tasks, setTasks: secureSetTasks, loading };
 }

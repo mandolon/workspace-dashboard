@@ -1,3 +1,4 @@
+
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup, TaskUser } from '@/types/task';
@@ -14,7 +15,7 @@ function updateTaskInList(tasks: Task[], taskId: string, updater: (t: Task) => T
 export const useTaskBoard = () => {
   const navigate = useNavigate();
   const { currentUser } = useUser();
-  const { tasks, setTasks } = useRealtimeTasks();
+  const { tasks, setTasks, loading } = useRealtimeTasks();
 
   // Dialog/quick add state
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
@@ -145,5 +146,6 @@ export const useTaskBoard = () => {
     addCollaborator,
     removeCollaborator,
     supabaseTasks: tasks, // expose realtime tasks for detail page
+    supabaseTasksLoading: loading,
   };
 };
