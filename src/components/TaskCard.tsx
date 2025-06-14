@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { MoreHorizontal, Paperclip } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getCRMUser } from '@/utils/taskUserCRM';
 import { getRandomColor, getInitials, formatDate } from '@/utils/taskUtils';
-import { Task } from '@/types/task'; // <-- IMPORT correct task interface
+import { Task } from '@/types/task';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface TaskCardProps {
@@ -10,7 +12,10 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
-  // Helper for consistent color: use avatarColor if present
+  // Always reference TEAM_USERS for display
+  const assignee = getCRMUser(task.assignee);
+  const collaborators = (task.collaborators || []).map(getCRMUser);
+
   const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
 
   return (
@@ -27,12 +32,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
           </div>
         </div>
       </div>
-
       {/* Estimated Completion */}
       <div className="col-span-2 flex items-center text-sm text-muted-foreground">
         {task.estimatedCompletion}
       </div>
-
       {/* Files */}
       <div className="col-span-1 flex items-center">
         {task.hasAttachment && (
@@ -41,28 +44,23 @@ const TaskCard = ({ task }: TaskCardProps) => {
           </div>
         )}
       </div>
-
       {/* Date Created */}
       <div className="col-span-2 flex items-center text-sm text-muted-foreground">
         {formatDate(task.dateCreated)}
       </div>
-
       {/* Due Date */}
       <div className="col-span-2 flex items-center text-sm text-muted-foreground">
         {task.dueDate}
       </div>
-
-      {/* Assignee */}
+      {/* Assignee & collaborators */}
       <div className="col-span-1 flex items-center justify-end gap-1">
         <div className="flex items-center -space-x-1">
-          {/* ASSIGNEE */}
-          {task.assignee && (
-            <div className={`w-7 h-7 rounded-full text-white ${AVATAR_INITIALS_CLASSNAMES} ${getColor(task.assignee)}`}>
-              {getInitials(task.assignee.fullName ?? task.assignee.name)}
+          {assignee && (
+            <div className={`w-7 h-7 rounded-full text-white ${AVATAR_INITIALS_CLASSNAMES} ${getColor(assignee)}`}>
+              {getInitials(assignee.fullName ?? assignee.name)}
             </div>
           )}
-          {/* COLLABORATORS */}
-          {task.collaborators?.map((collaborator, index) => (
+          {collaborators.map((collaborator, index) => collaborator && (
             <div
               key={index}
               className={`w-7 h-7 rounded-full text-white border-2 border-background ${AVATAR_INITIALS_CLASSNAMES} ${getColor(collaborator)}`}

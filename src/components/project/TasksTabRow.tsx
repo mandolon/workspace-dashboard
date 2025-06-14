@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Edit, Trash2, Paperclip } from 'lucide-react';
 import {
@@ -10,6 +11,7 @@ import {
 import TasksTabStatusIcon from './TasksTabStatusIcon';
 import { getRandomColor, formatDate, getInitials } from '@/utils/taskUtils';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
+import { getCRMUser } from '@/utils/taskUserCRM';
 
 interface TasksTabRowProps {
   task: any; // Consider defining a more specific type for task if possible
@@ -21,7 +23,9 @@ interface TasksTabRowProps {
 const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: TasksTabRowProps) => {
   const formattedDate = formatDate(task.dateCreated);
 
-  // Helper for consistent color: use avatarColor if present
+  // Always canonicalize assignee/collaborators
+  const assignee = getCRMUser(task.assignee);
+
   const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
 
   return (
@@ -52,9 +56,9 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
           <div className="col-span-3 text-muted-foreground">{formattedDate}</div>
           <div className="col-span-3 flex items-center justify-between">
             <div className="flex items-center -space-x-1">
-              {task.assignee && (
-                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getColor(task.assignee)}`}>
-                  {getInitials(task.assignee.fullName ?? task.assignee.name)}
+              {assignee && (
+                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getColor(assignee)}`}>
+                  {getInitials(assignee.fullName ?? assignee.name)}
                 </div>
               )}
             </div>

@@ -7,15 +7,8 @@ import { Task } from '@/types/task';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getRandomColor, availablePeople, getInitials } from '@/utils/taskUtils';
 import { X, UserPlus, Users } from 'lucide-react';
-import { TEAM_USERS } from "@/utils/teamUsers"; // ADD: CRM/team user source of truth
-
-// Helper: get canonical CRM/TEAM_USERS assignee for styling
-const getCRMUser = (person) => {
-  if (!person) return null;
-  return availablePeople.find(
-    p => p.name === person.name || p.fullName === person.fullName
-  ) || person;
-};
+import { TEAM_USERS } from "@/utils/teamUsers";
+import { getCRMUser } from '@/utils/taskUserCRM';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -69,7 +62,7 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 
   // Assignee UI logic
   const availableForAssignment = useMemo(() => {
-    return availablePeople;
+    return TEAM_USERS;
   }, []);
 
   const handleAssign = useCallback((person: { name: string; avatar: string; fullName?: string }) => {
@@ -220,3 +213,5 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
 };
 
 export default TaskDetailForm;
+
+// NOTE: TaskDetailForm.tsx is long—consider refactoring into smaller components for maintainability!

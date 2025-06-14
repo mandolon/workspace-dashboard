@@ -5,6 +5,7 @@ import { getRandomColor, getInitials } from '@/utils/taskUtils';
 import { X, Plus } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { TEAM_USERS } from "@/utils/teamUsers";
+import { getCRMUser } from '@/utils/taskUserCRM';
 
 interface TaskRowAssigneesProps {
   task: any;
@@ -23,18 +24,20 @@ const TaskRowAssignees = ({
 }: TaskRowAssigneesProps) => {
   const [open, setOpen] = useState(false);
 
-  // Helper: use avatarColor if present on person, else generate a color
-  const getColor = (person: any) => person.avatarColor || getRandomColor(person.name);
+  // Canonical users
+  const assignee = getCRMUser(task.assignee);
+  const collaborators = (task.collaborators || []).map(getCRMUser);
 
-  // Compute available people (not already assigned/collaborators)
+  const getColor = (person: any) => person?.avatarColor || getRandomColor(person?.name ?? '');
+
   const assignedIds = [
-    ...(task.assignee ? [task.assignee.name] : []),
-    ...(task.collaborators?.map((c: any) => c.name) || [])
+    ...(assignee ? [assignee.name] : []),
+    ...(collaborators?.map((c: any) => c?.name) || [])
   ];
   const availablePeople = TEAM_USERS.filter(u => !assignedIds.includes(u.name));
 
   const handleAdd = (person: any) => {
-    if (!task.assignee) {
+    if (!assignee) {
       onAssignPerson(task.id, person);
     } else {
       onAddCollaborator(task.id, person);
@@ -45,12 +48,12 @@ const TaskRowAssignees = ({
   return (
     <div className="flex items-center -space-x-1 relative">
       {/* ASSIGNEE */}
-      {task.assignee && (
-        <div className="relative group" title={task.assignee.fullName || task.assignee.name}>
+      {assignee && (
+        <div className="relative group" title={assignee.fullName || assignee.name}>
           <div
-            className={`${getColor(task.assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
+            className={`${getColor(assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
           >
-            {getInitials(task.assignee.fullName ?? task.assignee.name)}
+            {getInitials(assignee.fullName ?? assignee.name)}
           </div>
           {/* Remove Assignee Button (X) - shows on hover */}
           <button
@@ -65,7 +68,7 @@ const TaskRowAssignees = ({
         </div>
       )}
       {/* COLLABORATORS */}
-      {task.collaborators?.map((collaborator: any, idx: number) => (
+      {collaborators?.map((collaborator: any, idx: number) => collaborator && (
         <div className="relative group" key={idx} title={collaborator.fullName || collaborator.name}>
           <div
             className={`${getColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
