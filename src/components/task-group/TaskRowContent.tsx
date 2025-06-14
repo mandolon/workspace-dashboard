@@ -4,6 +4,8 @@ import { Edit, Check, X, GripVertical } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import TaskStatusIcon from '../TaskStatusIcon';
 import { Task } from '@/types/task';
+import { DraggableAttributes } from '@dnd-kit/core';
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useListeners';
 
 interface TaskRowContentProps {
   task: Task;
@@ -17,7 +19,9 @@ interface TaskRowContentProps {
   onKeyDown: (e: React.KeyboardEvent, taskId: number) => void;
   onTaskStatusClick: (taskId: number) => void;
   onDeleteClick: (e: React.MouseEvent) => void;
-  isDragging?: boolean; // Added for D&D visual feedback
+  isDragging?: boolean;
+  dragAttributes?: DraggableAttributes;
+  dragListeners?: SyntheticListenerMap;
 }
 
 const TaskRowContent = React.memo(({
@@ -32,7 +36,9 @@ const TaskRowContent = React.memo(({
   onKeyDown,
   onTaskStatusClick,
   onDeleteClick,
-  isDragging // Added for D&D visual feedback
+  isDragging,
+  dragAttributes,
+  dragListeners,
 }: TaskRowContentProps) => {
   const isEditing = editingTaskId === task.id;
 
@@ -72,13 +78,22 @@ const TaskRowContent = React.memo(({
     e.stopPropagation();
   }, []);
 
+  const handleDragHandleClick = (e: React.MouseEvent) => {
+    // Prevent row click when interacting with drag handle
+    e.stopPropagation();
+  };
+
   return (
     <div 
-      className={`flex items-center gap-2 cursor-pointer pl-1 ${isDragging ? 'opacity-50' : ''}`}
-      onClick={handleTaskClick}
+      className={`flex items-center gap-2 pl-1 ${isDragging ? 'opacity-50' : ''} ${!isEditing ? 'cursor-pointer' : ''}`}
+      onClick={!isEditing ? handleTaskClick : undefined} // Only allow task click if not editing
     >
-      {/* Drag Handle placeholder - actual functionality will be in TaskRow */}
-      <div className="text-muted-foreground hover:text-foreground cursor-grab">
+      <div 
+        className="text-muted-foreground hover:text-foreground cursor-grab p-1 -ml-1" // Added padding for easier grabbing
+        {...dragAttributes} 
+        {...dragListeners}
+        onClick={handleDragHandleClick} // Stop propagation on drag handle click
+      >
         <GripVertical className="w-4 h-4" strokeWidth="1.5" />
       </div>
       <TaskStatusIcon 
@@ -110,22 +125,25 @@ const TaskRowContent = React.memo(({
             </button>
           </div>
         ) : (
-          <div className="py-0.5"> {/* Adjusted padding for tighter spacing */}
+          <div 
+            className="py-0.5"
+            // onClick={handleTaskClick} // Moved onClick to parent div for broader click area when not editing
+          >
             <div className="text-xs text-muted-foreground truncate">{task.project}</div>
             <div className="flex items-center gap-1 group/title">
               <div className="font-medium text-xs text-foreground truncate">
                 {task.title}
               </div>
-              <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100">
+              <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100 transition-opacity">
                 <button
                   onClick={handleEditClick}
-                  className="p-0.5 hover:bg-accent rounded transition-opacity"
+                  className="p-0.5 hover:bg-accent rounded"
                 >
                   <Edit className="w-3 h-3 text-muted-foreground hover:text-foreground" strokeWidth="2" />
                 </button>
                 <button
                   onClick={onDeleteClick}
-                  className="p-0.5 hover:bg-accent rounded transition-opacity"
+                  className="p-0.5 hover:bg-accent rounded"
                 >
                   <X className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth="2" />
                 </button>

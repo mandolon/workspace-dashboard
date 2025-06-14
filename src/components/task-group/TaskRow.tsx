@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow as UiTableRow } from '@/components/ui/table'; // Renamed to avoid conflict
 import TaskRowContent from './TaskRowContent';
@@ -19,7 +18,7 @@ interface TaskRowProps {
   editingValue: string;
   onSetEditingValue: (value: string) => void;
   onTaskClick: (task: Task) => void;
-  onTaskNameClick: (task: Task, e: React.MouseEvent) => void; // Can be removed if not used
+  // onTaskNameClick: (task: Task, e: React.MouseEvent) => void; // Removed this line
   onEditClick: (task: Task, e: React.MouseEvent) => void;
   onSaveEdit: (taskId: number) => void;
   onCancelEdit: () => void;
@@ -38,7 +37,7 @@ const TaskRow = React.memo(({
   editingValue,
   onSetEditingValue,
   onTaskClick,
-  // onTaskNameClick, // Removed if not used
+  // onTaskNameClick, // Kept commented as it's removed from props
   onEditClick,
   onSaveEdit,
   onCancelEdit,
@@ -117,8 +116,8 @@ const TaskRow = React.memo(({
           <div onClick={handleContextMenuTriggerClick} className="contents"> 
             <TableCell 
               className="py-1.5 w-[50%] cursor-default" // Adjusted padding
-              {...attributes} // Spread attributes for dnd-kit
-              {...listeners}  // Spread listeners for dnd-kit, this makes the whole row draggable via the handle
+              // {...attributes} // Spread attributes for dnd-kit // Removed to apply only to handle
+              // {...listeners}  // Spread listeners for dnd-kit, this makes the whole row draggable via the handle // Removed
             >
               <TaskRowContent
                 task={task}
@@ -133,6 +132,8 @@ const TaskRow = React.memo(({
                 onTaskStatusClick={onTaskStatusClick}
                 onDeleteClick={handleDeleteClickInternal}
                 isDragging={isDragging}
+                dragAttributes={attributes} // Pass dnd attributes
+                dragListeners={listeners} // Pass dnd listeners
               />
             </TableCell>
             <TableCell className="py-1.5 w-[8%] cursor-default" onClick={(e) => e.stopPropagation()}>
