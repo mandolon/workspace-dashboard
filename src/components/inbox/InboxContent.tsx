@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
 import InboxHeader from './InboxHeader';
@@ -56,14 +55,7 @@ const InboxContent = React.memo(({
 
   return (
     <div className="h-full flex flex-col">
-      <InboxHeader 
-        unreadCount={unreadCount}
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-      />
+      {/* Removed InboxHeader here to avoid repeated title and unread notification */}
       <InboxToolbar 
         selectedEmails={selectedEmails}
         totalEmails={filteredEmails.length}
