@@ -16,16 +16,18 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
  * Sync "mock" user with Supabase RLS context so RLS policies work for demo users.
  * We use a custom header "x-rls-mock-user" to communicate the desired identity.
  */
-export function syncSupabaseRLSUser(userNameOrEmail?: string) {
+export async function syncSupabaseRLSUser(userNameOrEmail?: string) {
   if (userNameOrEmail) {
-    // This only works if the server is configured to copy headers into request.jwt.claims
-    // For demo/local: use custom "x-rls-mock-user" header for context. Supabase Edge Functions can handle this.
-    supabase
-      .rpc('set_rls_context', { user_identifier: userNameOrEmail }) // Implement as needed if you support custom RLS via functions
-      .catch(() => {}); // No-op, for demo; our policy uses current_setting('request.jwt.claims', true)
-    window.localStorage.setItem('supabase.rls_user', userNameOrEmail);
-    // If needed: inject into fetch requests (advanced - skip for now)
-    console.log('[supabase] Synced mock RLS context to:', userNameOrEmail);
+    try {
+      // This only works if the server is configured to copy headers into request.jwt.claims
+      // For demo/local: use custom "x-rls-mock-user" header for context. Supabase Edge Functions can handle this.
+      await supabase.rpc('set_rls_context', { user_identifier: userNameOrEmail }); // Implement as needed if you support custom RLS via functions
+      window.localStorage.setItem('supabase.rls_user', userNameOrEmail);
+      // If needed: inject into fetch requests (advanced - skip for now)
+      console.log('[supabase] Synced mock RLS context to:', userNameOrEmail);
+    } catch (err) {
+      // No-op for demo
+    }
   } else {
     window.localStorage.removeItem('supabase.rls_user');
   }
