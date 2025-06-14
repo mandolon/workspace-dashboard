@@ -30,6 +30,12 @@ interface TaskRowProps {
   onAssignPerson: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: number, person: { name: string; avatar: string; fullName?: string }) => void;
   onTaskDeleted?: () => void;
+  columnConfig: {
+    key: string;
+    label: string;
+    headClassName: string;
+    cellClassName: string;
+  }[];
 }
 
 const TaskRow = ({
@@ -48,7 +54,8 @@ const TaskRow = ({
   onRemoveCollaborator,
   onAssignPerson,
   onAddCollaborator,
-  onTaskDeleted
+  onTaskDeleted,
+  columnConfig
 }: TaskRowProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -128,7 +135,8 @@ const TaskRow = ({
         }}
       >
         <TableRow key={task.id} className="hover:bg-accent/50 group">
-          <TableCell className="py-2 w-[50%]">
+          {/* Name column */}
+          <TableCell className={columnConfig[0].cellClassName}>
             <div className="flex items-center gap-2">
               <TaskStatusIcon 
                 status={task.status} 
@@ -158,7 +166,8 @@ const TaskRow = ({
               />
             </div>
           </TableCell>
-          <TableCell className="py-2 w-[8%]">
+          {/* Files column */}
+          <TableCell className={columnConfig[1].cellClassName}>
             <TaskFileCell 
               hasAttachment={task.hasAttachment}
               onAddAttachment={(e) => {
@@ -167,10 +176,12 @@ const TaskRow = ({
               }}
             />
           </TableCell>
-          <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
+          {/* Date Created column */}
+          <TableCell className={columnConfig[2].cellClassName + " text-xs text-muted-foreground"}>
             {formatDate(task.dateCreated)}
           </TableCell>
-          <TableCell className="py-2 w-[25%]">
+          {/* Assigned To column */}
+          <TableCell className={columnConfig[3].cellClassName}>
             <TaskRowAssignees
               task={task}
               onRemoveAssignee={onRemoveAssignee}
@@ -194,3 +205,4 @@ const TaskRow = ({
 };
 
 export default TaskRow;
+
