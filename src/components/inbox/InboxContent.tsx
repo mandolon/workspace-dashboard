@@ -57,7 +57,7 @@ const InboxContent = React.memo(({
   return (
     <div className="h-full flex flex-col">
       {/* InboxHeader is now rendered at the page level for consistent layout */}
-      <div className="px-6 flex-1 flex flex-col">
+      <div className="px-6 flex-1 flex flex-col border-b border-border">
         <InboxToolbar
           selectedEmails={selectedEmails}
           totalEmails={filteredEmails.length}
