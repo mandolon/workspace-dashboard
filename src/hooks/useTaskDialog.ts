@@ -31,11 +31,17 @@ export const useTaskDialog = () => {
       assigneeObj = TEAM_USERS.find(u => u.id === assignedTo || u.name === assignedTo || u.fullName === assignedTo) 
         || { name: assignedTo, avatar: '', id: assignedTo };
     }
+    // <-- Ensure projectId always included for assignments
+    assigneeObj = {
+      ...assigneeObj,
+      id: assigneeObj.id,
+      projectId: getProjectIdFromDisplayName(selectedProject)
+    };
 
     const taskData = {
       title: taskName,
-      projectId: projectId,
-      project: getProjectDisplayName(projectId),
+      projectId: getProjectIdFromDisplayName(selectedProject),
+      project: getProjectDisplayName(getProjectIdFromDisplayName(selectedProject)),
       status: selectedStatus || 'progress',
       description: addDescription ? description : '',
       assignee: assigneeObj,

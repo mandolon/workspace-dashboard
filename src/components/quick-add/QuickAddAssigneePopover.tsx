@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -8,10 +9,12 @@ import { getAvatarColor } from '@/utils/avatarColors';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 type QuickAddTaskPerson = {
+  id: string;                    // Always include unique ID for project filtering!
   name: string;
   avatar: string;
   fullName?: string;
   avatarColor?: string;
+  projectId?: string;
 };
 
 interface QuickAddAssigneePopoverProps {
@@ -75,7 +78,11 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
               <button
                 key={person.id}
                 className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
-                onClick={(e) => { e.stopPropagation(); setAssignee(person); setShowAssigneePopover(false); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAssignee({ ...person }); // always passes full team user object including id
+                  setShowAssigneePopover(false);
+                }}
                 type="button"
               >
                 <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(person)}`}>

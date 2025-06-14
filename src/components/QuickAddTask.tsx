@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -6,10 +7,12 @@ import QuickAddTaskActions from './quick-add/QuickAddTaskActions';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 interface QuickAddTaskPerson {
+  id: string;                    // <-- Ensure ID present!
   name: string;
   avatar: string;
   fullName?: string;
   avatarColor?: string;
+  projectId?: string;            // <-- Attach projectId for traceability
 }
 
 interface QuickAddTaskProps {
@@ -86,10 +89,15 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const handleSave = () => {
     if (!canSave || !assignee) return;
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
+    // Ensure assignee includes unique id and project ID
+    const teamUser = TEAM_USERS.find(u => u.id === assignee.id);
+    const newAssignee: QuickAddTaskPerson = teamUser
+      ? { ...teamUser, projectId }
+      : { ...assignee, projectId, id: assignee.id || 'unknown' };
     const newTask = {
       id: Date.now(),
       title: taskName,
-      projectId: projectId,
+      projectId,
       project: selectedProject || 'No Project',
       estimatedCompletion: '—',
       dateCreated: new Date().toLocaleDateString('en-US', {
@@ -98,15 +106,14 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit'
       }),
       dueDate: '—',
-      // assign full team user object, including 'id'
-      assignee: assignee,
+      assignee: newAssignee,     // <-- assign full assignee object
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,
       status: defaultStatus,
     };
     onSave(newTask);
     if (attachedFiles.length > 0) {
-      addAttachments(String(newTask.id), attachedFiles, assignee?.name || "ME");
+      addAttachments(String(newTask.id), attachedFiles, newAssignee.name || "ME");
     }
     setTaskName('');
     setSelectedProject('');

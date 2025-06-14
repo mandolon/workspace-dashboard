@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -65,9 +64,7 @@ const TaskDialogActions = ({
           onValueChange={value => {
             // Always set full TEAM_USERS object as assignee
             const found = TEAM_USERS.find(u => u.id === value);
-            // Since the Select only allows picking from the dropdown,
-            // found should always exist, but fallback to first TEAM_USER if not.
-            setAssignedTo(found || TEAM_USERS[0]);
+            setAssignedTo(found ? { ...found } : TEAM_USERS[0]);
           }}
         >
           <SelectTrigger className="w-28 h-7 text-xs">
@@ -155,4 +152,3 @@ const TaskDialogActions = ({
 };
 
 export default TaskDialogActions;
-
