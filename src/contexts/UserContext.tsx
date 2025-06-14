@@ -1,7 +1,7 @@
-
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { User, UserContextType } from '@/types/user';
 import { TEAM_USERS } from '@/utils/teamUsers';
+import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
 
 const UserContext = createContext<UserContextType & {
   isImpersonating: boolean;
@@ -28,6 +28,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const findUserById = (userId: string): User | null => {
     const u = TEAM_USERS.find(u => u.id === userId);
     if (!u) return null;
+    const custom = getUserCustomizations(userId);
     return {
       id: u.id,
       name: u.fullName,
@@ -41,7 +42,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       notificationsMuted: false,
       showOnlineStatus: true,
       showLastActive: true,
-      avatarColor: u.avatarColor || 'bg-gray-600'
+      avatarColor: custom.avatarColor || u.avatarColor || 'bg-gray-600'
     };
   };
 
@@ -106,7 +107,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateUser = (updates: Partial<User>) => {
-    setCurrentUser(prev => prev ? { ...prev, ...updates } : prev);
+    setCurrentUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      if (updates.avatarColor && typeof window !== "undefined") {
+        saveUserCustomizations(prev.id, { avatarColor: updates.avatarColor });
+      }
+      return updated;
+    });
   };
 
   // Effect: Sync on mount with localStorage
