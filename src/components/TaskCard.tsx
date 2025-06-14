@@ -54,7 +54,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <div className="flex items-center -space-x-1">
           {/* ASSIGNEE */}
           <div className={cn(
-            "w-7 h-7 rounded-full flex items-center justify-center text-white text-[0.93rem] font-semibold tracking-tight",
+            "w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-semibold tracking-tight",
             getRandomColor(
               task.assignee?.name ?? '',
               task.assignee?.avatarColor // Optional chaining in case assignee is null
@@ -67,7 +67,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <div
               key={index}
               className={cn(
-                "w-7 h-7 rounded-full flex items-center justify-center text-white text-[0.93rem] font-semibold tracking-tight border-2 border-background",
+                "w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-semibold tracking-tight border-2 border-background",
                 getRandomColor(
                   collaborator.name,
                   collaborator.avatarColor // Pass color if available

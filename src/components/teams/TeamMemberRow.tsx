@@ -38,7 +38,7 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
     <div className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group">
       <div className="col-span-3">
         <div className="flex items-center gap-2">
-          <div className={`w-7 h-7 ${getRandomColor(member.id)} rounded-full flex items-center justify-center text-white text-[0.94rem] font-semibold tracking-tight`}>
+          <div className={`w-8 h-8 ${getRandomColor(member.id)} rounded-full flex items-center justify-center text-white text-xs font-semibold tracking-tight`}>
             {getInitials(member.fullName ?? member.name)}
           </div>
           <span className="font-medium">{member.fullName ?? member.name}</span>

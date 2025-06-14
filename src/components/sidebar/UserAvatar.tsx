@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Circle } from 'lucide-react';
 import { User } from '@/types/user';
@@ -20,8 +19,8 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
   };
 
   const sizeClasses = {
-    sm: 'w-9 h-9 text-sm', // from w-8 h-8
-    md: 'w-11 h-11 text-base' // from w-10 h-10, with readable font size
+    sm: 'w-9 h-9 text-xs',
+    md: 'w-12 h-12 text-xs'
   };
 
   const statusSizeClasses = {
