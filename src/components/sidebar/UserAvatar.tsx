@@ -20,8 +20,8 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
   };
 
   const sizeClasses = {
-    sm: 'w-8 h-8 text-sm',
-    md: 'w-10 h-10'
+    sm: 'w-9 h-9 text-sm', // from w-8 h-8
+    md: 'w-11 h-11 text-base' // from w-10 h-10, with readable font size
   };
 
   const statusSizeClasses = {
@@ -31,7 +31,7 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
 
   return (
     <div className="relative">
-      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white font-medium`}>
+      <div className={`${sizeClasses[size]} bg-gray-600 rounded-full flex items-center justify-center text-white font-semibold tracking-tight`}>
         {user.avatar}
       </div>
       {showStatus && (

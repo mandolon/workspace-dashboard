@@ -69,8 +69,8 @@ const TaskRowAssignees = React.memo(({
       {task.assignee ? (
         <div className="relative group/avatar">
           {/* Avatar WITH initials */}
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${assigneeColor}`}>
-            <span className="text-white text-xs font-medium">{getInitials(task.assignee.fullName ?? task.assignee.name)}</span>
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-[0.99rem] font-semibold tracking-tight ${assigneeColor}`}>
+            <span>{getInitials(task.assignee.fullName ?? task.assignee.name)}</span>
           </div>
           {/* Remove Assignee (X) - top left, small */}
           {canAssign && (
@@ -91,7 +91,7 @@ const TaskRowAssignees = React.memo(({
             <DropdownMenuTrigger asChild>
               <button
                 onClick={stopPropagation}
-                className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors bg-transparent"
+                className="w-7 h-7 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors bg-transparent"
                 aria-label="Assign to"
                 type="button"
               >
@@ -105,7 +105,7 @@ const TaskRowAssignees = React.memo(({
                   onClick={() => handleAssignPerson(person)}
                   className="flex items-center gap-2 cursor-pointer"
                 >
-                  <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-semibold select-none ${getRandomColor(person.fullName ?? person.name)}`}>
                     {getInitials(person.fullName ?? person.name)}
                   </div>
                   <span>{person.fullName ?? person.name}</span>
@@ -118,8 +118,8 @@ const TaskRowAssignees = React.memo(({
 
       {task.collaborators?.map((collaborator, index) => (
         <div key={index} className="relative group/collaborator">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-[2.2px] border-background select-none ${collaboratorColors[index]}`}>
-            <span className="text-white text-xs font-medium">{getInitials(collaborator.fullName ?? collaborator.name)}</span>
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center border-[2.2px] border-background select-none text-white text-[0.99rem] font-semibold tracking-tight ${collaboratorColors[index]}`}>
+            <span>{getInitials(collaborator.fullName ?? collaborator.name)}</span>
           </div>
           {canAssign && (
             <button
@@ -140,7 +140,7 @@ const TaskRowAssignees = React.memo(({
           <DropdownMenuTrigger asChild>
             <button
               onClick={stopPropagation}
-              className="w-6 h-6 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors ml-1"
+              className="w-7 h-7 border-2 border-dashed border-muted-foreground rounded-full flex items-center justify-center hover:border-foreground hover:bg-accent transition-colors ml-1"
             >
               <UserPlus className="w-3 h-3 text-muted-foreground" strokeWidth="2" />
             </button>
@@ -152,7 +152,7 @@ const TaskRowAssignees = React.memo(({
                 onClick={() => handleAddCollaborator(person)}
                 className="flex items-center gap-2 cursor-pointer"
               >
-                <div className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-medium select-none ${getRandomColor(person.name)}`}>
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-semibold select-none ${getRandomColor(person.fullName ?? person.name)}`}>
                   {getInitials(person.fullName ?? person.name)}
                 </div>
                 <span>{person.fullName ?? person.name}</span>
