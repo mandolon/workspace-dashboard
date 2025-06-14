@@ -7,6 +7,7 @@ import { getRandomColor } from '@/utils/taskUtils';
 interface TeamMember {
   id: string;
   name: string;
+  fullName?: string; // Make this optional for legacy compatibility
   email: string;
   role: string;
   lastActive: string;
@@ -18,6 +19,24 @@ interface TeamMemberRowProps {
   roles: string[];
   onRoleChange: (memberId: string, newRole: string) => void;
 }
+
+const getInitials = (fullName?: string, name?: string) => {
+  if (fullName) {
+    const parts = fullName.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return fullName[0]?.toUpperCase() ?? '';
+  }
+  if (name) {
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name[0]?.toUpperCase() ?? '';
+  }
+  return '';
+};
 
 const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
   const getStatusColor = (status: string) => {
@@ -38,9 +57,9 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
       <div className="col-span-3">
         <div className="flex items-center gap-2">
           <div className={`w-5 h-5 ${getRandomColor(member.id)} rounded-full flex items-center justify-center text-white text-xs font-medium`}>
-            {member.name.split(' ').map(n => n[0]).join('')}
+            {getInitials(member.fullName, member.name)}
           </div>
-          <span className="font-medium">{member.name}</span>
+          <span className="font-medium">{member.fullName ?? member.name}</span>
         </div>
       </div>
       <div className="col-span-3 flex items-center gap-1 text-muted-foreground">
@@ -77,3 +96,4 @@ const TeamMemberRow = ({ member, roles, onRoleChange }: TeamMemberRowProps) => {
 };
 
 export default TeamMemberRow;
+
