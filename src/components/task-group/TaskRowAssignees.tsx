@@ -69,13 +69,18 @@ const TaskRowAssignees = React.memo(({
     <div className="flex items-center -space-x-1">
       {task.assignee ? (
         <div className="relative group/avatar">
+          {/* Avatar with initials ONLY */}
           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium border-[2.2px] border-background select-none ${assigneeColor}`}>
             {task.assignee.name}
           </div>
+          {/* Remove Assignee (X) - top left, small */}
           {canAssign && (
             <button
               onClick={handleRemoveAssignee}
-              className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600"
+              className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:bg-red-600 shadow"
+              style={{ fontSize: '0.6rem', padding: 0 }}
+              aria-label="Remove assignee"
+              tabIndex={-1}
             >
               <X className="w-2 h-2" strokeWidth="2" />
             </button>
@@ -120,7 +125,10 @@ const TaskRowAssignees = React.memo(({
           {canAssign && (
             <button
               onClick={handleRemoveCollaborator(index)}
-              className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/collaborator:opacity-100 transition-opacity hover:bg-red-600"
+              className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/collaborator:opacity-100 transition-opacity hover:bg-red-600 shadow"
+              style={{ fontSize: '0.6rem', padding: 0 }}
+              aria-label="Remove collaborator"
+              tabIndex={-1}
             >
               <X className="w-2 h-2" strokeWidth="2" />
             </button>
@@ -161,3 +169,4 @@ const TaskRowAssignees = React.memo(({
 TaskRowAssignees.displayName = "TaskRowAssignees";
 
 export default TaskRowAssignees;
+
