@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -23,13 +22,28 @@ export const useTaskOperations = () => {
   const createTask = useCallback((taskData: any) => {
     console.log('Creating task via context:', taskData);
     if (taskData.useCustomTasks) {
-      setCustomTasks(prev => [taskData, ...prev]);
+      // For dialog-created custom tasks, ensure createdBy set to current user
+      setCustomTasks(prev => [
+        {
+          ...taskData,
+          createdBy: currentUser?.name ?? "Unknown",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        ...prev
+      ]);
     } else {
-      const newTask = addTask(taskData);
+      // For quick add/centralized add, ensure current user is author
+      const newTask = addTask({
+        ...taskData,
+        createdBy: currentUser?.name ?? "Unknown",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
       console.log('Quick add created task:', newTask);
       triggerRefresh();
     }
-  }, [triggerRefresh]);
+  }, [triggerRefresh, currentUser]);
 
   const updateTaskById = useCallback((taskId: number, updates: Partial<Task>) => {
     const updatedTask = updateTask(taskId, updates);
@@ -187,4 +201,3 @@ export const useTaskOperations = () => {
     triggerRefresh
   };
 };
-
