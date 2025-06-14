@@ -9,53 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      pdf_comments: {
-        Row: {
-          comment_number: number
-          comment_text: string
-          created_at: string
-          id: string
-          page_number: number
-          updated_at: string
-          user_id: string
-          whiteboard_id: string
-          x: number
-          y: number
-        }
-        Insert: {
-          comment_number: number
-          comment_text: string
-          created_at?: string
-          id?: string
-          page_number?: number
-          updated_at?: string
-          user_id: string
-          whiteboard_id: string
-          x: number
-          y: number
-        }
-        Update: {
-          comment_number?: number
-          comment_text?: string
-          created_at?: string
-          id?: string
-          page_number?: number
-          updated_at?: string
-          user_id?: string
-          whiteboard_id?: string
-          x?: number
-          y?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pdf_comments_whiteboard_id_fkey"
-            columns: ["whiteboard_id"]
-            isOneToOne: false
-            referencedRelation: "whiteboards"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       task_messages: {
         Row: {
           created_at: string
@@ -158,7 +111,6 @@ export type Database = {
           created_by: string
           id: string
           last_modified: string
-          pdf_url: string | null
           project_id: string
           shared_with_client: boolean
           thumbnail: string | null
@@ -172,7 +124,6 @@ export type Database = {
           created_by: string
           id: string
           last_modified?: string
-          pdf_url?: string | null
           project_id: string
           shared_with_client?: boolean
           thumbnail?: string | null
@@ -186,7 +137,6 @@ export type Database = {
           created_by?: string
           id?: string
           last_modified?: string
-          pdf_url?: string | null
           project_id?: string
           shared_with_client?: boolean
           thumbnail?: string | null

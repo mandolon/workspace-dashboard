@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText, Users } from 'lucide-react';
 
@@ -9,7 +10,6 @@ interface WhiteboardCardWhiteboard {
   thumbnail: string;
   projectName: string;
   sharedWithClient?: boolean;
-  pdf_url?: string; // Added for PDF navigation
 }
 
 interface WhiteboardCardProps {
@@ -19,19 +19,9 @@ interface WhiteboardCardProps {
 
 const WhiteboardCard = ({ whiteboard, showSharingStatus }: WhiteboardCardProps) => {
   return (
-    <div className="group cursor-pointer" onClick={() => {
-      if (whiteboard.type === "pdf" && whiteboard.pdf_url) {
-        // Navigate to PDF view page
-        window.location.href = `/whiteboard/${whiteboard.id}`;
-      }
-    }}>
+    <div className="group cursor-pointer">
       <div className="relative aspect-square bg-muted rounded-lg mb-2 flex items-center justify-center group-hover:bg-muted/80 transition-colors">
-        {/* Replace generic icon with a mini PDF preview/label for PDF type */}
-        {whiteboard.type === "pdf" ? (
-          <span className="text-red-700 font-semibold">PDF</span>
-        ) : (
-          <FileText className="w-12 h-12 text-muted-foreground" />
-        )}
+        <FileText className="w-12 h-12 text-muted-foreground" />
         {showSharingStatus && whiteboard.sharedWithClient && (
           <span className="absolute top-2 right-2 px-2 py-0.5 text-[10px] bg-green-200 text-green-700 rounded-full flex items-center gap-1">
             <Users className="w-3 h-3 mr-1 inline" /> Shared
@@ -52,4 +42,5 @@ const WhiteboardCard = ({ whiteboard, showSharingStatus }: WhiteboardCardProps) 
     </div>
   );
 };
+
 export default WhiteboardCard;

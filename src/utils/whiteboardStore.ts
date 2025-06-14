@@ -1,3 +1,4 @@
+
 import { projectClientData } from "@/data/projectClientStaticData";
 
 // Types
@@ -10,7 +11,6 @@ export interface Whiteboard {
   projectId: string;
   createdBy: string; // userId
   sharedWithClient: boolean;
-  pdf_url?: string; // optional
 }
 
 // Simple mock DB for whiteboards (in-memory)
@@ -88,14 +88,12 @@ export function createWhiteboard({
   projectId,
   createdBy,
   sharedWithClient,
-  pdf_url
 }: {
   title: string;
   type: string;
   projectId: string;
   createdBy: string;
   sharedWithClient: boolean;
-  pdf_url?: string;
 }) {
   const id = Date.now().toString();
   whiteboards.unshift({
@@ -107,7 +105,6 @@ export function createWhiteboard({
     projectId,
     createdBy,
     sharedWithClient,
-    pdf_url
   });
 }
 
@@ -116,3 +113,4 @@ export function toggleShareWithClient(whiteboardId: string, value: boolean) {
   const wb = whiteboards.find(w => w.id === whiteboardId);
   if (wb) wb.sharedWithClient = value;
 }
+
