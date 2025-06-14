@@ -5,6 +5,7 @@ import TaskBoardContent from './TaskBoardContent';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { useTaskNavigation } from '@/hooks/useTaskNavigation';
 import { TaskGroup } from '@/types/task';
+import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
 
 const TaskBoard = React.memo(() => {
   const {
@@ -15,6 +16,7 @@ const TaskBoard = React.memo(() => {
     triggerRefresh
   } = useTaskContext();
   const { navigateToTaskDetail } = useTaskNavigation();
+  const { addAttachments } = useTaskAttachmentContext();
 
   const [isTaskDialogOpen, setIsTaskDialogOpen] = React.useState(false);
   const [showQuickAdd, setShowQuickAdd] = React.useState<string | null>(null);
@@ -60,10 +62,11 @@ const TaskBoard = React.memo(() => {
     createTask({ ...newTask, useCustomTasks: true });
   }, [createTask]);
 
-  // FIX: Forward attachments to createTask!
+  // After creating task, save attachments in the attachment context using correct taskId.
   const handleQuickAddSave = useCallback((taskData: any) => {
     console.log('Quick add task data:', taskData);
-    createTask({
+    // Actually create the task, get the returned object so we get the real task with taskId
+    const result = createTask({
       title: taskData.title,
       projectId: taskData.projectId || 'unknown-project',
       project: taskData.project || 'No Project',
@@ -77,8 +80,12 @@ const TaskBoard = React.memo(() => {
       collaborators: [],
       useCustomTasks: false
     });
+    // If there are files, store them using the correct taskId (from either created task, or fallback to display warning)
+    if (taskData.attachments && taskData.attachments.length > 0 && result && result.taskId) {
+      addAttachments(result.taskId, taskData.attachments, "ME");
+    }
     setShowQuickAdd(null);
-  }, [createTask]);
+  }, [createTask, addAttachments]);
 
   const handleOpenTaskDialog = useCallback(() => {
     setIsTaskDialogOpen(true);
@@ -112,4 +119,3 @@ const TaskBoard = React.memo(() => {
 
 TaskBoard.displayName = "TaskBoard";
 export default TaskBoard;
-
