@@ -1,4 +1,3 @@
-
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import ProjectHero from "@/components/client-dashboard/ProjectHero";
@@ -55,7 +54,6 @@ const ClientDashboard = () => {
               </TabsList>
               <TabsContent value="overview" className="space-y-6 pt-2">
                 <ActivityFeed />
-                <ProjectTimeline />
               </TabsContent>
               <TabsContent value="timeline" className="pt-2">
                 <ProjectTimeline />

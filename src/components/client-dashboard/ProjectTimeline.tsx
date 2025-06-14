@@ -104,23 +104,19 @@ const PhaseCollapsibleItem: React.FC<{
 };
 
 const ProjectTimeline: React.FC = () => (
-  <div className="w-full max-w-2xl mx-auto">
-    <div className="pb-2 pt-4 px-4">
-      <div className="text-base font-semibold">Project Timeline</div>
-      <div className="text-xs text-muted-foreground">
-        Current and past project milestones
-      </div>
+  <div>
+    <h3 className="font-semibold mb-2">Project Timeline</h3>
+    <div className="text-xs text-muted-foreground mb-2">
+      Current and past project milestones
     </div>
-    <div className="pt-0 px-2 sm:px-4 pb-2">
-      <div>
-        {projectPhases.map((phase, idx) => (
-          <PhaseCollapsibleItem
-            key={phase.id}
-            phase={phase}
-            defaultOpen={idx === 0}
-          />
-        ))}
-      </div>
+    <div>
+      {projectPhases.map((phase, idx) => (
+        <PhaseCollapsibleItem
+          key={phase.id}
+          phase={phase}
+          defaultOpen={idx === 0}
+        />
+      ))}
     </div>
   </div>
 );
