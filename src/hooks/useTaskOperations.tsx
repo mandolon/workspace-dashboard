@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -55,13 +54,23 @@ export const useTaskOperations = () => {
           title: "Task deleted",
           description: `"${taskTitle}" has been deleted.`,
           action: (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => restoreDeletedTask(taskId)}
-            >
-              Undo
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => restoreDeletedTask(taskId)}
+              >
+                Undo
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/settings?tab=trash')}
+                className="ml-1"
+              >
+                Go to Trash
+              </Button>
+            </div>
           ),
           duration: 5000,
         });
@@ -75,7 +84,7 @@ export const useTaskOperations = () => {
         variant: "destructive",
       });
     }
-  }, [toast, triggerRefresh]);
+  }, [toast, triggerRefresh, navigate]);
 
   const restoreDeletedTask = useCallback((taskId: number) => {
     const restoredTask = restoreTask(taskId);
@@ -112,6 +121,7 @@ export const useTaskOperations = () => {
   }, [customTasks]);
 
   const getAllTasks = useCallback(() => {
+    // Get all tasks from centralized data and combine with custom tasks, filtering out deleted ones
     const allCentralizedTasks = getTasksByStatus('redline')
       .concat(getTasksByStatus('progress'))
       .concat(getTasksByStatus('completed'))

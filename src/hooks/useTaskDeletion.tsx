@@ -1,5 +1,6 @@
 
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { useTaskContext } from '@/contexts/TaskContext';
@@ -11,6 +12,7 @@ export const useTaskDeletion = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteTask, restoreDeletedTask } = useTaskContext();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleDeleteClick = useCallback((task: Task, e?: React.MouseEvent) => {
     if (e) {
@@ -22,22 +24,30 @@ export const useTaskDeletion = () => {
 
   const handleDeleteTask = useCallback(async () => {
     if (!taskToDelete) return;
-    
     setIsDeleting(true);
     try {
       await deleteTask(taskToDelete.id);
-      
       toast({
         title: "Task deleted",
         description: `"${taskToDelete.title}" has been deleted.`,
         action: (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => restoreDeletedTask(taskToDelete.id)}
-          >
-            Undo
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => restoreDeletedTask(taskToDelete.id)}
+            >
+              Undo
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/settings?tab=trash')}
+              className="ml-1"
+            >
+              Go to Trash
+            </Button>
+          </div>
         ),
         duration: 5000,
       });
@@ -52,7 +62,7 @@ export const useTaskDeletion = () => {
       setShowDeleteDialog(false);
       setTaskToDelete(null);
     }
-  }, [taskToDelete, deleteTask, restoreDeletedTask, toast]);
+  }, [taskToDelete, deleteTask, restoreDeletedTask, toast, navigate]);
 
   const handleCloseDeleteDialog = useCallback(() => {
     setShowDeleteDialog(false);
