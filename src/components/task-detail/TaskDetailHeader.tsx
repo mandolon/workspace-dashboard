@@ -1,12 +1,10 @@
 
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { Task } from '@/types/task'; // Import the Task type
 
 interface TaskDetailHeaderProps {
-  task: {
-    taskId: string;
-    project: string;
-  };
+  task: Task; // Use the imported Task type
   onClose: () => void;
   onProjectClick?: () => void;
 }
@@ -23,7 +21,7 @@ const TaskDetailHeader = ({ task, onClose, onProjectClick }: TaskDetailHeaderPro
             onClick={onProjectClick}
             className="text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors"
           >
-            {task.project}
+            {task.project} {/* This is the project display name */}
           </button>
         ) : (
           <span className="text-xs text-muted-foreground">{task.project}</span>
