@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import TaskGroupHeader from './task-group/TaskGroupHeader';
 import TaskTableSection from './task-group/TaskTableSection';
-import { Task, TaskGroup } from '@/types/task';
+import { Task, TaskGroup, TaskUser } from '@/types/task';
 
 interface TaskGroupSectionProps {
   group: TaskGroup;
@@ -12,8 +12,12 @@ interface TaskGroupSectionProps {
   onTaskClick: (task: Task) => void;
   onTaskArchive?: (taskId: number) => void;
   onTaskDeleted?: () => void;
-  // Add this prop to determine context mode
   useContext?: boolean;
+  // Assignment handler props (added!)
+  assignPerson?: (taskId: string, person: TaskUser) => void;
+  removeAssignee?: (taskId: string) => void;
+  addCollaborator?: (taskId: string, person: TaskUser) => void;
+  removeCollaborator?: (taskId: string, idx: number) => void;
 }
 
 const TaskGroupSection = React.memo(({
@@ -24,7 +28,12 @@ const TaskGroupSection = React.memo(({
   onTaskClick,
   onTaskArchive,
   onTaskDeleted,
-  useContext = true // default to context mode unless told otherwise
+  useContext = true,
+  // Assignment handlers (added!)
+  assignPerson,
+  removeAssignee,
+  addCollaborator,
+  removeCollaborator,
 }: TaskGroupSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -45,6 +54,11 @@ const TaskGroupSection = React.memo(({
           onTaskClick={onTaskClick}
           onTaskDeleted={onTaskDeleted}
           useContext={useContext}
+          // Assignment handlers pass-through (added!)
+          assignPerson={assignPerson}
+          removeAssignee={removeAssignee}
+          addCollaborator={addCollaborator}
+          removeCollaborator={removeCollaborator}
         />
       )}
     </div>
@@ -53,3 +67,4 @@ const TaskGroupSection = React.memo(({
 
 TaskGroupSection.displayName = "TaskGroupSection";
 export default TaskGroupSection;
+
