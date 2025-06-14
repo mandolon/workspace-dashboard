@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -19,6 +18,10 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastSavedValue = useRef(value ?? "");
 
+  // For animation: fade out after save
+  const [showSaving, setShowSaving] = useState(false);
+  const fadeTimeout = useRef<NodeJS.Timeout | null>(null);
+
   // Sync local state when new task is loaded or prop changes
   useEffect(() => {
     setDesc(value ?? "");
@@ -38,17 +41,28 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
     }
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
 
-    setSaving(true);
-    saveTimeout.current = setTimeout(() => {
-      onSave(desc);
-      setSaving(false);
-      setDirty(false);
-      lastSavedValue.current = desc;
+    saveTimeout.current = setTimeout(async () => {
+      setSaving(true);
+      setShowSaving(true);
+      try {
+        await Promise.resolve(onSave(desc));
+        lastSavedValue.current = desc;
+      } finally {
+        setSaving(false);
+        // Keep "Saving..." for 500ms after save finishes for better UX
+        if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+        fadeTimeout.current = setTimeout(() => setShowSaving(false), 500);
+        setDirty(false);
+      }
     }, 1800); // Save after 1.8 seconds inactivity
+    // cleanup 
+    return () => {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    };
   }, [desc, dirty, onSave]);
 
   // Immediate save on blur
-  const handleBlur = () => {
+  const handleBlur = async () => {
     if (
       dirty &&
       onSave &&
@@ -56,15 +70,28 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
     ) {
       if (saveTimeout.current) clearTimeout(saveTimeout.current);
       setSaving(true);
-      onSave(desc);
-      setSaving(false);
-      setDirty(false);
-      lastSavedValue.current = desc;
+      setShowSaving(true);
+      try {
+        await Promise.resolve(onSave(desc));
+        lastSavedValue.current = desc;
+      } finally {
+        setSaving(false);
+        if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+        fadeTimeout.current = setTimeout(() => setShowSaving(false), 500);
+        setDirty(false);
+      }
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+      if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    };
+  }, []);
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 relative">
       <label className="text-xs text-muted-foreground">Description</label>
       <Textarea
         placeholder="Add description..."
@@ -78,7 +105,18 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
         disabled={disabled}
         aria-label="Task description"
       />
-      {saving && <div className="text-[10px] text-muted-foreground">Saving...</div>}
+      {/* Fixed height to avoid shifting layout; absolutely positioned 'Saving...' */}
+      <div className="relative" style={{ minHeight: 16, height: 16 }}>
+        {showSaving && (
+          <div
+            className="absolute left-0 top-0 text-[10px] text-muted-foreground transition-opacity animate-fade-in"
+            style={{ pointerEvents: 'none' }}
+            aria-live="polite"
+          >
+            Saving...
+          </div>
+        )}
+      </div>
     </div>
   );
 };
