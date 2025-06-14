@@ -71,9 +71,9 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
                 </button>
               </>
             ) : (
-              // Make the +/Users icon centered and same size as a round avatar
-              <span className="w-7 h-7 flex items-center justify-center rounded-full">
-                <Users className="w-5 h-5" />
+              // +/Users icon is perfectly circular and sized like the avatar
+              <span className="w-8 h-8 flex items-center justify-center rounded-full bg-muted">
+                <Users className="w-5 h-5 text-muted-foreground" />
               </span>
             )}
           </Button>
