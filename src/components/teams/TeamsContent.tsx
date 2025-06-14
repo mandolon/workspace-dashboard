@@ -3,71 +3,70 @@ import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
 import TeamMembersSummary from './TeamMembersSummary';
+import { TEAM_USERS } from '@/utils/teamUsers';
+import { ArchitectureRole } from '@/types/roles';
 
-interface TeamMember {
+// Helper for last active/ status for demo purposes
+const memberStatus: Record<string, { lastActive: string; status: 'Active' | 'Inactive' | 'Pending' }> = {
+  'AL': { lastActive: 'Jun 2, 2025', status: 'Active' },
+  'MP': { lastActive: 'Jun 3, 2025', status: 'Active' },
+  'SS': { lastActive: 'May 28, 2025', status: 'Active' },
+  'JJ': { lastActive: 'Jun 1, 2025', status: 'Inactive' },
+  'RH': { lastActive: 'May 30, 2025', status: 'Pending' },
+  'JH': { lastActive: 'May 29, 2025', status: 'Active' }
+};
+
+export type TeamMember = {
   id: string;
   name: string;
+  fullName: string;
   email: string;
-  role: string;
+  role: ArchitectureRole;
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
-}
+  avatar: string;
+};
 
 const TeamsContent = () => {
-  console.log('TeamsContent component is rendering');
-  
   const [searchTerm, setSearchTerm] = useState('');
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([
-    {
-      id: '1',
-      name: 'Stephanie Sharkey',
-      email: 'steph56@gmail.com',
-      role: 'Architect',
-      lastActive: 'Jul 31, 2024',
-      status: 'Active'
-    },
-    {
-      id: '2',
-      name: 'Joshua Jones',
-      email: 'jjones@aol.com',
-      role: 'Engineer',
-      lastActive: 'Aug 17, 2024',
-      status: 'Active'
-    },
-    {
-      id: '3',
-      name: 'Rhonda Rhodes',
-      email: 'rhodes@outlook.com',
-      role: 'Consultant',
-      lastActive: 'Aug 11, 2024',
-      status: 'Active'
-    },
-    {
-      id: '4',
-      name: 'James Hall',
-      email: 'j.hall367@outlook.com',
-      role: 'Designer',
-      lastActive: 'Aug 2, 2024',
-      status: 'Inactive'
-    },
-    {
-      id: '5',
-      name: 'Corina McCoy',
-      email: 'mc.coy@aol.com',
-      role: 'Designer',
-      lastActive: 'Jul 23, 2024',
-      status: 'Pending'
-    }
-  ]);
 
-  const roles = ['Architect', 'Engineer', 'Designer', 'Consultant', 'Manager', 'Admin'];
+  // Map TEAM_USERS into full table records for the CRM
+  const teamMembers: TeamMember[] = TEAM_USERS.map(user => ({
+    id: user.id,
+    name: user.name,
+    fullName: user.fullName,
+    // Demo email from full name
+    email: `${user.fullName.replace(/ /g, '.').toLowerCase()}@example.com`,
+    role: user.role,
+    lastActive: memberStatus[user.name]?.lastActive || '—',
+    status: memberStatus[user.name]?.status || 'Active',
+    avatar: user.avatar
+  }));
+
+  const roles = [
+    'Architect',
+    'Engineer',
+    'CAD Tech',
+    'Designer',
+    'Interior Designer',
+    'Consultant',
+    'Project Manager',
+    'Admin',
+    'Developer',
+    'QA Tester',
+    'Team Lead',
+    'Marketing Manager',
+    'Customer Support',
+    'Operations',
+    'Jr Designer',
+    'Contractor',
+    'Client'
+  ];
 
   const handleRoleChange = (memberId: string, newRole: string) => {
-    setTeamMembers(prev => 
-      prev.map(member => 
-        member.id === memberId ? { ...member, role: newRole } : member
-      )
-    );
+    // For demo: would update role in state - here just console log for now
+    console.log(`Role change requested for ${memberId}: ${newRole}`);
+    // You can add state logic here if you want roles to be updated in UI as a demo
   };
 
   const handleAddMember = () => {
@@ -75,8 +74,8 @@ const TeamsContent = () => {
     console.log('Add member clicked');
   };
 
-  const filteredMembers = teamMembers.filter(member => 
-    member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredMembers = teamMembers.filter(member =>
+    member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -87,13 +86,11 @@ const TeamsContent = () => {
         onSearchChange={setSearchTerm}
         onAddMember={handleAddMember}
       />
-
       <TeamMembersTable
         members={filteredMembers}
         roles={roles}
         onRoleChange={handleRoleChange}
       />
-
       <TeamMembersSummary
         filteredMembers={filteredMembers}
         totalMembers={teamMembers.length}
