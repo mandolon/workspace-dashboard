@@ -165,7 +165,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   };
 
   return (
-    <div className="px-4 py-2 bg-background border border-border rounded shadow-lg transition-colors duration-100">
+    <div className="px-4 py-2 bg-background border border-border rounded transition-colors duration-100">
       <div className="grid grid-cols-12 gap-4 items-center overflow-visible">
         {/* Name column */}
         <div className="col-span-6 flex items-center gap-2 pl-4">
@@ -235,3 +235,4 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
 };
 
 export default QuickAddTask;
+
