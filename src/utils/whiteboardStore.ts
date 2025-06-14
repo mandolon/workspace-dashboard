@@ -63,13 +63,14 @@ export function getAllWhiteboards() {
 }
 
 // Team: see all; Client: see shared for their project(s)
-export function getVisibleWhiteboardsForUser(user: { role: string; id: string }) {
+// Updated: add email as an optional field on the user object param
+export function getVisibleWhiteboardsForUser(user: { role: string; id: string; email?: string }) {
   if (!user) return [];
   if (user.role === "Client") {
     // find project IDs where user is a client
     const projectIds = Object.keys(projectClientData).filter(pid =>
       projectClientData[pid].clients.some(
-        c => c.clientId === user.id || c.email === user.email
+        c => c.clientId === user.id || (user.email && c.email === user.email)
       )
     );
     return whiteboards.filter(
