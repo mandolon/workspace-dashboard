@@ -8,9 +8,10 @@ import DocumentsGallery from "@/components/client-dashboard/DocumentsGallery";
 import ProjectTeam from "@/components/client-dashboard/ProjectTeam";
 import QuickActions from "@/components/client-dashboard/QuickActions";
 import ProjectHealth from "@/components/client-dashboard/ProjectHealth";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 /**
- * Tweaked layout for better responsiveness & visual clarity.
+ * Tweaked layout for tab-based navigation for clients.
  */
 const activeProject = {
   name: "Adams - 1063 40th Street",
@@ -35,24 +36,33 @@ const ClientDashboard = () => {
           {/* Project Health */}
           <ProjectHealth />
 
-          {/* Two-column grid below Project Health */}
-          <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 mt-2">
-            <div className="space-y-6 lg:col-span-2">
-              {/* Activity Feed */}
-              <ActivityFeed />
-              {/* Project Timeline */}
-              <ProjectTimeline />
-            </div>
-            <div className="space-y-6">
-              {/* QuickActions (Schedule Meeting, etc.) */}
-              <QuickActions />
-              {/* Team Information */}
-              <ProjectTeam />
-            </div>
+          {/* Dashboard Tabs */}
+          <div className="mt-4">
+            <Tabs defaultValue="overview">
+              <TabsList className="mb-2 w-full justify-start bg-accent">
+                <TabsTrigger value="overview" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="team" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Team
+                </TabsTrigger>
+                <TabsTrigger value="documents" className="px-4 py-2 text-base rounded-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Documents
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview" className="space-y-6 pt-2">
+                <ActivityFeed />
+                <ProjectTimeline />
+              </TabsContent>
+              <TabsContent value="team" className="space-y-6 pt-2">
+                <ProjectTeam />
+                <QuickActions />
+              </TabsContent>
+              <TabsContent value="documents" className="pt-2">
+                <DocumentsGallery />
+              </TabsContent>
+            </Tabs>
           </div>
-
-          {/* Documents Gallery as full width below the grid */}
-          <DocumentsGallery />
         </div>
       </div>
     </AppLayout>
