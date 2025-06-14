@@ -7,6 +7,12 @@ import {
 import { useEditor } from "@tldraw/tldraw";
 import { cn } from "@/lib/utils";
 
+// Helper to build tldraw color style
+function getSolidColorStyle(color: string) {
+  // tldraw expects: { type: "solid", color: string }
+  return { type: "solid", color };
+}
+
 const TOOL_BUTTONS: Array<{
   key: string,
   icon: React.ReactNode,
@@ -47,8 +53,9 @@ const CustomTldrawToolbar: React.FC = () => {
   // When tool change/color change: update tldraw style
   React.useEffect(() => {
     if (editor) {
-      editor.setStyleForNextShapes('color', color as any);
-      editor.setStyleForNextShapes('size', stroke as any);
+      // Use correct tldraw style object for color
+      editor.setStyleForNextShapes('color', getSolidColorStyle(color));
+      editor.setStyleForNextShapes('size', stroke);
     }
   }, [color, stroke, editor]);
 
@@ -69,9 +76,9 @@ const CustomTldrawToolbar: React.FC = () => {
     }
     else if (tool === "highlight") {
       editor.setCurrentTool("draw");
-      editor.setStyleForNextShapes('color', "#fff176" as any);
-      editor.setStyleForNextShapes('opacity', 0.32 as any);
-      editor.setStyleForNextShapes('size', 6 as any);
+      editor.setStyleForNextShapes('color', getSolidColorStyle("#fff176"));
+      editor.setStyleForNextShapes('opacity', 0.32);
+      editor.setStyleForNextShapes('size', 6);
       setColor("#fff176");
       setStroke(6);
     }
@@ -154,3 +161,4 @@ const CustomTldrawToolbar: React.FC = () => {
 };
 
 export default CustomTldrawToolbar;
+
