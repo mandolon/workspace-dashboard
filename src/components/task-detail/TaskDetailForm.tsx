@@ -145,7 +145,8 @@ const TaskDetailForm = ({ task }: TaskDetailFormProps) => {
                   <div
                     className={`w-6 h-6 rounded-full border-[2.2px] border-background flex items-center justify-center select-none ${getRandomColor(task.assignee.name, task.assignee.avatarColor)} text-white font-medium text-xs`}
                   >
-                    {getInitials(task.assignee.name)}
+                    {/* FIX: Show initials based on fullName if present */}
+                    {getInitials(task.assignee.fullName ?? task.assignee.name)}
                   </div>
                   {/* Small red X in the top-left */}
                   <button
