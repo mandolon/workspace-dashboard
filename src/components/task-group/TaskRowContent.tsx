@@ -70,7 +70,7 @@ const TaskRowContent = React.memo(({
 
   return (
     <div 
-      className="flex items-center gap-2 cursor-pointer pl-4 py-1" // Adjusted padding
+      className="flex items-center gap-2 cursor-pointer pl-4" 
       onClick={handleTaskClick}
     >
       <TaskStatusIcon 
@@ -102,10 +102,9 @@ const TaskRowContent = React.memo(({
             </button>
           </div>
         ) : (
-          <div className="flex flex-col -my-0.5"> {/* Adjust vertical spacing for project/title */}
-            <div className="text-xs text-muted-foreground leading-tight">{task.project}</div> {/* Project name first, tighter leading */}
+          <div>
             <div className="flex items-center gap-1 group/title">
-              <div className="font-medium text-xs leading-tight"> {/* Task title, tighter leading */}
+              <div className="font-medium text-xs">
                 {task.title}
               </div>
               <div className="flex items-center gap-0.5 opacity-0 group-hover/title:opacity-100">
@@ -123,6 +122,7 @@ const TaskRowContent = React.memo(({
                 </button>
               </div>
             </div>
+            <div className="text-xs text-muted-foreground">{task.project}</div>
           </div>
         )}
       </div>
@@ -133,4 +133,3 @@ const TaskRowContent = React.memo(({
 TaskRowContent.displayName = "TaskRowContent";
 
 export default TaskRowContent;
-

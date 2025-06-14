@@ -23,7 +23,7 @@ const TaskGroupSection = React.memo(({
   onSetShowQuickAdd, 
   onQuickAddSave, 
   onTaskClick,
-  onTaskArchive, // This prop seems unused in the component logic currently
+  onTaskArchive,
   onTaskDeleted
 }: TaskGroupSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -44,6 +44,7 @@ const TaskGroupSection = React.memo(({
     removeCollaborator
   } = useTaskContext();
 
+  // Memoize filtered tasks
   const visibleTasks = useMemo(() => 
     group.tasks.filter(task => !task.archived && !task.deletedAt),
     [group.tasks]
@@ -51,29 +52,35 @@ const TaskGroupSection = React.memo(({
 
   const isShowingQuickAdd = showQuickAdd === group.status;
 
+  // Handle click outside to cancel quick add
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isShowingQuickAdd && quickAddRef.current && !quickAddRef.current.contains(event.target as Node)) {
         onSetShowQuickAdd(null);
       }
     };
+
     if (isShowingQuickAdd) {
       document.addEventListener('mousedown', handleClickOutside);
     }
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isShowingQuickAdd, onSetShowQuickAdd]);
 
+  // Handle click outside to cancel task editing
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (editingTaskId && taskTableRef.current && !taskTableRef.current.contains(event.target as Node)) {
         cancelTaskEdit();
       }
     };
+
     if (editingTaskId) {
       document.addEventListener('mousedown', handleClickOutside);
     }
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -132,8 +139,7 @@ const TaskGroupSection = React.memo(({
   }, [onSetShowQuickAdd]);
 
   return (
-    // Reduced overall spacing for the section (default space-y-2 was okay, header mb-2 removed)
-    <div className="space-y-1"> 
+    <div className="space-y-2">
       <TaskGroupHeader
         group={group}
         isExpanded={isExpanded}
@@ -142,30 +148,28 @@ const TaskGroupSection = React.memo(({
 
       {isExpanded && (
         <>
-          {visibleTasks.length > 0 && (
-            <TaskTable
-              ref={taskTableRef}
-              tasks={visibleTasks}
-              editingTaskId={editingTaskId}
-              editingValue={editingValue}
-              onSetEditingValue={setEditingValue}
-              onTaskClick={onTaskClick}
-              onTaskNameClick={handleTaskNameClick}
-              onEditClick={handleEditClick}
-              onSaveEdit={saveTaskEdit}
-              onCancelEdit={cancelTaskEdit}
-              onKeyDown={handleKeyDown}
-              onTaskStatusClick={handleTaskStatusClick}
-              onRemoveAssignee={handleRemoveAssignee}
-              onRemoveCollaborator={handleRemoveCollaborator}
-              onAssignPerson={handleAssignPerson}
-              onAddCollaborator={handleAddCollaborator}
-              onTaskDeleted={onTaskDeleted}
-            />
-          )}
+          <TaskTable
+            ref={taskTableRef}
+            tasks={visibleTasks}
+            editingTaskId={editingTaskId}
+            editingValue={editingValue}
+            onSetEditingValue={setEditingValue}
+            onTaskClick={onTaskClick}
+            onTaskNameClick={handleTaskNameClick}
+            onEditClick={handleEditClick}
+            onSaveEdit={saveTaskEdit}
+            onCancelEdit={cancelTaskEdit}
+            onKeyDown={handleKeyDown}
+            onTaskStatusClick={handleTaskStatusClick}
+            onRemoveAssignee={handleRemoveAssignee}
+            onRemoveCollaborator={handleRemoveCollaborator}
+            onAssignPerson={handleAssignPerson}
+            onAddCollaborator={handleAddCollaborator}
+            onTaskDeleted={onTaskDeleted}
+          />
 
           {isShowingQuickAdd ? (
-            <div ref={quickAddRef} className="pt-1"> {/* Added padding top for QuickAddTask when visible */}
+            <div ref={quickAddRef}>
               <QuickAddTask
                 onSave={onQuickAddSave}
                 onCancel={handleHideQuickAdd}
@@ -173,8 +177,6 @@ const TaskGroupSection = React.memo(({
               />
             </div>
           ) : (
-             // Conditional rendering for AddTaskButton only if there are tasks or to match ClickUp's "empty state"
-            (visibleTasks.length > 0 || group.status !== 'completed') && // Example: Don't show for completed if no tasks
             <AddTaskButton onAddTask={handleShowQuickAdd} />
           )}
         </>
@@ -186,4 +188,3 @@ const TaskGroupSection = React.memo(({
 TaskGroupSection.displayName = "TaskGroupSection";
 
 export default TaskGroupSection;
-

@@ -15,10 +15,9 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
     e.stopPropagation();
     if (status !== 'completed') {
       setIsAnimating(true);
+      // Small delay to show the animation before calling onClick
       setTimeout(() => {
         onClick();
-        // Reset animation state after a short delay if needed, or let it be reset by status change
-        // setIsAnimating(false); // Consider this if animation needs reset without status change
       }, 150);
     } else {
       onClick();
@@ -64,27 +63,16 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
       );
     }
 
-    // Default status icon - now dashed
     return (
-      <div className={cn(
-        "w-4 h-4 border-2 border-gray-300 border-dashed rounded-full cursor-pointer hover:bg-gray-50 transition-all duration-200",
-         isAnimating && "animate-[scale-in_0.3s_ease-out] bg-green-500 border-green-500 !border-solid" // Ensure border becomes solid on animation
-      )}>
-        {isAnimating && (
-            <div className="w-full h-full flex items-center justify-center">
-              <Check className="w-2.5 h-2.5 text-white animate-[fade-in_0.2s_ease-out_0.1s_both]" strokeWidth="3" />
-            </div>
-          )}
-      </div>
+      <div className="w-4 h-4 border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-50 transition-all duration-200" />
     );
   };
 
   return (
-    <button onClick={handleClick} className="p-0.5 hover:bg-accent rounded transition-colors flex-shrink-0">
+    <button onClick={handleClick} className="p-0.5 hover:bg-accent rounded transition-colors">
       {getStatusIcon()}
     </button>
   );
 };
 
 export default TaskStatusIcon;
-

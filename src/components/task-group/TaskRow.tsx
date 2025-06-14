@@ -83,8 +83,7 @@ const TaskRow = React.memo(({
         onContextMenuDelete={handleContextMenuDelete}
       >
         <TableRow key={task.id} className="hover:bg-accent/50 group">
-          {/* Adjusted py-0 for tighter vertical spacing in cells, TaskRowContent handles its internal padding */}
-          <TableCell className="py-0 w-[50%]"> 
+          <TableCell className="py-2 w-[50%]">
             <TaskRowContent
               task={task}
               editingTaskId={editingTaskId}
@@ -99,13 +98,13 @@ const TaskRow = React.memo(({
               onDeleteClick={handleDeleteClickInternal}
             />
           </TableCell>
-          <TableCell className="text-xs text-muted-foreground py-1 w-[8%]"> {/* py-1 for consistency */}
+          <TableCell className="py-2 w-[8%]">
             <TaskRowFiles hasAttachment={task.hasAttachment} />
           </TableCell>
-          <TableCell className="text-xs text-muted-foreground py-1 w-[17%]"> {/* py-1 */}
+          <TableCell className="text-xs text-muted-foreground py-2 w-[17%]">
             {formattedDate}
           </TableCell>
-          <TableCell className="py-1 w-[25%]"> {/* py-1 */}
+          <TableCell className="py-2 w-[25%]">
             <TaskRowAssignees
               task={task}
               onRemoveAssignee={onRemoveAssignee}
@@ -131,4 +130,3 @@ const TaskRow = React.memo(({
 TaskRow.displayName = "TaskRow";
 
 export default TaskRow;
-
