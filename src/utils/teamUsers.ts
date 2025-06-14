@@ -28,35 +28,35 @@ export const TEAM_USERS: TeamUser[] = [
     id: 't2',
     name: 'MP',
     fullName: 'Mark Pinsky',
-    role: 'Engineer',
+    role: 'Team Lead',
     avatar: 'bg-green-500'
   },
   {
     id: 't3',
     name: 'SS',
     fullName: 'Stephanie Sharkey',
-    role: 'Architect',
+    role: 'Team Lead',
     avatar: 'bg-blue-500'
   },
   {
     id: 't4',
     name: 'JJ',
     fullName: 'Joshua Jones',
-    role: 'Designer',
+    role: 'Team Lead',
     avatar: 'bg-orange-500'
   },
   {
     id: 't5',
     name: 'RH',
     fullName: 'Rhonda Rhodes',
-    role: 'Consultant',
+    role: 'Team Lead',
     avatar: 'bg-pink-500'
   },
   {
     id: 't6',
     name: 'JH',
     fullName: 'James Hall',
-    role: 'QA Tester',
+    role: 'Team Lead',
     avatar: 'bg-gray-500'
   }
 ];
