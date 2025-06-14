@@ -17,18 +17,25 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedValue = useRef(value ?? "");
 
-  // Sync local state when new task is loaded
+  // Sync local state when new task is loaded or prop changes
   useEffect(() => {
     setDesc(value ?? "");
     setDirty(false);
     setSaving(false);
+    lastSavedValue.current = value ?? "";
   }, [value]);
 
-  // Debounced autosave on change
+  // Debounced autosave when user stops typing
   useEffect(() => {
     if (!dirty) return;
     if (!onSave) return;
+    if (desc === lastSavedValue.current) {
+      setDirty(false);
+      setSaving(false);
+      return;
+    }
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
 
     setSaving(true);
@@ -36,18 +43,23 @@ const TaskDetailDescription: React.FC<TaskDetailDescriptionProps> = ({
       onSave(desc);
       setSaving(false);
       setDirty(false);
-    }, 650); // Save 650ms after user stops typing
-    // eslint-disable-next-line
-  }, [desc]);
+      lastSavedValue.current = desc;
+    }, 1800); // Save after 1.8 seconds inactivity
+  }, [desc, dirty, onSave]);
 
   // Immediate save on blur
   const handleBlur = () => {
-    if (dirty && onSave) {
+    if (
+      dirty &&
+      onSave &&
+      desc !== lastSavedValue.current
+    ) {
       if (saveTimeout.current) clearTimeout(saveTimeout.current);
       setSaving(true);
       onSave(desc);
       setSaving(false);
       setDirty(false);
+      lastSavedValue.current = desc;
     }
   };
 
