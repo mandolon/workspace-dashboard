@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -16,6 +15,7 @@ const memberStatus: Record<string, { lastActive: string; status: 'Active' | 'Ina
   'JH': { lastActive: 'May 29, 2025', status: 'Active' }
 };
 
+// Only these fields are present
 export type TeamMember = {
   id: string;
   name: string;
@@ -127,4 +127,3 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
 };
 
 export default TeamsContent;
-
