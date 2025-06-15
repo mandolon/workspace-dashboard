@@ -64,24 +64,35 @@ export function useRealtimeTasks() {
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         (payload: any) => {
+          // Enhanced debugging for all events
+          console.log('[useRealtimeTasks] Real-time event received:', {
+            event: payload.eventType,
+            table: payload.table,
+            schema: payload.schema,
+            taskId: payload.new?.task_id || payload.old?.task_id,
+            title: payload.new?.title || payload.old?.title,
+            fullPayload: payload
+          });
+          
           // Type assertion for the payload data
           const newRow = payload.new as any;
           const oldRow = payload.old as any;
           
-          console.log('[useRealtimeTasks] Real-time event received:', {
-            event: payload.eventType,
-            taskId: newRow?.task_id || oldRow?.task_id,
-            title: newRow?.title || oldRow?.title
-          });
-          
           const row = newRow ?? oldRow;
           if (!row) {
-            console.warn('[useRealtimeTasks] No row data in payload');
+            console.warn('[useRealtimeTasks] No row data in payload:', payload);
             return;
           }
           
           const task = dbRowToTask(row);
-          console.log('[useRealtimeTasks] Processed task:', task.taskId, task.title);
+          console.log('[useRealtimeTasks] Processed task:', {
+            taskId: task.taskId,
+            title: task.title,
+            status: task.status,
+            id: task.id,
+            archived: task.archived,
+            deletedAt: task.deletedAt
+          });
 
           setTasks(prev => {
             const visible = canUserViewTask(task, currentUser);
@@ -96,10 +107,17 @@ export function useRealtimeTasks() {
             
             if (payload.eventType === "INSERT") {
               if (!prev.some(t => t.id === task.id)) {
-                console.log('[useRealtimeTasks] Adding new task:', task.taskId, task.title);
-                return [task, ...prev];
+                console.log('[useRealtimeTasks] Adding new task:', {
+                  taskId: task.taskId,
+                  title: task.title,
+                  status: task.status,
+                  totalTasksBefore: prev.length
+                });
+                const newTasks = [task, ...prev];
+                console.log('[useRealtimeTasks] Total tasks after insert:', newTasks.length);
+                return newTasks;
               }
-              console.log('[useRealtimeTasks] Task already exists, skipping insert');
+              console.log('[useRealtimeTasks] Task already exists, skipping insert for:', task.taskId);
               return prev;
             }
             
@@ -121,13 +139,20 @@ export function useRealtimeTasks() {
               return prev.filter(t => t.id !== task.id);
             }
             
-            console.log('[useRealtimeTasks] Unknown event type:', payload.eventType);
+            console.warn('[useRealtimeTasks] Unknown event type:', payload.eventType);
             return prev;
           });
         }
       )
       .subscribe(status => {
-        console.log('[useRealtimeTasks] Subscription status:', status);
+        console.log('[useRealtimeTasks] Subscription status:', status, 'for channel:', channelName);
+        if (status === 'SUBSCRIBED') {
+          console.log('[useRealtimeTasks] Successfully subscribed to real-time updates');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('[useRealtimeTasks] Channel error occurred');
+        } else if (status === 'TIMED_OUT') {
+          console.error('[useRealtimeTasks] Subscription timed out');
+        }
       });
 
     // Store the channel reference

@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task } from '@/types/task';
@@ -22,39 +21,92 @@ export const useTaskOperations = (tasks: Task[]) => {
   const handleCreateTask = useCallback(
     async (newTask: any) => {
       const taskId = newTask.taskId ?? generateTaskId();
-      console.log('[useTaskOperations] Creating task:', taskId, newTask.title);
+      console.log('[useTaskOperations] Creating task:', {
+        taskId,
+        title: newTask.title,
+        projectId: newTask.projectId,
+        status: newTask.status,
+        assignee: newTask.assignee,
+        fullTaskData: newTask
+      });
+      
       try {
-        await insertTask({
+        const taskToInsert = {
           ...newTask,
           taskId,
           createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+        };
+        
+        console.log('[useTaskOperations] Inserting task to database:', taskToInsert);
+        const createdTask = await insertTask(taskToInsert);
+        console.log('[useTaskOperations] Task created successfully in database:', {
+          id: createdTask.id,
+          taskId: createdTask.taskId,
+          title: createdTask.title
         });
-        console.log('[useTaskOperations] Task created successfully');
+        
         setIsTaskDialogOpen(false);
+        
+        // Add a small delay to allow real-time to process
+        setTimeout(() => {
+          console.log('[useTaskOperations] Task creation completed, real-time should have updated UI');
+        }, 1000);
+        
       } catch (error) {
         console.error('[useTaskOperations] Failed to create task:', error);
+        toast({
+          description: "Failed to create task: " + (error as Error).message,
+          variant: "destructive",
+          duration: 5000,
+        });
       }
     },
-    [currentUser]
+    [currentUser, toast]
   );
 
   const handleQuickAddSave = useCallback(
     async (taskData: any) => {
       const taskId = taskData.taskId ?? generateTaskId();
-      console.log('[useTaskOperations] Quick adding task:', taskId, taskData.title);
+      console.log('[useTaskOperations] Quick adding task:', {
+        taskId,
+        title: taskData.title,
+        projectId: taskData.projectId,
+        status: taskData.status,
+        fullTaskData: taskData
+      });
+      
       try {
-        await insertTask({
+        const taskToInsert = {
           ...taskData,
           taskId,
           createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+        };
+        
+        console.log('[useTaskOperations] Quick add - inserting task to database:', taskToInsert);
+        const createdTask = await insertTask(taskToInsert);
+        console.log('[useTaskOperations] Quick add task created successfully:', {
+          id: createdTask.id,
+          taskId: createdTask.taskId,
+          title: createdTask.title
         });
-        console.log('[useTaskOperations] Quick add task created successfully');
+        
         setShowQuickAdd(null);
+        
+        // Add a small delay to allow real-time to process
+        setTimeout(() => {
+          console.log('[useTaskOperations] Quick add task creation completed, real-time should have updated UI');
+        }, 1000);
+        
       } catch (error) {
         console.error('[useTaskOperations] Failed to quick add task:', error);
+        toast({
+          description: "Failed to create task: " + (error as Error).message,
+          variant: "destructive",
+          duration: 5000,
+        });
       }
     },
-    [currentUser]
+    [currentUser, toast]
   );
 
   const handleTaskClick = (task: Task) => {
