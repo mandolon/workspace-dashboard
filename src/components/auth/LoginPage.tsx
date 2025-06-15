@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { useUser } from "@/contexts/UserContext";
-import { TEAM_USERS } from "@/utils/teamUsers";
+import { TEAM_USERS, ALL_USERS } from "@/utils/teamUsers";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -61,7 +60,7 @@ const LoginPage: React.FC = () => {
             className="rounded border border-input px-3 py-2 bg-background dark:bg-neutral-800"
           >
             <option value="">Choose a user...</option>
-            {TEAM_USERS.map(u => (
+            {ALL_USERS.map(u => (
               <option key={u.id} value={u.id}>
                 {u.fullName} ({u.role})
               </option>
@@ -92,4 +91,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-
