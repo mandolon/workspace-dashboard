@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useMemo } from "react";
 import { TEAM_USERS, TeamMember } from "@/utils/teamUsers";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -82,16 +81,22 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({
 
   // Add from "TEAM_USERS"
   const handleAddTeamUser = (user: TeamMember) => {
-    onChange([...value, {
-      id: user.id,
-      name: user.fullName,
-      email: user.email,
-      avatar: user.avatar,
-      avatarColor: user.avatarColor,
-    }]);
+    onChange([
+      ...value,
+      {
+        id: user.id,
+        name: user.fullName,
+        email: user.email,
+        avatar: user.avatar,
+        avatarColor: user.avatarColor,
+      },
+    ]);
     setSearch("");
-    setPopoverOpen(true); // keep open after select so user can keep adding
-    inputRef.current?.focus();
+    setPopoverOpen(true); // ensure popover stays open after add
+    // Ensure input is focused for further entry
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   // Add from input (custom)
@@ -167,36 +172,45 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({
               <button
                 key={user.id}
                 type="button"
-                // prevent losing focus (which closes popover instantly)
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => handleAddTeamUser(user)}
                 className="flex items-center gap-2 w-full px-2 py-1.5 rounded hover:bg-gray-100 transition-colors"
+                tabIndex={-1}
               >
                 <Avatar className="h-7 w-7">
-                  <AvatarFallback className={user.avatarColor}>
-                    {user.avatar}
-                  </AvatarFallback>
+                  <AvatarFallback className={user.avatarColor}>{user.avatar}</AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium">{user.fullName}</span>
                 <span className="text-xs text-muted-foreground">{user.email}</span>
-                <span className="ml-auto text-xs py-0.5 px-1 bg-gray-200 rounded">{user.crmRole}</span>
+                <span className="ml-auto text-xs py-0.5 px-1 bg-gray-200 rounded">
+                  {user.crmRole}
+                </span>
               </button>
             ))}
           </div>
           {/* Custom email add */}
           {inputValue && !isValidEmail(inputValue) && (
-            <div className="text-xs text-red-500 px-2 py-1">Please enter a valid email</div>
+            <div className="text-xs text-red-500 px-2 py-1">
+              Please enter a valid email
+            </div>
           )}
-          {inputValue && isValidEmail(inputValue) && !value.some(r => r.email === inputValue.trim()) && (
-            <button
-              className="w-full text-left px-2 py-2 text-primary hover:bg-primary/10 transition-colors text-sm"
-              type="button"
-              onMouseDown={e => e.preventDefault()}
-              onClick={() => { tryAddCustom(); inputRef.current?.focus(); }}
-            >
-              Add "{inputValue.trim()}" as recipient
-            </button>
-          )}
+          {inputValue &&
+            isValidEmail(inputValue) &&
+            !value.some((r) => r.email === inputValue.trim()) && (
+              <button
+                className="w-full text-left px-2 py-2 text-primary hover:bg-primary/10 transition-colors text-sm"
+                type="button"
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => {
+                  tryAddCustom();
+                  setTimeout(() => {
+                    inputRef.current?.focus();
+                  }, 0);
+                }}
+              >
+                Add "{inputValue.trim()}" as recipient
+              </button>
+            )}
         </div>
       </PopoverContent>
     </Popover>
