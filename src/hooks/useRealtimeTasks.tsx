@@ -53,7 +53,7 @@ export function useRealtimeTasks() {
         { event: "*", schema: "public", table: "tasks" },
         payload => {
           console.log('[useRealtimeTasks] Real-time event received:', {
-            event: payload.eventType,
+            event: payload.event,
             taskId: payload.new?.task_id || payload.old?.task_id,
             title: payload.new?.title || payload.old?.title
           });
@@ -78,7 +78,7 @@ export function useRealtimeTasks() {
               return filtered;
             }
             
-            if (payload.eventType === "INSERT") {
+            if (payload.event === "INSERT") {
               if (!prev.some(t => t.id === task.id)) {
                 console.log('[useRealtimeTasks] Adding new task:', task.taskId, task.title);
                 return [task, ...prev];
@@ -87,7 +87,7 @@ export function useRealtimeTasks() {
               return prev;
             }
             
-            if (payload.eventType === "UPDATE") {
+            if (payload.event === "UPDATE") {
               const taskIndex = prev.findIndex(t => t.id === task.id);
               if (taskIndex >= 0) {
                 console.log('[useRealtimeTasks] Updating existing task:', task.taskId, task.title);
@@ -100,12 +100,12 @@ export function useRealtimeTasks() {
               }
             }
             
-            if (payload.eventType === "DELETE") {
+            if (payload.event === "DELETE") {
               console.log('[useRealtimeTasks] Deleting task:', task.taskId);
               return prev.filter(t => t.id !== task.id);
             }
             
-            console.log('[useRealtimeTasks] Unknown event type:', payload.eventType);
+            console.log('[useRealtimeTasks] Unknown event type:', payload.event);
             return prev;
           });
         }
