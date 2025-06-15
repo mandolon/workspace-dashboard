@@ -1,15 +1,26 @@
 
-// New version: powered by Supabase session, not localStorage
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
-import { UserContextType } from "@/types/user";
+import { UserContextType, User } from "@/types/user";
 
-const UserContext = createContext<UserContextType & {
-  logout: () => void;
-  isAuthenticated: boolean;
-  session: Session | null;
-} | undefined>(undefined);
+// Define exported context type with impersonation support
+type ImpersonationContext = {
+  isImpersonating: boolean;
+  impersonatedUser: User | null;
+  impersonateAs: (userId: string) => void;
+  exitImpersonation: () => void;
+};
+
+// The augmented context type:
+const UserContext = createContext<
+  UserContextType &
+    ImpersonationContext & {
+      logout: () => void;
+      isAuthenticated: boolean;
+      session: Session | null;
+    } | undefined
+>(undefined);
 
 export const useUser = () => {
   const context = useContext(UserContext);
@@ -21,6 +32,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // BEGIN: Impersonation stubs (no real functionality)
+  const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
+  const [isImpersonating, setIsImpersonating] = useState(false);
+
+  // Stub: Call to "impersonate" (does nothing for now)
+  const impersonateAs = (userId: string) => {
+    // Normally you'd setImpersonatedUser/fetch, for now just flag.
+    setIsImpersonating(true);
+    setImpersonatedUser(null); // You could fake a user here if you want
+  };
+  const exitImpersonation = () => {
+    setIsImpersonating(false);
+    setImpersonatedUser(null);
+  };
+  // END Impersonation stubs
 
   useEffect(() => {
     // 1. Listen for auth state changes
@@ -40,9 +67,26 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isAuthenticated = !!user;
 
+  // Convert SupabaseUser to your local User type, fallback fields
+  const mapToAppUser = (u: SupabaseUser | null): User => ({
+    id: u?.id || "unknown",
+    name: u?.user_metadata?.full_name || u?.email || "Unnamed",
+    email: u?.email || "",
+    avatar: "", // Replace with avatar URL if available in profile/user_metadata
+    status: "online", // Fallback; app could actually derive from presence later
+    role: "Admin", // Fallback; replace with real role if applicable
+    lastActive: new Date().toISOString(),
+    notificationsMuted: false,
+    showOnlineStatus: true,
+    showLastActive: true,
+    company: "",
+    bio: "",
+    avatarColor: undefined,
+  });
+
   // This can be fleshed out with more fields per your needs
   const contextValue = {
-    currentUser: user,
+    currentUser: mapToAppUser(isImpersonating ? null : user), // You may want to return impersonatedUser here if impersonating
     updateUserStatus: () => {},
     toggleNotifications: () => {},
     updateUser: () => {},
@@ -52,6 +96,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
     isAuthenticated,
     session,
+    // ADD IMPERSONATION KEYS
+    isImpersonating,
+    impersonatedUser,
+    impersonateAs,
+    exitImpersonation,
   };
 
   if (loading) {
