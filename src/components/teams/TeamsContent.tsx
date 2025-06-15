@@ -5,7 +5,6 @@ import TeamMembersSummary from './TeamMembersSummary';
 import { ADMIN_USERS, TEAM_USERS, CLIENT_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
 import { useSupabaseAdmins } from '@/hooks/useSupabaseAdmins';
 import { mapSupabaseTeamProfile, mapSupabaseClientProfile } from '@/utils/supabaseTeamMappers';
@@ -15,6 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 const SUPABASE_URL = "https://xxarxbmmedbmpptjgtxe.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4YXJ4Ym1tZWRibXBwdGpndHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2ODY1NTYsImV4cCI6MjA2NTI2MjU1Nn0.Gn3SU4hK27MNtZvyL4V2gSCGy0ahqeMiIyg9bNW7Tmc";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+import TeamMembersScrollContainer from './TeamMembersScrollContainer';
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -151,7 +151,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
 
   // For infinite scrolling
   const [visibleCount, setVisibleCount] = useState(MEMBERS_BATCH);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reset visibleCount if teamMembers/filters change
   useEffect(() => {
@@ -187,30 +186,21 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     displayedMembers = displayedMembers.filter(m => m.id === selectedUserId);
   }
 
+  // Remove scrollContainerRef from here; responsibility moved to TeamMembersScrollContainer.
   // Infinite scroll handler (desktop, all tabs)
   const handleScroll = useCallback(() => {
     if (
-      scrollContainerRef.current &&
       !isMobile &&
       visibleCount < displayedMembers.length
     ) {
-      const { scrollTop, clientHeight, scrollHeight } = scrollContainerRef.current;
+      const node = document.querySelector('[data-scrollarea-scrollable]');
+      if (!node) return;
+      const { scrollTop, clientHeight, scrollHeight } = node as HTMLDivElement;
       if (scrollTop + clientHeight >= scrollHeight - 60) {
         setVisibleCount(count => Math.min(count + MEMBERS_BATCH, displayedMembers.length));
       }
     }
   }, [isMobile, visibleCount, displayedMembers.length]);
-
-  useEffect(() => {
-    if (!isMobile && scrollContainerRef.current) {
-      scrollContainerRef.current.addEventListener('scroll', handleScroll);
-      return () => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.removeEventListener('scroll', handleScroll);
-        }
-      }
-    }
-  }, [isMobile, handleScroll]);
 
   return (
     <div className={`flex-1 overflow-y-auto ${isMobile ? "px-2 py-3" : "p-6"}`}>
@@ -219,30 +209,20 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         onSearchChange={setSearchTerm}
         isMobile={isMobile}
       />
-      {(!isMobile) ? (
-        <ScrollArea className="h-96 w-full" type="always">
-          <div ref={scrollContainerRef} style={{ maxHeight: 384, overflowY: 'auto' }}>
-            <TeamMembersTable
-              members={displayedMembers.slice(0, visibleCount)}
-              roles={roles}
-              onRoleChange={handleRoleChange}
-              isMobile={false}
-              visibleCount={visibleCount}
-              totalCount={displayedMembers.length}
-              projectId={projectId || "default-project"}
-            />
-            {visibleCount < displayedMembers.length && (
-              <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
-                Loading more...
-              </div>
-            )}
-            {(tab === "admin" && loadingAdmins) || ((tab === "team" || tab === "client") && loadingMembers) ? (
-              <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
-                Loading real {tab === "admin" ? "admins" : (tab === "team" ? "team members" : "client members")}...
-              </div>
-            ) : null}
-          </div>
-        </ScrollArea>
+      {!isMobile ? (
+        <TeamMembersScrollContainer
+          members={displayedMembers}
+          roles={roles}
+          onRoleChange={handleRoleChange}
+          visibleCount={visibleCount}
+          totalCount={displayedMembers.length}
+          projectId={projectId || "default-project"}
+          isMobile={isMobile}
+          loadingAdmins={loadingAdmins}
+          loadingMembers={loadingMembers}
+          tab={tab}
+          handleScroll={handleScroll}
+        />
       ) : (
         <TeamMembersTable
           members={displayedMembers}
