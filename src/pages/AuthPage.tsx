@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -85,6 +84,14 @@ const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-3">
       <div className="w-full max-w-sm mx-auto bg-white border border-border rounded-lg shadow-xl p-7 mt-10">
+        <div className="mb-2">
+          <div className="rounded bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-900 mb-4 text-center">
+            <strong>Real&nbsp;Account&nbsp;Login/Signup</strong>: Use this form to log in or register using your real email and password (Supabase auth).<br/>
+            <span className="block mt-1">
+              For quick testing, try the <a href="/login" className="underline text-blue-600 hover:text-blue-800">Demo Login</a>.
+            </span>
+          </div>
+        </div>
         <div className="mb-6 flex flex-col items-center">
           <LogIn className="text-primary mb-2" size={32} />
           <h2 className="text-xl font-bold">{isLoginPage ? "Log In" : "Sign Up"}</h2>
@@ -140,6 +147,12 @@ const AuthPage: React.FC = () => {
         {isLoginPage
           ? "Forgot your password? Use the Supabase reset!" 
           : "Random name is assigned for each new user on sign up. All signups become Admins."}
+        <br/>
+        <span className="block mt-3">
+          <a href="/login" className="underline text-blue-600 hover:text-blue-800">
+            Or use Demo Login (instant, for testing)
+          </a>
+        </span>
       </div>
     </div>
   );
