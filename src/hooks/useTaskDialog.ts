@@ -5,7 +5,6 @@ import { getProjectDisplayName } from '@/data/projectClientData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { TEAM_USERS } from '@/utils/teamUsers';
 import { useUser } from '@/contexts/UserContext';
-import { insertTask } from '@/data/taskSupabase';
 
 export const useTaskDialog = () => {
   const [taskName, setTaskName] = useState('');
@@ -18,12 +17,10 @@ export const useTaskDialog = () => {
 
   const { currentUser } = useUser();
 
-  /**
-   * Create the task directly in Supabase!
-   */
   const handleCreateTask = async (onCreateTask: (taskData: any) => void, onClose: () => void) => {
     if (!taskName.trim() || !assignedTo) {
-      return; // Cannot create if no name or assignee
+      console.warn('[TaskDialog] Cannot create task - missing name or assignee');
+      return;
     }
 
     // Prepare assignee object
@@ -40,11 +37,11 @@ export const useTaskDialog = () => {
 
     const projectId = getProjectIdFromDisplayName(selectedProject);
     const taskDataForSupabase = {
-      taskId: undefined, // let insertTask generate if absent
+      taskId: `T${Math.floor(Math.random() * 100000).toString().padStart(4, "0")}`,
       title: taskName,
       projectId,
       project: getProjectDisplayName(projectId),
-      status: selectedStatus || 'progress',
+      status: selectedStatus || 'redline',
       description: addDescription ? description : '',
       assignee: assigneeObj,
       dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '—',
@@ -58,12 +55,15 @@ export const useTaskDialog = () => {
       deletedBy: null,
     };
 
+    console.log('[TaskDialog] Creating task:', taskDataForSupabase);
+
     try {
-      await insertTask(taskDataForSupabase);
+      await onCreateTask(taskDataForSupabase);
       handleReset();
       onClose();
+      console.log('[TaskDialog] Task created successfully');
     } catch (err) {
-      // For now, use window.alert. You can replace with toast/sonner.
+      console.error('[TaskDialog] Failed to create task:', err);
       window.alert('Failed to create task! ' + (err as Error).message);
     }
   };
