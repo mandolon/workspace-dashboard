@@ -16,6 +16,8 @@ interface TaskRowContextMenuProps {
   onEditClick: (task: Task, e: React.MouseEvent) => void;
   onTaskStatusClick: (taskId: number) => void;
   onContextMenuDelete: (e: React.MouseEvent) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const TaskRowContextMenu = ({
@@ -23,19 +25,24 @@ const TaskRowContextMenu = ({
   children,
   onEditClick,
   onTaskStatusClick,
-  onContextMenuDelete
+  onContextMenuDelete,
+  open,
+  onOpenChange,
 }: TaskRowContextMenuProps) => {
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
+    onOpenChange(false);
   };
 
   const handleMarkComplete = () => {
     onTaskStatusClick(task.id);
+    onOpenChange(false);
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEditClick(task, e as any);
+    onOpenChange(false);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -45,7 +52,7 @@ const TaskRowContextMenu = ({
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu open={open} onOpenChange={onOpenChange}>
       <ContextMenuTrigger asChild>
         {children}
       </ContextMenuTrigger>
