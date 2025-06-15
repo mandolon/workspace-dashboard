@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
@@ -37,6 +36,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
   const [isImpersonating, setIsImpersonating] = useState(false);
 
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   // Stub: Call to "impersonate" (does nothing for now)
   const impersonateAs = (userId: string) => {
     // Normally you'd setImpersonatedUser/fetch, for now just flag.
@@ -65,6 +65,30 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => { subscription.unsubscribe(); };
   }, []);
 
+  // Fetch admin status for the current user (from user_roles table in Supabase)
+  useEffect(() => {
+    // Don't check while loading or if user not present
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    let isMounted = true;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id);
+        if (error) throw error;
+        const isAdminFound = data?.some((row: any) => row.role === "admin");
+        if (isMounted) setIsAdmin(!!isAdminFound);
+      } catch (err) {
+        setIsAdmin(false);
+      }
+    })();
+    return () => { isMounted = false; };
+  }, [user]);
+
   const isAuthenticated = !!user;
 
   // Convert SupabaseUser to your local User type, fallback fields
@@ -82,6 +106,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     company: "",
     bio: "",
     avatarColor: undefined,
+    isAdmin, // NEW: expose isAdmin
   });
 
   // This can be fleshed out with more fields per your needs
