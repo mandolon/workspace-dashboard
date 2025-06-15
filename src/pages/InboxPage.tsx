@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
-import InboxTopBar from "@/components/inbox/InboxTopBar";
 import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
 import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
@@ -40,11 +39,6 @@ const InboxPage = () => {
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
-        <InboxTopBar
-          onToggleSidebar={handleToggleSidebar}
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
         <InboxHeader
           activeTab={activeTab}
           onTabChange={handleTabChange}
@@ -92,3 +86,4 @@ const InboxPage = () => {
 };
 
 export default InboxPage;
+
