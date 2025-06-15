@@ -10,6 +10,7 @@ import { updateTaskSupabase } from '@/data/taskSupabase';
 import { toast } from "@/hooks/use-toast";
 import { useTaskDetailAssignmentHandlers } from './hooks/useTaskDetailAssignmentHandlers';
 import { useTaskDetailDescriptionSave } from './hooks/useTaskDetailDescriptionSave';
+import { useTaskTitleEdit } from '@/hooks/useTaskTitleEdit';
 
 interface TaskDetailFormProps {
   task: Task;
@@ -18,16 +19,24 @@ interface TaskDetailFormProps {
 const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
   const { currentUser } = useUser();
   const {
-    editingTaskId,
-    editingValue,
-    setEditingValue,
-    startEditingTask,
-    saveTaskEdit,
-    cancelTaskEdit,
     changeTaskStatus: legacyChangeTaskStatus
   } = useTaskContext();
 
   const [task, setTask] = useState<Task>(originalTask);
+
+  // Use local title editing instead of global context
+  const {
+    isEditing,
+    editingValue,
+    setEditingValue,
+    startEditing,
+    saveEdit,
+    cancelEdit,
+    handleKeyDown,
+    handleBlur
+  } = useTaskTitleEdit(task.id, task.title);
+
+  console.log('[TaskDetailForm] Title editing state:', { isEditing, editingValue, taskTitle: task.title });
 
   // Assignment/collaborator handlers (refactored out)
   const {
@@ -39,7 +48,6 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
   } = useTaskDetailAssignmentHandlers(task, setTask);
 
   // Supabase/legacy status change logic stays here (no assignment logic touched)
-  const isEditing = editingTaskId === task.id;
   
   const handleChangeStatus = async (newStatus: "redline" | "progress" | "completed") => {
     if (!task) return;
@@ -80,6 +88,36 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
     }
   };
 
+  // Custom save function that updates the local task state
+  const handleSaveEdit = async () => {
+    console.log('[TaskDetailForm] handleSaveEdit called with value:', editingValue);
+    
+    if (editingValue.trim() !== '' && editingValue !== task.title) {
+      if (isSupabaseTask) {
+        try {
+          const updated = await updateTaskSupabase(task.taskId, { title: editingValue.trim() });
+          setTask(updated);
+          console.log('[TaskDetailForm] Updated task title via Supabase:', editingValue.trim());
+          toast({
+            title: "Task Updated",
+            description: "Task title has been updated successfully."
+          });
+        } catch (e) {
+          console.error('[TaskDetailForm] Failed to update task title:', e);
+          toast({
+            title: "Error",
+            description: "Failed to update task title."
+          });
+        }
+      } else {
+        // Legacy task update logic would go here
+        setTask(prev => ({ ...prev, title: editingValue.trim() }));
+        console.log('[TaskDetailForm] Updated legacy task title:', editingValue.trim());
+      }
+    }
+    saveEdit();
+  };
+
   // Description save/dirty state logic (refactored out)
   // Pass setTask as a React state setter (accepts both Task and updater function)
   const {
@@ -94,9 +132,9 @@ const TaskDetailForm = ({ task: originalTask }: TaskDetailFormProps) => {
         isEditing={isEditing}
         editingValue={editingValue}
         setEditingValue={setEditingValue}
-        startEditingTask={startEditingTask}
-        saveTaskEdit={saveTaskEdit}
-        cancelTaskEdit={cancelTaskEdit}
+        startEditingTask={startEditing}
+        saveTaskEdit={handleSaveEdit}
+        cancelTaskEdit={cancelEdit}
         task={task}
         onChangeStatus={handleChangeStatus}
       />
