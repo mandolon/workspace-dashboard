@@ -171,7 +171,12 @@ const TaskTableSection = ({
           />
         </div>
       ) : (
-        <AddTaskButton onAddTask={() => onSetShowQuickAdd(group.status)} />
+        <AddTaskButton 
+          status={group.status}
+          showQuickAdd={showQuickAdd}
+          onSetShowQuickAdd={onSetShowQuickAdd}
+          onQuickAddSave={onQuickAddSave}
+        />
       )}
     </>
   );
