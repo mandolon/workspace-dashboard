@@ -90,6 +90,7 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({
       avatarColor: user.avatarColor,
     }]);
     setSearch("");
+    setPopoverOpen(true); // keep open after select so user can keep adding
     inputRef.current?.focus();
   };
 
@@ -166,6 +167,8 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({
               <button
                 key={user.id}
                 type="button"
+                // prevent losing focus (which closes popover instantly)
+                onMouseDown={e => e.preventDefault()}
                 onClick={() => handleAddTeamUser(user)}
                 className="flex items-center gap-2 w-full px-2 py-1.5 rounded hover:bg-gray-100 transition-colors"
               >
@@ -188,6 +191,7 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({
             <button
               className="w-full text-left px-2 py-2 text-primary hover:bg-primary/10 transition-colors text-sm"
               type="button"
+              onMouseDown={e => e.preventDefault()}
               onClick={() => { tryAddCustom(); inputRef.current?.focus(); }}
             >
               Add "{inputValue.trim()}" as recipient
