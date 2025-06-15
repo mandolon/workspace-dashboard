@@ -43,40 +43,41 @@ export function useRealtimeTasks() {
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         payload => {
+          console.log('[useRealtimeTasks] Realtime update:', payload.eventType, payload.new || payload.old);
           const row = payload.new ?? payload.old;
           if (!row) return;
           const task = dbRowToTask(row);
 
           setTasks(prev => {
-            // Filter out archived or soft-deleted tasks before updating local state
-            const filteredPrev = filterTasksForUser(
-              prev.filter(t => !t.archived && !t.deletedAt),
-              currentUser
-            );
-
             const visible = canUserViewTask(task, currentUser);
-            // Hide if task is deleted or now invisible
+            // Hide if task is deleted, archived, or now invisible
             if (task.deletedAt || task.archived || !visible.allowed) {
-              return filteredPrev.filter(t => t.id !== task.id);
+              const filtered = prev.filter(t => t.id !== task.id);
+              console.log('[useRealtimeTasks] Hiding task:', task.id, 'Reason:', task.deletedAt ? 'deleted' : task.archived ? 'archived' : 'not visible');
+              return filtered;
             }
             if (payload.eventType === "INSERT") {
-              if (!filteredPrev.some(t => t.id === task.id)) {
-                return [task, ...filteredPrev];
+              if (!prev.some(t => t.id === task.id)) {
+                console.log('[useRealtimeTasks] Adding new task:', task.id, task.title);
+                return [task, ...prev];
               }
-              return filteredPrev;
+              return prev;
             }
             if (payload.eventType === "UPDATE") {
               // Update or (if now visible) add the task
-              const present = filteredPrev.some(t => t.id === task.id);
+              const present = prev.some(t => t.id === task.id);
               if (present) {
-                return filteredPrev.map(t => (t.id === task.id ? task : t));
+                console.log('[useRealtimeTasks] Updating task:', task.id, task.title);
+                return prev.map(t => (t.id === task.id ? task : t));
               }
-              return [task, ...filteredPrev];
+              console.log('[useRealtimeTasks] Adding updated task:', task.id, task.title);
+              return [task, ...prev];
             }
             if (payload.eventType === "DELETE") {
-              return filteredPrev.filter(t => t.id !== task.id);
+              console.log('[useRealtimeTasks] Deleting task:', task.id);
+              return prev.filter(t => t.id !== task.id);
             }
-            return filteredPrev;
+            return prev;
           });
         }
       )
