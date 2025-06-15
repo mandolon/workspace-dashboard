@@ -16,8 +16,6 @@ interface TaskRowContextMenuProps {
   onEditClick: (task: Task, e: React.MouseEvent) => void;
   onTaskStatusClick: (taskId: number) => void;
   onContextMenuDelete: (e: React.MouseEvent) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
 const TaskRowContextMenu = ({
@@ -26,33 +24,28 @@ const TaskRowContextMenu = ({
   onEditClick,
   onTaskStatusClick,
   onContextMenuDelete,
-  open,
-  onOpenChange,
 }: TaskRowContextMenuProps) => {
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
-    onOpenChange(false);
   };
 
   const handleMarkComplete = () => {
     onTaskStatusClick(task.id);
-    onOpenChange(false);
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEditClick(task, e as any);
-    onOpenChange(false);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+    // e.preventDefault(); // This was preventing the menu from closing.
     e.stopPropagation();
     onContextMenuDelete(e);
   };
 
   return (
-    <ContextMenu open={open} onOpenChange={onOpenChange}>
+    <ContextMenu>
       <ContextMenuTrigger asChild>
         {children}
       </ContextMenuTrigger>

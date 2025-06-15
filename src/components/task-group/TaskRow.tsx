@@ -1,5 +1,4 @@
-
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
 import TaskRowFiles from './TaskRowFiles';
@@ -48,8 +47,6 @@ const TaskRow = React.memo(({
   onAddCollaborator,
   onTaskDeleted
 }: TaskRowProps) => {
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
-
   const {
     showDeleteDialog,
     taskToDelete,
@@ -62,12 +59,6 @@ const TaskRow = React.memo(({
   const formattedDate = useMemo(() => formatDate(task.dateCreated), [task.dateCreated]);
 
   const handleDeleteClickInternal = useCallback((e: React.MouseEvent) => {
-    handleDeleteClick(task, e);
-  }, [handleDeleteClick, task]);
-
-  const handleContextMenuDelete = useCallback((e: React.MouseEvent) => {
-    // Manually close the context menu, then trigger the delete dialog
-    setIsContextMenuOpen(false);
     handleDeleteClick(task, e);
   }, [handleDeleteClick, task]);
 
@@ -122,9 +113,7 @@ const TaskRow = React.memo(({
         task={task}
         onEditClick={onEditClick}
         onTaskStatusClick={onTaskStatusClick}
-        onContextMenuDelete={handleContextMenuDelete}
-        open={isContextMenuOpen}
-        onOpenChange={setIsContextMenuOpen}
+        onContextMenuDelete={handleDeleteClickInternal}
       >
         <TableRow key={task.id} className="hover:bg-accent/50">
           <TableCell className="py-2 w-[47%]">
