@@ -125,12 +125,10 @@ const TaskStatusIcon = ({ status, onClick, showLabel = false }: TaskStatusIconPr
 
   if (showLabel) {
     return (
-      <div className="flex items-center gap-2">
-        <button onClick={handleClick} className="p-0.5 hover:bg-accent rounded transition-colors">
-          {getStatusIcon()}
-        </button>
-        <span className="text-xs text-foreground font-medium">{getStatusLabel()}</span>
-      </div>
+      <button onClick={handleClick} className="flex items-center gap-2 p-0.5 hover:bg-accent rounded transition-colors">
+        {getStatusIcon()}
+        <span className="text-xs text-muted-foreground">{getStatusLabel()}</span>
+      </button>
     );
   }
 
