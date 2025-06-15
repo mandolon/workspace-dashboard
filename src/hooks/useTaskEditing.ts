@@ -9,22 +9,24 @@ export const useTaskEditing = (updateTaskById: (taskId: number, updates: Partial
   const startEditingTask = useCallback((task: Task) => {
     setEditingTaskId(task.id);
     setEditingValue(task.title);
+    console.log('[TaskEditing] startEditingTask:', task.id, task.title);
   }, []);
 
   const saveTaskEdit = useCallback((taskId: number) => {
     if (editingValue.trim() === '') {
-      console.warn('Cannot save empty task title');
+      console.warn('[TaskEditing] Cannot save empty task title');
       setEditingTaskId(null);
       setEditingValue('');
       return;
     }
-
+    console.log('[TaskEditing] saveTaskEdit:', taskId, editingValue);
     updateTaskById(taskId, { title: editingValue.trim() });
     setEditingTaskId(null);
     setEditingValue('');
   }, [editingValue, updateTaskById]);
 
   const cancelTaskEdit = useCallback(() => {
+    console.log('[TaskEditing] cancelTaskEdit');
     setEditingTaskId(null);
     setEditingValue('');
   }, []);
