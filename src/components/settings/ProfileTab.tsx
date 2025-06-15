@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,6 +9,7 @@ import { useUser } from '@/contexts/UserContext';
 import { ARCHITECTURE_ROLES, ROLE_DISPLAY_NAMES } from '@/types/roles';
 import AvatarUpload from './AvatarUpload';
 import DisplayPreferences from './DisplayPreferences';
+import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
 
 const AVATAR_COLORS = [
   'bg-blue-500',
@@ -24,6 +26,13 @@ const AVATAR_COLORS = [
 
 const ProfileTab = () => {
   const { currentUser, updateUser } = useUser();
+
+  // Initial avatarColor from local customizations, fallback to profile/db/user property
+  const initialAvatarColor =
+    getUserCustomizations(currentUser.id).avatarColor ||
+    currentUser.avatarColor ||
+    'bg-blue-500';
+
   const [formData, setFormData] = useState({
     name: currentUser.name,
     bio: currentUser.bio || '',
@@ -31,8 +40,20 @@ const ProfileTab = () => {
     role: currentUser.role,
     showOnlineStatus: currentUser.showOnlineStatus,
     showLastActive: currentUser.showLastActive,
-    avatarColor: currentUser.avatarColor || 'bg-blue-500', // new
+    avatarColor: initialAvatarColor,
   });
+
+  useEffect(() => {
+    // Update state if avatarColor changes on user (i.e., if context updates)
+    setFormData(prev => ({
+      ...prev,
+      avatarColor:
+        getUserCustomizations(currentUser.id).avatarColor ||
+        currentUser.avatarColor ||
+        'bg-blue-500',
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser.avatarColor, currentUser.id]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -45,17 +66,24 @@ const ProfileTab = () => {
 
   const handleAvatarColorChange = (color: string) => {
     setFormData(prev => ({ ...prev, avatarColor: color }));
+    // Save customization to local storage
+    saveUserCustomizations(currentUser.id, { avatarColor: color });
+    // Send update to context so sidebar/header, etc. reflect color instantly
+    updateUser({ avatarColor: color });
   };
 
   const handleSave = () => {
-    updateUser(formData);
+    // Save any other profile changes (excluding avatarColor which was already saved on color change)
+    updateUser({ ...formData });
+    // Optionally, also re-save to customizations (for completeness, even though color already saved above)
+    saveUserCustomizations(currentUser.id, { avatarColor: formData.avatarColor });
     console.log('Profile updated:', formData);
   };
 
   return (
     <div className="p-6 max-w-2xl">
       <div className="space-y-6">
-        <AvatarUpload user={currentUser} onAvatarChange={handleAvatarChange} />
+        <AvatarUpload user={{ ...currentUser, avatarColor: formData.avatarColor }} onAvatarChange={handleAvatarChange} />
 
         <div className="space-y-4">
           {/* Avatar color picker */}
