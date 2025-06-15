@@ -18,6 +18,7 @@ export function useRealtimeTasks() {
       allTasks.filter(t => !t.deletedAt && !t.archived),
       currentUser
     );
+    console.log('[useRealtimeTasks] Setting tasks:', filtered.length, 'tasks');
     setTasks(filtered);
   };
 
@@ -26,8 +27,15 @@ export function useRealtimeTasks() {
     if (loadingRef.current) return;
     loadingRef.current = true;
     setLoading(true);
+    console.log('[useRealtimeTasks] Fetching initial tasks...');
     fetchAllTasks()
-      .then(secureSetTasks)
+      .then(allTasks => {
+        console.log('[useRealtimeTasks] Fetched', allTasks.length, 'tasks from database');
+        secureSetTasks(allTasks);
+      })
+      .catch(error => {
+        console.error('[useRealtimeTasks] Error fetching tasks:', error);
+      })
       .finally(() => {
         loadingRef.current = false;
         setLoading(false);
@@ -37,53 +45,77 @@ export function useRealtimeTasks() {
 
   // Real-time subscription
   useEffect(() => {
+    console.log('[useRealtimeTasks] Setting up real-time subscription...');
     const channel = supabase
       .channel("public-tasks-change")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         payload => {
-          console.log('[useRealtimeTasks] Realtime update:', payload.eventType, payload.new || payload.old);
+          console.log('[useRealtimeTasks] Real-time event received:', {
+            event: payload.eventType,
+            taskId: payload.new?.task_id || payload.old?.task_id,
+            title: payload.new?.title || payload.old?.title
+          });
+          
           const row = payload.new ?? payload.old;
-          if (!row) return;
+          if (!row) {
+            console.warn('[useRealtimeTasks] No row data in payload');
+            return;
+          }
+          
           const task = dbRowToTask(row);
+          console.log('[useRealtimeTasks] Processed task:', task.taskId, task.title);
 
           setTasks(prev => {
             const visible = canUserViewTask(task, currentUser);
+            
             // Hide if task is deleted, archived, or now invisible
             if (task.deletedAt || task.archived || !visible.allowed) {
               const filtered = prev.filter(t => t.id !== task.id);
-              console.log('[useRealtimeTasks] Hiding task:', task.id, 'Reason:', task.deletedAt ? 'deleted' : task.archived ? 'archived' : 'not visible');
+              console.log('[useRealtimeTasks] Hiding task:', task.taskId, 'Reason:', 
+                task.deletedAt ? 'deleted' : task.archived ? 'archived' : 'not visible');
               return filtered;
             }
+            
             if (payload.eventType === "INSERT") {
               if (!prev.some(t => t.id === task.id)) {
-                console.log('[useRealtimeTasks] Adding new task:', task.id, task.title);
+                console.log('[useRealtimeTasks] Adding new task:', task.taskId, task.title);
                 return [task, ...prev];
               }
+              console.log('[useRealtimeTasks] Task already exists, skipping insert');
               return prev;
             }
+            
             if (payload.eventType === "UPDATE") {
-              // Update or (if now visible) add the task
-              const present = prev.some(t => t.id === task.id);
-              if (present) {
-                console.log('[useRealtimeTasks] Updating task:', task.id, task.title);
-                return prev.map(t => (t.id === task.id ? task : t));
+              const taskIndex = prev.findIndex(t => t.id === task.id);
+              if (taskIndex >= 0) {
+                console.log('[useRealtimeTasks] Updating existing task:', task.taskId, task.title);
+                const updated = [...prev];
+                updated[taskIndex] = task;
+                return updated;
+              } else {
+                console.log('[useRealtimeTasks] Adding updated task (was not visible before):', task.taskId);
+                return [task, ...prev];
               }
-              console.log('[useRealtimeTasks] Adding updated task:', task.id, task.title);
-              return [task, ...prev];
             }
+            
             if (payload.eventType === "DELETE") {
-              console.log('[useRealtimeTasks] Deleting task:', task.id);
+              console.log('[useRealtimeTasks] Deleting task:', task.taskId);
               return prev.filter(t => t.id !== task.id);
             }
+            
+            console.log('[useRealtimeTasks] Unknown event type:', payload.eventType);
             return prev;
           });
         }
       )
-      .subscribe();
+      .subscribe(status => {
+        console.log('[useRealtimeTasks] Subscription status:', status);
+      });
 
     return () => {
+      console.log('[useRealtimeTasks] Cleaning up real-time subscription');
       supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

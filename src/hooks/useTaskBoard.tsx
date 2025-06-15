@@ -5,7 +5,6 @@ import { Task, TaskGroup, TaskUser } from '@/types/task';
 import { useUser } from '@/contexts/UserContext';
 import { useRealtimeTasks } from './useRealtimeTasks';
 import { insertTask, updateTaskSupabase, deleteTaskSupabase } from '@/data/taskSupabase';
-import { nanoid } from "nanoid";
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
@@ -18,6 +17,7 @@ export const useTaskBoard = () => {
 
   // Supabase powered task groups - depend on tasks for real-time updates
   const getTaskGroups = useCallback((): TaskGroup[] => {
+    console.log('[useTaskBoard] Getting task groups from', tasks.length, 'tasks');
     const centralizedRedline = tasks.filter(task => task.status === 'redline' && !task.archived && !task.deletedAt);
     const centralizedProgress = tasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
     const centralizedCompleted = tasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
@@ -45,22 +45,30 @@ export const useTaskBoard = () => {
         tasks: centralizedCompleted
       }
     ];
+    
+    console.log('[useTaskBoard] Task groups:', taskGroups.map(g => `${g.status}: ${g.count}`));
     return taskGroups;
   }, [tasks]);
 
   // Generate a new taskId for every task insert
   const generateTaskId = () => "T" + Math.floor(Math.random() * 100000).toString().padStart(4, "0");
 
-  // --- No more optimistic update! Only insert, let realtime pull in
+  // Create task - relies on real-time to update UI
   const handleCreateTask = useCallback(
     async (newTask: any) => {
       const taskId = newTask.taskId ?? generateTaskId();
-      await insertTask({
-        ...newTask,
-        taskId,
-        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-      });
-      setIsTaskDialogOpen(false);
+      console.log('[useTaskBoard] Creating task:', taskId, newTask.title);
+      try {
+        await insertTask({
+          ...newTask,
+          taskId,
+          createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+        });
+        console.log('[useTaskBoard] Task created successfully');
+        setIsTaskDialogOpen(false);
+      } catch (error) {
+        console.error('[useTaskBoard] Failed to create task:', error);
+      }
     },
     [currentUser]
   );
@@ -68,12 +76,18 @@ export const useTaskBoard = () => {
   const handleQuickAddSave = useCallback(
     async (taskData: any) => {
       const taskId = taskData.taskId ?? generateTaskId();
-      await insertTask({
-        ...taskData,
-        taskId,
-        createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
-      });
-      setShowQuickAdd(null);
+      console.log('[useTaskBoard] Quick adding task:', taskId, taskData.title);
+      try {
+        await insertTask({
+          ...taskData,
+          taskId,
+          createdBy: currentUser?.name ?? currentUser?.email ?? "Unknown",
+        });
+        console.log('[useTaskBoard] Quick add task created successfully');
+        setShowQuickAdd(null);
+      } catch (error) {
+        console.error('[useTaskBoard] Failed to quick add task:', error);
+      }
     },
     [currentUser]
   );
@@ -85,6 +99,7 @@ export const useTaskBoard = () => {
   const handleTaskArchive = async (taskId: number) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) {
+      console.log('[useTaskBoard] Archiving task:', task.taskId);
       await updateTaskSupabase(task.taskId, { archived: true });
     }
   };
@@ -92,34 +107,68 @@ export const useTaskBoard = () => {
   const handleTaskDeleted = async (taskId: string) => {
     const task = tasks.find(t => t.taskId === taskId);
     if (task) {
+      console.log('[useTaskBoard] Deleting task:', task.taskId);
       await deleteTaskSupabase(task.taskId);
     }
   };
 
-  // ------------- NEW ASSIGN PERSON (and collaborators) HANDLERS --------------
-
+  // Assignment handlers - rely on real-time to update UI
   const assignPerson = async (taskId: string, person: TaskUser) => {
-    // taskId should always be a string here
-    await updateTaskSupabase(taskId, { assignee: person });
-    // No need for optimistic updates: realtime will pick up change
+    console.log('[useTaskBoard] Assigning person to task:', taskId, person.name);
+    try {
+      await updateTaskSupabase(taskId, { assignee: person });
+      console.log('[useTaskBoard] Person assigned successfully');
+    } catch (error) {
+      console.error('[useTaskBoard] Failed to assign person:', error);
+    }
   };
+
   const removeAssignee = async (taskId: string) => {
-    await updateTaskSupabase(taskId, { assignee: null });
+    console.log('[useTaskBoard] Removing assignee from task:', taskId);
+    try {
+      await updateTaskSupabase(taskId, { assignee: null });
+      console.log('[useTaskBoard] Assignee removed successfully');
+    } catch (error) {
+      console.error('[useTaskBoard] Failed to remove assignee:', error);
+    }
   };
+
   const addCollaborator = async (taskId: string, person: TaskUser) => {
-    // De-duplicate, always pass string taskId
+    console.log('[useTaskBoard] Adding collaborator to task:', taskId, person.name);
     const task = tasks.find(t => t.taskId === taskId);
-    const collabs = (task?.collaborators ?? []).slice();
+    if (!task) {
+      console.error('[useTaskBoard] Task not found for adding collaborator:', taskId);
+      return;
+    }
+    
+    const collabs = (task.collaborators ?? []).slice();
     if (!collabs.find(c => c.id === person.id)) {
       collabs.push(person);
+      try {
+        await updateTaskSupabase(taskId, { collaborators: collabs });
+        console.log('[useTaskBoard] Collaborator added successfully');
+      } catch (error) {
+        console.error('[useTaskBoard] Failed to add collaborator:', error);
+      }
     }
-    await updateTaskSupabase(taskId, { collaborators: collabs });
   };
+
   const removeCollaborator = async (taskId: string, collaboratorIndex: number) => {
+    console.log('[useTaskBoard] Removing collaborator from task:', taskId, 'index:', collaboratorIndex);
     const task = tasks.find(t => t.taskId === taskId);
-    const collabs = (task?.collaborators ?? []).slice();
+    if (!task) {
+      console.error('[useTaskBoard] Task not found for removing collaborator:', taskId);
+      return;
+    }
+    
+    const collabs = (task.collaborators ?? []).slice();
     collabs.splice(collaboratorIndex, 1);
-    await updateTaskSupabase(taskId, { collaborators: collabs });
+    try {
+      await updateTaskSupabase(taskId, { collaborators: collabs });
+      console.log('[useTaskBoard] Collaborator removed successfully');
+    } catch (error) {
+      console.error('[useTaskBoard] Failed to remove collaborator:', error);
+    }
   };
 
   return {
