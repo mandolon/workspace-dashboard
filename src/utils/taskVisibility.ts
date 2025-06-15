@@ -1,10 +1,14 @@
 
 import { Task } from "@/types/task";
 import { User } from "@/types/user";
-import { getCRMRole, isAdmin as isAdminHelper } from "@/utils/userRoleHelpers";
+import { getCRMRole, isAdmin as isAdminHelper, isTeamMember as isTeamMemberHelper } from "@/utils/userRoleHelpers";
 
 export function isAdmin(user: User) {
   return isAdminHelper(user);
+}
+
+export function isTeamMember(user: User) {
+  return isTeamMemberHelper(user);
 }
 
 export function isUserMatch(a: any, b: User | null) {
@@ -36,9 +40,9 @@ export function canUserViewTask(task: Task, user: User | null): { allowed: boole
     return { allowed: false, reason: 'No user' };
   }
   
-  if (isAdmin(user)) {
-    console.log('[taskVisibility] User is admin - allowed');
-    return { allowed: true, reason: 'Admin' };
+  if (isAdmin(user) || isTeamMember(user)) {
+    console.log('[taskVisibility] User is admin or team member - allowed');
+    return { allowed: true, reason: 'Admin or Team Member' };
   }
 
   if (task.assignee && isUserMatch(task.assignee, user)) {
@@ -70,7 +74,7 @@ export function canUserViewTask(task: Task, user: User | null): { allowed: boole
  */
 export function filterTasksForUser(tasks: Task[], user: User | null) {
   if (!user) return [];
-  if (isAdmin(user)) return tasks.filter(t => !t.deletedAt && !t.archived);
+  if (isAdmin(user) || isTeamMember(user)) return tasks.filter(t => !t.deletedAt && !t.archived);
   return tasks.filter(
     t => !t.deletedAt && !t.archived && canUserViewTask(t, user).allowed
   );
