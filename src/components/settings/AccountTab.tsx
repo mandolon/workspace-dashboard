@@ -39,6 +39,7 @@ const AccountTab = () => {
   // Handler for account deletion
   const handleDeleteAccount = async () => {
     setDeleting(true);
+    let errorMsg: string | null = null;
 
     try {
       if (supabaseUserId) {
@@ -46,27 +47,26 @@ const AccountTab = () => {
 
         const { error } = await supabase.auth.admin.deleteUser(supabaseUserId);
         if (error) {
-          alert('Could not delete your authentication record: ' + error.message);
-          setDeleting(false);
-          return;
+          errorMsg = 'Could not delete your authentication record: ' + error.message;
         }
       } else if (currentUser?.id) {
         await supabase.from('profiles').delete().eq('id', currentUser.id);
       }
     } catch (err: any) {
-      alert('An unexpected error occurred while deleting your account.');
+      errorMsg = 'An unexpected error occurred while deleting your account.';
+    } finally {
+      // Cleanup all Supabase tokens and session data before logout
+      cleanupAuthState();
       setDeleting(false);
-      return;
+      // Optionally, display the error before logout/redirect
+      if (errorMsg) {
+        // Optionally use a toast or alert here:
+        alert(errorMsg);
+      }
+      // Log the user out and redirect (always)
+      logout();
+      // After logout, user will be redirected to login
     }
-
-    // Cleanup all Supabase tokens and session data before logout
-    cleanupAuthState();
-
-    setDeleting(false);
-
-    // Log the user out and redirect
-    logout();
-    // After logout, user will be redirected to login
   };
 
   return (
