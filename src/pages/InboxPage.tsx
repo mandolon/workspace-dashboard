@@ -5,6 +5,8 @@ import InboxTopBar from "@/components/inbox/InboxTopBar";
 import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
 import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
+import { Button } from "@/components/ui/button";
+import ComposeDialog from "@/components/inbox/ComposeDialog";
 
 const InboxPage = () => {
   const {
@@ -31,6 +33,9 @@ const InboxPage = () => {
   // Dummy toggle sidebar handler (customize if you have a sidebar)
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const handleToggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  // Floating Compose dialog state
+  const [showComposeDialog, setShowComposeDialog] = useState(false);
 
   return (
     <AppLayout>
@@ -68,10 +73,22 @@ const InboxPage = () => {
             error={error}
           />
         </div>
+        {/* Floating Compose Button */}
+        <Button
+          size="lg"
+          className="fixed z-50 bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-4 shadow-xl animate-scale-in"
+          onClick={() => setShowComposeDialog(true)}
+        >
+          Compose
+        </Button>
+        {/* Compose Dialog */}
+        <ComposeDialog
+          isOpen={showComposeDialog}
+          onClose={() => setShowComposeDialog(false)}
+        />
       </div>
     </AppLayout>
   );
 };
 
 export default InboxPage;
-
