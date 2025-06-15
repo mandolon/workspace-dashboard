@@ -1,13 +1,12 @@
+
 import React from 'react';
 import { Mail, Eye } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getInitials } from '@/utils/taskUtils';
-import { getAvatarColor } from '@/utils/avatarColors';
-import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 import { TeamMember } from '@/utils/teamUsers';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
+import Avatar from "@/components/common/Avatar";
 
 interface TeamMemberRowMobileProps {
   member: TeamMember;
@@ -33,23 +32,12 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
   const navigate = useNavigate();
   const { impersonateAs, isImpersonating, impersonatedUser, currentUser } = useUser();
 
-  // Handlers
   const handleViewAsUser = () => {
     if (!isImpersonating || (impersonatedUser && impersonatedUser.id !== member.id)) {
       impersonateAs(member.id);
     }
   };
-  const handleEditUser = () => {
-    console.log(`Edit user: ${member.fullName ?? member.name}`);
-  };
-  const handleRemoveUser = () => {
-    console.log(`Remove user from team: ${member.fullName ?? member.name}`);
-  };
-  const handleSendMessage = () => {
-    console.log(`Send message to user: ${member.fullName ?? member.name}`);
-  };
 
-  // Click client row to go to project client tab
   const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (member.crmRole === 'Client') {
       navigate(`/project/${projectId}`, { state: { returnToTab: "client" } });
@@ -59,9 +47,9 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
   return (
     <TeamMemberContextMenu
       onViewAsUser={handleViewAsUser}
-      onEditUser={handleEditUser}
-      onRemoveUser={handleRemoveUser}
-      onSendMessage={handleSendMessage}
+      onEditUser={() => {}}
+      onRemoveUser={() => {}}
+      onSendMessage={() => {}}
     >
       <div
         className="rounded border shadow px-3 py-2 bg-card flex flex-col gap-2"
@@ -70,14 +58,16 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
         tabIndex={0}
       >
         <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 ${getAvatarColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
-            {getInitials(member.fullName ?? member.name)}
-          </div>
+          <Avatar
+            initials={member.initials}
+            avatarUrl={member.avatarUrl}
+            color={member.avatarColor || "bg-blue-500"}
+            size={36}
+          />
           <div>
             <div className="font-medium">{member.fullName ?? member.name}</div>
             <div className="text-xs text-muted-foreground">{member.crmRole}</div>
           </div>
-          {/* If Admin/Team, show Eye button; Clients get spacing only */}
           {member.crmRole !== 'Client' ? (
             <button
               className="ml-auto p-1 opacity-80 hover:opacity-100"
@@ -97,7 +87,6 @@ const TeamMemberRowMobile: React.FC<TeamMemberRowMobileProps> = ({ member, roles
           <Mail className="w-3 h-3" />
           <span className="text-blue-600 break-all">{member.email}</span>
         </div>
-        {/* Only show Role selection if NOT a client */}
         {member.crmRole !== 'Client' && (
           <div className="flex items-center gap-2 text-xs">
             <span className="text-muted-foreground">Role:</span>

@@ -1,31 +1,31 @@
+
 import { ArchitectureRole } from '@/types/roles';
 import { getAllClients } from '@/data/projectClientData';
 
+// New TeamMember type for unified avatar prop/casing
 export interface TeamMember {
   id: string;
-  name: string; // e.g. "AL"
+  name: string; // Initials or first name
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
   titleRole?: ArchitectureRole;
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
-  avatar: string; // initials ONLY
   email: string;
   role: ArchitectureRole;
-  avatarColor: string; // Added: always present, Tailwind class
+  avatarUrl?: string;
+  avatarColor?: string;
+  initials: string;
 }
 
-// Color palette to rotate for clients
-const CLIENT_COLOR_PALETTE = [
-  'bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-yellow-500', 'bg-purple-500',
-  'bg-pink-500', 'bg-indigo-500', 'bg-orange-500', 'bg-teal-500', 'bg-cyan-500'
-];
+// Color palette for clients (use only for fallback as default, now all will default to bg-blue-500)
+const DEFAULT_AVATAR_COLOR = "bg-blue-500";
 
-// Static team/admin users, now with consistent avatarColor
+// Static team/admin users, now all start with default color
 export const TEAM_USERS: TeamMember[] = [
   {
     id: 't0',
-    name: 'AL',
+    name: 'Armando',
     fullName: 'Armando Lopez',
     crmRole: 'Admin',
     titleRole: 'Admin',
@@ -33,12 +33,12 @@ export const TEAM_USERS: TeamMember[] = [
     status: 'Active',
     email: 'armando.lopez@example.com',
     role: 'Admin',
-    avatar: 'AL',
-    avatarColor: 'bg-blue-800'
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: "AL",
   },
   {
     id: 't1',
-    name: 'ALD',
+    name: 'Alice',
     fullName: 'Alice Dale',
     crmRole: 'Team',
     titleRole: 'Team Lead',
@@ -46,12 +46,12 @@ export const TEAM_USERS: TeamMember[] = [
     status: 'Active',
     email: 'alice.dale@example.com',
     role: 'Team Lead',
-    avatar: 'ALD',
-    avatarColor: 'bg-purple-500'
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: "AD",
   },
   {
     id: 't2',
-    name: 'MP',
+    name: 'Mark',
     fullName: 'Mark Pinsky',
     crmRole: 'Team',
     titleRole: 'Team Lead',
@@ -59,12 +59,12 @@ export const TEAM_USERS: TeamMember[] = [
     status: 'Active',
     email: 'mark.pinsky@example.com',
     role: 'Team Lead',
-    avatar: 'MP',
-    avatarColor: 'bg-green-500'
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: "MP",
   },
   {
     id: 't3',
-    name: 'SS',
+    name: 'Stephanie',
     fullName: 'Stephanie Sharp',
     crmRole: 'Team',
     titleRole: 'Team Lead',
@@ -72,12 +72,12 @@ export const TEAM_USERS: TeamMember[] = [
     status: 'Active',
     email: 'stephanie.sharp@example.com',
     role: 'Team Lead',
-    avatar: 'SS',
-    avatarColor: 'bg-blue-500'
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: "SS",
   },
   {
     id: 't4',
-    name: 'JJ',
+    name: 'Joshua',
     fullName: 'Joshua Jones',
     crmRole: 'Team',
     titleRole: 'Team Lead',
@@ -85,20 +85,19 @@ export const TEAM_USERS: TeamMember[] = [
     status: 'Inactive',
     email: 'joshua.jones@example.com',
     role: 'Team Lead',
-    avatar: 'JJ',
-    avatarColor: 'bg-orange-500'
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: "JJ",
   },
-  // ... add client rows dynamically below
   ...getAllClients().map((client, i) => ({
     id: client.clientId,
-    name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
+    name: client.firstName,
     fullName: `${client.firstName} ${client.lastName}`,
     crmRole: 'Client' as const,
     lastActive: '—',
     status: 'Active' as const,
     email: client.email || 'unknown@email.com',
     role: 'Client' as ArchitectureRole,
-    avatar: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
-    avatarColor: CLIENT_COLOR_PALETTE[i % CLIENT_COLOR_PALETTE.length]
+    avatarColor: DEFAULT_AVATAR_COLOR,
+    initials: ((client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase()),
   }))
 ];

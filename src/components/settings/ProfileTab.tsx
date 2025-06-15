@@ -7,9 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useUser } from '@/contexts/UserContext';
 import { ARCHITECTURE_ROLES, ROLE_DISPLAY_NAMES } from '@/types/roles';
-import AvatarUpload from './AvatarUpload';
+import Avatar from '../common/Avatar';
 import DisplayPreferences from './DisplayPreferences';
-import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
 
 const AVATAR_COLORS = [
   'bg-blue-500',
@@ -27,12 +26,6 @@ const AVATAR_COLORS = [
 const ProfileTab = () => {
   const { currentUser, updateUser } = useUser();
 
-  // Initial avatarColor from local customizations, fallback to profile/db/user property
-  const initialAvatarColor =
-    getUserCustomizations(currentUser.id).avatarColor ||
-    currentUser.avatarColor ||
-    'bg-blue-500';
-
   const [formData, setFormData] = useState({
     name: currentUser.name,
     bio: currentUser.bio || '',
@@ -40,53 +33,40 @@ const ProfileTab = () => {
     role: currentUser.role,
     showOnlineStatus: currentUser.showOnlineStatus,
     showLastActive: currentUser.showLastActive,
-    avatarColor: initialAvatarColor,
+    avatarColor: currentUser.avatarColor || 'bg-blue-500',
+    initials: currentUser.initials,
   });
 
   useEffect(() => {
-    // Update state if avatarColor changes on user (i.e., if context updates)
     setFormData(prev => ({
       ...prev,
-      avatarColor:
-        getUserCustomizations(currentUser.id).avatarColor ||
-        currentUser.avatarColor ||
-        'bg-blue-500',
+      avatarColor: currentUser.avatarColor || 'bg-blue-500',
+      initials: currentUser.initials,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser.avatarColor, currentUser.id]);
+  }, [currentUser.avatarColor, currentUser.initials, currentUser.id]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleAvatarChange = (file: File) => {
-    console.log('Avatar file selected:', file);
-    // In a real app, this would upload the file and update the avatar URL
-  };
-
   const handleAvatarColorChange = (color: string) => {
     setFormData(prev => ({ ...prev, avatarColor: color }));
-    // Save customization to local storage
-    saveUserCustomizations(currentUser.id, { avatarColor: color });
-    // Send update to context so sidebar/header, etc. reflect color instantly
     updateUser({ avatarColor: color });
+    localStorage.setItem("avatar-color", color);
   };
 
   const handleSave = () => {
-    // Save any other profile changes (excluding avatarColor which was already saved on color change)
     updateUser({ ...formData });
-    // Optionally, also re-save to customizations (for completeness, even though color already saved above)
-    saveUserCustomizations(currentUser.id, { avatarColor: formData.avatarColor });
+    localStorage.setItem("avatar-color", formData.avatarColor);
     console.log('Profile updated:', formData);
   };
 
   return (
     <div className="p-6 max-w-2xl">
       <div className="space-y-6">
-        <AvatarUpload user={{ ...currentUser, avatarColor: formData.avatarColor }} onAvatarChange={handleAvatarChange} />
-
-        <div className="space-y-4">
-          {/* Avatar color picker */}
+        <div className="flex items-center gap-4">
+          <Avatar initials={formData.initials} avatarUrl={currentUser.avatarUrl} color={formData.avatarColor} size={66} />
           <div>
             <Label>Avatar Color</Label>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
@@ -106,7 +86,8 @@ const ProfileTab = () => {
               ))}
             </div>
           </div>
-
+        </div>
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Full Name</Label>
@@ -143,7 +124,6 @@ const ProfileTab = () => {
               placeholder="Enter your company name"
             />
           </div>
-
           <div>
             <Label htmlFor="bio">Bio</Label>
             <Textarea

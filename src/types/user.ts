@@ -7,15 +7,18 @@ export interface TeamUser {
   name: string;
   fullName: string;
   role: ArchitectureRole;
-  avatar: string;
-  avatarColor?: string; // ADDED for consistency if needed
+  avatarUrl?: string;
+  avatarColor?: string; // default "bg-blue-500" if not set
+  initials: string;
 }
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  avatar: string;
+  avatarUrl?: string;
+  avatarColor?: string;
+  initials: string;
   status: 'online' | 'away' | 'busy' | 'offline';
   bio?: string;
   company?: string;
@@ -24,8 +27,7 @@ export interface User {
   notificationsMuted: boolean;
   showOnlineStatus: boolean;
   showLastActive: boolean;
-  avatarColor?: string; // ADDED
-  isAdmin?: boolean; // NEW: User's admin flag
+  isAdmin?: boolean;
 }
 
 export interface UserContextType {
@@ -34,4 +36,3 @@ export interface UserContextType {
   toggleNotifications: () => void;
   updateUser: (updates: Partial<User>) => void;
 }
-
