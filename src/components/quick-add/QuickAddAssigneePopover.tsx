@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,7 @@ interface QuickAddAssigneePopoverProps {
 }
 
 // Only use TEAM members for assignment dropdown
-const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
+const teamAssignees = TEAM_USERS;
 
 const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
   assignee,
@@ -108,4 +107,3 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
-

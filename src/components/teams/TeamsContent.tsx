@@ -1,9 +1,8 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
 import TeamMembersSummary from './TeamMembersSummary';
-import { TEAM_USERS, TeamMember } from '@/utils/teamUsers';
+import { ADMIN_USERS, TEAM_USERS, CLIENT_USERS, ALL_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -27,7 +26,10 @@ const MEMBERS_BATCH = 10;
 const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const { projectId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
+  // Use correct initial data for editing titles
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(
+    tab === "admin" ? ADMIN_USERS : (tab === "team" ? TEAM_USERS : CLIENT_USERS)
+  );
   const isMobile = useIsMobile();
 
   // Supabase admins
@@ -38,7 +40,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   if (tab === "admin") {
     // Convert Supabase admins to TeamMember type, avoid duplicates (email)
     const adminLookup = new Map<string, boolean>();
-    TEAM_USERS.filter(u => u.crmRole === "Admin").forEach(u =>
+    ADMIN_USERS.forEach(u =>
       adminLookup.set((u.email ?? "").toLowerCase(), true)
     );
 
@@ -61,11 +63,15 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
 
     // Merge static + Supabase admins
     allTeamMembers = [
-      ...TEAM_USERS.filter(u => u.crmRole === "Admin"),
+      ...ADMIN_USERS,
       ...supabaseAdminMembers
     ];
+  } else if (tab === "team") {
+    allTeamMembers = TEAM_USERS;
+  } else if (tab === "client") {
+    allTeamMembers = CLIENT_USERS;
   } else {
-    allTeamMembers = TEAM_USERS.filter(m => getCrmRoleForTab(tab).includes(m.crmRole));
+    allTeamMembers = [];
   }
 
   // For infinite scrolling

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TEAM_USERS } from "@/utils/teamUsers";
+import { ALL_USERS } from "@/utils/teamUsers";
 
 interface SelectUserDropdownProps {
   selectedUserId: string;
@@ -18,7 +18,7 @@ const SelectUserDropdown: React.FC<SelectUserDropdownProps> = ({
       className="border border-border rounded px-2 py-1 text-xs min-w-[160px] bg-background"
     >
       <option value="">All Users</option>
-      {TEAM_USERS.map(user => (
+      {ALL_USERS.map(user => (
         <option key={user.id} value={user.id}>
           {user.fullName}
         </option>

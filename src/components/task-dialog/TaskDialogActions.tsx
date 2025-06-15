@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -30,7 +29,7 @@ interface TaskDialogActionsProps {
 }
 
 // Only use TEAM members for assignment dropdown
-const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
+const teamAssignees = TEAM_USERS;
 
 const TaskDialogActions = ({
   assignedTo,
@@ -157,4 +156,3 @@ const TaskDialogActions = ({
 };
 
 export default TaskDialogActions;
-

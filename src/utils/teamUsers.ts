@@ -1,6 +1,8 @@
+
 import { ArchitectureRole } from '@/types/roles';
 import { getAllClients } from '@/data/projectClientData';
 
+// Shared type for all user roles
 export interface TeamMember {
   id: string;
   name: string; // e.g. "AL"
@@ -15,14 +17,13 @@ export interface TeamMember {
   avatarColor: string; // Added: always present, Tailwind class
 }
 
-// Color palette to rotate for clients
 const CLIENT_COLOR_PALETTE = [
   'bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-yellow-500', 'bg-purple-500',
   'bg-pink-500', 'bg-indigo-500', 'bg-orange-500', 'bg-teal-500', 'bg-cyan-500'
 ];
 
-// Static team/admin users, now with consistent avatarColor
-export const TEAM_USERS: TeamMember[] = [
+// Static admins
+export const ADMIN_USERS: TeamMember[] = [
   {
     id: 't0',
     name: 'AL',
@@ -35,7 +36,11 @@ export const TEAM_USERS: TeamMember[] = [
     role: 'Admin',
     avatar: 'AL',
     avatarColor: 'bg-blue-800'
-  },
+  }
+];
+
+// Static team members
+export const TEAM_USERS: TeamMember[] = [
   {
     id: 't1',
     name: 'ALD',
@@ -87,18 +92,34 @@ export const TEAM_USERS: TeamMember[] = [
     role: 'Team Lead',
     avatar: 'JJ',
     avatarColor: 'bg-orange-500'
-  },
-  // ... add client rows dynamically below
-  ...getAllClients().map((client, i) => ({
-    id: client.clientId,
-    name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
-    fullName: `${client.firstName} ${client.lastName}`,
-    crmRole: 'Client' as const,
-    lastActive: '—',
-    status: 'Active' as const,
-    email: client.email || 'unknown@email.com',
-    role: 'Client' as ArchitectureRole,
-    avatar: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
-    avatarColor: CLIENT_COLOR_PALETTE[i % CLIENT_COLOR_PALETTE.length]
-  }))
+  }
 ];
+
+// Dynamic clients
+export const CLIENT_USERS: TeamMember[] = getAllClients().map((client, i) => ({
+  id: client.clientId,
+  name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
+  fullName: `${client.firstName} ${client.lastName}`,
+  crmRole: 'Client' as const,
+  lastActive: '—',
+  status: 'Active' as const,
+  email: client.email || 'unknown@email.com',
+  role: 'Client' as ArchitectureRole,
+  avatar: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
+  avatarColor: CLIENT_COLOR_PALETTE[i % CLIENT_COLOR_PALETTE.length]
+}));
+
+// ALL_USERS helper includes all admins, teams, clients
+export const ALL_USERS: TeamMember[] = [
+  ...ADMIN_USERS,
+  ...TEAM_USERS,
+  ...CLIENT_USERS
+];
+
+// Helper for any role
+export function getUsersByRole(role: TeamMember['crmRole']): TeamMember[] {
+  if (role === 'Admin') return ADMIN_USERS;
+  if (role === 'Team') return TEAM_USERS;
+  if (role === 'Client') return CLIENT_USERS;
+  return [];
+}
