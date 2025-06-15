@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -82,20 +81,26 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         setLoadingMembers(false);
         return;
       }
-      // 3. Map to TeamMember type
-      const mappedMembers: TeamMember[] = profiles.map((p: any) => ({
-        id: p.id,
-        name: (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU"),
-        fullName: p.full_name || p.email || "Unknown User",
-        crmRole: role.charAt(0).toUpperCase() + role.slice(1), // 'Team' or 'Client'
-        titleRole: role.charAt(0).toUpperCase() + role.slice(1) as ArchitectureRole,
-        lastActive: "—",
-        status: "Active",
-        email: p.email || "",
-        role: (role.charAt(0).toUpperCase() + role.slice(1)) as ArchitectureRole,
-        avatar: (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU"),
-        avatarColor: role === "team" ? "bg-blue-700" : "bg-pink-700",
-      }));
+      // 3. Map to TeamMember type - FIX: use explicit union value for crmRole and others
+      const mappedMembers: TeamMember[] = profiles.map((p: any) => {
+        const crmRole = role === "team" ? "Team" : "Client";
+        const avatarColor = role === "team" ? "bg-blue-700" : "bg-pink-700";
+        const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
+        return {
+          id: p.id,
+          name: nameInit,
+          fullName: p.full_name || p.email || "Unknown User",
+          crmRole: crmRole as "Team" | "Client",
+          titleRole: crmRole as ArchitectureRole,
+          lastActive: "—",
+          status: "Active",
+          email: p.email || "",
+          role: crmRole as ArchitectureRole,
+          avatar: nameInit,
+          avatarColor,
+        };
+      });
+
       if (role === "team") setSupabaseTeamMembers(mappedMembers);
       else setSupabaseClientMembers(mappedMembers);
       setLoadingMembers(false);
