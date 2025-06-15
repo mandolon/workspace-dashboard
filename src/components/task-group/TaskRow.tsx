@@ -136,8 +136,8 @@ const TaskRow = React.memo(({
           <TableCell className="py-2 w-[10%]">
             <TaskRowCreatedBy createdBy={task.createdBy} />
           </TableCell>
-          {/* Add group class HERE for assignees cell */}
-          <TableCell className="py-2 w-[18%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors group">
+          {/* Remove group class from cell, restore previous behavior */}
+          <TableCell className="py-2 w-[18%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors">
             {rowAssignees}
           </TableCell>
         </TableRow>
