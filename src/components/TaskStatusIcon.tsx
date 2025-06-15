@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface TaskStatusIconProps {
   status: string;
   onClick: () => void;
+  showLabel?: boolean;
 }
 
-const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
+const TaskStatusIcon = ({ status, onClick, showLabel = false }: TaskStatusIconProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -48,6 +49,19 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
         return 'hover:bg-gray-300/50 dark:hover:bg-gray-700/40';
     }
   })();
+
+  const getStatusLabel = () => {
+    switch (status) {
+      case 'redline':
+        return 'Redline / To Do';
+      case 'progress':
+        return 'Progress / Update';
+      case 'completed':
+        return 'Completed';
+      default:
+        return '';
+    }
+  };
 
   const getStatusIcon = () => {
     if (status === 'completed') {
@@ -108,6 +122,15 @@ const TaskStatusIcon = ({ status, onClick }: TaskStatusIconProps) => {
       />
     );
   };
+
+  if (showLabel) {
+    return (
+      <button onClick={handleClick} className="flex items-center gap-2 p-0.5 hover:bg-accent rounded transition-colors">
+        {getStatusIcon()}
+        <span className="text-xs text-muted-foreground">{getStatusLabel()}</span>
+      </button>
+    );
+  }
 
   return (
     <button onClick={handleClick} className="p-0.5 hover:bg-accent rounded transition-colors">
