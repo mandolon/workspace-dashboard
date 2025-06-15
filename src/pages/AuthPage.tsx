@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -65,7 +64,7 @@ const AuthPage: React.FC = () => {
       email,
       password,
       options: {
-        data: { full_name: randomName, crm_role: "admin" },
+        data: { full_name: randomName, crm_role: "team" },
         emailRedirectTo: redirectTo,
       },
     });
@@ -172,4 +171,3 @@ const AuthPage: React.FC = () => {
 };
 
 export default AuthPage;
-
