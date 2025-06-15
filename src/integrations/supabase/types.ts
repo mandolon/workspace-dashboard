@@ -9,6 +9,69 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      emails: {
+        Row: {
+          avatar: string | null
+          content: string | null
+          created_at: string
+          has_attachment: boolean | null
+          id: string
+          is_read: boolean | null
+          is_starred: boolean | null
+          preview: string | null
+          recipient: string | null
+          recipient_id: string | null
+          sender_email: string | null
+          sender_id: string
+          sender_name: string
+          status: string
+          subject: string
+          time: string | null
+          to_emails: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string | null
+          content?: string | null
+          created_at?: string
+          has_attachment?: boolean | null
+          id?: string
+          is_read?: boolean | null
+          is_starred?: boolean | null
+          preview?: string | null
+          recipient?: string | null
+          recipient_id?: string | null
+          sender_email?: string | null
+          sender_id: string
+          sender_name: string
+          status: string
+          subject: string
+          time?: string | null
+          to_emails?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string | null
+          content?: string | null
+          created_at?: string
+          has_attachment?: boolean | null
+          id?: string
+          is_read?: boolean | null
+          is_starred?: boolean | null
+          preview?: string | null
+          recipient?: string | null
+          recipient_id?: string | null
+          sender_email?: string | null
+          sender_id?: string
+          sender_name?: string
+          status?: string
+          subject?: string
+          time?: string | null
+          to_emails?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pdf_comments: {
         Row: {
           comment_number: number

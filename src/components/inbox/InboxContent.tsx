@@ -1,7 +1,6 @@
 
 import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
-import InboxHeader from './InboxHeader';
 import InboxToolbar from './InboxToolbar';
 import EmailList from './EmailList';
 import { Email } from '@/types/email';
@@ -21,6 +20,8 @@ interface InboxContentProps {
   onBackToList: () => void;
   onTabChange: (tab: string) => void;
   onPageChange: (page: number) => void;
+  isLoading?: boolean;
+  error?: Error | null;
 }
 
 const InboxContent = React.memo(({
@@ -38,6 +39,8 @@ const InboxContent = React.memo(({
   onBackToList,
   onTabChange,
   onPageChange,
+  isLoading,
+  error,
 }: InboxContentProps) => {
   const emailDetailContent = useMemo(() => {
     if (selectedEmail && currentEmail) {
@@ -54,14 +57,31 @@ const InboxContent = React.memo(({
     return emailDetailContent;
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <span className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></span>
+        <span className="mt-2 text-sm text-muted-foreground">Loading messages...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <span className="text-sm text-red-500">Error loading emails.</span>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full flex flex-col">
-      {/* InboxHeader is now rendered at the page level for consistent layout */}
       <div className="px-6 flex-1 flex flex-col border-b border-border">
         <InboxToolbar
           selectedEmails={selectedEmails}
           totalEmails={filteredEmails.length}
           onSelectAll={onSelectAll}
+          activeTab={activeTab}
         />
         <EmailList
           emails={filteredEmails}

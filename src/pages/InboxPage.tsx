@@ -1,11 +1,9 @@
 
-// Make the Inbox heading layout, tabs, and spacing 100% consistent with the Whiteboards page.
-
 import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
-import { useInboxState } from "@/hooks/useInboxState";
+import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
 
 const InboxPage = () => {
   const {
@@ -17,13 +15,15 @@ const InboxPage = () => {
     filteredEmails,
     currentEmail,
     unreadCount,
+    setCurrentPage,
     handleSelectEmail,
     handleSelectAll,
     handleEmailClick,
     handleBackToList,
     handleTabChange,
-    setCurrentPage,
-  } = useInboxState();
+    isLoading,
+    error,
+  } = useSupabaseInbox();
 
   return (
     <AppLayout>
@@ -52,6 +52,8 @@ const InboxPage = () => {
             onBackToList={handleBackToList}
             onTabChange={handleTabChange}
             onPageChange={setCurrentPage}
+            isLoading={isLoading}
+            error={error}
           />
         </div>
       </div>
@@ -60,3 +62,4 @@ const InboxPage = () => {
 };
 
 export default InboxPage;
+
