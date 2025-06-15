@@ -65,7 +65,8 @@ const InboxHeader = ({
           </Button>
         </div>
       </div>
-      <div className="flex items-center px-6 pb-2 space-x-3">
+      {/* Tabs row: padding and bottom border for alignment */}
+      <div className="flex items-center px-6 pb-2 space-x-3 border-b border-border">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const selected = activeTab === tab.id;
@@ -91,3 +92,4 @@ const InboxHeader = ({
 };
 
 export default InboxHeader;
+
