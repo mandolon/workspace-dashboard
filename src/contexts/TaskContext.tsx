@@ -1,10 +1,7 @@
+
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
-import { useTaskOperations } from '@/hooks/useTaskOperations';
-import { useTaskEditing } from '@/hooks/useTaskEditing';
-import { useTaskAssignments } from '@/hooks/useTaskAssignments';
-import { useTaskStatusOperations } from '@/hooks/useTaskStatusOperations';
-import { useCRMRole } from '@/pages/TeamsPage';
+import { useTaskBoard } from '@/hooks/useTaskBoard';
 
 interface TaskContextType {
   // Task state
@@ -50,7 +47,6 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-// Add log to test context order
 console.log('TaskContext created');
 
 export const useTaskContext = () => {
@@ -65,63 +61,97 @@ interface TaskProviderProps {
   children: React.ReactNode;
 }
 
-// Remove React.memo here!
 export const TaskProvider = ({ children }: TaskProviderProps) => {
-  const taskOperations = useTaskOperations();
-  const taskEditing = useTaskEditing(taskOperations.updateTaskById);
-  const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
-  const taskStatusOperations = useTaskStatusOperations(
-    taskOperations.customTasks,
-    taskOperations.updateTaskById,
-    taskOperations.archiveTask
-  );
-  const crmRole = useCRMRole();
+  // Use the new Supabase-powered task board
+  const {
+    handleCreateTask,
+    handleTaskClick,
+    handleTaskArchive,
+    toggleTaskStatus,
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator,
+    supabaseTasks,
+  } = useTaskBoard();
+
+  // Mock implementations for legacy compatibility
+  const mockEditingState = {
+    editingTaskId: null,
+    editingValue: "",
+    startEditingTask: (task: Task) => {
+      console.log('[TaskContext] Legacy editing not implemented for:', task.taskId);
+    },
+    saveTaskEdit: (taskId: number) => {
+      console.log('[TaskContext] Legacy save edit not implemented for:', taskId);
+    },
+    cancelTaskEdit: () => {
+      console.log('[TaskContext] Legacy cancel edit not implemented');
+    },
+    setEditingValue: (value: string) => {
+      console.log('[TaskContext] Legacy set editing value not implemented:', value);
+    },
+  };
+
+  const mockLegacyOperations = {
+    updateTaskById: (taskId: number, updates: Partial<Task>) => {
+      console.log('[TaskContext] Legacy updateTaskById not implemented:', taskId, updates);
+    },
+    deleteTask: async (taskId: number) => {
+      console.log('[TaskContext] Legacy deleteTask not implemented:', taskId);
+    },
+    restoreDeletedTask: (taskId: number) => {
+      console.log('[TaskContext] Legacy restoreDeletedTask not implemented:', taskId);
+    },
+    changeTaskStatus: (taskId: number, newStatus: "redline" | "progress" | "completed") => {
+      console.log('[TaskContext] Legacy changeTaskStatus not implemented:', taskId, newStatus);
+    },
+    navigateToTask: (task: Task) => {
+      handleTaskClick(task);
+    },
+    triggerRefresh: () => {
+      console.log('[TaskContext] Legacy triggerRefresh not implemented');
+    },
+  };
 
   const value = React.useMemo((): TaskContextType => ({
-    // Task state
-    customTasks: taskOperations.customTasks,
-    archivedTasks: taskOperations.archivedTasks,
-    editingTaskId: taskEditing.editingTaskId,
-    editingValue: taskEditing.editingValue,
-    refreshTrigger: taskOperations.refreshTrigger,
+    // Task state - use Supabase tasks
+    customTasks: supabaseTasks || [],
+    archivedTasks: [], // Archived tasks are included in supabaseTasks when needed
+    refreshTrigger: 0, // Not needed with real-time updates
     
-    // Task operations
-    createTask: taskOperations.createTask,
-    updateTaskById: taskOperations.updateTaskById,
-    deleteTask: taskOperations.deleteTask,
-    restoreDeletedTask: taskOperations.restoreDeletedTask,
-    archiveTask: taskOperations.archiveTask,
+    // Edit operations (legacy compatibility)
+    ...mockEditingState,
     
-    // Edit operations
-    startEditingTask: taskEditing.startEditingTask,
-    saveTaskEdit: taskEditing.saveTaskEdit,
-    cancelTaskEdit: taskEditing.cancelTaskEdit,
-    setEditingValue: taskEditing.setEditingValue,
+    // Task operations - bridge to new system
+    createTask: handleCreateTask,
+    archiveTask: (taskId: number) => handleTaskArchive(taskId),
+    toggleTaskStatus: toggleTaskStatus,
     
-    // Status operations
-    toggleTaskStatus: taskStatusOperations.toggleTaskStatus,
-    changeTaskStatus: taskStatusOperations.changeTaskStatus,
+    // Legacy operations (mock implementations)
+    ...mockLegacyOperations,
     
-    // Assignment operations
-    assignPerson: taskAssignments.assignPerson,
-    removeAssignee: taskAssignments.removeAssignee,
-    addCollaborator: taskAssignments.addCollaborator,
-    removeCollaborator: taskAssignments.removeCollaborator,
-    
-    // Navigation
-    navigateToTask: taskOperations.navigateToTask,
+    // Assignment operations - bridge to new system
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator,
     
     // Data getters
-    getTasksByStatus: taskOperations.getTasksByStatus,
-    getAllTasks: taskOperations.getAllTasks,
-    
-    // Refresh trigger
-    triggerRefresh: taskOperations.triggerRefresh
+    getTasksByStatus: (status: string) => {
+      return (supabaseTasks || []).filter(task => task.status === status);
+    },
+    getAllTasks: () => supabaseTasks || [],
   }), [
-    taskOperations,
-    taskEditing,
-    taskAssignments,
-    taskStatusOperations
+    supabaseTasks,
+    handleCreateTask,
+    handleTaskClick,
+    handleTaskArchive,
+    toggleTaskStatus,
+    assignPerson,
+    removeAssignee,
+    addCollaborator,
+    removeCollaborator,
   ]);
 
   return (
