@@ -50,6 +50,9 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
+// Add log to test context order
+console.log('TaskContext created');
+
 export const useTaskContext = () => {
   const context = useContext(TaskContext);
   if (context === undefined) {
@@ -62,7 +65,8 @@ interface TaskProviderProps {
   children: React.ReactNode;
 }
 
-export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
+// Remove React.memo here!
+export const TaskProvider = ({ children }: TaskProviderProps) => {
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
   const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
@@ -125,6 +129,4 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
       {children}
     </TaskContext.Provider>
   );
-});
-
-TaskProvider.displayName = "TaskProvider";
+};
