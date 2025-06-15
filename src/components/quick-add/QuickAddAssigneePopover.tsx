@@ -4,16 +4,16 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { Users, X } from 'lucide-react';
 import { getInitials } from '@/utils/taskUtils';
+import { getAvatarColor } from '@/utils/avatarColors';
 import { TEAM_USERS } from '@/utils/teamUsers';
 import { getCRMUser } from '@/utils/taskUserCRM';
 
 type QuickAddTaskPerson = {
   id: string;
   name: string;
+  avatar: string;
   fullName?: string;
-  avatarUrl?: string;
   avatarColor?: string;
-  initials: string;
   projectId?: string;
 };
 
@@ -53,9 +53,9 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             {assigneeWithColor ? (
               <>
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${assigneeWithColor.avatarColor ?? "bg-blue-500"}`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
                 >
-                  {assigneeWithColor.initials}
+                  {assigneeWithColor.name}
                 </div>
                 <button
                   type="button"
@@ -88,17 +88,13 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
                   className="flex items-center gap-2 py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground text-xs text-foreground transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setAssignee({ 
-                      ...personWithColor,
-                      id: safeId,
-                      initials: personWithColor.initials ?? getInitials(personWithColor.name || personWithColor.fullName || ""),
-                    });
+                    setAssignee({ ...personWithColor, id: safeId });
                     setShowAssigneePopover(false);
                   }}
                   type="button"
                 >
-                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${personWithColor.avatarColor ?? "bg-blue-500"}`}>
-                    {personWithColor.initials ?? getInitials(personWithColor.name || personWithColor.fullName || "")}
+                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(personWithColor)}`}>
+                    {personWithColor.name}
                   </div>
                   <span>{personWithColor.fullName || personWithColor.name}</span>
                 </button>
@@ -112,3 +108,4 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
 };
 
 export default QuickAddAssigneePopover;
+

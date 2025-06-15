@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import { UserContextType, User } from "@/types/user";
-import Avatar from '@/components/common/Avatar';
 
 // Define exported context type with impersonation support
 type ImpersonationContext = {
@@ -97,103 +96,25 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     id: u?.id || "unknown",
     name: u?.user_metadata?.full_name || u?.email || "Unnamed",
     email: u?.email || "",
-    avatarUrl: "", // We'll sync from profile below
-    avatarColor: "bg-blue-500",
-    initials: (u?.user_metadata?.full_name || u?.email || "U").split(" ").map((n: string) => n[0]).join("").toUpperCase(),
-    status: "online",
-    role: "Admin",
+    avatar: "", // Replace with avatar URL if available in profile/user_metadata
+    status: "online", // Fallback; app could actually derive from presence later
+    role: "Admin", // Fallback; replace with real role if applicable
     lastActive: new Date().toISOString(),
     notificationsMuted: false,
     showOnlineStatus: true,
     showLastActive: true,
     company: "",
     bio: "",
-    isAdmin,
+    avatarColor: undefined,
+    isAdmin, // NEW: expose isAdmin
   });
-
-  // Updated local user state based on profile
-  const [userProfile, setUserProfile] = useState<any>(null);
-
-  // Load user profile from Supabase public.profiles table
-  useEffect(() => {
-    if (!user) return setUserProfile(null);
-    (async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (!error && data) {
-        setUserProfile(data);
-      }
-    })();
-  }, [user]);
-
-  // -- Implement updateUser
-  const updateUser = async (updates: Partial<User>) => {
-    if (!user) return;
-    // Only update allowed fields
-    const profileUpdates: any = {};
-    if (typeof updates.name === "string") profileUpdates.full_name = updates.name;
-    if (typeof updates.avatarUrl === "string") profileUpdates.avatar_url = updates.avatarUrl;
-    // Extra fields can be added as you wish
-
-    if (Object.keys(profileUpdates).length === 0) return;
-
-    // Update in Supabase
-    const { error, data } = await supabase
-      .from("profiles")
-      .update(profileUpdates)
-      .eq("id", user.id)
-      .select()
-      .maybeSingle();
-
-    if (error) {
-      // Optional: show toast UI error (if using shadcn/ui use-toast)
-      if (window && "toast" in window) {
-        (window as any).toast &&
-          (window as any).toast({
-            title: "Update failed",
-            description: error.message,
-            variant: "destructive",
-          });
-      } else {
-        alert("Profile update failed: " + error.message);
-      }
-      return;
-    }
-    // Update local userProfile and possibly force a refresh if desired
-    setUserProfile(data);
-
-    // Optional: refetch SupabaseUser/profile here if fields like full_name or avatarUrl
-    // are referenced in SupabaseUser metadata.
-
-    // Optional: show toast success
-    if (window && "toast" in window) {
-      (window as any).toast &&
-        (window as any).toast({
-          title: "Profile updated",
-          description: "Your profile changes have been saved.",
-          variant: "success",
-        });
-    }
-  };
 
   // This can be fleshed out with more fields per your needs
   const contextValue = {
-    currentUser: {
-      ...mapToAppUser(isImpersonating ? null : user),
-      // Patch over with userProfile fields if loaded
-      ...(userProfile
-        ? {
-            name: userProfile.full_name || user?.user_metadata?.full_name || user?.email || "",
-            avatarUrl: userProfile.avatar_url || "",
-          }
-        : {}),
-    },
+    currentUser: mapToAppUser(isImpersonating ? null : user), // You may want to return impersonatedUser here if impersonating
     updateUserStatus: () => {},
     toggleNotifications: () => {},
-    updateUser,
+    updateUser: () => {},
     logout: async () => {
       await supabase.auth.signOut();
       window.location.href = "/auth";

@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -27,7 +26,7 @@ interface TaskRowProps {
   onRemoveCollaborator: (taskId: string, collaboratorIndex: number, e: React.MouseEvent) => void;
   onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
-  onTaskDeleted?: (task: Task) => void;
+  onTaskDeleted?: () => void;
 }
 
 const TaskRow = React.memo(({
@@ -72,7 +71,7 @@ const TaskRow = React.memo(({
   const handleDeleteTaskInternal = useCallback(async () => {
     await handleDeleteTask(task);
     if (onTaskDeleted) {
-      onTaskDeleted(task); // Always send full Task object
+      onTaskDeleted();
     }
   }, [handleDeleteTask, onTaskDeleted, task]);
 
@@ -114,7 +113,6 @@ const TaskRow = React.memo(({
     />
   ), [task, onRemoveAssignee, onRemoveCollaborator, onAssignPerson, onAddCollaborator]);
 
-  // Remove duplicate key={task.id} usage -- should be set in mapping/list parent
   return (
     <>
       <TaskRowContextMenu
@@ -123,7 +121,7 @@ const TaskRow = React.memo(({
         onTaskStatusClick={onTaskStatusClick}
         onContextMenuDelete={handleContextMenuDelete}
       >
-        <TableRow className="hover:bg-accent/50 group">
+        <TableRow key={task.id} className="hover:bg-accent/50 group">
           <TableCell className="py-2 w-[47%]">
             {rowContent}
           </TableCell>

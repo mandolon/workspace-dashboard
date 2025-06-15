@@ -2,7 +2,7 @@
 import React from 'react';
 import { Circle } from 'lucide-react';
 import { User } from '@/types/user';
-import Avatar from "@/components/common/Avatar";
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 
 interface UserAvatarProps {
   user: User;
@@ -20,14 +20,26 @@ const UserAvatar = ({ user, size = 'md', showStatus = true }: UserAvatarProps) =
     }
   };
 
-  const sizeMap = { sm: 36, md: 48 };
-  const px = sizeMap[size];
+  const sizeClasses = {
+    sm: 'w-9 h-9 text-xs',
+    md: 'w-12 h-12 text-xs'
+  };
+
+  const statusSizeClasses = {
+    sm: 'w-3 h-3',
+    md: 'w-3 h-3'
+  };
+
+  // Always use user.avatarColor if present, fallback to gray
+  const avatarBg = user.avatarColor || 'bg-gray-600';
 
   return (
     <div className="relative">
-      <Avatar initials={user.initials} avatarUrl={user.avatarUrl} color={user.avatarColor || "bg-blue-500"} size={px} />
+      <div className={`${sizeClasses[size]} ${avatarBg} rounded-full flex items-center justify-center text-white ${AVATAR_INITIALS_CLASSNAMES}`}>
+        {user.avatar}
+      </div>
       {showStatus && (
-        <Circle className={`absolute -bottom-0.5 -right-0.5 ${getStatusColor(user.status)} fill-current`} size={px / 4} />
+        <Circle className={`${statusSizeClasses[size]} absolute -bottom-0.5 -right-0.5 ${getStatusColor(user.status)} fill-current`} />
       )}
     </div>
   );

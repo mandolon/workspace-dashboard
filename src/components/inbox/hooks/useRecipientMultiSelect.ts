@@ -42,9 +42,8 @@ export function useRecipientMultiSelect(value: Recipient[], onChange: (recipient
         id: user.id,
         name: user.fullName,
         email: user.email,
+        avatar: user.avatar,
         avatarColor: user.avatarColor,
-        avatar: user.initials,
-        // No "initials" property here
       },
     ]);
     setSearch("");

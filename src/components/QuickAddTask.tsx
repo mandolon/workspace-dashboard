@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -6,13 +7,12 @@ import QuickAddTaskActions from './quick-add/QuickAddTaskActions';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 interface QuickAddTaskPerson {
-  id: string;
+  id: string;                    // <-- Ensure ID present!
   name: string;
+  avatar: string;
   fullName?: string;
-  avatarUrl?: string;
   avatarColor?: string;
-  initials: string;
-  projectId?: string;
+  projectId?: string;            // <-- Attach projectId for traceability
 }
 
 interface QuickAddTaskProps {
@@ -89,31 +89,11 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const handleSave = () => {
     if (!canSave || !assignee) return;
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
-    // Ensure assignee includes unique id, initials, and project ID
+    // Ensure assignee includes unique id and project ID
     const teamUser = TEAM_USERS.find(u => u.id === assignee.id);
-    let newAssignee: QuickAddTaskPerson;
-    if (teamUser) {
-      newAssignee = {
-        id: teamUser.id,
-        name: teamUser.name,
-        fullName: teamUser.fullName,
-        avatarUrl: teamUser.avatarUrl,
-        avatarColor: teamUser.avatarColor,
-        initials: teamUser.initials,
-        projectId,
-      };
-    } else {
-      // Fallback, but always build initials!
-      newAssignee = {
-        id: assignee.id || 'unknown',
-        name: assignee.name,
-        fullName: assignee.fullName,
-        avatarUrl: assignee.avatarUrl,
-        avatarColor: assignee.avatarColor,
-        initials: assignee.initials || (assignee.name ? assignee.name[0].toUpperCase() : 'U'),
-        projectId,
-      };
-    }
+    const newAssignee: QuickAddTaskPerson = teamUser
+      ? { ...teamUser, projectId }
+      : { ...assignee, projectId, id: assignee.id || 'unknown' };
     const newTask = {
       id: Date.now(),
       title: taskName,
@@ -126,7 +106,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit'
       }),
       dueDate: '—',
-      assignee: newAssignee,     
+      assignee: newAssignee,     // <-- assign full assignee object
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,
       status: defaultStatus,

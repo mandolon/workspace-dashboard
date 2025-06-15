@@ -1,12 +1,13 @@
-
 import React from 'react';
 import { MoreHorizontal, Mail, Eye } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getInitials } from '@/utils/taskUtils';
+import { getAvatarColor } from '@/utils/avatarColors';
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TeamMemberContextMenu from './TeamMemberContextMenu';
 import { TeamMember } from '@/utils/teamUsers';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
-import Avatar from "@/components/common/Avatar";
 
 interface TeamMemberRowDesktopProps {
   member: TeamMember;
@@ -37,12 +38,23 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
   const navigate = useNavigate();
   const { impersonateAs, isImpersonating, impersonatedUser, currentUser } = useUser();
 
+  // Handlers
   const handleViewAsUser = () => {
     if (!isImpersonating || (impersonatedUser && impersonatedUser.id !== member.id)) {
       impersonateAs(member.id);
     }
   };
+  const handleEditUser = () => {
+    console.log(`Edit user: ${member.fullName ?? member.name}`);
+  };
+  const handleRemoveUser = () => {
+    console.log(`Remove user from team: ${member.fullName ?? member.name}`);
+  };
+  const handleSendMessage = () => {
+    console.log(`Send message to user: ${member.fullName ?? member.name}`);
+  };
 
+  // Navigate to client tab in project page if client row clicked (excluding action buttons)
   const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (member.crmRole === 'Client') {
       navigate(`/project/${projectId}`, { state: { returnToTab: "client" } });
@@ -52,9 +64,9 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
   return (
     <TeamMemberContextMenu
       onViewAsUser={handleViewAsUser}
-      onEditUser={() => {}}
-      onRemoveUser={() => {}}
-      onSendMessage={() => {}}
+      onEditUser={handleEditUser}
+      onRemoveUser={handleRemoveUser}
+      onSendMessage={handleSendMessage}
     >
       <div
         className="grid grid-cols-12 gap-3 text-xs py-2 hover:bg-accent/50 rounded cursor-pointer border-b border-border/30 group"
@@ -64,12 +76,9 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
       >
         <div className="col-span-3">
           <div className="flex items-center gap-2">
-            <Avatar
-              initials={member.initials}
-              avatarUrl={member.avatarUrl}
-              color={member.avatarColor || "bg-blue-500"}
-              size={32}
-            />
+            <div className={`w-8 h-8 ${getAvatarColor(member)} rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white`}>
+              {getInitials(member.fullName ?? member.name)}
+            </div>
             <span className="font-medium">{member.fullName ?? member.name}</span>
           </div>
         </div>
@@ -77,6 +86,7 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
           <Mail className="w-3 h-3" />
           <span className="text-blue-600 hover:underline">{member.email}</span>
         </div>
+        {/* Only show Title Role column if member is NOT a client */}
         {member.crmRole !== 'Client' && (
           <div className="col-span-2 flex flex-col">
             <Select value={member.titleRole} onValueChange={(value) => onRoleChange(member.id, value)}>
@@ -93,6 +103,7 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
             </Select>
           </div>
         )}
+        {/* Adjust the spans to keep the grid lining up */}
         <div className={member.crmRole === 'Client' ? "col-span-3 flex items-center text-muted-foreground" : "col-span-2 flex items-center text-muted-foreground"}>
           <span>{member.lastActive}</span>
         </div>
@@ -112,7 +123,7 @@ const TeamMemberRowDesktop: React.FC<TeamMemberRowDesktopProps> = ({
               <Eye className="w-4 h-4 text-muted-foreground" />
             </button>
           ) : (
-            <span className="w-3 h-3" />
+            <span className="w-3 h-3" /> /* Just spacing for grid */
           )}
         </div>
       </div>

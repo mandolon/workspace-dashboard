@@ -1,6 +1,5 @@
-
 import React, { createContext, useContext } from 'react';
-import { Task, TaskUser } from '@/types/task'; // <-- Add TaskUser here!
+import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
 import { useTaskEditing } from '@/hooks/useTaskEditing';
 import { useTaskAssignments } from '@/hooks/useTaskAssignments';
@@ -33,9 +32,9 @@ interface TaskContextType {
   changeTaskStatus: (taskId: number, newStatus: "redline" | "progress" | "completed") => void;
   
   // Assignment operations
-  assignPerson: (taskId: string, person: TaskUser) => void; // <--- fix type
+  assignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
   removeAssignee: (taskId: string) => void;
-  addCollaborator: (taskId: string, person: TaskUser) => void; // <--- fix type
+  addCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
   removeCollaborator: (taskId: string, collaboratorIndex: number) => void;
   
   // Navigation
@@ -66,12 +65,7 @@ interface TaskProviderProps {
 export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
-  // Pass getTasksByStatus to useTaskAssignments:
-  const taskAssignments = useTaskAssignments(
-    taskOperations.customTasks,
-    taskOperations.updateTaskById,
-    taskOperations.getTasksByStatus
-  );
+  const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,
@@ -105,9 +99,9 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
     changeTaskStatus: taskStatusOperations.changeTaskStatus,
     
     // Assignment operations
-    assignPerson: taskAssignments.assignPerson, // Now (taskId: string, TaskUser)
+    assignPerson: taskAssignments.assignPerson,
     removeAssignee: taskAssignments.removeAssignee,
-    addCollaborator: taskAssignments.addCollaborator, // Now (taskId: string, TaskUser)
+    addCollaborator: taskAssignments.addCollaborator,
     removeCollaborator: taskAssignments.removeCollaborator,
     
     // Navigation
@@ -134,4 +128,3 @@ export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
 });
 
 TaskProvider.displayName = "TaskProvider";
-

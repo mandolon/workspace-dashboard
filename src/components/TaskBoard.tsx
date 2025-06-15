@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskDialog from './TaskDialog';
 import TaskBoardContent from './TaskBoardContent';
@@ -70,6 +71,8 @@ const TaskBoard: React.FC = React.memo(() => {
     if (typeof task === "object" && task.taskId) {
       realTask = task;
     } else if (typeof task === "string" || typeof task === "number") {
+      // There isn't a global task list here, so we can't always find details. We'll try to infer.
+      // Try to find the task by id/taskId in any group
       const allTasks = taskGroups.flatMap(g => g.tasks);
       realTask =
         allTasks.find(t =>
@@ -78,14 +81,10 @@ const TaskBoard: React.FC = React.memo(() => {
         ) || null;
     }
     if (!realTask) {
-      const { toast } = await import('@/hooks/use-toast');
-      toast({
-        title: "Error",
-        description: "Can't resolve task to delete.",
-        variant: "destructive",
-      });
+      console.error("Can't resolve task for deletion");
       return;
     }
+    // Soft delete via the task deletion hook (will set deletedAt)
     await handleDeleteTask(realTask);
   }, [handleDeleteTask, taskGroups]);
 
