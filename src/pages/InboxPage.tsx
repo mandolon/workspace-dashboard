@@ -1,6 +1,7 @@
 
-import React from "react";
+import React, { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
+import InboxTopBar from "@/components/inbox/InboxTopBar";
 import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
 import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
@@ -21,13 +22,24 @@ const InboxPage = () => {
     handleEmailClick,
     handleBackToList,
     handleTabChange,
+    searchQuery,
+    handleSearchChange,
     isLoading,
     error,
   } = useSupabaseInbox();
 
+  // Dummy toggle sidebar handler (customize if you have a sidebar)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const handleToggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
+        <InboxTopBar
+          onToggleSidebar={handleToggleSidebar}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+        />
         <InboxHeader
           activeTab={activeTab}
           onTabChange={handleTabChange}
