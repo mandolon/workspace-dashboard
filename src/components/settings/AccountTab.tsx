@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +17,20 @@ import {
 } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 
+const cleanupAuthState = () => {
+  // Remove all Supabase auth keys from localStorage and sessionStorage
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  Object.keys(sessionStorage || {}).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+};
+
 const AccountTab = () => {
   const { currentUser, updateUser, logout, supabaseUserId } = useUser();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -27,13 +40,10 @@ const AccountTab = () => {
   const handleDeleteAccount = async () => {
     setDeleting(true);
 
-    // 1. Delete from profiles table, if possible
     try {
       if (supabaseUserId) {
-        // Delete from profiles
         await supabase.from('profiles').delete().eq('id', supabaseUserId);
 
-        // Delete user from auth
         const { error } = await supabase.auth.admin.deleteUser(supabaseUserId);
         if (error) {
           alert('Could not delete your authentication record: ' + error.message);
@@ -41,7 +51,6 @@ const AccountTab = () => {
           return;
         }
       } else if (currentUser?.id) {
-        // Fallback, just remove profile (demo user)
         await supabase.from('profiles').delete().eq('id', currentUser.id);
       }
     } catch (err: any) {
@@ -50,8 +59,12 @@ const AccountTab = () => {
       return;
     }
 
-    // 2. Sign the user out
+    // Cleanup all Supabase tokens and session data before logout
+    cleanupAuthState();
+
     setDeleting(false);
+
+    // Log the user out and redirect
     logout();
     // After logout, user will be redirected to login
   };
