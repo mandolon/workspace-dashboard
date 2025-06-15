@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ const AuthPage: React.FC = () => {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState(""); // New state for full name
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [user, setUser] = useState<any>(null);
@@ -57,14 +59,19 @@ const AuthPage: React.FC = () => {
     setErrorMsg("");
     setLoading(true);
 
-    const randomName = getRandomName();
+    if (!fullName.trim()) {
+      setErrorMsg("Full Name is required.");
+      setLoading(false);
+      return;
+    }
+
     const redirectTo = `${window.location.origin}/auth`;
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: randomName, crm_role: "team" },
+        data: { full_name: fullName, crm_role: "team" },
         emailRedirectTo: redirectTo,
       },
     });
@@ -107,10 +114,26 @@ const AuthPage: React.FC = () => {
           <p className="text-xs text-muted-foreground mt-1 text-center">
             {isLoginPage
               ? "Log in with your email and password"
-              : "Sign up to create an account (random name will be assigned)"}
+              : "Sign up to create an account (full name required)"}
           </p>
         </div>
         <form className="flex flex-col gap-3" onSubmit={isLoginPage ? handleLogin : handleSignUp}>
+          {!isLoginPage && (
+            <>
+              <label className="text-sm" htmlFor="full-name">Full Name</label>
+              <Input
+                id="full-name"
+                autoComplete="name"
+                type="text"
+                value={fullName}
+                onChange={e => setFullName(e.target.value)}
+                disabled={loading}
+                required
+                className="mb-2"
+                placeholder="Enter your full name"
+              />
+            </>
+          )}
           <label className="text-sm" htmlFor="email">Email</label>
           <Input
             id="email"
@@ -155,7 +178,7 @@ const AuthPage: React.FC = () => {
       <div className="mt-6 text-xs text-muted-foreground text-center">
         {isLoginPage
           ? "Forgot your password? Use the Supabase reset!"
-          : "Random name is assigned for each new user on sign up. All signups become Admins."}
+          : "Full name is required for sign up. All signups become Admins."}
         <br/>
         <span className="block mt-3">
           <a
