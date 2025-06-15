@@ -5,7 +5,10 @@ import { useTaskOperations } from './useTaskOperations';
 import { useTaskAssignmentOperations } from './useTaskAssignmentOperations';
 
 export const useTaskBoard = () => {
+  console.log('[useTaskBoard] Hook called');
+  
   const { tasks, loading } = useRealtimeTasks();
+  console.log('[useTaskBoard] Realtime tasks:', { taskCount: tasks?.length, loading });
   
   const { getTaskGroups } = useTaskGroups(tasks);
   
@@ -28,6 +31,8 @@ export const useTaskBoard = () => {
     addCollaborator,
     removeCollaborator,
   } = useTaskAssignmentOperations(tasks);
+
+  console.log('[useTaskBoard] Returning hook data');
 
   return {
     isTaskDialogOpen,
