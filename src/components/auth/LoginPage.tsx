@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useUser } from "@/contexts/UserContext";
 import { TEAM_USERS } from "@/utils/teamUsers";
@@ -11,7 +12,6 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If already authenticated (on a weird reload), redirect
     if (isAuthenticated) {
       navigate("/dashboard", { replace: true });
     }
@@ -25,17 +25,27 @@ const LoginPage: React.FC = () => {
       setTimeout(() => {
         setSubmitting(false);
         navigate("/dashboard", { replace: true });
-      }, 200); // delay for effect
+      }, 200);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-xs bg-white border border-border rounded-lg shadow-lg p-7 flex flex-col gap-5 mt-10">
-        <div className="rounded bg-yellow-50 border border-yellow-200 px-3 py-2 text-xs text-yellow-900 mb-4 text-center">
+      <div className="w-full max-w-xs bg-white dark:bg-neutral-900 border border-border rounded-lg shadow-lg p-7 flex flex-col gap-5 mt-10">
+        <div className="rounded 
+            bg-yellow-50 dark:bg-yellow-900/40 
+            border border-yellow-200 dark:border-yellow-800
+            px-3 py-2 text-xs 
+            text-yellow-900 dark:text-yellow-100 
+            mb-4 text-center"
+        >
           <strong>Demo Login</strong>: Instantly log in as any test user for trying different roles and interfaces.<br/>
           <span className="block mt-1">
-            For real accounts (email/password), use <a href="/auth" className="underline text-yellow-700 hover:text-yellow-900">Real Account Login</a>.
+            For real accounts (email/password), use{" "}
+            <a href="/auth" className="underline text-yellow-700 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100">
+              Real Account Login
+            </a>
+            .
           </span>
         </div>
         <h2 className="text-lg font-semibold text-center mb-2">Login</h2>
@@ -48,7 +58,7 @@ const LoginPage: React.FC = () => {
             value={selectedId}
             disabled={submitting}
             onChange={e => setSelectedId(e.target.value)}
-            className="rounded border border-input px-3 py-2"
+            className="rounded border border-input px-3 py-2 bg-background dark:bg-neutral-800"
           >
             <option value="">Choose a user...</option>
             {TEAM_USERS.map(u => (
@@ -63,11 +73,16 @@ const LoginPage: React.FC = () => {
         </form>
       </div>
       <div className="mt-6 text-xs text-muted-foreground text-center">
-        Demo authentication<br />
-        (No password required. Choose a user to test as Admin, Team, or Client)
+        <span>
+          Demo authentication<br />
+          (No password required. Choose a user to test as Admin, Team, or Client)
+        </span>
         <br />
         <span className="block mt-3">
-          <a href="/auth" className="underline text-yellow-700 hover:text-yellow-900">
+          <a
+            href="/auth"
+            className="underline text-yellow-700 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100"
+          >
             Or use Real Account Login (email/password)
           </a>
         </span>
@@ -77,3 +92,4 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+

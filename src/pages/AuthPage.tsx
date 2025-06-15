@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,6 @@ const AuthPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check auth session on page load
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
@@ -83,12 +83,22 @@ const AuthPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-3">
-      <div className="w-full max-w-sm mx-auto bg-white border border-border rounded-lg shadow-xl p-7 mt-10">
+      <div className="w-full max-w-sm mx-auto bg-white dark:bg-neutral-900 border border-border rounded-lg shadow-xl p-7 mt-10">
         <div className="mb-2">
-          <div className="rounded bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-900 mb-4 text-center">
+          <div className="rounded 
+            bg-blue-50 dark:bg-blue-900/40 
+            border border-blue-200 dark:border-blue-800 
+            px-3 py-2 text-xs 
+            text-blue-900 dark:text-blue-100 
+            mb-4 text-center"
+          >
             <strong>Real&nbsp;Account&nbsp;Login/Signup</strong>: Use this form to log in or register using your real email and password (Supabase auth).<br/>
             <span className="block mt-1">
-              For quick testing, try the <a href="/login" className="underline text-blue-600 hover:text-blue-800">Demo Login</a>.
+              For quick testing, try the{" "}
+              <a href="/login" className="underline text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-100">
+                Demo Login
+              </a>
+              .
             </span>
           </div>
         </div>
@@ -124,7 +134,7 @@ const AuthPage: React.FC = () => {
             required
             className="mb-4"
           />
-          {errorMsg && <div className="text-red-600 text-xs text-center">{errorMsg}</div>}
+          {errorMsg && <div className="text-red-600 dark:text-red-400 text-xs text-center">{errorMsg}</div>}
           <Button
             type="submit"
             disabled={loading}
@@ -145,11 +155,14 @@ const AuthPage: React.FC = () => {
       </div>
       <div className="mt-6 text-xs text-muted-foreground text-center">
         {isLoginPage
-          ? "Forgot your password? Use the Supabase reset!" 
+          ? "Forgot your password? Use the Supabase reset!"
           : "Random name is assigned for each new user on sign up. All signups become Admins."}
         <br/>
         <span className="block mt-3">
-          <a href="/login" className="underline text-blue-600 hover:text-blue-800">
+          <a
+            href="/login"
+            className="underline text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-100"
+          >
             Or use Demo Login (instant, for testing)
           </a>
         </span>
@@ -159,3 +172,4 @@ const AuthPage: React.FC = () => {
 };
 
 export default AuthPage;
+
