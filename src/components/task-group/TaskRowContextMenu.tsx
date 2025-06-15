@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Edit, Check, Trash2 } from 'lucide-react';
 import {
   ContextMenu,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/context-menu';
 import { Task } from '@/types/task';
 
+// Add a prop for closing context menu
 interface TaskRowContextMenuProps {
   task: Task;
   children: React.ReactNode;
@@ -25,6 +26,18 @@ const TaskRowContextMenu = ({
   onTaskStatusClick,
   onContextMenuDelete
 }: TaskRowContextMenuProps) => {
+  // Use a ref to access underlying context menu API
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Imperatively close the context menu (works with Radix)
+  const closeContextMenu = () => {
+    // Radix context menus will close when 'open' prop set to false or event bubbles
+    // Dispatching custom keyboard navigation event, e.g. Escape key
+    if (contentRef.current) {
+      const escEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+      contentRef.current.dispatchEvent(escEvent);
+    }
+  };
 
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
@@ -34,12 +47,11 @@ const TaskRowContextMenu = ({
     onTaskStatusClick(task.id);
   };
 
-  // Use native event closing via pointerdown for Radix
-  // We ensure clicking "Delete" closes the menu before anything else
+  // Updated: close the context menu *before* opening any dialog
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // "onContextMenuDelete" will trigger dialog
+    closeContextMenu();
     onContextMenuDelete(e);
   };
 
@@ -48,7 +60,7 @@ const TaskRowContextMenu = ({
       <ContextMenuTrigger asChild>
         {children}
       </ContextMenuTrigger>
-      <ContextMenuContent>
+      <ContextMenuContent ref={contentRef}>
         <ContextMenuItem onClick={(e) => { e.stopPropagation(); onEditClick(task, e as any); }}>
           <Edit className="w-4 h-4 mr-2" />
           Edit task
