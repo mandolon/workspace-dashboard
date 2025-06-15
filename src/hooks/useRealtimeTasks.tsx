@@ -99,40 +99,66 @@ export function useRealtimeTasks() {
           payload => {
             const row = payload.new ?? payload.old;
             if (!row) return;
+            const task = dbRowToTask(row);
+            // Defensive: ensure taskId is defined
+            if (!task.taskId) {
+              console.warn("Realtime task missing `taskId`", task, payload);
+              return;
+            }
             console.log("Supabase realtime event received:", {
               eventType: payload.eventType,
+              taskId: task.taskId,
               row,
               payload,
               currentUser,
             });
             setTasks(prev => {
+              // Use only taskId (never .id) for matching
               const filteredPrev = filterTasksForUser(prev, currentUser);
-              const task = dbRowToTask(row);
-              const visible = canUserViewTask(task, currentUser);
-              if (!visible.allowed) {
-                if (filteredPrev.some(t => t.id === task.id)) {
-                  return filteredPrev.filter(t => t.id !== task.id);
+              const idx = filteredPrev.findIndex(t => t.taskId === task.taskId);
+              const visible = canUserViewTask(task, currentUser).allowed;
+              if (!visible) {
+                if (idx !== -1) {
+                  console.log(`[Realtime] Removing task ${task.taskId} (not visible to user)`);
+                  return [...filteredPrev.slice(0, idx), ...filteredPrev.slice(idx + 1)];
                 }
                 return filteredPrev;
               }
               if (payload.eventType === "INSERT") {
-                if (!filteredPrev.some(t => t.id === task.id)) {
-                  console.log("[Realtime] INSERT: Adding task to local state", task);
+                if (idx === -1) {
+                  console.log(`[Realtime] INSERT: Adding new task ${task.taskId}`);
                   return [task, ...filteredPrev];
+                } else {
+                  console.log(`[Realtime] INSERT but task ${task.taskId} already present, skipping`);
+                  return filteredPrev;
                 }
-                return filteredPrev;
               }
               if (payload.eventType === "UPDATE") {
-                console.log("[Realtime] UPDATE: Updating existing task", task);
-                const present = filteredPrev.some(t => t.id === task.id);
-                if (present) {
-                  return filteredPrev.map(t => (t.id === task.id ? task : t));
+                if (idx !== -1) {
+                  // Only update if changed
+                  if (JSON.stringify(filteredPrev[idx]) !== JSON.stringify(task)) {
+                    console.log(`[Realtime] UPDATE: Updating task ${task.taskId}`);
+                    const updated = filteredPrev.slice();
+                    updated[idx] = task;
+                    return updated;
+                  } else {
+                    console.log(`[Realtime] UPDATE received but no change for ${task.taskId}`);
+                    return filteredPrev;
+                  }
+                } else {
+                  // Might be a user gaining permission: add to list
+                  console.log(`[Realtime] UPDATE: Adding new visible task ${task.taskId}`);
+                  return [task, ...filteredPrev];
                 }
-                return [task, ...filteredPrev];
               }
               if (payload.eventType === "DELETE") {
-                console.log("[Realtime] DELETE: Removing task from local state", task);
-                return filteredPrev.filter(t => t.id !== task.id);
+                if (idx !== -1) {
+                  console.log(`[Realtime] DELETE: Removing task ${task.taskId}`);
+                  return [...filteredPrev.slice(0, idx), ...filteredPrev.slice(idx + 1)];
+                } else {
+                  console.log(`[Realtime] DELETE for non-present task ${task.taskId}, skipping`);
+                  return filteredPrev;
+                }
               }
               return filteredPrev;
             });
