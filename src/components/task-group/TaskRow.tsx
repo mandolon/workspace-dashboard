@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -113,6 +114,7 @@ const TaskRow = React.memo(({
     />
   ), [task, onRemoveAssignee, onRemoveCollaborator, onAssignPerson, onAddCollaborator]);
 
+  // Remove duplicate key={task.id} usage -- should be set in mapping/list parent
   return (
     <>
       <TaskRowContextMenu
@@ -121,7 +123,7 @@ const TaskRow = React.memo(({
         onTaskStatusClick={onTaskStatusClick}
         onContextMenuDelete={handleContextMenuDelete}
       >
-        <TableRow key={task.id} className="hover:bg-accent/50 group">
+        <TableRow className="hover:bg-accent/50 group">
           <TableCell className="py-2 w-[47%]">
             {rowContent}
           </TableCell>
