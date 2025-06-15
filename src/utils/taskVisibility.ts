@@ -1,13 +1,9 @@
-
 import { Task } from "@/types/task";
 import { User } from "@/types/user";
+import { getCRMRole, isAdmin as isAdminHelper } from "@/utils/userRoleHelpers";
 
 export function isAdmin(user: User) {
-  return (
-    user.name === "Armando Lopez" ||
-    user.name === "AL" ||
-    user.email === "armando@company.com"
-  );
+  return isAdminHelper(user);
 }
 
 export function isUserMatch(a: any, b: User | null) {
