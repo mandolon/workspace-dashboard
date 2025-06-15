@@ -2,6 +2,7 @@
 import React, { useRef } from 'react';
 import { Upload } from 'lucide-react';
 import { User } from '@/types/user';
+import Avatar from '@/components/common/Avatar';
 
 interface AvatarUploadProps {
   user: User;
@@ -28,11 +29,13 @@ const AvatarUpload = ({ user, onAvatarChange }: AvatarUploadProps) => {
 
   return (
     <div className="flex items-center gap-4">
-      <div 
-        className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-medium text-white ${user.avatarColor || 'bg-gray-600'}`}
-      >
-        {user.avatar}
-      </div>
+      <Avatar
+        initials={user.initials}
+        avatarUrl={user.avatarUrl}
+        color={user.avatarColor || 'bg-blue-500'}
+        size={64}
+        alt={user.fullName || user.name}
+      />
       <div>
         <button
           type="button"

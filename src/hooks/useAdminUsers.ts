@@ -1,13 +1,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { TeamMember } from "@/utils/teamUsers"; // Import TeamMember
+import { TeamMember } from "@/utils/teamUsers";
 
 export function useAdminUsers() {
   return useQuery({
     queryKey: ["adminUsers"],
     queryFn: async (): Promise<TeamMember[]> => {
-      // Get users with 'admin' role in user_roles
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
         .select("user_id")
@@ -16,8 +15,6 @@ export function useAdminUsers() {
       const userIds = (roles ?? []).map((r: any) => r.user_id);
 
       if (!userIds.length) return [];
-
-      // Now get profiles/user info for those user ids
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, full_name, email, avatar_url")
@@ -28,14 +25,15 @@ export function useAdminUsers() {
         id: profile.id,
         name: profile.full_name ?? profile.email ?? "",
         fullName: profile.full_name ?? profile.email ?? "",
-        crmRole: "Admin", // set as union literal
+        crmRole: "Admin",
         titleRole: "Admin",
         lastActive: "—",
-        status: "Active", // use strict literal
+        status: "Active",
         email: profile.email ?? "",
         role: "Admin",
-        avatar: profile.avatar_url ?? "",
-        avatarColor: "bg-blue-800", // Can improve color logic later
+        avatarUrl: profile.avatar_url ?? "",
+        avatarColor: "bg-blue-500",
+        initials: (profile.full_name ?? profile.email ?? "U").split(" ").map((n: string) => n[0]).join("").toUpperCase(),
       }));
     }
   });

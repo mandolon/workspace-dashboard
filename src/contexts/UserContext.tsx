@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import { UserContextType, User } from "@/types/user";
+import Avatar from '@/components/common/Avatar';
 
 // Define exported context type with impersonation support
 type ImpersonationContext = {
@@ -96,17 +97,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     id: u?.id || "unknown",
     name: u?.user_metadata?.full_name || u?.email || "Unnamed",
     email: u?.email || "",
-    avatar: "", // Replace with avatar URL if available in profile/user_metadata
-    status: "online", // Fallback; app could actually derive from presence later
-    role: "Admin", // Fallback; replace with real role if applicable
+    avatarUrl: "", // source from user profile/metadata or keep blank
+    avatarColor: "bg-blue-500",
+    initials: (u?.user_metadata?.full_name || u?.email || "U").split(" ").map((n: string) => n[0]).join("").toUpperCase(),
+    status: "online",
+    role: "Admin",
     lastActive: new Date().toISOString(),
     notificationsMuted: false,
     showOnlineStatus: true,
     showLastActive: true,
     company: "",
     bio: "",
-    avatarColor: undefined,
-    isAdmin, // NEW: expose isAdmin
+    isAdmin,
   });
 
   // This can be fleshed out with more fields per your needs
