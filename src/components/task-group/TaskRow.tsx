@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import TaskRowContent from './TaskRowContent';
@@ -137,8 +136,8 @@ const TaskRow = React.memo(({
           <TableCell className="py-2 w-[10%]">
             <TaskRowCreatedBy createdBy={task.createdBy} />
           </TableCell>
-          {/* Add group class to assignees cell to make x icons appear only on cell hover */}
-          <TableCell className="py-2 w-[18%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors group">
+          {/* Add a named group to assignees cell to make x icons appear only on cell hover */}
+          <TableCell className="py-2 w-[18%] border-l border-r border-l-transparent border-r-transparent hover:border-border transition-colors group/assignees">
             {rowAssignees}
           </TableCell>
         </TableRow>

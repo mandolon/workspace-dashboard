@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
@@ -49,7 +48,7 @@ const TaskRowAssignees = ({
     setOpen(false);
   };
 
-  // The TableCell now has `group`, so the hover behavior is controlled by the parent cell
+  // The TableCell now has `group/assignees`, so the hover behavior is controlled by the parent cell
   return (
     <div className="flex items-center -space-x-1 relative">
       {/* ASSIGNEE */}
@@ -62,7 +61,7 @@ const TaskRowAssignees = ({
           </div>
           {/* Remove Assignee Button */}
           <button
-            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover/assignees:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
             onClick={e => { e.stopPropagation(); onRemoveAssignee(task.taskId, e); }}
             title="Remove assignee"
@@ -82,7 +81,7 @@ const TaskRowAssignees = ({
           </div>
           {/* Remove Collaborator Button */}
           <button
-            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover/assignees:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
             onClick={e => { e.stopPropagation(); onRemoveCollaborator(task.taskId, idx, e); }}
             title="Remove collaborator"
