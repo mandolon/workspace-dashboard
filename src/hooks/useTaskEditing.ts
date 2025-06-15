@@ -7,9 +7,10 @@ export const useTaskEditing = (updateTaskById: (taskId: number, updates: Partial
   const [editingValue, setEditingValue] = useState('');
 
   const startEditingTask = useCallback((task: Task) => {
+    console.log('[TaskEditing] startEditingTask called with:', task.id, task.title);
     setEditingTaskId(task.id);
     setEditingValue(task.title);
-    console.log('[TaskEditing] startEditingTask:', task.id, task.title);
+    console.log('[TaskEditing] State should be updated to:', task.id, task.title);
   }, []);
 
   const saveTaskEdit = useCallback((taskId: number) => {
@@ -30,6 +31,9 @@ export const useTaskEditing = (updateTaskById: (taskId: number, updates: Partial
     setEditingTaskId(null);
     setEditingValue('');
   }, []);
+
+  // Add debug logging to track state
+  console.log('[useTaskEditing] Current state:', { editingTaskId, editingValue });
 
   return {
     editingTaskId,
