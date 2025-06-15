@@ -41,32 +41,7 @@ const InboxHeader = ({
             </span>
           )}
         </h1>
-      </div>
-      {/* Tabs row: paging now on same line as tabs */}
-      <div className="flex items-center px-6 pb-2 border-b border-border">
-        <div className="flex items-center space-x-3 flex-1">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const selected = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className={`flex items-center gap-2 text-sm pb-2 border-b-2 transition-colors
-                  ${selected
-                    ? "border-primary text-foreground font-medium"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                  }`}
-                style={{ outline: "none" }}
-              >
-                <Icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-        {/* Pagination controls - now inline with tabs */}
-        <div className="flex items-center gap-1 ml-5">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
@@ -90,8 +65,31 @@ const InboxHeader = ({
           </Button>
         </div>
       </div>
+      {/* Tabs row: padding and bottom border for alignment */}
+      <div className="flex items-center px-6 pb-2 space-x-3 border-b border-border">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const selected = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={`flex items-center gap-2 text-sm pb-2 border-b-2 transition-colors
+                ${selected
+                  ? "border-primary text-foreground font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              style={{ outline: "none" }}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
 
 export default InboxHeader;
+

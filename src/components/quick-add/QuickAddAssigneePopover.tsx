@@ -25,7 +25,7 @@ interface QuickAddAssigneePopoverProps {
 }
 
 // Only use TEAM members for assignment dropdown
-const teamAssignees = TEAM_USERS;
+const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
 
 const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
   assignee,
@@ -51,11 +51,23 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             data-testid="assign-button"
           >
             {assigneeWithColor ? (
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
-              >
-                {assigneeWithColor.name}
-              </div>
+              <>
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
+                >
+                  {assigneeWithColor.name}
+                </div>
+                <button
+                  type="button"
+                  className="absolute -top-1.5 -right-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
+                  style={{ lineHeight: 1, fontSize: 13 }}
+                  onClick={e => { e.stopPropagation(); setAssignee(null); }}
+                  tabIndex={-1}
+                  title="Clear assignee"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </>
             ) : (
               <span className="w-7 h-7 flex items-center justify-center rounded-full bg-muted">
                 <Users className="w-4 h-4 text-muted-foreground" />
@@ -91,18 +103,9 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
           </div>
         </PopoverContent>
       </Popover>
-      {assigneeWithColor && (
-        <div
-          className="absolute -top-1.5 -right-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1 cursor-pointer"
-          style={{ lineHeight: 1, fontSize: 13 }}
-          onClick={e => { e.stopPropagation(); setAssignee(null); }}
-          title="Clear assignee"
-        >
-          <X className="w-3 h-3" />
-        </div>
-      )}
     </div>
   );
 };
 
 export default QuickAddAssigneePopover;
+

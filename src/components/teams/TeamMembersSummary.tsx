@@ -1,6 +1,14 @@
 
 import React from 'react';
-import { TeamMember } from '@/utils/teamUsers';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  lastActive: string;
+  status: 'Active' | 'Inactive' | 'Pending';
+}
 
 interface TeamMembersSummaryProps {
   filteredMembers: TeamMember[];

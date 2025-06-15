@@ -8,54 +8,36 @@ import { useTaskDeletion } from '@/hooks/useTaskDeletion';
 import { Task } from '@/types/task';
 
 const TaskBoard: React.FC = React.memo(() => {
-  console.log('[TaskBoard] Starting to render TaskBoard');
-  
   // Use Supabase-powered board for state
   const {
     isTaskDialogOpen,
     setIsTaskDialogOpen,
     showQuickAdd,
     setShowQuickAdd,
+    refreshTrigger,
     getTaskGroups,
     handleCreateTask,
     handleQuickAddSave,
     handleTaskClick,
     handleTaskArchive,
-    toggleTaskStatus,
     assignPerson,
     removeAssignee,
     addCollaborator,
     removeCollaborator,
-    supabaseTasks,
-    supabaseTasksLoading,
   } = useTaskBoard();
-  
-  console.log('[TaskBoard] useTaskBoard data:', { 
-    supabaseTasks: supabaseTasks?.length, 
-    loading: supabaseTasksLoading,
-    isTaskDialogOpen,
-    showQuickAdd 
-  });
-
   const { addAttachments } = useTaskAttachmentContext();
 
   // --- Task Deletion logic from useTaskDeletion
   const {
-    handleDeleteTask,
+    handleDeleteTask, // Will soft delete as expected for SB & legacy
     isDeleting,
   } = useTaskDeletion();
 
-  // Board tasks - use supabaseTasks directly for real-time updates
-  const taskGroups = React.useMemo(() => {
-    console.log('[TaskBoard] Computing task groups...');
-    const groups = getTaskGroups();
-    console.log('[TaskBoard] Task groups computed:', groups.map(g => `${g.status}: ${g.count}`));
-    return groups;
-  }, [getTaskGroups, supabaseTasks]);
+  // Board tasks
+  const taskGroups = React.useMemo(() => getTaskGroups(), [getTaskGroups, refreshTrigger]);
 
   // Quick Add handles attachments as in Supabase system
   const onQuickAddSave = React.useCallback(async (taskData: any) => {
-    console.log('[TaskBoard] Quick add save:', taskData);
     await handleQuickAddSave(taskData);
 
     // If attachments exist, try to find the new task (by title/project/dateCreated) and add them
@@ -85,11 +67,11 @@ const TaskBoard: React.FC = React.memo(() => {
 
   // --- Unified delete handler for this board. Accept Task or id as arg.
   const onTaskDeleted = React.useCallback(async (task: Task | string | number) => {
-    console.log('[TaskBoard] Task deleted callback:', task);
     let realTask: Task | null = null;
     if (typeof task === "object" && task.taskId) {
       realTask = task;
     } else if (typeof task === "string" || typeof task === "number") {
+      // There isn't a global task list here, so we can't always find details. We'll try to infer.
       // Try to find the task by id/taskId in any group
       const allTasks = taskGroups.flatMap(g => g.tasks);
       realTask =
@@ -106,32 +88,18 @@ const TaskBoard: React.FC = React.memo(() => {
     await handleDeleteTask(realTask);
   }, [handleDeleteTask, taskGroups]);
 
-  console.log('[TaskBoard] About to render TaskBoardContent with taskGroups:', taskGroups.length);
-
-  if (supabaseTasksLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-          <p className="text-sm text-muted-foreground">Loading tasks...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <TaskBoardContent
         taskGroups={taskGroups}
         showQuickAdd={showQuickAdd}
-        refreshTrigger={0}
+        refreshTrigger={refreshTrigger}
         onSetShowQuickAdd={setShowQuickAdd}
         onQuickAddSave={onQuickAddSave}
         onTaskClick={handleTaskClick}
         onTaskArchive={handleTaskArchive}
         onTaskDeleted={onTaskDeleted}
         onAddTask={onDialogOpen}
-        toggleTaskStatus={toggleTaskStatus}
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}

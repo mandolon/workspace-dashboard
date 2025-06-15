@@ -9,69 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      emails: {
-        Row: {
-          avatar: string | null
-          content: string | null
-          created_at: string
-          has_attachment: boolean | null
-          id: string
-          is_read: boolean | null
-          is_starred: boolean | null
-          preview: string | null
-          recipient: string | null
-          recipient_id: string | null
-          sender_email: string | null
-          sender_id: string
-          sender_name: string
-          status: string
-          subject: string
-          time: string | null
-          to_emails: string[] | null
-          updated_at: string
-        }
-        Insert: {
-          avatar?: string | null
-          content?: string | null
-          created_at?: string
-          has_attachment?: boolean | null
-          id?: string
-          is_read?: boolean | null
-          is_starred?: boolean | null
-          preview?: string | null
-          recipient?: string | null
-          recipient_id?: string | null
-          sender_email?: string | null
-          sender_id: string
-          sender_name: string
-          status: string
-          subject: string
-          time?: string | null
-          to_emails?: string[] | null
-          updated_at?: string
-        }
-        Update: {
-          avatar?: string | null
-          content?: string | null
-          created_at?: string
-          has_attachment?: boolean | null
-          id?: string
-          is_read?: boolean | null
-          is_starred?: boolean | null
-          preview?: string | null
-          recipient?: string | null
-          recipient_id?: string | null
-          sender_email?: string | null
-          sender_id?: string
-          sender_name?: string
-          status?: string
-          subject?: string
-          time?: string | null
-          to_emails?: string[] | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       pdf_comments: {
         Row: {
           comment_number: number
@@ -118,30 +55,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email: string | null
-          full_name: string | null
-          id: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email?: string | null
-          full_name?: string | null
-          id: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email?: string | null
-          full_name?: string | null
-          id?: string
-        }
-        Relationships: []
       }
       task_messages: {
         Row: {
@@ -239,27 +152,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
       whiteboards: {
         Row: {
           created_at: string
@@ -307,25 +199,13 @@ export type Database = {
       }
     }
     Views: {
-      admin_users_with_profile: {
-        Row: {
-          created_at: string | null
-          email: string | null
-          full_name: string | null
-          id: string | null
-          role: Database["public"]["Enums"]["app_role"] | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "team" | "client"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -440,8 +320,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "moderator", "user", "team", "client"],
-    },
+    Enums: {},
   },
 } as const

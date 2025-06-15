@@ -1,11 +1,11 @@
 
-import React, { useState } from "react";
+// Make the Inbox heading layout, tabs, and spacing 100% consistent with the Whiteboards page.
+
+import React from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
-import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
-import { Button } from "@/components/ui/button";
-import ComposeDialog from "@/components/inbox/ComposeDialog";
+import { useInboxState } from "@/hooks/useInboxState";
 
 const InboxPage = () => {
   const {
@@ -17,24 +17,13 @@ const InboxPage = () => {
     filteredEmails,
     currentEmail,
     unreadCount,
-    setCurrentPage,
     handleSelectEmail,
     handleSelectAll,
     handleEmailClick,
     handleBackToList,
     handleTabChange,
-    searchQuery,
-    handleSearchChange,
-    isLoading,
-    error,
-  } = useSupabaseInbox();
-
-  // Dummy toggle sidebar handler (customize if you have a sidebar)
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const handleToggleSidebar = () => setSidebarOpen((prev) => !prev);
-
-  // Floating Compose dialog state
-  const [showComposeDialog, setShowComposeDialog] = useState(false);
+    setCurrentPage,
+  } = useInboxState();
 
   return (
     <AppLayout>
@@ -63,27 +52,11 @@ const InboxPage = () => {
             onBackToList={handleBackToList}
             onTabChange={handleTabChange}
             onPageChange={setCurrentPage}
-            isLoading={isLoading}
-            error={error}
           />
         </div>
-        {/* Floating Compose Button */}
-        <Button
-          size="lg"
-          className="fixed z-50 bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-4 shadow-xl animate-scale-in"
-          onClick={() => setShowComposeDialog(true)}
-        >
-          Compose
-        </Button>
-        {/* Compose Dialog */}
-        <ComposeDialog
-          isOpen={showComposeDialog}
-          onClose={() => setShowComposeDialog(false)}
-        />
       </div>
     </AppLayout>
   );
 };
 
 export default InboxPage;
-

@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Calendar, User, Paperclip, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -28,20 +29,8 @@ interface TaskDialogActionsProps {
   onCreateTask: (attachments?: File[]) => void;
 }
 
-// Helper: Convert TeamMember to TeamUser with proper .role
-function teamMemberToTeamUser(member: typeof TEAM_USERS[number]): TeamUser {
-  return {
-    id: member.id,
-    name: member.name,
-    fullName: member.fullName,
-    role: member.titleRole ?? "Team Lead",
-    avatar: member.avatar,
-    avatarColor: member.avatarColor
-  };
-}
-
 // Only use TEAM members for assignment dropdown
-const teamAssignees = TEAM_USERS;
+const teamAssignees = TEAM_USERS.filter(member => member.crmRole === 'Team');
 
 const TaskDialogActions = ({
   assignedTo,
@@ -78,9 +67,9 @@ const TaskDialogActions = ({
         <Select 
           value={selectValue}
           onValueChange={value => {
-            // Always set full teamAssignees object as assignee, but as TeamUser type
+            // Always set full teamAssignees object as assignee
             const found = teamAssignees.find(u => u.id === value);
-            setAssignedTo(found ? teamMemberToTeamUser(found) : teamMemberToTeamUser(teamAssignees[0]));
+            setAssignedTo(found ? { ...found } : teamAssignees[0]);
           }}
         >
           <SelectTrigger className="w-28 h-7 text-xs">
@@ -168,3 +157,4 @@ const TaskDialogActions = ({
 };
 
 export default TaskDialogActions;
+

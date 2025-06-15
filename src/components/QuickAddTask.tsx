@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { getAvailableProjects, getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { useTaskAttachmentContext } from '@/contexts/TaskAttachmentContext';
@@ -6,11 +7,12 @@ import QuickAddTaskActions from './quick-add/QuickAddTaskActions';
 import { TEAM_USERS } from '@/utils/teamUsers';
 
 interface QuickAddTaskPerson {
-  id: string;
+  id: string;                    // <-- Ensure ID present!
   name: string;
   avatar: string;
   fullName?: string;
   avatarColor?: string;
+  projectId?: string;            // <-- Attach projectId for traceability
 }
 
 interface QuickAddTaskProps {
@@ -87,31 +89,11 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
   const handleSave = () => {
     if (!canSave || !assignee) return;
     const projectId = selectedProject ? getProjectIdFromDisplayName(selectedProject) : 'unknown-project';
-    
-    // Ensure assignee is clean - find from team users or use clean structure
+    // Ensure assignee includes unique id and project ID
     const teamUser = TEAM_USERS.find(u => u.id === assignee.id);
     const newAssignee: QuickAddTaskPerson = teamUser
-      ? {
-          id: teamUser.id,
-          name: teamUser.name,
-          avatar: teamUser.avatar,
-          fullName: teamUser.fullName,
-          avatarColor: teamUser.avatarColor
-        }
-      : {
-          id: assignee.id || 'unknown',
-          name: assignee.name,
-          avatar: assignee.avatar,
-          fullName: assignee.fullName,
-          avatarColor: assignee.avatarColor
-        };
-
-    console.log('[QuickAddTask] Creating task with clean assignee:', {
-      projectId,
-      project: selectedProject,
-      assignee: newAssignee
-    });
-
+      ? { ...teamUser, projectId }
+      : { ...assignee, projectId, id: assignee.id || 'unknown' };
     const newTask = {
       id: Date.now(),
       title: taskName,
@@ -124,7 +106,7 @@ const QuickAddTask = ({ onSave, onCancel, defaultStatus }: QuickAddTaskProps) =>
         year: '2-digit'
       }),
       dueDate: '—',
-      assignee: newAssignee,
+      assignee: newAssignee,     // <-- assign full assignee object
       hasAttachment: attachedFiles.length > 0,
       attachments: attachedFiles,
       status: defaultStatus,

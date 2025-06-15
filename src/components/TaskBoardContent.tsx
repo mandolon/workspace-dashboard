@@ -16,7 +16,6 @@ interface TaskBoardContentProps {
   onTaskArchive: (taskId: number) => void;
   onTaskDeleted: () => void; // <-- ensure consistent signature
   onAddTask: () => void;
-  toggleTaskStatus: (taskId: number) => void; // Add status toggle handler
   // Handlers for assignment (Supabase only)
   assignPerson: (taskId: string, person: any) => void;
   removeAssignee: (taskId: string) => void;
@@ -34,46 +33,31 @@ const TaskBoardContent = ({
   onTaskArchive,
   onTaskDeleted, // This will just be a refresh callback
   onAddTask,
-  toggleTaskStatus, // Add status toggle handler
   assignPerson,
   removeAssignee,
   addCollaborator,
   removeCollaborator,
 }: any) => {
-  // Remove the key with refreshTrigger since we're using real-time updates
   const renderedGroups = React.useMemo(
     () => taskGroups.map((group, groupIndex) => (
       <TaskGroupSection
-        key={`group-${group.status}`} // Use status as key for stability
+        key={`${groupIndex}-${refreshTrigger}`}
         group={group}
         showQuickAdd={showQuickAdd}
         onSetShowQuickAdd={onSetShowQuickAdd}
         onQuickAddSave={onQuickAddSave}
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
-        onTaskDeleted={onTaskDeleted} // Always () => void signature
+        onTaskDeleted={onTaskDeleted} // Pass unchanged! Now guaranteed to be () => void
         useContext={false}
-        toggleTaskStatus={toggleTaskStatus} // Pass status toggle handler
+        // Pass these down for assignment
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}
         removeCollaborator={removeCollaborator}
       />
     )),
-    [
-      taskGroups,
-      showQuickAdd,
-      onSetShowQuickAdd,
-      onQuickAddSave,
-      onTaskClick,
-      onTaskArchive,
-      onTaskDeleted,
-      toggleTaskStatus, // Add to dependencies
-      assignPerson,
-      removeAssignee,
-      addCollaborator,
-      removeCollaborator,
-    ]
+    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted, assignPerson, removeAssignee, addCollaborator, removeCollaborator]
   );
 
   return (
@@ -81,8 +65,11 @@ const TaskBoardContent = ({
       <div className="h-full flex flex-col">
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={onAddTask} />
+
         <ScrollArea className="flex-1">
-          <div className="p-4 space-y-6">{renderedGroups}</div>
+          <div className="p-4 space-y-6">
+            {renderedGroups}
+          </div>
         </ScrollArea>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { getProjectDisplayName } from '@/data/projectClientData';
 import { getProjectIdFromDisplayName } from '@/utils/projectMapping';
 import { TEAM_USERS } from '@/utils/teamUsers';
 import { useUser } from '@/contexts/UserContext';
+import { insertTask } from '@/data/taskSupabase';
 
 export const useTaskDialog = () => {
   const [taskName, setTaskName] = useState('');
@@ -17,34 +18,33 @@ export const useTaskDialog = () => {
 
   const { currentUser } = useUser();
 
+  /**
+   * Create the task directly in Supabase!
+   */
   const handleCreateTask = async (onCreateTask: (taskData: any) => void, onClose: () => void) => {
     if (!taskName.trim() || !assignedTo) {
-      console.warn('[TaskDialog] Cannot create task - missing name or assignee');
-      return;
+      return; // Cannot create if no name or assignee
     }
 
-    // Prepare assignee object - clean structure without projectId
+    // Prepare assignee object
     let assigneeObj = assignedTo;
     if (typeof assignedTo === 'string') {
       assigneeObj = TEAM_USERS.find(u => u.id === assignedTo || u.name === assignedTo || u.fullName === assignedTo) 
         || { name: assignedTo, avatar: '', id: assignedTo };
     }
-    
-    // Clean assignee object - ensure consistent structure
     assigneeObj = {
+      ...assigneeObj,
       id: assigneeObj.id,
-      name: assigneeObj.name,
-      avatar: assigneeObj.avatar,
-      fullName: assigneeObj.fullName
+      projectId: getProjectIdFromDisplayName(selectedProject)
     };
 
     const projectId = getProjectIdFromDisplayName(selectedProject);
     const taskDataForSupabase = {
-      taskId: `T${Math.floor(Math.random() * 100000).toString().padStart(4, "0")}`,
+      taskId: undefined, // let insertTask generate if absent
       title: taskName,
       projectId,
       project: getProjectDisplayName(projectId),
-      status: selectedStatus || 'redline',
+      status: selectedStatus || 'progress',
       description: addDescription ? description : '',
       assignee: assigneeObj,
       dueDate: dueDate ? format(dueDate, 'MM/dd/yy') : '—',
@@ -58,20 +58,12 @@ export const useTaskDialog = () => {
       deletedBy: null,
     };
 
-    console.log('[TaskDialog] Creating task with clean assignee:', {
-      taskId: taskDataForSupabase.taskId,
-      assignee: taskDataForSupabase.assignee,
-      project: taskDataForSupabase.project,
-      projectId: taskDataForSupabase.projectId
-    });
-
     try {
-      await onCreateTask(taskDataForSupabase);
+      await insertTask(taskDataForSupabase);
       handleReset();
       onClose();
-      console.log('[TaskDialog] Task created successfully');
     } catch (err) {
-      console.error('[TaskDialog] Failed to create task:', err);
+      // For now, use window.alert. You can replace with toast/sonner.
       window.alert('Failed to create task! ' + (err as Error).message);
     }
   };

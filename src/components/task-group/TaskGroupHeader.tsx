@@ -1,69 +1,46 @@
 
 import React from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { TaskGroup } from '@/types/task';
-import AddTaskButton from './AddTaskButton';
+
+interface TaskGroup {
+  title: string;
+  count: number;
+  color: string;
+  status: string;
+}
 
 interface TaskGroupHeaderProps {
   group: TaskGroup;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
-  showQuickAdd: string | null;
-  onSetShowQuickAdd: (status: string | null) => void;
-  onQuickAddSave: (taskData: any) => void;
+  isExpanded: boolean;
+  onToggleExpanded: () => void;
 }
 
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case 'redline':
-      return 'TASK/ REDLINE';
-    case 'progress':
-      return 'PROGRESS/ UPDATE';
-    case 'completed':
-      return 'COMPLETED';
-    default:
-      return status.toUpperCase();
-  }
-};
-
-const TaskGroupHeader = ({
-  group,
-  isCollapsed,
-  onToggleCollapse,
-  showQuickAdd,
-  onSetShowQuickAdd,
-  onQuickAddSave,
-}: TaskGroupHeaderProps) => {
-  const statusLabel = getStatusLabel(group.status);
-
+const TaskGroupHeader = ({ group, isExpanded, onToggleExpanded }: TaskGroupHeaderProps) => {
   return (
-    <div className="flex items-center justify-between py-2 px-1">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={onToggleCollapse}
-          className="p-1 hover:bg-accent rounded transition-colors"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </button>
-        <div className={`px-2 py-1 rounded text-white text-xs font-medium ${group.color}`}>
-          {statusLabel}
-        </div>
-        <span className="text-sm text-muted-foreground">
-          {group.count}
-        </span>
+    <div className="flex items-center gap-2 mb-2">
+      <button
+        onClick={onToggleExpanded}
+        className="p-0.5 hover:bg-accent rounded transition-colors"
+        aria-label={isExpanded ? "Collapse group" : "Expand group"}
+      >
+        {isExpanded ? (
+          <ChevronDown className="w-3 h-3 text-muted-foreground" />
+        ) : (
+          <ChevronRight className="w-3 h-3 text-muted-foreground" />
+        )}
+      </button>
+      <div className={`px-2 py-0.5 rounded text-white text-xs font-medium flex items-center ${group.color}`}>
+        <span>{group.title}</span>
       </div>
-      <AddTaskButton
-        status={group.status}
-        showQuickAdd={showQuickAdd}
-        onSetShowQuickAdd={onSetShowQuickAdd}
-        onQuickAddSave={onQuickAddSave}
-      />
+      <span
+        className="ml-1 bg-white text-neutral-800 rounded px-2 py-0.5 text-xs font-bold min-w-[1.5rem] flex items-center justify-center"
+        title={`Total tasks in ${group.title}`}
+      >
+        {group.count}
+      </span>
     </div>
   );
 };
 
 export default TaskGroupHeader;
+
