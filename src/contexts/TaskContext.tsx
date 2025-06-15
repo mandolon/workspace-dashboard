@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext } from 'react';
 import { Task } from '@/types/task';
 import { useTaskOperations } from '@/hooks/useTaskOperations';
@@ -65,7 +66,12 @@ interface TaskProviderProps {
 export const TaskProvider = React.memo(({ children }: TaskProviderProps) => {
   const taskOperations = useTaskOperations();
   const taskEditing = useTaskEditing(taskOperations.updateTaskById);
-  const taskAssignments = useTaskAssignments(taskOperations.customTasks, taskOperations.updateTaskById);
+  // Pass getTasksByStatus to useTaskAssignments:
+  const taskAssignments = useTaskAssignments(
+    taskOperations.customTasks,
+    taskOperations.updateTaskById,
+    taskOperations.getTasksByStatus
+  );
   const taskStatusOperations = useTaskStatusOperations(
     taskOperations.customTasks,
     taskOperations.updateTaskById,

@@ -1,7 +1,8 @@
 
 import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
 import { useTaskContext } from '@/contexts/TaskContext';
-import { Task } from '@/types/task';
+import { Task, TaskUser } from '@/types/task';
+import { getInitials } from '@/utils/taskUtils';
 
 /**
  * Keeps all assignment/collaborator handler logic together for reuse.
@@ -27,14 +28,22 @@ export function useTaskDetailAssignmentHandlers(task: Task, setTask: (t: Task) =
     removeCollaborator: legacyRemoveCollaborator,
   };
 
+  // Construct TaskUser with required "initials" field for all actions
+  const buildTaskUser = (input: { name: string; avatar: string; fullName?: string }): TaskUser => ({
+    name: input.name,
+    fullName: input.fullName,
+    avatarUrl: input.avatar,
+    initials: getInitials(input.fullName ?? input.name),
+  });
+
   const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
-    handlerSet.assignPerson(taskId, person);
+    handlerSet.assignPerson(taskId, buildTaskUser(person));
   };
   const handleRemoveAssignee = (taskId: string) => {
     handlerSet.removeAssignee(taskId);
   };
   const handleAddCollaborator = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
-    if (handlerSet.addCollaborator) handlerSet.addCollaborator(taskId, person);
+    if (handlerSet.addCollaborator) handlerSet.addCollaborator(taskId, buildTaskUser(person));
   };
   const handleRemoveCollaborator = (taskId: string, idx: number) => {
     if (handlerSet.removeCollaborator) handlerSet.removeCollaborator(taskId, idx);

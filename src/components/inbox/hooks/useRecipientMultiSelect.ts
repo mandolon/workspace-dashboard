@@ -1,3 +1,4 @@
+
 import { useRef, useState, useMemo } from "react";
 import { TEAM_USERS, TeamMember } from "@/utils/teamUsers";
 
@@ -42,7 +43,8 @@ export function useRecipientMultiSelect(value: Recipient[], onChange: (recipient
         name: user.fullName,
         email: user.email,
         avatarColor: user.avatarColor,
-        initials: user.initials,
+        avatar: user.initials,
+        // No "initials" property here
       },
     ]);
     setSearch("");

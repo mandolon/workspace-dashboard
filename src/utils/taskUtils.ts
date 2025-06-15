@@ -1,4 +1,5 @@
-import { getAvatarColor } from './avatarColors';
+
+// Removed: import { getAvatarColor } from './avatarColors';
 
 export const getInitials = (name: string) => {
   if (!name) return '';
