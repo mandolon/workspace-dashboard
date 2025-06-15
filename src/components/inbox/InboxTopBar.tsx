@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Search, Settings, HelpCircle, Bell } from 'lucide-react';
+import { Menu, Search, Settings, HelpCircle, Bell, MailPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -42,7 +42,11 @@ const InboxTopBar = ({ onToggleSidebar, searchQuery, onSearchChange }: InboxTopB
       </div>
 
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="h-8 px-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 px-2"
+        >
           <Bell className="w-4 h-4" />
         </Button>
         
@@ -63,6 +67,17 @@ const InboxTopBar = ({ onToggleSidebar, searchQuery, onSearchChange }: InboxTopB
 
         <Button variant="ghost" size="sm" className="h-8 px-2">
           <HelpCircle className="w-4 h-4" />
+        </Button>
+
+        {/* NEW: Create Email Button */}
+        <Button
+          size="sm"
+          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm font-medium flex items-center gap-2"
+          onClick={() => setShowComposeDialog(true)}
+          title="Create Email"
+        >
+          <MailPlus className="w-4 h-4" />
+          Create Email
         </Button>
 
         <Button 
