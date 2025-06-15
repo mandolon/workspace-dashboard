@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -19,10 +18,8 @@ export interface SupabaseAdmin {
 export function useSupabaseAdmins() {
   const [admins, setAdmins] = useState<SupabaseAdmin[]>([]);
   const [loading, setLoading] = useState(true);
-  // Use a ref to avoid duplicate fetches during rapid changes
   const isMountedRef = useRef(true);
 
-  // Fetch admins logic extracted for reuse
   const fetchAdmins = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -34,6 +31,7 @@ export function useSupabaseAdmins() {
         console.error("Failed to fetch Supabase admins:", error);
         setAdmins([]);
       } else if (data) {
+        console.log("[Supabase] Fetched admins from view:", data);
         setAdmins(data);
       } else {
         setAdmins([]);
@@ -42,12 +40,10 @@ export function useSupabaseAdmins() {
     }
   }, []);
 
-  // RealTime subscription effect
   useEffect(() => {
     isMountedRef.current = true;
     fetchAdmins();
 
-    // Subscribe to profile changes (insert, update, delete)
     const channel = supabase.channel('admin-profiles-updates');
     const eventHandler = (payload: any) => {
       console.log("[Supabase] Received realtime event (profiles):", payload);
@@ -66,7 +62,6 @@ export function useSupabaseAdmins() {
       )
       .subscribe();
 
-    // Also subscribe to direct changes in user_roles, just in case roles change
     const rolesChannel = supabase.channel('admin-roles-updates');
     const rolesEventHandler = (payload: any) => {
       console.log("[Supabase] Received realtime event (user_roles):", payload);
@@ -92,9 +87,7 @@ export function useSupabaseAdmins() {
     };
   }, [fetchAdmins]);
 
-  // Optional: manual refresh method (can be used for a refresh button)
   const refresh = fetchAdmins;
 
   return { admins, loading, refresh };
 }
-
