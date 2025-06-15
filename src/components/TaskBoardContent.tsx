@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -38,38 +39,47 @@ const TaskBoardContent = ({
   removeCollaborator,
 }: any) => {
   const renderedGroups = React.useMemo(
-    () => taskGroups.map((group, groupIndex) => (
-      <TaskGroupSection
-        key={`${groupIndex}-${refreshTrigger}`}
-        group={group}
-        showQuickAdd={showQuickAdd}
-        onSetShowQuickAdd={onSetShowQuickAdd}
-        onQuickAddSave={onQuickAddSave}
-        onTaskClick={onTaskClick}
-        onTaskArchive={onTaskArchive}
-        onTaskDeleted={onTaskDeleted} // always pass Task object downstream
-        useContext={false}
-        // Pass these down for assignment
-        assignPerson={assignPerson}
-        removeAssignee={removeAssignee}
-        addCollaborator={addCollaborator}
-        removeCollaborator={removeCollaborator}
-      />
-    )),
-    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted, assignPerson, removeAssignee, addCollaborator, removeCollaborator]
+    () =>
+      taskGroups.map((group) => (
+        <TaskGroupSection
+          key={group.status} // Use stable group.status instead of groupIndex-refreshTrigger
+          group={group}
+          showQuickAdd={showQuickAdd}
+          onSetShowQuickAdd={onSetShowQuickAdd}
+          onQuickAddSave={onQuickAddSave}
+          onTaskClick={onTaskClick}
+          onTaskArchive={onTaskArchive}
+          onTaskDeleted={onTaskDeleted}
+          useContext={false}
+          assignPerson={assignPerson}
+          removeAssignee={removeAssignee}
+          addCollaborator={addCollaborator}
+          removeCollaborator={removeCollaborator}
+        />
+      )),
+    [
+      taskGroups,
+      showQuickAdd,
+      refreshTrigger,
+      onSetShowQuickAdd,
+      onQuickAddSave,
+      onTaskClick,
+      onTaskArchive,
+      onTaskDeleted,
+      assignPerson,
+      removeAssignee,
+      addCollaborator,
+      removeCollaborator
+    ]
   );
 
   return (
     <div className="flex-1 bg-background pl-2">
       <div className="h-full flex flex-col">
-        {/* Header now includes connection indicator */}
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={onAddTask} />
-
         <ScrollArea className="flex-1">
-          <div className="p-4 space-y-6">
-            {renderedGroups}
-          </div>
+          <div className="p-4 space-y-6">{renderedGroups}</div>
         </ScrollArea>
       </div>
     </div>
@@ -77,3 +87,4 @@ const TaskBoardContent = ({
 };
 
 export default TaskBoardContent;
+
