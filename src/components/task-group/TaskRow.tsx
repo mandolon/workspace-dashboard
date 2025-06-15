@@ -26,7 +26,7 @@ interface TaskRowProps {
   onRemoveCollaborator: (taskId: string, collaboratorIndex: number, e: React.MouseEvent) => void;
   onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
   onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
-  onTaskDeleted?: () => void;
+  onTaskDeleted?: (task: Task) => void;
 }
 
 const TaskRow = React.memo(({
@@ -71,7 +71,7 @@ const TaskRow = React.memo(({
   const handleDeleteTaskInternal = useCallback(async () => {
     await handleDeleteTask(task);
     if (onTaskDeleted) {
-      onTaskDeleted();
+      onTaskDeleted(task); // Always send full Task object
     }
   }, [handleDeleteTask, onTaskDeleted, task]);
 

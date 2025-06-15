@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -14,7 +13,7 @@ interface TaskBoardContentProps {
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
   onTaskArchive: (taskId: number) => void;
-  onTaskDeleted: () => void; // <-- ensure consistent signature
+  onTaskDeleted: (task: any) => void; // Accepts a Task now
   onAddTask: () => void;
   // Handlers for assignment (Supabase only)
   assignPerson: (taskId: string, person: any) => void;
@@ -31,7 +30,7 @@ const TaskBoardContent = ({
   onQuickAddSave,
   onTaskClick,
   onTaskArchive,
-  onTaskDeleted, // This will just be a refresh callback
+  onTaskDeleted,
   onAddTask,
   assignPerson,
   removeAssignee,
@@ -48,7 +47,7 @@ const TaskBoardContent = ({
         onQuickAddSave={onQuickAddSave}
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
-        onTaskDeleted={onTaskDeleted} // Pass unchanged! Now guaranteed to be () => void
+        onTaskDeleted={onTaskDeleted} // always pass Task object downstream
         useContext={false}
         // Pass these down for assignment
         assignPerson={assignPerson}
