@@ -1,4 +1,3 @@
-
 import { useSupabaseTaskAssignments } from '@/hooks/useSupabaseTaskAssignments';
 import { useTaskContext } from '@/contexts/TaskContext';
 import { Task, TaskUser } from '@/types/task';
@@ -36,6 +35,7 @@ export function useTaskDetailAssignmentHandlers(task: Task, setTask: (t: Task) =
     initials: getInitials(input.fullName ?? input.name),
   });
 
+  // Update types here to pass only TaskUser:
   const handleAssignPerson = (taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
     handlerSet.assignPerson(taskId, buildTaskUser(person));
   };
