@@ -43,7 +43,11 @@ const TeamMembersScrollContainer: React.FC<TeamMembersScrollContainerProps> = ({
 
   return (
     <ScrollArea className="h-96 w-full" type="always">
-      <div ref={scrollContainerRef} style={{ maxHeight: 384, overflowY: 'auto' }>
+      <div
+        ref={scrollContainerRef}
+        style={{ maxHeight: 384, overflowY: 'auto' }}
+        data-scrollarea-scrollable
+      >
         <TeamMembersTable
           members={members.slice(0, visibleCount)}
           roles={roles}
