@@ -81,24 +81,46 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         setLoadingMembers(false);
         return;
       }
-      // 3. Map to TeamMember type - FIX: use explicit union value for crmRole and others
+      // 3. Map to TeamMember type
       const mappedMembers: TeamMember[] = profiles.map((p: any) => {
-        const crmRole = role === "team" ? "Team" : "Client";
-        const avatarColor = role === "team" ? "bg-blue-700" : "bg-pink-700";
-        const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
-        return {
-          id: p.id,
-          name: nameInit,
-          fullName: p.full_name || p.email || "Unknown User",
-          crmRole: crmRole as "Team" | "Client",
-          titleRole: crmRole as ArchitectureRole,
-          lastActive: "—",
-          status: "Active",
-          email: p.email || "",
-          role: crmRole as ArchitectureRole,
-          avatar: nameInit,
-          avatarColor,
-        };
+        if (role === "client") {
+          // Client: do not assign architecture role or titleRole
+          const crmRole = "Client";
+          const avatarColor = "bg-pink-700";
+          const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
+          return {
+            id: p.id,
+            name: nameInit,
+            fullName: p.full_name || p.email || "Unknown User",
+            crmRole: crmRole,
+            // No titleRole/role for clients:
+            titleRole: undefined,
+            lastActive: "—",
+            status: "Active",
+            email: p.email || "",
+            role: undefined,
+            avatar: nameInit,
+            avatarColor,
+          };
+        } else {
+          // Team: normal mapping, architecture roles allowed
+          const crmRole = "Team";
+          const avatarColor = "bg-blue-700";
+          const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
+          return {
+            id: p.id,
+            name: nameInit,
+            fullName: p.full_name || p.email || "Unknown User",
+            crmRole: crmRole,
+            titleRole: crmRole as ArchitectureRole,
+            lastActive: "—",
+            status: "Active",
+            email: p.email || "",
+            role: crmRole as ArchitectureRole,
+            avatar: nameInit,
+            avatarColor,
+          };
+        }
       });
 
       if (role === "team") setSupabaseTeamMembers(mappedMembers);
