@@ -307,7 +307,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_users_with_profile: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       is_admin: {

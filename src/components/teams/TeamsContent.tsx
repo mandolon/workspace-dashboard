@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -7,6 +8,7 @@ import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
+import { useSupabaseAdmins } from '@/hooks/useSupabaseAdmins';
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -28,6 +30,44 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
   const isMobile = useIsMobile();
 
+  // Supabase admins
+  const { admins: supabaseAdmins, loading: loadingAdmins } = useSupabaseAdmins();
+
+  // Memo: Build merged admins only for tab === 'admin'
+  let allTeamMembers: TeamMember[] = [];
+  if (tab === "admin") {
+    // Convert Supabase admins to TeamMember type, avoid duplicates (email)
+    const adminLookup = new Map<string, boolean>();
+    TEAM_USERS.filter(u => u.crmRole === "Admin").forEach(u =>
+      adminLookup.set((u.email ?? "").toLowerCase(), true)
+    );
+
+    // Map Supabase admins to TeamMember type, add only new ones
+    const supabaseAdminMembers: TeamMember[] = supabaseAdmins
+      .filter(a => !!a.email && !adminLookup.has(a.email.toLowerCase()))
+      .map(a => ({
+        id: a.id,
+        name: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
+        fullName: a.full_name || a.email || "Unknown User",
+        crmRole: "Admin",
+        titleRole: "Admin" as ArchitectureRole,
+        lastActive: "—",
+        status: "Active",
+        email: a.email || "",
+        role: "Admin" as ArchitectureRole,
+        avatar: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
+        avatarColor: "bg-blue-700"
+      }));
+
+    // Merge static + Supabase admins
+    allTeamMembers = [
+      ...TEAM_USERS.filter(u => u.crmRole === "Admin"),
+      ...supabaseAdminMembers
+    ];
+  } else {
+    allTeamMembers = TEAM_USERS.filter(m => getCrmRoleForTab(tab).includes(m.crmRole));
+  }
+
   // For infinite scrolling
   const [visibleCount, setVisibleCount] = useState(MEMBERS_BATCH);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -35,7 +75,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   // Reset visibleCount if teamMembers/filters change
   useEffect(() => {
     setVisibleCount(MEMBERS_BATCH);
-  }, [tab, searchTerm, selectedUserId, teamMembers.length]);
+  }, [tab, searchTerm, selectedUserId, teamMembers.length, supabaseAdmins.length]);
 
   const roles: ArchitectureRole[] = [
     'Architect', 'Engineer', 'CAD Tech', 'Designer', 'Interior Designer',
@@ -53,7 +93,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   };
 
   // Filtering by tab and search
-  let filteredMembers: TeamMember[] = teamMembers.filter(
+  let filteredMembers: TeamMember[] = allTeamMembers.filter(
     m => getCrmRoleForTab(tab).includes(m.crmRole)
   );
 
@@ -91,7 +131,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     }
   }, [isMobile, handleScroll]);
 
-  // Desktop: Infinite scroll + loader for all tabs
   return (
     <div className={`flex-1 overflow-y-auto ${isMobile ? "px-2 py-3" : "p-6"}`}>
       <TeamsSearchBar
@@ -114,6 +153,11 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
             {visibleCount < displayedMembers.length && (
               <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
                 Loading more...
+              </div>
+            )}
+            {tab === "admin" && loadingAdmins && (
+              <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
+                Loading real admins...
               </div>
             )}
           </div>
