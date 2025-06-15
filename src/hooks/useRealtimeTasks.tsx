@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -66,28 +65,38 @@ export function useRealtimeTasks() {
     reconnectAttempts.current = 0;
     notifiedRef.current = false;
 
-    // Cleanup previous channel before making a new one
+    // Totally remove previous channel (if any) before new one is made
     if (channelRef.current) {
-      supabase.removeChannel(channelRef.current);
+      try {
+        // Proper cleanup if the channel is active
+        supabase.removeChannel(channelRef.current);
+      } catch (e) {
+        // Defensive: in case Supabase already removed
+        console.warn("Tried to remove Supabase channel; error:", e);
+      }
       channelRef.current = null;
     }
     stopFallbackPolling();
 
+    // Always produce a *brand new* channel instance
     const setupChannel = (retryAttempt: number = 0) => {
-      // Extra: ensure any previous channel is fully removed before making a new one
+      // Final cleanup (in case called recursively)
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (e) {
+          console.warn("Cleanup before new channel (recursive)", e);
+        }
         channelRef.current = null;
       }
 
+      // CREATE new channel instance and assign to ref before subscription!
       const newChannel = supabase
-        .channel("public-tasks-change")
+        .channel("public-tasks-change-" + Date.now() + "-" + Math.random()) // Ensure unique channel name so each is a true instance!
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "tasks" },
           payload => {
-            realTimeConnected = true;
-            setConnectionStatus("live");
             const row = payload.new ?? payload.old;
             if (!row) return;
             console.log("Supabase realtime event received:", {
@@ -128,47 +137,49 @@ export function useRealtimeTasks() {
               return filteredPrev;
             });
           }
-        )
-        .subscribe((status: string) => {
-          if (status === "SUBSCRIBED") {
-            realTimeConnected = true;
-            setConnectionStatus("live");
-            stopFallbackPolling();
+        );
+
+      // Assign *before* subscribing, to avoid reference leaks
+      channelRef.current = newChannel;
+
+      // Immediately subscribe ONCE per instance
+      newChannel.subscribe((status: string) => {
+        if (status === "SUBSCRIBED") {
+          realTimeConnected = true;
+          setConnectionStatus("live");
+          stopFallbackPolling();
+          if (!notifiedRef.current) {
+            toast({
+              title: "Live updates active",
+              description: "You're getting instant task changes.",
+              duration: 1200,
+            });
+            notifiedRef.current = true;
+          }
+        } else if (
+          status === "CHANNEL_ERROR" ||
+          status === "TIMED_OUT" ||
+          status === "CLOSED"
+        ) {
+          realTimeConnected = false;
+          reconnectAttempts.current += 1;
+          setConnectionStatus("connecting");
+          if (reconnectAttempts.current <= MAX_RECONNECT_ATTEMPTS) {
+            setTimeout(() => setupChannel(reconnectAttempts.current), RETRY_DELAY_BASE * reconnectAttempts.current);
+          } else {
+            setConnectionStatus("polling");
+            startFallbackPolling();
             if (!notifiedRef.current) {
               toast({
-                title: "Live updates active",
-                description: "You're getting instant task changes.",
-                duration: 1200,
+                title: "Live updates not available",
+                description: "Falling back to polling. New tasks or changes may be delayed.",
+                duration: 4000,
               });
               notifiedRef.current = true;
             }
-          } else if (
-            status === "CHANNEL_ERROR" ||
-            status === "TIMED_OUT" ||
-            status === "CLOSED"
-          ) {
-            realTimeConnected = false;
-            reconnectAttempts.current += 1;
-            setConnectionStatus("connecting");
-            if (reconnectAttempts.current <= MAX_RECONNECT_ATTEMPTS) {
-              setTimeout(() => setupChannel(reconnectAttempts.current), RETRY_DELAY_BASE * reconnectAttempts.current);
-            } else {
-              setConnectionStatus("polling");
-              startFallbackPolling();
-              if (!notifiedRef.current) {
-                toast({
-                  title: "Live updates not available",
-                  description: "Falling back to polling. New tasks or changes may be delayed.",
-                  duration: 4000,
-                });
-                notifiedRef.current = true;
-              }
-            }
           }
-        });
-
-      // Store current channel ref
-      channelRef.current = newChannel;
+        }
+      });
     };
 
     setupChannel();
@@ -192,7 +203,12 @@ export function useRealtimeTasks() {
     // CLEANUP: always remove channel, stop polling, clear timeout
     return () => {
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (e) {
+          // Defensive logging
+          console.warn("Cleanup on unmount", e);
+        }
         channelRef.current = null;
       }
       stopFallbackPolling();
