@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -37,6 +38,8 @@ export function useRealtimeTasks() {
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         payload => {
+          console.log("[useRealtimeTasks] Real-time event:", payload.eventType, payload);
+          
           // Get the real-time row and event type
           const row = payload.new ?? payload.old;
           if (!row) return;
@@ -52,6 +55,7 @@ export function useRealtimeTasks() {
             if (!visible.allowed) {
               // If losing access and present, remove
               if (filteredPrev.some(t => t.id === task.id)) {
+                console.log("[useRealtimeTasks] Removing task due to visibility loss:", task.taskId);
                 return filteredPrev.filter(t => t.id !== task.id);
               }
               // Not present, do nothing
@@ -60,6 +64,7 @@ export function useRealtimeTasks() {
 
             if (payload.eventType === "INSERT") {
               if (!filteredPrev.some(t => t.id === task.id)) {
+                console.log("[useRealtimeTasks] Adding new task:", task.taskId);
                 return [task, ...filteredPrev];
               }
               return filteredPrev;
@@ -67,14 +72,17 @@ export function useRealtimeTasks() {
             if (payload.eventType === "UPDATE") {
               const present = filteredPrev.some(t => t.id === task.id);
               if (present) {
+                console.log("[useRealtimeTasks] Updating existing task:", task.taskId);
                 return filteredPrev.map(t => (t.id === task.id ? task : t));
               }
               // Was not visible before, now is visible
+              console.log("[useRealtimeTasks] Adding previously invisible task:", task.taskId);
               return [task, ...filteredPrev];
             }
             if (payload.eventType === "DELETE") {
               // Remove deleted task from filtered list
-              return filteredPrev.filter(t => t.id !== task.id);
+              console.log("[useRealtimeTasks] Removing deleted task:", task.taskId);
+              return filteredPrev.filter(t => t.id !== task.id && t.taskId !== task.taskId);
             }
             return filteredPrev;
           });

@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Search, RotateCcw, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -13,15 +14,19 @@ const TrashTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
   const [restoringIds, setRestoringIds] = useState<string[]>([]);
+  const [emptyingTrash, setEmptyingTrash] = useState(false);
   const { tasks: allTasks, loading } = useRealtimeTasks();
   const [optimisticallyRestored, setOptimisticallyRestored] = useState<string[]>([]);
+  const [optimisticallyDeleted, setOptimisticallyDeleted] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const deletedTasks = useMemo(() => {
     return (allTasks ?? []).filter(
-      task => !!task.deletedAt && !optimisticallyRestored.includes(task.id?.toString() ?? '')
+      task => !!task.deletedAt && 
+        !optimisticallyRestored.includes(task.id?.toString() ?? '') &&
+        !optimisticallyDeleted.includes(task.id?.toString() ?? '')
     );
-  }, [allTasks, optimisticallyRestored]);
+  }, [allTasks, optimisticallyRestored, optimisticallyDeleted]);
 
   const filteredTasks = useMemo(() => {
     if (!searchQuery.trim()) return deletedTasks;
@@ -112,9 +117,14 @@ const TrashTab = () => {
 
     if (isSupabaseTask(task)) {
       try {
+        // Optimistically remove from UI
+        setOptimisticallyDeleted(prev => [...prev, taskId.toString()]);
+        
         await deleteTaskSupabase(task.taskId);
         toast({ title: 'Task permanently deleted', description: '', duration: 3000 });
       } catch (e) {
+        // Revert optimistic update on error
+        setOptimisticallyDeleted(prev => prev.filter(id => id !== taskId.toString()));
         toast({ title: 'Error', description: 'Could not permanently delete.', variant: 'destructive' });
       }
     } else {
@@ -123,14 +133,37 @@ const TrashTab = () => {
   };
 
   const handleEmptyTrash = async () => {
-    const promises = deletedTasks.map(async (task) => {
-      if (isSupabaseTask(task)) {
-        return handlePermanentDelete(task.id);
-      }
-      return null;
-    });
-    await Promise.all(promises);
-    toast({ title: 'Trash emptied', description: 'All deleted tasks were removed.', duration: 3000 });
+    if (deletedTasks.length === 0) return;
+    
+    setEmptyingTrash(true);
+    const supabaseTasks = deletedTasks.filter(isSupabaseTask);
+    const taskIds = supabaseTasks.map(t => t.id.toString());
+    
+    try {
+      // Optimistically remove all tasks from UI
+      setOptimisticallyDeleted(prev => [...prev, ...taskIds]);
+      
+      // Delete all Supabase tasks
+      const promises = supabaseTasks.map(task => deleteTaskSupabase(task.taskId));
+      await Promise.all(promises);
+      
+      toast({ 
+        title: 'Trash emptied', 
+        description: `${supabaseTasks.length} task(s) permanently deleted.`, 
+        duration: 3000 
+      });
+    } catch (error) {
+      // Revert optimistic updates on error
+      setOptimisticallyDeleted(prev => prev.filter(id => !taskIds.includes(id)));
+      console.error('Error emptying trash:', error);
+      toast({ 
+        title: 'Error', 
+        description: 'Failed to empty trash completely.', 
+        variant: 'destructive' 
+      });
+    } finally {
+      setEmptyingTrash(false);
+    }
   };
 
   return (
@@ -158,13 +191,23 @@ const TrashTab = () => {
         {/* Actions */}
         {deletedTasks.length > 0 && (
           <div className="flex gap-2 mb-6">
-            <Button variant="outline" size="sm" onClick={() => deletedTasks.forEach((task) => handleRestore(task.id))}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => deletedTasks.forEach((task) => handleRestore(task.id))}
+              disabled={restoringIds.length > 0 || emptyingTrash}
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               Restore all
             </Button>
-            <Button variant="destructive" size="sm" onClick={handleEmptyTrash}>
+            <Button 
+              variant="destructive" 
+              size="sm" 
+              onClick={handleEmptyTrash}
+              disabled={emptyingTrash || restoringIds.length > 0}
+            >
               <Trash2 className="w-4 h-4 mr-2" />
-              Empty trash
+              {emptyingTrash ? 'Emptying...' : 'Empty trash'}
             </Button>
           </div>
         )}
@@ -210,7 +253,7 @@ const TrashTab = () => {
                     size="sm"
                     onClick={() => handleRestore(task.id)}
                     className="h-6 px-2"
-                    disabled={restoringIds.includes(task.id?.toString() ?? '')}
+                    disabled={restoringIds.includes(task.id?.toString() ?? '') || emptyingTrash}
                   >
                     <RotateCcw className="w-3 h-3" />
                   </Button>
@@ -219,6 +262,7 @@ const TrashTab = () => {
                     size="sm"
                     onClick={() => handlePermanentDelete(task.id)}
                     className="h-6 px-2 text-red-500 hover:text-red-700"
+                    disabled={emptyingTrash || restoringIds.length > 0}
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
