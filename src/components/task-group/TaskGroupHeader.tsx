@@ -13,6 +13,19 @@ interface TaskGroupHeaderProps {
   onQuickAddSave: (taskData: any) => void;
 }
 
+const getStatusLabel = (status: string) => {
+  switch (status) {
+    case 'redline':
+      return 'TASK/ REDLINE';
+    case 'progress':
+      return 'PROGRESS/ UPDATE';
+    case 'completed':
+      return 'COMPLETED';
+    default:
+      return status.toUpperCase();
+  }
+};
+
 const TaskGroupHeader = ({
   group,
   isCollapsed,
@@ -21,6 +34,8 @@ const TaskGroupHeader = ({
   onSetShowQuickAdd,
   onQuickAddSave,
 }: TaskGroupHeaderProps) => {
+  const statusLabel = getStatusLabel(group.status);
+
   return (
     <div className="flex items-center justify-between py-2 px-1">
       <div className="flex items-center gap-2">
@@ -35,7 +50,7 @@ const TaskGroupHeader = ({
           )}
         </button>
         <div className={`px-2 py-1 rounded text-white text-xs font-medium ${group.color}`}>
-          {group.title}
+          {statusLabel}
         </div>
         <span className="text-sm text-muted-foreground">
           {group.count}
