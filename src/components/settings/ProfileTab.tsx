@@ -57,30 +57,43 @@ const ProfileTab = () => {
 
     // If Supabase user, update profile in Supabase
     if (supabaseUserId) {
-      // Only update full_name, company, bio for demo, but you could extend this
-      const { error } = await supabase
+      // Only update full_name, company, bio for demo
+      const { error, data } = await supabase
         .from('profiles')
         .update({
           full_name: formData.name,
           company: formData.company,
           bio: formData.bio,
-          // Optionally add avatar_url if your schema supports it
         })
-        .eq('id', supabaseUserId);
+        .eq('id', supabaseUserId)
+        .select();
+
+      console.log('Supabase profile update result', { error, data });
+
+      // Immediately fetch from Supabase to check if the update took effect
+      const { data: profileDb, error: fetchError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', supabaseUserId)
+        .maybeSingle();
+
+      console.log('Fetched updated Supabase profile after update:', { error: fetchError, data: profileDb });
 
       if (error) {
-        // Show a toast if you want (you could import/use-toast)
         alert('Failed to update your profile in Supabase');
         console.error('Supabase update error:', error);
       } else {
-        // Optionally: show toast success here
-        // If you want, refetch the profile or reload
-        // For demo, just log it
-        console.log('Supabase profile updated.');
+        if (profileDb && profileDb.full_name === formData.name) {
+          alert('Profile name updated in Supabase: ' + profileDb.full_name);
+        } else if (profileDb) {
+          alert('Supabase profile saved, but name did not match input. Current in DB: ' + profileDb.full_name);
+        } else {
+          alert('Profile update finished. No matching DB row found.');
+        }
       }
     }
     setSaving(false);
-    console.log('Profile updated:', formData);
+    console.log('Profile updated (local state):', formData);
   };
 
   return (
