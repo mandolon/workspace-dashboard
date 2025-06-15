@@ -125,37 +125,9 @@ export const useTaskOperations = () => {
   }, [navigate]);
 
   // FILTERING: Only Armando Lopez sees all, everyone else only their assigned/created
+  // DEBUG: Show all tasks to everyone for debugging
   function filterTasksForUser(tasks: Task[]) {
-    if (!currentUser) {
-      // If user is not logged in or hasn't loaded yet, return empty.
-      return [];
-    }
-
-    if (
-      currentUser.name === "Armando Lopez"
-      || currentUser.name === "AL"
-      || currentUser.email === "armando@company.com"
-    ) {
-      return tasks;
-    }
-
-    // Support both fullName and name for matching
-    const myNames = [currentUser.name, (currentUser as any).fullName].filter(Boolean);
-    return tasks.filter(
-      t =>
-        // Match on assignee's name or fullName
-        (t.assignee && (
-          myNames.includes(t.assignee?.fullName) ||
-          myNames.includes(t.assignee?.name)
-        ))
-        // Or if a collaborator matches
-        || (t.collaborators && t.collaborators.some(
-          c => myNames.includes(c.fullName) || myNames.includes(c.name)
-        ))
-        // Or createdBy matches
-        || myNames.includes(t.createdBy)
-        || t.createdBy === currentUser.email // fallback just in case
-    );
+    return tasks; // <-- REMOVE ALL USER FILTERING. DEBUG ONLY!
   }
 
   const getTasksByStatusFromContext = useCallback((status: string) => {
