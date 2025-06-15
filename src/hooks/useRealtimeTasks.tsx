@@ -52,13 +52,17 @@ export function useRealtimeTasks() {
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         payload => {
+          // Type assertion for the payload data
+          const newRow = payload.new as any;
+          const oldRow = payload.old as any;
+          
           console.log('[useRealtimeTasks] Real-time event received:', {
-            event: payload.event,
-            taskId: payload.new?.task_id || payload.old?.task_id,
-            title: payload.new?.title || payload.old?.title
+            event: payload.eventType,
+            taskId: newRow?.task_id || oldRow?.task_id,
+            title: newRow?.title || oldRow?.title
           });
           
-          const row = payload.new ?? payload.old;
+          const row = newRow ?? oldRow;
           if (!row) {
             console.warn('[useRealtimeTasks] No row data in payload');
             return;
@@ -78,7 +82,7 @@ export function useRealtimeTasks() {
               return filtered;
             }
             
-            if (payload.event === "INSERT") {
+            if (payload.eventType === "INSERT") {
               if (!prev.some(t => t.id === task.id)) {
                 console.log('[useRealtimeTasks] Adding new task:', task.taskId, task.title);
                 return [task, ...prev];
@@ -87,7 +91,7 @@ export function useRealtimeTasks() {
               return prev;
             }
             
-            if (payload.event === "UPDATE") {
+            if (payload.eventType === "UPDATE") {
               const taskIndex = prev.findIndex(t => t.id === task.id);
               if (taskIndex >= 0) {
                 console.log('[useRealtimeTasks] Updating existing task:', task.taskId, task.title);
@@ -100,12 +104,12 @@ export function useRealtimeTasks() {
               }
             }
             
-            if (payload.event === "DELETE") {
+            if (payload.eventType === "DELETE") {
               console.log('[useRealtimeTasks] Deleting task:', task.taskId);
               return prev.filter(t => t.id !== task.id);
             }
             
-            console.log('[useRealtimeTasks] Unknown event type:', payload.event);
+            console.log('[useRealtimeTasks] Unknown event type:', payload.eventType);
             return prev;
           });
         }
