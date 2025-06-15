@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import TaskGroup from './TaskGroup';
+import TaskTableSection from './task-group/TaskTableSection';
 import { Task, TaskGroup as TaskGroupType, TaskUser } from '@/types/task';
 import { useTaskEditing } from '@/hooks/useTaskEditing';
 
@@ -53,26 +53,24 @@ const TaskGroupSection = ({
 
   return (
     <div className="space-y-4">
-      <TaskGroup
+      <TaskTableSection
         group={group}
         showQuickAdd={showQuickAdd}
         onSetShowQuickAdd={onSetShowQuickAdd}
         onQuickAddSave={onQuickAddSave}
         onTaskClick={onTaskClick}
-        onTaskArchive={onTaskArchive}
         onTaskDeleted={onTaskDeleted}
         useContext={useContext}
-        assignPerson={assignPerson}
-        removeAssignee={removeAssignee}
-        addCollaborator={addCollaborator}
-        removeCollaborator={removeCollaborator}
-        // Pass editing state and handlers to TaskGroup
         editingTaskId={editingTaskId}
         editingValue={editingValue}
         setEditingValue={setEditingValue}
         startEditingTask={startEditingTask}
         saveTaskEdit={saveTaskEdit}
         cancelTaskEdit={cancelTaskEdit}
+        assignPerson={assignPerson}
+        removeAssignee={removeAssignee}
+        addCollaborator={addCollaborator}
+        removeCollaborator={removeCollaborator}
       />
     </div>
   );
