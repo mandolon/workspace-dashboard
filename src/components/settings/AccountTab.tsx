@@ -1,13 +1,60 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useUser } from '@/contexts/UserContext';
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/alert-dialog';
+import { supabase } from '@/integrations/supabase/client';
 
 const AccountTab = () => {
-  const { currentUser, updateUser } = useUser();
+  const { currentUser, updateUser, logout, supabaseUserId } = useUser();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  // Handler for account deletion
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+
+    // 1. Delete from profiles table, if possible
+    try {
+      if (supabaseUserId) {
+        // Delete from profiles
+        await supabase.from('profiles').delete().eq('id', supabaseUserId);
+
+        // Delete user from auth
+        const { error } = await supabase.auth.admin.deleteUser(supabaseUserId);
+        if (error) {
+          alert('Could not delete your authentication record: ' + error.message);
+          setDeleting(false);
+          return;
+        }
+      } else if (currentUser?.id) {
+        // Fallback, just remove profile (demo user)
+        await supabase.from('profiles').delete().eq('id', currentUser.id);
+      }
+    } catch (err: any) {
+      alert('An unexpected error occurred while deleting your account.');
+      setDeleting(false);
+      return;
+    }
+
+    // 2. Sign the user out
+    setDeleting(false);
+    logout();
+    // After logout, user will be redirected to login
+  };
 
   return (
     <div className="p-6 max-w-2xl">
@@ -76,7 +123,33 @@ const AccountTab = () => {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Delete account</span>
-              <Button variant="destructive" size="sm">Delete account</Button>
+              <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" size="sm" disabled={deleting}>
+                    Delete account
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to delete your account?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action is permanent and will remove your user record and authentication. You will be signed out.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={deleting}
+                      onClick={handleDeleteAccount}
+                      className="bg-destructive text-white"
+                    >
+                      {deleting ? 'Deleting...' : 'Delete account'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         </div>
