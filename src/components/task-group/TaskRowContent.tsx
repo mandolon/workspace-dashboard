@@ -35,37 +35,45 @@ const TaskRowContent = React.memo(({
   // Add debug log to track types and values
   console.log(
     '[TaskRowContent] Render. editingTaskId:', editingTaskId, '(', typeof editingTaskId, ')',
-    'task.id:', task.id, '(', typeof task.id, ')'
+    'task.id:', task.id, '(', typeof task.id, ')',
+    'isEditing:', editingTaskId === task.id
   );
   const isEditing = editingTaskId === task.id;
 
   const handleTaskClick = useCallback(() => {
+    console.log('[TaskRowContent] Task clicked:', task.id);
     onTaskClick(task);
   }, [onTaskClick, task]);
 
   const handleStatusClick = useCallback(() => {
+    console.log('[TaskRowContent] Status clicked for task:', task.id);
     onTaskStatusClick(task.id);
   }, [onTaskStatusClick, task.id]);
 
   const handleEditClick = useCallback((e: React.MouseEvent) => {
+    console.log('[TaskRowContent] Edit clicked for task:', task.id);
     onEditClick(task, e);
   }, [onEditClick, task]);
 
   const handleSaveEdit = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('[TaskRowContent] Save edit clicked for task:', task.id);
     onSaveEdit(task.id);
   }, [onSaveEdit, task.id]);
 
   const handleCancelEdit = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('[TaskRowContent] Cancel edit clicked');
     onCancelEdit();
   }, [onCancelEdit]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    console.log('[TaskRowContent] Key pressed:', e.key, 'for task:', task.id);
     onKeyDown(e, task.id);
   }, [onKeyDown, task.id]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('[TaskRowContent] Input changed:', e.target.value);
     onSetEditingValue(e.target.value);
   }, [onSetEditingValue]);
 

@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import TaskGroupHeader from './task-group/TaskGroupHeader';
-import TaskTableSection from './task-group/TaskTableSection';
-import { Task, TaskGroup, TaskUser } from '@/types/task';
+
+import React, { useState, useMemo } from 'react';
+import TaskGroup from './TaskGroup';
+import { Task, TaskGroup as TaskGroupType, TaskUser } from '@/types/task';
+import { useTaskEditing } from '@/hooks/useTaskEditing';
 
 interface TaskGroupSectionProps {
-  group: TaskGroup;
+  group: TaskGroupType;
   showQuickAdd: string | null;
   onSetShowQuickAdd: (status: string | null) => void;
   onQuickAddSave: (taskData: any) => void;
   onTaskClick: (task: Task) => void;
-  onTaskArchive?: (taskId: number) => void;
-  onTaskDeleted?: () => void;
-  useContext?: boolean;
-  // Assignment handler props (added!)
-  assignPerson?: (taskId: string, person: TaskUser) => void;
-  removeAssignee?: (taskId: string) => void;
-  addCollaborator?: (taskId: string, person: TaskUser) => void;
-  removeCollaborator?: (taskId: string, idx: number) => void;
+  onTaskArchive: (taskId: number) => void;
+  onTaskDeleted: () => void;
+  useContext: boolean;
+  assignPerson: (taskId: string, person: TaskUser) => void;
+  removeAssignee: (taskId: string) => void;
+  addCollaborator: (taskId: string, person: TaskUser) => void;
+  removeCollaborator: (taskId: string, idx: number) => void;
 }
 
-const TaskGroupSection = React.memo(({
+const TaskGroupSection = ({
   group,
   showQuickAdd,
   onSetShowQuickAdd,
@@ -27,42 +27,55 @@ const TaskGroupSection = React.memo(({
   onTaskClick,
   onTaskArchive,
   onTaskDeleted,
-  useContext = true,
-  // Assignment handlers (added!)
+  useContext,
   assignPerson,
   removeAssignee,
   addCollaborator,
   removeCollaborator,
-}: any) => { // updated prop types to 'any' for flexibility, could be more specific in a full refactor
-  const [isExpanded, setIsExpanded] = useState(true);
+}: TaskGroupSectionProps) => {
+  // Mock update function for the editing hook - since we're using Supabase now
+  const mockUpdateTaskById = (taskId: number, updates: Partial<Task>) => {
+    console.log('[TaskGroupSection] Mock update task:', taskId, updates);
+    // The actual update will be handled by the Supabase realtime system
+  };
+
+  // Add task editing functionality
+  const {
+    editingTaskId,
+    editingValue,
+    setEditingValue,
+    startEditingTask,
+    saveTaskEdit,
+    cancelTaskEdit
+  } = useTaskEditing(mockUpdateTaskById);
+
+  console.log('[TaskGroupSection] Editing state:', { editingTaskId, editingValue });
 
   return (
-    <div className="space-y-1.5">
-      <TaskGroupHeader
+    <div className="space-y-4">
+      <TaskGroup
         group={group}
-        isExpanded={isExpanded}
-        onToggleExpanded={() => setIsExpanded(prev => !prev)}
+        showQuickAdd={showQuickAdd}
+        onSetShowQuickAdd={onSetShowQuickAdd}
+        onQuickAddSave={onQuickAddSave}
+        onTaskClick={onTaskClick}
+        onTaskArchive={onTaskArchive}
+        onTaskDeleted={onTaskDeleted}
+        useContext={useContext}
+        assignPerson={assignPerson}
+        removeAssignee={removeAssignee}
+        addCollaborator={addCollaborator}
+        removeCollaborator={removeCollaborator}
+        // Pass editing state and handlers to TaskGroup
+        editingTaskId={editingTaskId}
+        editingValue={editingValue}
+        setEditingValue={setEditingValue}
+        startEditingTask={startEditingTask}
+        saveTaskEdit={saveTaskEdit}
+        cancelTaskEdit={cancelTaskEdit}
       />
-
-      {isExpanded && (
-        <TaskTableSection
-          group={group}
-          showQuickAdd={showQuickAdd}
-          onSetShowQuickAdd={onSetShowQuickAdd}
-          onQuickAddSave={onQuickAddSave}
-          onTaskClick={onTaskClick}
-          onTaskDeleted={onTaskDeleted} // Used exactly as received, always () => void
-          useContext={useContext}
-          // Assignment handlers pass-through (added!)
-          assignPerson={assignPerson}
-          removeAssignee={removeAssignee}
-          addCollaborator={addCollaborator}
-          removeCollaborator={removeCollaborator}
-        />
-      )}
     </div>
   );
-});
+};
 
-TaskGroupSection.displayName = "TaskGroupSection";
 export default TaskGroupSection;
