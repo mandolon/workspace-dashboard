@@ -51,7 +51,7 @@ export function useRealtimeTasks() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
-        payload => {
+        (payload: any) => {
           // Type assertion for the payload data
           const newRow = payload.new as any;
           const oldRow = payload.old as any;
