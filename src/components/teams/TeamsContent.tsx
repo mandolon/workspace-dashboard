@@ -99,7 +99,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   }, [tab, supabaseAdmins.length]);
 
   // Memo: Build merged admins only for tab === 'admin'
-  let allTeamMembers = [];
+  let allTeamMembers: TeamMember[] = [];
   if (tab === "admin") {
     // Deduplicate admins by email
     const adminLookup = new Map<string, boolean>();
