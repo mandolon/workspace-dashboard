@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
@@ -8,6 +9,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
 import { useSupabaseAdmins } from '@/hooks/useSupabaseAdmins';
+
+// NEW: direct Supabase client fetch
+import { createClient } from "@supabase/supabase-js";
+const SUPABASE_URL = "https://xxarxbmmedbmpptjgtxe.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4YXJ4Ym1tZWRibXBwdGpndHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2ODY1NTYsImV4cCI6MjA2NTI2MjU1Nn0.Gn3SU4hK27MNtZvyL4V2gSCGy0ahqeMiIyg9bNW7Tmc";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -30,10 +37,78 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(
     tab === "admin" ? ADMIN_USERS : (tab === "team" ? TEAM_USERS : CLIENT_USERS)
   );
+  const [supabaseTeamMembers, setSupabaseTeamMembers] = useState<TeamMember[]>([]);
+  const [supabaseClientMembers, setSupabaseClientMembers] = useState<TeamMember[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
   const isMobile = useIsMobile();
 
-  // Supabase admins
+  // Supabase admins (existing)
   const { admins: supabaseAdmins, loading: loadingAdmins } = useSupabaseAdmins();
+
+  // Fetch SUPABASE "team" users
+  useEffect(() => {
+    const fetchRoleMembers = async (role: "team" | "client") => {
+      setLoadingMembers(true);
+      // 1. Find users in user_roles with the expected role
+      const { data: userRoles, error: userRolesError } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .eq("role", role);
+      if (userRolesError) {
+        console.error(`Error fetching user_roles for role=${role}:`, userRolesError);
+        setLoadingMembers(false);
+        return;
+      }
+      if (!userRoles || userRoles.length === 0) {
+        if (role === "team") setSupabaseTeamMembers([]);
+        else setSupabaseClientMembers([]);
+        setLoadingMembers(false);
+        return;
+      }
+      // 2. Fetch profiles for those user_ids
+      const userIds = userRoles.map((ur: any) => ur.user_id).filter(Boolean);
+      if (userIds.length === 0) {
+        if (role === "team") setSupabaseTeamMembers([]);
+        else setSupabaseClientMembers([]);
+        setLoadingMembers(false);
+        return;
+      }
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", userIds);
+      if (profilesError) {
+        console.error(`Error fetching profiles for role=${role}:`, profilesError);
+        setLoadingMembers(false);
+        return;
+      }
+      // 3. Map to TeamMember type
+      const mappedMembers: TeamMember[] = profiles.map((p: any) => ({
+        id: p.id,
+        name: (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU"),
+        fullName: p.full_name || p.email || "Unknown User",
+        crmRole: role.charAt(0).toUpperCase() + role.slice(1), // 'Team' or 'Client'
+        titleRole: role.charAt(0).toUpperCase() + role.slice(1) as ArchitectureRole,
+        lastActive: "—",
+        status: "Active",
+        email: p.email || "",
+        role: (role.charAt(0).toUpperCase() + role.slice(1)) as ArchitectureRole,
+        avatar: (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU"),
+        avatarColor: role === "team" ? "bg-blue-700" : "bg-pink-700",
+      }));
+      if (role === "team") setSupabaseTeamMembers(mappedMembers);
+      else setSupabaseClientMembers(mappedMembers);
+      setLoadingMembers(false);
+    };
+
+    if (tab === "team") {
+      fetchRoleMembers("team");
+    } else if (tab === "client") {
+      fetchRoleMembers("client");
+    }
+    // No need for admin here (handled in useSupabaseAdmins)
+    // eslint-disable-next-line
+  }, [tab, supabaseAdmins.length]);
 
   // Memo: Build merged admins only for tab === 'admin'
   let allTeamMembers: TeamMember[] = [];
@@ -67,9 +142,28 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
       ...supabaseAdminMembers
     ];
   } else if (tab === "team") {
-    allTeamMembers = TEAM_USERS;
+    // Static + Supabase team
+    // Avoid duplicates based on email
+    const userLookup = new Map<string, boolean>();
+    TEAM_USERS.forEach(u => userLookup.set((u.email ?? "").toLowerCase(), true));
+    const nonDupeSupabaseTeams = supabaseTeamMembers.filter(tm =>
+      !!tm.email && !userLookup.has(tm.email.toLowerCase())
+    );
+    allTeamMembers = [
+      ...TEAM_USERS,
+      ...nonDupeSupabaseTeams
+    ];
   } else if (tab === "client") {
-    allTeamMembers = CLIENT_USERS;
+    // Static + Supabase clients
+    const userLookup = new Map<string, boolean>();
+    CLIENT_USERS.forEach(u => userLookup.set((u.email ?? "").toLowerCase(), true));
+    const nonDupeSupabaseClients = supabaseClientMembers.filter(cm =>
+      !!cm.email && !userLookup.has(cm.email.toLowerCase())
+    );
+    allTeamMembers = [
+      ...CLIENT_USERS,
+      ...nonDupeSupabaseClients
+    ];
   } else {
     allTeamMembers = [];
   }
@@ -81,7 +175,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   // Reset visibleCount if teamMembers/filters change
   useEffect(() => {
     setVisibleCount(MEMBERS_BATCH);
-  }, [tab, searchTerm, selectedUserId, teamMembers.length, supabaseAdmins.length]);
+  }, [tab, searchTerm, selectedUserId, teamMembers.length, supabaseAdmins.length, supabaseTeamMembers.length, supabaseClientMembers.length]);
 
   const roles: ArchitectureRole[] = [
     'Architect', 'Engineer', 'CAD Tech', 'Designer', 'Interior Designer',
@@ -161,11 +255,11 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
                 Loading more...
               </div>
             )}
-            {tab === "admin" && loadingAdmins && (
+            {(tab === "admin" && loadingAdmins) || ((tab === "team" || tab === "client") && loadingMembers) ? (
               <div className="w-full py-2 flex justify-center text-xs text-muted-foreground">
-                Loading real admins...
+                Loading real {tab === "admin" ? "admins" : (tab === "team" ? "team members" : "client members")}...
               </div>
-            )}
+            ) : null}
           </div>
         </ScrollArea>
       ) : (
