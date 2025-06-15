@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,10 +16,10 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const cleanupAuthState = () => {
-  // Remove all Supabase auth keys from localStorage and sessionStorage
   Object.keys(localStorage).forEach((key) => {
     if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
       localStorage.removeItem(key);
@@ -31,41 +32,61 @@ const cleanupAuthState = () => {
   });
 };
 
+const EDGE_FUNCTION_URL = "https://xxarxbmmedbmpptjgtxe.functions.supabase.co/delete-user-account";
+
 const AccountTab = () => {
   const { currentUser, updateUser, logout, supabaseUserId } = useUser();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
 
-  // Handler for account deletion
+  // Handler for account deletion (via edge function)
   const handleDeleteAccount = async () => {
     setDeleting(true);
     let errorMsg: string | null = null;
 
     try {
-      if (supabaseUserId) {
-        await supabase.from('profiles').delete().eq('id', supabaseUserId);
+      const userId = supabaseUserId || currentUser?.id;
+      if (!userId) {
+        errorMsg = "Missing user ID";
+      } else {
+        const session = (await supabase.auth.getSession()).data.session;
+        const accessToken = session?.access_token;
 
-        const { error } = await supabase.auth.admin.deleteUser(supabaseUserId);
-        if (error) {
-          errorMsg = 'Could not delete your authentication record: ' + error.message;
+        const res = await fetch(EDGE_FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+          },
+          body: JSON.stringify({ user_id: userId }),
+        });
+        // Try to parse error message if deletion fails
+        if (!res.ok) {
+          let reason = "";
+          try {
+            const json = await res.json();
+            reason = json?.error || json?.message || res.statusText;
+          } catch {
+            reason = res.statusText;
+          }
+          errorMsg = `Account deletion failed: ${reason}`;
         }
-      } else if (currentUser?.id) {
-        await supabase.from('profiles').delete().eq('id', currentUser.id);
       }
     } catch (err: any) {
-      errorMsg = 'An unexpected error occurred while deleting your account.';
+      errorMsg = 'An unexpected error occurred during account deletion.';
     } finally {
-      // Cleanup all Supabase tokens and session data before logout
       cleanupAuthState();
       setDeleting(false);
-      // Optionally, display the error before logout/redirect
       if (errorMsg) {
-        // Optionally use a toast or alert here:
-        alert(errorMsg);
+        toast({
+          title: "Account Deletion Failed",
+          description: errorMsg,
+          variant: "destructive",
+        });
       }
-      // Log the user out and redirect (always)
+      // Always log out for security and redirect
       logout();
-      // After logout, user will be redirected to login
     }
   };
 
