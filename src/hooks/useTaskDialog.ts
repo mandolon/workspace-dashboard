@@ -23,16 +23,19 @@ export const useTaskDialog = () => {
       return;
     }
 
-    // Prepare assignee object
+    // Prepare assignee object - clean structure without projectId
     let assigneeObj = assignedTo;
     if (typeof assignedTo === 'string') {
       assigneeObj = TEAM_USERS.find(u => u.id === assignedTo || u.name === assignedTo || u.fullName === assignedTo) 
         || { name: assignedTo, avatar: '', id: assignedTo };
     }
+    
+    // Clean assignee object - ensure consistent structure
     assigneeObj = {
-      ...assigneeObj,
       id: assigneeObj.id,
-      projectId: getProjectIdFromDisplayName(selectedProject)
+      name: assigneeObj.name,
+      avatar: assigneeObj.avatar,
+      fullName: assigneeObj.fullName
     };
 
     const projectId = getProjectIdFromDisplayName(selectedProject);
@@ -55,7 +58,12 @@ export const useTaskDialog = () => {
       deletedBy: null,
     };
 
-    console.log('[TaskDialog] Creating task:', taskDataForSupabase);
+    console.log('[TaskDialog] Creating task with clean assignee:', {
+      taskId: taskDataForSupabase.taskId,
+      assignee: taskDataForSupabase.assignee,
+      project: taskDataForSupabase.project,
+      projectId: taskDataForSupabase.projectId
+    });
 
     try {
       await onCreateTask(taskDataForSupabase);

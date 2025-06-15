@@ -13,13 +13,16 @@ export function useRealtimeTasks() {
   const channelRef = useRef<any>(null);
   const { currentUser } = useUser();
 
-  // Only expose tasks that are not soft-deleted or archived
+  // Only expose tasks that are not soft-deleted or archived (except completed tasks)
   const secureSetTasks = (allTasks: Task[]) => {
-    const filtered = filterTasksForUser(
-      allTasks.filter(t => !t.deletedAt && (!t.archived || t.status === 'completed')),
-      currentUser
-    );
-    console.log('[useRealtimeTasks] Setting tasks:', filtered.length, 'tasks');
+    const validTasks = allTasks.filter(t => !t.deletedAt && (!t.archived || t.status === 'completed'));
+    const filtered = filterTasksForUser(validTasks, currentUser);
+    console.log('[useRealtimeTasks] Setting tasks:', {
+      totalTasks: allTasks.length,
+      validTasks: validTasks.length,
+      filteredTasks: filtered.length,
+      userCanSee: filtered.map(t => ({ taskId: t.taskId, title: t.title }))
+    });
     setTasks(filtered);
   };
 
@@ -85,23 +88,32 @@ export function useRealtimeTasks() {
           }
           
           const task = dbRowToTask(row);
-          console.log('[useRealtimeTasks] Processed task:', {
+          console.log('[useRealtimeTasks] Processed task from real-time event:', {
             taskId: task.taskId,
             title: task.title,
             status: task.status,
             id: task.id,
             archived: task.archived,
-            deletedAt: task.deletedAt
+            deletedAt: task.deletedAt,
+            assignee: task.assignee,
+            project: task.project,
+            projectId: task.projectId
+          });
+
+          // Check if user can view this task
+          const visibility = canUserViewTask(task, currentUser);
+          console.log('[useRealtimeTasks] Task visibility check:', {
+            taskId: task.taskId,
+            allowed: visibility.allowed,
+            reason: visibility.reason
           });
 
           setTasks(prev => {
-            const visible = canUserViewTask(task, currentUser);
-            
-            // Hide if task is deleted, or archived but NOT completed, or now invisible
-            if (task.deletedAt || (task.archived && task.status !== 'completed') || !visible.allowed) {
+            // Hide if task is deleted, or archived but NOT completed, or not visible
+            if (task.deletedAt || (task.archived && task.status !== 'completed') || !visibility.allowed) {
               const filtered = prev.filter(t => t.id !== task.id);
               console.log('[useRealtimeTasks] Hiding task:', task.taskId, 'Reason:', 
-                task.deletedAt ? 'deleted' : (task.archived && task.status !== 'completed') ? 'archived (non-completed)' : 'not visible');
+                task.deletedAt ? 'deleted' : (task.archived && task.status !== 'completed') ? 'archived (non-completed)' : 'not visible to user');
               return filtered;
             }
             
@@ -111,6 +123,8 @@ export function useRealtimeTasks() {
                   taskId: task.taskId,
                   title: task.title,
                   status: task.status,
+                  assignee: task.assignee,
+                  project: task.project,
                   totalTasksBefore: prev.length
                 });
                 const newTasks = [task, ...prev];
