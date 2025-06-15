@@ -32,6 +32,11 @@ const TaskRowContent = React.memo(({
   onTaskStatusClick,
   onDeleteClick
 }: TaskRowContentProps) => {
+  // Add debug log to track types and values
+  console.log(
+    '[TaskRowContent] Render. editingTaskId:', editingTaskId, '(', typeof editingTaskId, ')',
+    'task.id:', task.id, '(', typeof task.id, ')'
+  );
   const isEditing = editingTaskId === task.id;
 
   const handleTaskClick = useCallback(() => {
