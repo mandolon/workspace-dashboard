@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Edit, Check, Trash2 } from 'lucide-react';
 import {
   ContextMenu,
@@ -25,31 +25,42 @@ const TaskRowContextMenu = ({
   onTaskStatusClick,
   onContextMenuDelete
 }: TaskRowContextMenuProps) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
+    setIsOpen(false);
   };
 
   const handleMarkComplete = () => {
     onTaskStatusClick(task.id);
+    setIsOpen(false);
   };
 
-  // Use native event closing via pointerdown for Radix
-  // We ensure clicking "Delete" closes the menu before anything else
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEditClick(task, e as any);
+    setIsOpen(false);
+  };
+
+  // Close menu and trigger delete
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // "onContextMenuDelete" will trigger dialog
-    onContextMenuDelete(e);
+    setIsOpen(false); // Close menu immediately
+    // Small delay to ensure menu closes before dialog opens
+    setTimeout(() => {
+      onContextMenuDelete(e);
+    }, 0);
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu open={isOpen} onOpenChange={setIsOpen}>
       <ContextMenuTrigger asChild>
         {children}
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onClick={(e) => { e.stopPropagation(); onEditClick(task, e as any); }}>
+        <ContextMenuItem onClick={handleEditClick}>
           <Edit className="w-4 h-4 mr-2" />
           Edit task
         </ContextMenuItem>
