@@ -104,7 +104,8 @@ export const CLIENT_USERS: TeamMember[] = getAllClients().map((client, i) => ({
   lastActive: '—',
   status: 'Active' as const,
   email: client.email || 'unknown@email.com',
-  role: 'Client' as ArchitectureRole,
+  role: undefined,
+  titleRole: undefined,
   avatar: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
   avatarColor: CLIENT_COLOR_PALETTE[i % CLIENT_COLOR_PALETTE.length]
 }));

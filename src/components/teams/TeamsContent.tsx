@@ -81,21 +81,21 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         setLoadingMembers(false);
         return;
       }
-      // 3. Map to TeamMember type - FIX: use explicit union value for crmRole and others
+      // 3. Map to TeamMember type - FIX: use explicit undefined for architecture role fields for clients
       const mappedMembers: TeamMember[] = profiles.map((p: any) => {
-        const crmRole = role === "team" ? "Team" : "Client";
-        const avatarColor = role === "team" ? "bg-blue-700" : "bg-pink-700";
+        const isTeam = role === "team";
+        const avatarColor = isTeam ? "bg-blue-700" : "bg-pink-700";
         const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
         return {
           id: p.id,
           name: nameInit,
           fullName: p.full_name || p.email || "Unknown User",
-          crmRole: crmRole as "Team" | "Client",
-          titleRole: crmRole as ArchitectureRole,
+          crmRole: isTeam ? "Team" : "Client",
+          titleRole: isTeam ? ("Team" as ArchitectureRole) : undefined,
           lastActive: "—",
           status: "Active",
           email: p.email || "",
-          role: crmRole as ArchitectureRole,
+          role: isTeam ? ("Team" as ArchitectureRole) : undefined,
           avatar: nameInit,
           avatarColor,
         };
