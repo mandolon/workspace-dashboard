@@ -2,22 +2,20 @@
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { useTaskContext } from '@/contexts/TaskContext';
 import { Task } from '@/types/task';
 import { Undo } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { updateTaskSupabase } from '@/data/taskSupabase';
-import { useUser } from '@/contexts/UserContext'; // <-- ADDED
+import { useUser } from '@/contexts/UserContext';
 
 export const useTaskDeletion = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { deleteTask, restoreDeletedTask } = useTaskContext();
   const { toast, dismiss } = useToast();
   const navigate = useNavigate();
-  const { currentUser } = useUser(); // <-- ADDED
+  const { currentUser } = useUser();
 
   function isSupabaseTask(task: Task) {
     return !!task.taskId && !!task.updatedAt;
@@ -55,8 +53,8 @@ export const useTaskDeletion = () => {
             deletedBy: deletedByName
           });
         } else {
-          // Legacy: only pass the ID, as the context only expects one argument
-          await deleteTask(taskToDeleteObj.id);
+          // Legacy task - just log since we no longer have context operations
+          console.log('[TaskDeletion] Legacy task deletion not supported in this context:', taskToDeleteObj.id);
         }
 
         toast({
@@ -89,8 +87,6 @@ export const useTaskDeletion = () => {
                       deletedAt: null,
                       deletedBy: null
                     });
-                  } else {
-                    restoreDeletedTask(taskToDeleteObj!.id);
                   }
                   dismiss();
                 }}
@@ -116,7 +112,7 @@ export const useTaskDeletion = () => {
         setTaskToDelete(null);
       }
     },
-    [deleteTask, restoreDeletedTask, toast, navigate, dismiss, currentUser]
+    [toast, navigate, dismiss, currentUser]
   );
 
   return {
@@ -128,4 +124,3 @@ export const useTaskDeletion = () => {
     handleCloseDeleteDialog
   };
 };
-
