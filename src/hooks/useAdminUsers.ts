@@ -1,12 +1,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { User } from "@/types/user";
+import { TeamMember } from "@/utils/teamUsers"; // Import TeamMember
 
 export function useAdminUsers() {
   return useQuery({
     queryKey: ["adminUsers"],
-    queryFn: async () => {
+    queryFn: async (): Promise<TeamMember[]> => {
       // Get users with 'admin' role in user_roles
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
@@ -24,18 +24,18 @@ export function useAdminUsers() {
         .in("id", userIds);
 
       if (profilesError) throw profilesError;
-      return profiles.map((profile: any) => ({
+      return profiles.map((profile: any): TeamMember => ({
         id: profile.id,
         name: profile.full_name ?? profile.email ?? "",
         fullName: profile.full_name ?? profile.email ?? "",
-        crmRole: "Admin",
+        crmRole: "Admin", // set as union literal
         titleRole: "Admin",
         lastActive: "—",
-        status: "Active",
+        status: "Active", // use strict literal
         email: profile.email ?? "",
         role: "Admin",
         avatar: profile.avatar_url ?? "",
-        avatarColor: "bg-blue-800", // You can use a more advanced color logic if desired
+        avatarColor: "bg-blue-800", // Can improve color logic later
       }));
     }
   });
