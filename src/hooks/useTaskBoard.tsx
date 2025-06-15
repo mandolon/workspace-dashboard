@@ -5,11 +5,13 @@ import { Task, TaskGroup, TaskUser } from '@/types/task';
 import { useUser } from '@/contexts/UserContext';
 import { useRealtimeTasks } from './useRealtimeTasks';
 import { insertTask, updateTaskSupabase, deleteTaskSupabase } from '@/data/taskSupabase';
+import { useToast } from '@/hooks/use-toast';
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
   const { currentUser } = useUser();
   const { tasks, setTasks, loading } = useRealtimeTasks();
+  const { toast, dismiss } = useToast();
 
   // Dialog/quick add state
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
@@ -112,6 +114,66 @@ export const useTaskBoard = () => {
     }
   };
 
+  // Task status toggle with archive/complete functionality
+  const toggleTaskStatus = useCallback(async (taskId: number) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) {
+      console.error('[useTaskBoard] Task not found for status toggle:', taskId);
+      return;
+    }
+
+    console.log('[useTaskBoard] Toggling task status:', task.taskId, 'current status:', task.status);
+
+    try {
+      if (task.status === 'completed') {
+        // Uncomplete: move back to progress and unarchive
+        await updateTaskSupabase(task.taskId, { 
+          status: 'progress', 
+          archived: false 
+        });
+        
+        toast({
+          description: "Task marked as in progress",
+          duration: 3000,
+        });
+      } else {
+        // Complete and archive: mark as completed and archived
+        await updateTaskSupabase(task.taskId, { 
+          status: 'completed', 
+          archived: true 
+        });
+        
+        toast({
+          description: "Task completed and archived",
+          duration: 3000,
+          action: (
+            <button
+              onClick={async () => {
+                await updateTaskSupabase(task.taskId, { 
+                  status: task.status, // restore original status
+                  archived: false 
+                });
+                dismiss();
+              }}
+              className="text-sm underline"
+            >
+              Undo
+            </button>
+          ),
+        });
+      }
+      
+      console.log('[useTaskBoard] Task status toggled successfully');
+    } catch (error) {
+      console.error('[useTaskBoard] Failed to toggle task status:', error);
+      toast({
+        description: "Failed to update task status",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  }, [tasks, toast, dismiss]);
+
   // Assignment handlers - rely on real-time to update UI
   const assignPerson = async (taskId: string, person: TaskUser) => {
     console.log('[useTaskBoard] Assigning person to task:', taskId, person.name);
@@ -182,6 +244,7 @@ export const useTaskBoard = () => {
     handleTaskClick,
     handleTaskArchive,
     handleTaskDeleted,
+    toggleTaskStatus, // New status toggle handler
     // Assignment handlers for Supabase tasks only:
     assignPerson,
     removeAssignee,

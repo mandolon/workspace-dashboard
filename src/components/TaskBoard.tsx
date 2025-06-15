@@ -19,6 +19,7 @@ const TaskBoard: React.FC = React.memo(() => {
     handleQuickAddSave,
     handleTaskClick,
     handleTaskArchive,
+    toggleTaskStatus, // Add the status toggle handler
     assignPerson,
     removeAssignee,
     addCollaborator,
@@ -100,6 +101,7 @@ const TaskBoard: React.FC = React.memo(() => {
         onTaskArchive={handleTaskArchive}
         onTaskDeleted={onTaskDeleted}
         onAddTask={onDialogOpen}
+        toggleTaskStatus={toggleTaskStatus} // Pass the status toggle handler
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}

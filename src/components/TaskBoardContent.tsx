@@ -16,6 +16,7 @@ interface TaskBoardContentProps {
   onTaskArchive: (taskId: number) => void;
   onTaskDeleted: () => void; // <-- ensure consistent signature
   onAddTask: () => void;
+  toggleTaskStatus: (taskId: number) => void; // Add status toggle handler
   // Handlers for assignment (Supabase only)
   assignPerson: (taskId: string, person: any) => void;
   removeAssignee: (taskId: string) => void;
@@ -33,6 +34,7 @@ const TaskBoardContent = ({
   onTaskArchive,
   onTaskDeleted, // This will just be a refresh callback
   onAddTask,
+  toggleTaskStatus, // Add status toggle handler
   assignPerson,
   removeAssignee,
   addCollaborator,
@@ -51,6 +53,7 @@ const TaskBoardContent = ({
         onTaskArchive={onTaskArchive}
         onTaskDeleted={onTaskDeleted} // Always () => void signature
         useContext={false}
+        toggleTaskStatus={toggleTaskStatus} // Pass status toggle handler
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}
@@ -65,6 +68,7 @@ const TaskBoardContent = ({
       onTaskClick,
       onTaskArchive,
       onTaskDeleted,
+      toggleTaskStatus, // Add to dependencies
       assignPerson,
       removeAssignee,
       addCollaborator,

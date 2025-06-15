@@ -13,6 +13,7 @@ interface TaskGroupSectionProps {
   onTaskArchive: (taskId: number) => void;
   onTaskDeleted: () => void;
   useContext: boolean;
+  toggleTaskStatus?: (taskId: number) => void; // Add optional toggle handler
   assignPerson: (taskId: string, person: TaskUser) => void;
   removeAssignee: (taskId: string) => void;
   addCollaborator: (taskId: string, person: TaskUser) => void;
@@ -28,6 +29,7 @@ const TaskGroupSection = ({
   onTaskArchive,
   onTaskDeleted,
   useContext,
+  toggleTaskStatus, // Add toggle handler
   assignPerson,
   removeAssignee,
   addCollaborator,
@@ -67,6 +69,7 @@ const TaskGroupSection = ({
         startEditingTask={startEditingTask}
         saveTaskEdit={saveTaskEdit}
         cancelTaskEdit={cancelTaskEdit}
+        toggleTaskStatus={toggleTaskStatus} // Pass toggle handler
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}
