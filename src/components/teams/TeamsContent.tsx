@@ -7,7 +7,6 @@ import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
-import { supabase } from "@/integrations/supabase/client";
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -27,7 +26,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const { projectId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(TEAM_USERS);
-  const [supabaseUsers, setSupabaseUsers] = useState<any[]>([]);
   const isMobile = useIsMobile();
 
   // For infinite scrolling

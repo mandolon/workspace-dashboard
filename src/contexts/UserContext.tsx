@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { User, UserContextType } from '@/types/user';
 import { TEAM_USERS } from '@/utils/teamUsers';
 import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
-import { supabase } from "@/integrations/supabase/client";
 
 const UserContext = createContext<UserContextType & {
   isImpersonating: boolean;
@@ -46,39 +45,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       avatarColor: custom.avatarColor || u.avatarColor || 'bg-gray-600'
     };
   };
-
-  // Fetch Supabase authenticated users for CRM display (async)
-  const [dbUsers, setDbUsers] = useState<any[]>([]);
-  useEffect(() => {
-    const loadDbUsers = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*");
-      if (!error && Array.isArray(data)) setDbUsers(data);
-    };
-    loadDbUsers();
-  }, []);
-
-  // Merge TEAM_USERS with new db users (CRM)
-  const mergedUsers = [
-    ...TEAM_USERS,
-    ...dbUsers
-      .filter(dbUser => !TEAM_USERS.some(u => u.email.toLowerCase() === (dbUser.email?.toLowerCase())))
-      .map(dbUser => ({
-        id: dbUser.id,
-        name: (dbUser.full_name?.split(" ")[0] ?? "User")[0] + (dbUser.full_name?.split(" ")[1]?.[0] ?? ""),
-        fullName: dbUser.full_name ?? "User",
-        role: "Admin",
-        email: dbUser.email ?? "unknown@email.com",
-        avatar: (dbUser.full_name?.split(" ")[0] ?? "U")[0] + (dbUser.full_name?.split(" ")[1]?.[0] ?? ""),
-        status: "online",
-        lastActive: "",
-        notificationsMuted: false,
-        showOnlineStatus: true,
-        showLastActive: true,
-        avatarColor: "bg-gray-700"
-      }))
-  ];
 
   // Load persisted userId
   const persistedUserId = typeof window !== "undefined" ? window.localStorage.getItem(LOCAL_STORAGE_KEY) : null;
