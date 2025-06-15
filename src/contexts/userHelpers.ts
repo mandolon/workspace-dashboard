@@ -1,5 +1,5 @@
 
-import { TEAM_USERS } from '@/utils/teamUsers';
+import { ADMIN_USERS, TEAM_USERS, CLIENT_USERS } from '@/utils/teamUsers';
 import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
 import { User } from '@/types/user';
 
@@ -21,7 +21,11 @@ export const getSupabaseUserToCtxUser = (supabaseUser: any): User => ({
 });
 
 export const findUserById = (userId: string): User | null => {
-  const u = TEAM_USERS.find(u => u.id === userId);
+  // Search in all user arrays
+  const u =
+    ADMIN_USERS.find(u => u.id === userId) ||
+    TEAM_USERS.find(u => u.id === userId) ||
+    CLIENT_USERS.find(u => u.id === userId);
   if (!u) return null;
   const custom = getUserCustomizations(userId);
   return {
