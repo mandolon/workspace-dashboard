@@ -1,4 +1,3 @@
-
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup, TaskUser } from '@/types/task';
@@ -20,9 +19,17 @@ export const useTaskBoard = () => {
   // Supabase powered task groups - depend on tasks for real-time updates
   const getTaskGroups = useCallback((): TaskGroup[] => {
     console.log('[useTaskBoard] Getting task groups from', tasks.length, 'tasks');
-    const centralizedRedline = tasks.filter(task => task.status === 'redline' && !task.archived && !task.deletedAt);
-    const centralizedProgress = tasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
-    const centralizedCompleted = tasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
+    // Filter tasks based on status, excluding soft-deleted tasks
+    const centralizedRedline = tasks.filter(task => 
+      task.status === 'redline' && !task.deletedAt && !task.archived
+    );
+    const centralizedProgress = tasks.filter(task => 
+      task.status === 'progress' && !task.deletedAt && !task.archived
+    );
+    // Show completed tasks regardless of archived status since they're intentionally archived
+    const centralizedCompleted = tasks.filter(task => 
+      task.status === 'completed' && !task.deletedAt
+    );
 
     const taskGroups: TaskGroup[] = [
       {

@@ -15,7 +15,7 @@ export function useRealtimeTasks() {
   // Only expose tasks that are not soft-deleted or archived
   const secureSetTasks = (allTasks: Task[]) => {
     const filtered = filterTasksForUser(
-      allTasks.filter(t => !t.deletedAt && !t.archived),
+      allTasks.filter(t => !t.deletedAt && (!t.archived || t.status === 'completed')),
       currentUser
     );
     console.log('[useRealtimeTasks] Setting tasks:', filtered.length, 'tasks');
@@ -74,11 +74,11 @@ export function useRealtimeTasks() {
           setTasks(prev => {
             const visible = canUserViewTask(task, currentUser);
             
-            // Hide if task is deleted, archived, or now invisible
-            if (task.deletedAt || task.archived || !visible.allowed) {
+            // Hide if task is deleted, or archived but NOT completed, or now invisible
+            if (task.deletedAt || (task.archived && task.status !== 'completed') || !visible.allowed) {
               const filtered = prev.filter(t => t.id !== task.id);
               console.log('[useRealtimeTasks] Hiding task:', task.taskId, 'Reason:', 
-                task.deletedAt ? 'deleted' : task.archived ? 'archived' : 'not visible');
+                task.deletedAt ? 'deleted' : (task.archived && task.status !== 'completed') ? 'archived (non-completed)' : 'not visible');
               return filtered;
             }
             
