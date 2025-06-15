@@ -7,7 +7,6 @@ import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
-import { useAdminUsers } from "@/hooks/useAdminUsers";
 
 interface TeamsContentProps {
   tab: "admin" | "team" | "client";
@@ -53,18 +52,10 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     );
   };
 
-  const { data: adminUsers, isLoading: adminsLoading } = useAdminUsers();
-
-  // Filtering by tab and search: update for live Admin fetching
-  let filteredMembers: TeamMember[] = [];
-
-  if (tab === "admin" && adminUsers) {
-    filteredMembers = adminUsers;
-  } else {
-    filteredMembers = teamMembers.filter(
-      m => getCrmRoleForTab(tab).includes(m.crmRole)
-    );
-  }
+  // Filtering by tab and search
+  let filteredMembers: TeamMember[] = teamMembers.filter(
+    m => getCrmRoleForTab(tab).includes(m.crmRole)
+  );
 
   let displayedMembers = filteredMembers.filter(member =>
     member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -108,9 +99,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         onSearchChange={setSearchTerm}
         isMobile={isMobile}
       />
-      {tab === "admin" && adminsLoading && (
-        <div className="p-4 text-center text-muted-foreground">Loading admins…</div>
-      )}
       {(!isMobile) ? (
         <ScrollArea className="h-96 w-full" type="always">
           <div ref={scrollContainerRef} style={{ maxHeight: 384, overflowY: 'auto' }}>

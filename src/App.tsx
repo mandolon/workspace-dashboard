@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -23,7 +24,6 @@ import ClientDashboard from "./pages/ClientDashboard";
 import AdminHelpPage from "./pages/AdminHelpPage";
 import TeamHelpPage from "./pages/TeamHelpPage";
 import ClientHelpPage from "./pages/ClientHelpPage";
-import AuthPage from "./pages/AuthPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ProjectDataProvider } from "./contexts/ProjectDataContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -74,9 +74,7 @@ const App = () => {
                   <LocationLogger />
                   <ImpersonationGate>
                     <Routes>
-                      <Route path="/auth" element={<AuthPage />} />
                       <Route path="/login" element={<LoginPage />} />
-                      {/* Now: All other routes require auth */}
                       <Route
                         path="/*"
                         element={

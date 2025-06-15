@@ -1,4 +1,3 @@
-
 import { ArchitectureRole } from './roles';
 
 // TeamUser for demo
@@ -25,7 +24,6 @@ export interface User {
   showOnlineStatus: boolean;
   showLastActive: boolean;
   avatarColor?: string; // ADDED
-  isAdmin?: boolean; // NEW: User's admin flag
 }
 
 export interface UserContextType {
@@ -34,4 +32,3 @@ export interface UserContextType {
   toggleNotifications: () => void;
   updateUser: (updates: Partial<User>) => void;
 }
-

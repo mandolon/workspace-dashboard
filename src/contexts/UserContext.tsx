@@ -1,133 +1,138 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { User as SupabaseUser, Session } from "@supabase/supabase-js";
-import { UserContextType, User } from "@/types/user";
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { User, UserContextType } from '@/types/user';
+import { TEAM_USERS } from '@/utils/teamUsers';
+import { getUserCustomizations, saveUserCustomizations } from '@/utils/userCustomizations';
 
-// Define exported context type with impersonation support
-type ImpersonationContext = {
+const UserContext = createContext<UserContextType & {
   isImpersonating: boolean;
   impersonatedUser: User | null;
   impersonateAs: (userId: string) => void;
   exitImpersonation: () => void;
-};
-
-// The augmented context type:
-const UserContext = createContext<
-  UserContextType &
-    ImpersonationContext & {
-      logout: () => void;
-      isAuthenticated: boolean;
-      session: Session | null;
-    } | undefined
->(undefined);
+  loginAs: (userId: string) => void;
+  logout: () => void;
+  isAuthenticated: boolean;
+} | undefined>(undefined);
 
 export const useUser = () => {
   const context = useContext(UserContext);
-  if (!context) throw new Error('useUser must be used within a UserProvider');
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
   return context;
 };
 
+const LOCAL_STORAGE_KEY = 'lovable-demo-auth-userid';
+
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  // Use avatarColor from TEAM_USERS (never from 'avatar' field!)
+  const findUserById = (userId: string): User | null => {
+    const u = TEAM_USERS.find(u => u.id === userId);
+    if (!u) return null;
+    const custom = getUserCustomizations(userId);
+    return {
+      id: u.id,
+      name: u.fullName,
+      email: u.email,
+      avatar: u.avatar,
+      status: u.status === "Active" ? "online" : u.status === "Inactive" ? "offline" : "away",
+      bio: "",
+      company: "",
+      role: u.role,
+      lastActive: u.lastActive || "",
+      notificationsMuted: false,
+      showOnlineStatus: true,
+      showLastActive: true,
+      avatarColor: custom.avatarColor || u.avatarColor || 'bg-gray-600'
+    };
+  };
+
+  // Load persisted userId
+  const persistedUserId = typeof window !== "undefined" ? window.localStorage.getItem(LOCAL_STORAGE_KEY) : null;
+  const defaultUser = persistedUserId ? findUserById(persistedUserId) : null;
+
+  // State: originalUser is the admin, currentUser is the logged-in user
+  const [originalUser, setOriginalUser] = useState<User | null>(defaultUser);
+  const [currentUser, setCurrentUser] = useState<User | null>(defaultUser);
+  const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // BEGIN: Impersonation stubs (no real functionality)
-  const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
-  const [isImpersonating, setIsImpersonating] = useState(false);
+  const isImpersonating = !!impersonatedUser;
+  const isAuthenticated = !!currentUser;
 
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  // Stub: Call to "impersonate" (does nothing for now)
-  const impersonateAs = (userId: string) => {
-    // Normally you'd setImpersonatedUser/fetch, for now just flag.
-    setIsImpersonating(true);
-    setImpersonatedUser(null); // You could fake a user here if you want
-  };
-  const exitImpersonation = () => {
-    setIsImpersonating(false);
-    setImpersonatedUser(null);
-  };
-  // END Impersonation stubs
-
-  useEffect(() => {
-    // 1. Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user || null);
-      setLoading(false);
-    });
-    // 2. Check current session
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user || null);
-      setLoading(false);
-    });
-    return () => { subscription.unsubscribe(); };
+  // Login as a given userId
+  const loginAs = useCallback((userId: string) => {
+    setLoading(true);
+    const user = findUserById(userId);
+    if (user) {
+      setOriginalUser(user);
+      setCurrentUser(user);
+      setImpersonatedUser(null);
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, userId);
+    }
+    setLoading(false);
   }, []);
 
-  // Fetch admin status for the current user (from user_roles table in Supabase)
-  useEffect(() => {
-    // Don't check while loading or if user not present
-    if (!user) {
-      setIsAdmin(false);
-      return;
+  // Logout: clear auth and session
+  const logout = useCallback(() => {
+    setOriginalUser(null);
+    setCurrentUser(null);
+    setImpersonatedUser(null);
+    window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }, []);
+
+  // Impersonation
+  const impersonateAs = useCallback((userId: string) => {
+    if (!originalUser || userId === originalUser.id) return;
+    const user = findUserById(userId);
+    if (user) {
+      setImpersonatedUser(user);
+      setCurrentUser(user);
     }
-    let isMounted = true;
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id);
-        if (error) throw error;
-        const isAdminFound = data?.some((row: any) => row.role === "admin");
-        if (isMounted) setIsAdmin(!!isAdminFound);
-      } catch (err) {
-        setIsAdmin(false);
-      }
-    })();
-    return () => { isMounted = false; };
-  }, [user]);
+  }, [originalUser]);
 
-  const isAuthenticated = !!user;
+  const exitImpersonation = useCallback(() => {
+    if (originalUser) {
+      setImpersonatedUser(null);
+      setCurrentUser(originalUser);
+    }
+  }, [originalUser]);
 
-  // Convert SupabaseUser to your local User type, fallback fields
-  const mapToAppUser = (u: SupabaseUser | null): User => ({
-    id: u?.id || "unknown",
-    name: u?.user_metadata?.full_name || u?.email || "Unnamed",
-    email: u?.email || "",
-    avatar: "", // Replace with avatar URL if available in profile/user_metadata
-    status: "online", // Fallback; app could actually derive from presence later
-    role: "Admin", // Fallback; replace with real role if applicable
-    lastActive: new Date().toISOString(),
-    notificationsMuted: false,
-    showOnlineStatus: true,
-    showLastActive: true,
-    company: "",
-    bio: "",
-    avatarColor: undefined,
-    isAdmin, // NEW: expose isAdmin
-  });
-
-  // This can be fleshed out with more fields per your needs
-  const contextValue = {
-    currentUser: mapToAppUser(isImpersonating ? null : user), // You may want to return impersonatedUser here if impersonating
-    updateUserStatus: () => {},
-    toggleNotifications: () => {},
-    updateUser: () => {},
-    logout: async () => {
-      await supabase.auth.signOut();
-      window.location.href = "/auth";
-    },
-    isAuthenticated,
-    session,
-    // ADD IMPERSONATION KEYS
-    isImpersonating,
-    impersonatedUser,
-    impersonateAs,
-    exitImpersonation,
+  // Basic "update" logic as before
+  const updateUserStatus = (status: User['status']) => {
+    setCurrentUser(prev => prev ? { ...prev, status } : prev);
   };
 
+  const toggleNotifications = () => {
+    setCurrentUser(prev => prev ? { ...prev, notificationsMuted: !prev.notificationsMuted } : prev);
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    setCurrentUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      if (updates.avatarColor && typeof window !== "undefined") {
+        saveUserCustomizations(prev.id, { avatarColor: updates.avatarColor });
+      }
+      return updated;
+    });
+  };
+
+  // Effect: Sync on mount with localStorage/user
+  useEffect(() => {
+    if (!currentUser && persistedUserId) {
+      const user = findUserById(persistedUserId);
+      if (user) {
+        setOriginalUser(user);
+        setCurrentUser(user);
+      }
+    } else if (currentUser) {
+    } else {
+    }
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // only run on mount
+
+  // Only render children once loading is done
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -137,5 +142,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
   }
 
-  return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{
+      currentUser,
+      updateUserStatus,
+      toggleNotifications,
+      updateUser,
+      isImpersonating,
+      impersonatedUser,
+      impersonateAs,
+      exitImpersonation,
+      loginAs,
+      logout,
+      isAuthenticated,
+    }}>
+      {children}
+    </UserContext.Provider>
+  );
 };

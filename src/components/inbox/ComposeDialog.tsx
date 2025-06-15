@@ -6,8 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import RecipientMultiSelect from "./RecipientMultiSelect";
-import { useSupabaseInbox } from "@/hooks/useSupabaseInbox";
-import { useToast } from "@/hooks/use-toast";
 
 interface ComposeDialogProps {
   isOpen: boolean;
@@ -29,9 +27,6 @@ interface Recipient {
 }
 
 const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
-  const { sendEmail } = useSupabaseInbox();
-  const { toast } = useToast();
-
   const [recipients, setRecipients] = useState<Recipient[]>(() =>
     replyTo && replyTo.senderEmail
       ? [{ id: replyTo.senderEmail, name: replyTo.sender, email: replyTo.senderEmail }]
@@ -49,47 +44,20 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
     setMessage('');
   };
 
-  const handleSend = async () => {
-    setError(null);
-
+  const handleSend = () => {
     if (recipients.length === 0) {
       setError("Please add at least one recipient.");
       return;
     }
-    if (!subject.trim()) {
-      setError("Please enter a subject.");
-      return;
-    }
-    if (!message.trim()) {
-      setError("Please enter a message.");
-      return;
-    }
-
+    // In a real app, this would send the email with recipient emails
     setSending(true);
-    try {
-      // Call sendEmail mutation
-      await sendEmail.mutateAsync({
-        to_emails: recipients.map(r => r.email),
-        subject: subject.trim(),
-        content: message,
-        status: "sent",
-      });
+    setTimeout(() => {
       setSending(false);
-      toast({
-        title: "Message sent!",
-        description: "Your email was delivered."
-      });
       onClose();
       resetFields();
-    } catch (err: any) {
-      setSending(false);
-      setError("Failed to send message. Please try again.");
-      toast({
-        title: "Error",
-        description: "Failed to send message.",
-        variant: "destructive"
-      });
-    }
+    }, 500);
+    setError(null);
+    // console.log('Sending email:', { to: recipients, subject, message });
   };
 
   return (
@@ -217,4 +185,3 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
 };
 
 export default ComposeDialog;
-
