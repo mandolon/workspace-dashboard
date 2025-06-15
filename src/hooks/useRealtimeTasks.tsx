@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -41,6 +42,13 @@ export function useRealtimeTasks() {
           const row = payload.new ?? payload.old;
           if (!row) return;
 
+          console.log("Supabase realtime event received:", {
+            eventType: payload.eventType,
+            row,
+            payload,
+            currentUser,
+          });
+
           setTasks(prev => {
             // Re-run filter on prev for safety
             const filteredPrev = filterTasksForUser(prev, currentUser);
@@ -59,12 +67,17 @@ export function useRealtimeTasks() {
             }
 
             if (payload.eventType === "INSERT") {
+              // Only add if not already present in state
               if (!filteredPrev.some(t => t.id === task.id)) {
+                // Debug
+                console.log("[Realtime] INSERT: Adding task to local state", task);
                 return [task, ...filteredPrev];
               }
               return filteredPrev;
             }
             if (payload.eventType === "UPDATE") {
+              // Debug
+              console.log("[Realtime] UPDATE: Updating existing task", task);
               const present = filteredPrev.some(t => t.id === task.id);
               if (present) {
                 return filteredPrev.map(t => (t.id === task.id ? task : t));
@@ -73,6 +86,8 @@ export function useRealtimeTasks() {
               return [task, ...filteredPrev];
             }
             if (payload.eventType === "DELETE") {
+              // Debug
+              console.log("[Realtime] DELETE: Removing task from local state", task);
               // Remove deleted task from filtered list
               return filteredPrev.filter(t => t.id !== task.id);
             }
@@ -90,3 +105,4 @@ export function useRealtimeTasks() {
 
   return { tasks, setTasks: secureSetTasks, loading };
 }
+
