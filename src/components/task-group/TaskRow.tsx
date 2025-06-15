@@ -121,7 +121,7 @@ const TaskRow = React.memo(({
         onTaskStatusClick={onTaskStatusClick}
         onContextMenuDelete={handleContextMenuDelete}
       >
-        <TableRow key={task.id} className="hover:bg-accent/50 group">
+        <TableRow key={task.id} className="hover:bg-accent/50">
           <TableCell className="py-2 w-[47%]">
             {rowContent}
           </TableCell>
