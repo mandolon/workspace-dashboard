@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import TaskTable from "./TaskTable";
 import AddTaskButton from "./AddTaskButton";
@@ -80,6 +81,8 @@ const TaskTableSection = ({
     removeCollaborator = propsRemoveCollaborator;
   }
 
+  console.log('[TaskTableSection] Editing state:', { editingTaskId, editingValue, useContext });
+
   const {
     visibleTasks,
     sortBy,
@@ -89,21 +92,6 @@ const TaskTableSection = ({
   } = useTaskSorting(group.tasks);
 
   const isShowingQuickAdd = showQuickAdd === group.status;
-
-  // Handler rewiring for correct signature everywhere
-  if (useContext) {
-    const ctx = useTaskContext();
-    // All context handlers below must have the correct signatures and should use task.taskId for upstream
-    assignPerson = ctx.assignPerson;
-    removeAssignee = ctx.removeAssignee;
-    addCollaborator = ctx.addCollaborator;
-    removeCollaborator = ctx.removeCollaborator;
-  } else {
-    assignPerson = propsAssignPerson;
-    removeAssignee = propsRemoveAssignee;
-    addCollaborator = propsAddCollaborator;
-    removeCollaborator = propsRemoveCollaborator;
-  }
 
   // Handle click outside to cancel quick add
   useEffect(() => {
