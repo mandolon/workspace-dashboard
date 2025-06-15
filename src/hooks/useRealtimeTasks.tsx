@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -111,14 +110,14 @@ export function useRealtimeTasks() {
           setTasks(prev => {
             // Hide if task is deleted, or archived but NOT completed, or not visible
             if (task.deletedAt || (task.archived && task.status !== 'completed') || !visibility.allowed) {
-              const filtered = prev.filter(t => t.id !== task.id);
+              const filtered = prev.filter(t => t.taskId !== task.taskId);
               console.log('[useRealtimeTasks] Hiding task:', task.taskId, 'Reason:', 
                 task.deletedAt ? 'deleted' : (task.archived && task.status !== 'completed') ? 'archived (non-completed)' : 'not visible to user');
               return filtered;
             }
             
             if (payload.eventType === "INSERT") {
-              if (!prev.some(t => t.id === task.id)) {
+              if (!prev.some(t => t.taskId === task.taskId)) {
                 console.log('[useRealtimeTasks] Adding new task:', {
                   taskId: task.taskId,
                   title: task.title,
@@ -136,7 +135,7 @@ export function useRealtimeTasks() {
             }
             
             if (payload.eventType === "UPDATE") {
-              const taskIndex = prev.findIndex(t => t.id === task.id);
+              const taskIndex = prev.findIndex(t => t.taskId === task.taskId);
               if (taskIndex >= 0) {
                 console.log('[useRealtimeTasks] Updating existing task:', task.taskId, task.title);
                 const updated = [...prev];
@@ -150,7 +149,7 @@ export function useRealtimeTasks() {
             
             if (payload.eventType === "DELETE") {
               console.log('[useRealtimeTasks] Deleting task:', task.taskId);
-              return prev.filter(t => t.id !== task.id);
+              return prev.filter(t => t.taskId !== task.taskId);
             }
             
             console.warn('[useRealtimeTasks] Unknown event type:', payload.eventType);
