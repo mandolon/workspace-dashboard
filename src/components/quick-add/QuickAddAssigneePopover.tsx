@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -50,23 +51,11 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
             data-testid="assign-button"
           >
             {assigneeWithColor ? (
-              <>
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
-                >
-                  {assigneeWithColor.name}
-                </div>
-                <button
-                  type="button"
-                  className="absolute -top-1.5 -right-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1"
-                  style={{ lineHeight: 1, fontSize: 13 }}
-                  onClick={e => { e.stopPropagation(); setAssignee(null); }}
-                  tabIndex={-1}
-                  title="Clear assignee"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </>
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-medium ${getAvatarColor(assigneeWithColor)}`}
+              >
+                {assigneeWithColor.name}
+              </div>
             ) : (
               <span className="w-7 h-7 flex items-center justify-center rounded-full bg-muted">
                 <Users className="w-4 h-4 text-muted-foreground" />
@@ -102,6 +91,16 @@ const QuickAddAssigneePopover: React.FC<QuickAddAssigneePopoverProps> = ({
           </div>
         </PopoverContent>
       </Popover>
+      {assigneeWithColor && (
+        <div
+          className="absolute -top-1.5 -right-1 rounded-full bg-muted/90 text-xs text-destructive hover:bg-destructive hover:text-white px-1 cursor-pointer"
+          style={{ lineHeight: 1, fontSize: 13 }}
+          onClick={e => { e.stopPropagation(); setAssignee(null); }}
+          title="Clear assignee"
+        >
+          <X className="w-3 h-3" />
+        </div>
+      )}
     </div>
   );
 };
