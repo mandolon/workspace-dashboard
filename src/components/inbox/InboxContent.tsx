@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import EmailDetail from '@/components/EmailDetail';
 import InboxToolbar from './InboxToolbar';
@@ -24,25 +23,27 @@ interface InboxContentProps {
   error?: Error | null;
 }
 
-const InboxContent = React.memo(({
-  selectedEmails,
-  selectedEmail,
-  activeTab,
-  currentPage,
-  totalPages,
-  filteredEmails,
-  currentEmail,
-  unreadCount,
-  onSelectEmail,
-  onSelectAll,
-  onEmailClick,
-  onBackToList,
-  onTabChange,
-  onPageChange,
-  isLoading,
-  error,
-}: InboxContentProps) => {
-  const emailDetailContent = useMemo(() => {
+const InboxContent = React.memo((props: InboxContentProps) => {
+  const {
+    selectedEmails,
+    selectedEmail,
+    activeTab,
+    currentPage,
+    totalPages,
+    filteredEmails,
+    currentEmail,
+    unreadCount,
+    onSelectEmail,
+    onSelectAll,
+    onEmailClick,
+    onBackToList,
+    onTabChange,
+    onPageChange,
+    isLoading,
+    error,
+  } = props;
+
+  const emailDetailContent = React.useMemo(() => {
     if (selectedEmail && currentEmail) {
       return (
         <div className="h-full">
@@ -66,10 +67,25 @@ const InboxContent = React.memo(({
     );
   }
 
+  // Improved error handling and user guidance for non-UUID login flow
   if (error) {
+    let extra = null;
+    if (
+      typeof error.message === "string" &&
+      error.message.includes("user ID is not a real Supabase UUID")
+    ) {
+      extra = (
+        <div className="text-xs text-muted-foreground mt-2 max-w-md text-center">
+          Your current user ID is not a real Supabase UID, so emails cannot be loaded from the database.<br />
+          To see real email data, please set up Supabase Auth and log in as a real user.<br />
+          (Demo logins using "t0", "t1", etc. are not UUIDs and will not work with database-secured queries.)
+        </div>
+      );
+    }
     return (
       <div className="flex-1 flex flex-col items-center justify-center">
         <span className="text-sm text-red-500">Error loading emails.</span>
+        {extra}
       </div>
     );
   }
@@ -97,4 +113,3 @@ const InboxContent = React.memo(({
 InboxContent.displayName = 'InboxContent';
 
 export default InboxContent;
-
