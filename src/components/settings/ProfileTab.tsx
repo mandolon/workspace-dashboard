@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +9,7 @@ import { useUser } from '@/contexts/UserContext';
 import { ARCHITECTURE_ROLES, ROLE_DISPLAY_NAMES } from '@/types/roles';
 import AvatarUpload from './AvatarUpload';
 import DisplayPreferences from './DisplayPreferences';
+import { supabase } from '@/integrations/supabase/client';
 
 const AVATAR_COLORS = [
   'bg-blue-500',
@@ -23,7 +25,7 @@ const AVATAR_COLORS = [
 ];
 
 const ProfileTab = () => {
-  const { currentUser, updateUser } = useUser();
+  const { currentUser, updateUser, supabaseUserId } = useUser();
   const [formData, setFormData] = useState({
     name: currentUser.name,
     bio: currentUser.bio || '',
@@ -31,8 +33,9 @@ const ProfileTab = () => {
     role: currentUser.role,
     showOnlineStatus: currentUser.showOnlineStatus,
     showLastActive: currentUser.showLastActive,
-    avatarColor: currentUser.avatarColor || 'bg-blue-500', // new
+    avatarColor: currentUser.avatarColor || 'bg-blue-500',
   });
+  const [saving, setSaving] = useState(false);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -47,8 +50,36 @@ const ProfileTab = () => {
     setFormData(prev => ({ ...prev, avatarColor: color }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setSaving(true);
+    // Update local user context
     updateUser(formData);
+
+    // If Supabase user, update profile in Supabase
+    if (supabaseUserId) {
+      // Only update full_name, company, bio for demo, but you could extend this
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: formData.name,
+          company: formData.company,
+          bio: formData.bio,
+          // Optionally add avatar_url if your schema supports it
+        })
+        .eq('id', supabaseUserId);
+
+      if (error) {
+        // Show a toast if you want (you could import/use-toast)
+        alert('Failed to update your profile in Supabase');
+        console.error('Supabase update error:', error);
+      } else {
+        // Optionally: show toast success here
+        // If you want, refetch the profile or reload
+        // For demo, just log it
+        console.log('Supabase profile updated.');
+      }
+    }
+    setSaving(false);
     console.log('Profile updated:', formData);
   };
 
@@ -56,7 +87,6 @@ const ProfileTab = () => {
     <div className="p-6 max-w-2xl">
       <div className="space-y-6">
         <AvatarUpload user={currentUser} onAvatarChange={handleAvatarChange} />
-
         <div className="space-y-4">
           {/* Avatar color picker */}
           <div>
@@ -78,7 +108,6 @@ const ProfileTab = () => {
               ))}
             </div>
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Full Name</Label>
@@ -87,6 +116,7 @@ const ProfileTab = () => {
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 className="mt-1"
+                disabled={saving}
               />
             </div>
             <div>
@@ -113,9 +143,9 @@ const ProfileTab = () => {
               onChange={(e) => handleInputChange('company', e.target.value)}
               className="mt-1"
               placeholder="Enter your company name"
+              disabled={saving}
             />
           </div>
-
           <div>
             <Label htmlFor="bio">Bio</Label>
             <Textarea
@@ -125,6 +155,7 @@ const ProfileTab = () => {
               className="mt-1"
               rows={3}
               placeholder="Tell us about yourself..."
+              disabled={saving}
             />
           </div>
         </div>
@@ -135,8 +166,8 @@ const ProfileTab = () => {
           onShowLastActiveChange={(value) => handleInputChange('showLastActive', value)}
         />
         <div className="flex justify-end">
-          <Button onClick={handleSave}>
-            Save changes
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving...' : 'Save changes'}
           </Button>
         </div>
       </div>
