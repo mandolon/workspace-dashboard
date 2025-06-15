@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Edit, Check, Trash2 } from 'lucide-react';
 import {
   ContextMenu,
@@ -25,37 +25,27 @@ const TaskRowContextMenu = ({
   onTaskStatusClick,
   onContextMenuDelete
 }: TaskRowContextMenuProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleDuplicateTask = () => {
     console.log('Duplicating task:', task.id);
-    setIsOpen(false);
   };
 
   const handleMarkComplete = () => {
     onTaskStatusClick(task.id);
-    setIsOpen(false);
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEditClick(task, e as any);
-    setIsOpen(false);
   };
 
-  // Close menu and trigger delete
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsOpen(false); // Close menu immediately
-    // Small delay to ensure menu closes before dialog opens
-    setTimeout(() => {
-      onContextMenuDelete(e);
-    }, 0);
+    onContextMenuDelete(e);
   };
 
   return (
-    <ContextMenu open={isOpen} onOpenChange={setIsOpen}>
+    <ContextMenu>
       <ContextMenuTrigger asChild>
         {children}
       </ContextMenuTrigger>
