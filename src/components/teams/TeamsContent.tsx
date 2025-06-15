@@ -106,15 +106,16 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     ADMIN_USERS.forEach(u =>
       adminLookup.set((u.email ?? "").toLowerCase(), true)
     );
-    const supabaseAdminMembers = supabaseAdmins
+    const supabaseAdminMembers: TeamMember[] = supabaseAdmins
       .filter(a => !!a.email && !adminLookup.has(a.email.toLowerCase()))
       .map(a => ({
         id: a.id,
         name: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
         fullName: a.full_name || a.email || "Unknown User",
         crmRole: "Admin" as const,
+        titleRole: undefined,
         lastActive: "—",
-        status: "Active",
+        status: "Active" as const,
         email: a.email || "",
         avatar: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
         avatarColor: "bg-blue-700"
