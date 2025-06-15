@@ -28,6 +28,18 @@ interface TaskDialogActionsProps {
   onCreateTask: (attachments?: File[]) => void;
 }
 
+// Helper: Convert TeamMember to TeamUser with proper .role
+function teamMemberToTeamUser(member: typeof TEAM_USERS[number]): TeamUser {
+  return {
+    id: member.id,
+    name: member.name,
+    fullName: member.fullName,
+    role: member.titleRole ?? "Team Lead",
+    avatar: member.avatar,
+    avatarColor: member.avatarColor
+  };
+}
+
 // Only use TEAM members for assignment dropdown
 const teamAssignees = TEAM_USERS;
 
@@ -66,9 +78,9 @@ const TaskDialogActions = ({
         <Select 
           value={selectValue}
           onValueChange={value => {
-            // Always set full teamAssignees object as assignee
+            // Always set full teamAssignees object as assignee, but as TeamUser type
             const found = teamAssignees.find(u => u.id === value);
-            setAssignedTo(found ? { ...found } : teamAssignees[0]);
+            setAssignedTo(found ? teamMemberToTeamUser(found) : teamMemberToTeamUser(teamAssignees[0]));
           }}
         >
           <SelectTrigger className="w-28 h-7 text-xs">

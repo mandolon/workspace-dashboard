@@ -12,7 +12,7 @@ export const getSupabaseUserToCtxUser = (supabaseUser: any): User => ({
   status: 'online',
   bio: '',
   company: '',
-  role: 'Admin',
+  role: "Admin",
   lastActive: new Date().toISOString(),
   notificationsMuted: false,
   showOnlineStatus: true,
@@ -36,7 +36,8 @@ export const findUserById = (userId: string): User | null => {
     status: u.status === "Active" ? "online" : u.status === "Inactive" ? "offline" : "away",
     bio: "",
     company: "",
-    role: u.role,
+    // Use titleRole if present (for team), else fallback to crmRole, else blank
+    role: (u.titleRole as string) || u.crmRole || "",
     lastActive: u.lastActive || "",
     notificationsMuted: false,
     showOnlineStatus: true,

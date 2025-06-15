@@ -85,7 +85,7 @@ const LoginPage: React.FC = () => {
             <option value="">Choose a user...</option>
             {ALL_USERS.map(u => (
               <option key={u.id} value={u.id}>
-                {u.fullName} ({u.role})
+                {u.fullName} ({u.crmRole})
               </option>
             ))}
           </select>
