@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useUser } from "@/contexts/UserContext";
 import { TEAM_USERS, ALL_USERS } from "@/utils/teamUsers";
@@ -5,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const { loginAs, isAuthenticated } = useUser();
+  const { loginAs, isAuthenticated, updateUser } = useUser();
   const [selectedId, setSelectedId] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [customFullName, setCustomFullName] = useState("");
+  const [customEmail, setCustomEmail] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,12 +19,32 @@ const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // Get the selected user for default values
+  const selectedUser = ALL_USERS.find(u => u.id === selectedId);
+
+  // When user selection changes, set custom fields default to selected user data
+  useEffect(() => {
+    if (selectedUser) {
+      setCustomFullName(selectedUser.fullName);
+      setCustomEmail(selectedUser.email);
+    } else {
+      setCustomFullName("");
+      setCustomEmail("");
+    }
+  }, [selectedUser]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedId) {
       setSubmitting(true);
       loginAs(selectedId);
+      // After logging in, override name/email in demo context
       setTimeout(() => {
+        // Use updateUser to change name & email in context
+        updateUser({
+          name: customFullName,
+          email: customEmail,
+        });
         setSubmitting(false);
         navigate("/dashboard", { replace: true });
       }, 200);
@@ -66,6 +89,38 @@ const LoginPage: React.FC = () => {
               </option>
             ))}
           </select>
+          {/* Show only if a user is selected */}
+          {selectedId && (
+            <>
+              <label className="text-sm" htmlFor="custom-fullname">
+                Full Name:
+              </label>
+              <input
+                id="custom-fullname"
+                className="rounded border border-input px-3 py-2 bg-background dark:bg-neutral-800"
+                type="text"
+                value={customFullName}
+                onChange={e => setCustomFullName(e.target.value)}
+                disabled={submitting}
+                required
+                placeholder="Full Name"
+              />
+              <label className="text-sm" htmlFor="custom-email">
+                Email:
+              </label>
+              <input
+                id="custom-email"
+                className="rounded border border-input px-3 py-2 bg-background dark:bg-neutral-800"
+                type="email"
+                value={customEmail}
+                onChange={e => setCustomEmail(e.target.value)}
+                disabled={submitting}
+                required
+                placeholder="Email"
+                autoComplete="username"
+              />
+            </>
+          )}
           <Button type="submit" disabled={!selectedId || submitting} className="mt-2 w-full">
             {submitting ? "Logging in..." : "Log In"}
           </Button>
@@ -91,3 +146,4 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+
