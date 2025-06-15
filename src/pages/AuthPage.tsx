@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -118,22 +117,20 @@ const AuthPage: React.FC = () => {
           </p>
         </div>
         <form className="flex flex-col gap-3" onSubmit={isLoginPage ? handleLogin : handleSignUp}>
-          {!isLoginPage && (
-            <>
-              <label className="text-sm" htmlFor="full-name">Full Name</label>
-              <Input
-                id="full-name"
-                autoComplete="name"
-                type="text"
-                value={fullName}
-                onChange={e => setFullName(e.target.value)}
-                disabled={loading}
-                required
-                className="mb-2"
-                placeholder="Enter your full name"
-              />
-            </>
-          )}
+          <>
+            <label className="text-sm" htmlFor="full-name">Full Name</label>
+            <Input
+              id="full-name"
+              autoComplete="name"
+              type="text"
+              value={fullName}
+              onChange={e => setFullName(e.target.value)}
+              disabled={loading}
+              required
+              className="mb-2"
+              placeholder="Enter your full name"
+            />
+          </>
           <label className="text-sm" htmlFor="email">Email</label>
           <Input
             id="email"
