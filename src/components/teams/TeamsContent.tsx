@@ -112,7 +112,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         id: a.id,
         name: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
         fullName: a.full_name || a.email || "Unknown User",
-        crmRole: "Admin",
+        crmRole: "Admin" as const,
         lastActive: "—",
         status: "Active",
         email: a.email || "",
