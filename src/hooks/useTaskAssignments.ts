@@ -1,14 +1,11 @@
 
-import { useCallback } from 'react';
-import { Task } from '@/types/task';
-import { getTasksByStatus } from '@/data/taskData';
-
+// ... imports
 export const useTaskAssignments = (
   customTasks: Task[],
   updateTaskById: (taskId: number, updates: Partial<Task>) => void
 ) => {
   // Accept taskId as string everywhere and handle both cases
-  const assignPerson = useCallback((taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+  const assignPerson = useCallback((taskId: string, person: { name: string; fullName?: string; avatarUrl?: string; avatarColor?: string; initials: string }) => {
     const taskNumericId = Number(taskId);
     updateTaskById(taskNumericId, { assignee: person });
     console.log(`Assigned ${person.fullName || person.name} to task ${taskId}`);
@@ -20,7 +17,7 @@ export const useTaskAssignments = (
     console.log(`Removed assignee from task ${taskId}`);
   }, [updateTaskById]);
 
-  const addCollaborator = useCallback((taskId: string, person: { name: string; avatar: string; fullName?: string }) => {
+  const addCollaborator = useCallback((taskId: string, person: { name: string; fullName?: string; avatarUrl?: string; avatarColor?: string; initials: string }) => {
     const taskNumericId = Number(taskId);
     const centralizedTask = getTasksByStatus('redline').concat(getTasksByStatus('progress')).concat(getTasksByStatus('completed')).find(t => t.id === taskNumericId);
     const customTask = customTasks.find(t => t.id === taskNumericId);

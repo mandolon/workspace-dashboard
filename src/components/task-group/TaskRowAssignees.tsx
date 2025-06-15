@@ -1,12 +1,10 @@
 
 import React, { useState } from 'react';
-import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
 import { X, Plus } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { TEAM_USERS } from "@/utils/teamUsers";
 import { getCRMUser } from '@/utils/taskUserCRM';
-import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TaskRowAssigneesProps {
   task: any;
@@ -40,26 +38,24 @@ const TaskRowAssignees = ({
 
   const handleAdd = (person: any) => {
     if (!assignee) {
-      console.info("AssignPerson handler called with: ", person);
       onAssignPerson(task.taskId, person);
     } else {
-      console.info("AddCollaborator handler called with: ", person);
       onAddCollaborator(task.taskId, person);
     }
     setOpen(false);
   };
 
+  const avatarColor = (person: any) => person?.avatarColor || "bg-blue-500";
+
   return (
     <div className="flex items-center -space-x-1 relative">
-      {/* ASSIGNEE */}
       {assignee && (
         <div className="relative group" title={assignee.fullName || assignee.name}>
           <div
-            className={`${getAvatarColor(assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
+            className={`${avatarColor(assignee)} w-7 h-7 rounded-full text-white font-semibold flex items-center justify-center border-2 border-background`}
           >
             {getInitials(assignee.fullName ?? assignee.name)}
           </div>
-          {/* Remove Assignee Button */}
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
@@ -71,15 +67,13 @@ const TaskRowAssignees = ({
           </button>
         </div>
       )}
-      {/* COLLABORATORS */}
       {collaborators?.map((collaborator: any, idx: number) => collaborator && (
         <div className="relative group" key={idx} title={collaborator.fullName || collaborator.name}>
           <div
-            className={`${getAvatarColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
+            className={`${avatarColor(collaborator)} w-7 h-7 rounded-full text-white font-semibold flex items-center justify-center border-2 border-background`}
           >
             {getInitials(collaborator.fullName ?? collaborator.name)}
           </div>
-          {/* Remove Collaborator Button */}
           <button
             className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-border p-0 flex items-center justify-center text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             style={{lineHeight: 1}}
@@ -91,7 +85,6 @@ const TaskRowAssignees = ({
           </button>
         </div>
       ))}
-      {/* ADD PERSON ("+") BUTTON */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
@@ -117,7 +110,7 @@ const TaskRowAssignees = ({
                   onClick={(e) => { e.stopPropagation(); handleAdd(personWithColor); }}
                   type="button"
                 >
-                  <div className={`w-5 h-5 rounded-full text-white flex items-center justify-center text-xs font-medium ${getAvatarColor(personWithColor)}`}>
+                  <div className={`w-5 h-5 rounded-full text-white font-semibold flex items-center justify-center ${avatarColor(personWithColor)}`}>
                     {getInitials(personWithColor.fullName || personWithColor.name)}
                   </div>
                   <span>{personWithColor.fullName || personWithColor.name}</span>
@@ -135,4 +128,3 @@ const TaskRowAssignees = ({
 };
 
 export default TaskRowAssignees;
-

@@ -10,9 +10,7 @@ import {
 } from '@/components/ui/context-menu';
 import TasksTabStatusIcon from './TasksTabStatusIcon';
 import { formatDate, getInitials } from '@/utils/taskUtils';
-import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getCRMUser } from '@/utils/taskUserCRM';
-import { getAvatarColor } from '@/utils/avatarColors';
 
 interface TasksTabRowProps {
   task: any; // Consider defining a more specific type for task if possible
@@ -24,6 +22,7 @@ interface TasksTabRowProps {
 const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: TasksTabRowProps) => {
   const formattedDate = formatDate(task.dateCreated);
   const assignee = getCRMUser(task.assignee);
+  const avatarColor = (user: any) => user?.avatarColor || "bg-blue-500";
 
   return (
     <ContextMenu>
@@ -54,7 +53,7 @@ const TasksTabRow = ({ task, onTaskClick, onDeleteClick, onContextMenuDelete }: 
           <div className="col-span-3 flex items-center justify-between">
             <div className="flex items-center -space-x-1">
               {assignee && (
-                <div className={`w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getAvatarColor(assignee)}`}>
+                <div className={`w-7 h-7 rounded-full text-white font-semibold flex items-center justify-center ${avatarColor(assignee)}`}>
                   {getInitials(assignee.fullName ?? assignee.name)}
                 </div>
               )}

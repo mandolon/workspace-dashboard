@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
@@ -76,8 +75,9 @@ const RecipientMultiSelect: React.FC<RecipientMultiSelectProps> = ({ value, onCh
                 className="flex items-center gap-2 w-full px-2 py-1.5 rounded hover:bg-gray-100 transition-colors"
                 tabIndex={-1}
               >
-                <span className="h-7 w-7 flex items-center justify-center rounded-full bg-gray-200 mr-2">
-                  {user.avatar}
+                <span className="h-7 w-7 flex items-center justify-center rounded-full bg-gray-200 mr-2 text-xs font-semibold">
+                  {/* Present the user's initials or the first letter of their name */}
+                  {user.initials || (user.fullName?.charAt(0) ?? user.name?.charAt(0) ?? '?')}
                 </span>
                 <span className="text-sm font-medium">{user.fullName}</span>
                 <span className="text-xs text-muted-foreground">{user.email}</span>

@@ -13,21 +13,22 @@ export function getCRMUser(person?: TaskUser | null): TaskUser | null {
     u => u.name === person.name || u.fullName === person.fullName
   );
   if (match) {
-    // Use CRM/TEAM_USERS properties, override with custom avatarColor from localStorage
     const custom = getUserCustomizations(match.id);
     return {
       ...match,
-      avatar: match.avatar || person.avatar,
+      avatarUrl: match.avatarUrl || person.avatarUrl,
       avatarColor: custom.avatarColor || match.avatarColor,
+      initials: match.initials || person.initials || '',
     };
   }
-  // If not a match, try to inject any custom color by id if possible
   if (person.id) {
     const custom = getUserCustomizations(person.id);
     return {
       ...person,
       avatarColor: custom.avatarColor || person.avatarColor,
+      initials: person.initials || '',
     };
   }
   return person;
 }
+

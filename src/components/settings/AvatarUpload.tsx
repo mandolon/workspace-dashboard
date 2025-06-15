@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Upload } from 'lucide-react';
 import { User } from '@/types/user';
@@ -34,7 +33,7 @@ const AvatarUpload = ({ user, onAvatarChange }: AvatarUploadProps) => {
         avatarUrl={user.avatarUrl}
         color={user.avatarColor || 'bg-blue-500'}
         size={64}
-        alt={user.fullName || user.name}
+        alt={user.name}
       />
       <div>
         <button

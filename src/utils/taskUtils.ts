@@ -1,5 +1,4 @@
-
-export { getAvatarColor } from './avatarColors';
+import { getAvatarColor } from './avatarColors';
 
 export const getInitials = (name: string) => {
   if (!name) return '';
@@ -23,7 +22,6 @@ export const formatDate = (dateString: string) => {
   }
 };
 
-// Format "FirstName L." from "FirstName LastName"
 export const formatFirstNameLastInitial = (fullNameOrName: string): string => {
   if (!fullNameOrName || typeof fullNameOrName !== "string") return "";
   const parts = fullNameOrName.trim().split(" ").filter(Boolean);
@@ -36,8 +34,6 @@ export const formatFirstNameLastInitial = (fullNameOrName: string): string => {
   return `${first} ${lastInitial}.`;
 };
 
-// Now consistently use 'avatarColor' for color property (for all available people)
-// 'avatar' property is for displaying initials only (for legacy fallback).
 export const availablePeople = [
   { name: "MP", avatar: "MP", fullName: "Marcus Pierce", avatarColor: "bg-blue-500" },
   { name: "JD", avatar: "JD", fullName: "Jennifer Davis", avatarColor: "bg-green-500" },
@@ -45,4 +41,3 @@ export const availablePeople = [
   { name: "AL", avatar: "AL", fullName: "Alex Lopez", avatarColor: "bg-orange-500" },
   { name: "RT", avatar: "RT", fullName: "Ryan Taylor", avatarColor: "bg-red-500" }
 ];
-
