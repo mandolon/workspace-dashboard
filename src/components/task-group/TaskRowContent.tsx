@@ -89,7 +89,6 @@ const TaskRowContent = React.memo(({
       <TaskStatusIcon 
         status={task.status} 
         onClick={handleStatusClick}
-        showLabel={true}
       />
       <div className="flex-1">
         {isEditing ? (
