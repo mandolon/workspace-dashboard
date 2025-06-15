@@ -10,6 +10,7 @@ export function useRealtimeTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const loadingRef = useRef(false);
+  const channelRef = useRef<any>(null);
   const { currentUser } = useUser();
 
   // Only expose tasks that are not soft-deleted or archived
@@ -43,11 +44,22 @@ export function useRealtimeTasks() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-  // Real-time subscription
+  // Real-time subscription - separate effect to avoid duplicate subscriptions
   useEffect(() => {
+    // Clean up existing channel if it exists
+    if (channelRef.current) {
+      console.log('[useRealtimeTasks] Cleaning up existing channel');
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+
     console.log('[useRealtimeTasks] Setting up real-time subscription...');
-    const channel = supabase
-      .channel("public-tasks-change")
+    
+    // Create a unique channel name to avoid conflicts
+    const channelName = `public-tasks-change-${Date.now()}-${Math.random()}`;
+    const channel = supabase.channel(channelName);
+    
+    channel
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
@@ -118,9 +130,15 @@ export function useRealtimeTasks() {
         console.log('[useRealtimeTasks] Subscription status:', status);
       });
 
+    // Store the channel reference
+    channelRef.current = channel;
+
     return () => {
       console.log('[useRealtimeTasks] Cleaning up real-time subscription');
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
