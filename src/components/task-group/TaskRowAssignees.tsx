@@ -10,8 +10,8 @@ interface TaskRowAssigneesProps {
   task: any;
   onRemoveAssignee: (taskId: string, e: React.MouseEvent) => void;
   onRemoveCollaborator: (taskId: string, collaboratorIndex: number, e: React.MouseEvent) => void;
-  onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
-  onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string }) => void;
+  onAssignPerson: (taskId: string, person: { name: string; avatar: string; fullName?: string; initials?: string }) => void;
+  onAddCollaborator: (taskId: string, person: { name: string; avatar: string; fullName?: string; initials?: string }) => void;
 }
 
 const TaskRowAssignees = ({
@@ -36,11 +36,36 @@ const TaskRowAssignees = ({
     .filter(u => u.crmRole === 'Team')
     .filter(u => !assignedIds.includes(u.name));
 
+  // always build a proper TaskUser with initials for any assignment
+  const buildTaskUser = (person: any) => {
+    return {
+      name: person.name,
+      fullName: person.fullName,
+      avatar: person.avatar ?? person.avatarUrl ?? '',
+      initials: person.initials || getInitials(person.fullName || person.name || ''),
+    };
+  };
+
   const handleAdd = (person: any) => {
-    if (!assignee) {
-      onAssignPerson(task.taskId, person);
-    } else {
-      onAddCollaborator(task.taskId, person);
+    const properUser = buildTaskUser(person);
+    try {
+      if (!assignee) {
+        onAssignPerson(task.taskId, properUser);
+      } else {
+        onAddCollaborator(task.taskId, properUser);
+      }
+    } catch (err) {
+      // Display error in UI if possible (if using shadcn/ui toast)
+      if (window && "toast" in window) {
+        (window as any).toast &&
+          (window as any).toast({
+            title: "Failed to assign user",
+            description: err instanceof Error ? err.message : String(err),
+            variant: "destructive",
+          });
+      }
+      // Also log error
+      console.error("Assignment error", err);
     }
     setOpen(false);
   };
@@ -128,3 +153,4 @@ const TaskRowAssignees = ({
 };
 
 export default TaskRowAssignees;
+
