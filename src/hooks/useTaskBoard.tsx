@@ -1,3 +1,4 @@
+
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup, TaskUser } from '@/types/task';
@@ -5,11 +6,6 @@ import { useUser } from '@/contexts/UserContext';
 import { useRealtimeTasks } from './useRealtimeTasks';
 import { insertTask, updateTaskSupabase, deleteTaskSupabase } from '@/data/taskSupabase';
 import { nanoid } from "nanoid";
-
-// New: helper to deep copy and update list
-function updateTaskInList(tasks: Task[], taskId: string, updater: (t: Task) => Task) {
-  return tasks.map(t => t.taskId === taskId ? updater(t) : t);
-}
 
 export const useTaskBoard = () => {
   const navigate = useNavigate();
@@ -19,10 +15,9 @@ export const useTaskBoard = () => {
   // Dialog/quick add state
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState<string | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Supabase powered task groups
-  const getTaskGroups = (): TaskGroup[] => {
+  // Supabase powered task groups - depend on tasks for real-time updates
+  const getTaskGroups = useCallback((): TaskGroup[] => {
     const centralizedRedline = tasks.filter(task => task.status === 'redline' && !task.archived && !task.deletedAt);
     const centralizedProgress = tasks.filter(task => task.status === 'progress' && !task.archived && !task.deletedAt);
     const centralizedCompleted = tasks.filter(task => task.status === 'completed' && !task.archived && !task.deletedAt);
@@ -51,7 +46,7 @@ export const useTaskBoard = () => {
       }
     ];
     return taskGroups;
-  };
+  }, [tasks]);
 
   // Generate a new taskId for every task insert
   const generateTaskId = () => "T" + Math.floor(Math.random() * 100000).toString().padStart(4, "0");
@@ -132,7 +127,6 @@ export const useTaskBoard = () => {
     setIsTaskDialogOpen,
     showQuickAdd,
     setShowQuickAdd,
-    refreshTrigger,
     getTaskGroups,
     handleCreateTask,
     handleQuickAddSave,

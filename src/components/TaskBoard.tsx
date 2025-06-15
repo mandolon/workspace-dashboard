@@ -14,7 +14,6 @@ const TaskBoard: React.FC = React.memo(() => {
     setIsTaskDialogOpen,
     showQuickAdd,
     setShowQuickAdd,
-    refreshTrigger,
     getTaskGroups,
     handleCreateTask,
     handleQuickAddSave,
@@ -24,6 +23,7 @@ const TaskBoard: React.FC = React.memo(() => {
     removeAssignee,
     addCollaborator,
     removeCollaborator,
+    supabaseTasks, // Use real-time tasks directly
   } = useTaskBoard();
   const { addAttachments } = useTaskAttachmentContext();
 
@@ -33,8 +33,8 @@ const TaskBoard: React.FC = React.memo(() => {
     isDeleting,
   } = useTaskDeletion();
 
-  // Board tasks
-  const taskGroups = React.useMemo(() => getTaskGroups(), [getTaskGroups, refreshTrigger]);
+  // Board tasks - use supabaseTasks directly for real-time updates
+  const taskGroups = React.useMemo(() => getTaskGroups(), [getTaskGroups, supabaseTasks]);
 
   // Quick Add handles attachments as in Supabase system
   const onQuickAddSave = React.useCallback(async (taskData: any) => {
@@ -93,7 +93,7 @@ const TaskBoard: React.FC = React.memo(() => {
       <TaskBoardContent
         taskGroups={taskGroups}
         showQuickAdd={showQuickAdd}
-        refreshTrigger={refreshTrigger}
+        refreshTrigger={0} // Remove refresh trigger since we're using real-time updates
         onSetShowQuickAdd={setShowQuickAdd}
         onQuickAddSave={onQuickAddSave}
         onTaskClick={handleTaskClick}

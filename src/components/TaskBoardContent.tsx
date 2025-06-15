@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -37,10 +38,11 @@ const TaskBoardContent = ({
   addCollaborator,
   removeCollaborator,
 }: any) => {
+  // Remove the key with refreshTrigger since we're using real-time updates
   const renderedGroups = React.useMemo(
     () => taskGroups.map((group, groupIndex) => (
       <TaskGroupSection
-        key={`${groupIndex}-${refreshTrigger}`}
+        key={`group-${group.status}`} // Use status as key for stability
         group={group}
         showQuickAdd={showQuickAdd}
         onSetShowQuickAdd={onSetShowQuickAdd}
@@ -58,7 +60,6 @@ const TaskBoardContent = ({
     [
       taskGroups,
       showQuickAdd,
-      refreshTrigger,
       onSetShowQuickAdd,
       onQuickAddSave,
       onTaskClick,
