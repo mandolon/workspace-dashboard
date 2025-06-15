@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import { getInitials } from '@/utils/taskUtils';
@@ -48,12 +49,12 @@ const TaskRowAssignees = ({
     setOpen(false);
   };
 
-  // The TableCell now has `group`, so switch owner of group-hover from .group on avatar to .group on the parent
+  // The TableCell now has `group`, so the hover behavior is controlled by the parent cell
   return (
     <div className="flex items-center -space-x-1 relative">
       {/* ASSIGNEE */}
       {assignee && (
-        <div className="relative group" title={assignee.fullName || assignee.name}>
+        <div className="relative" title={assignee.fullName || assignee.name}>
           <div
             className={`${getAvatarColor(assignee)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
           >
@@ -73,7 +74,7 @@ const TaskRowAssignees = ({
       )}
       {/* COLLABORATORS */}
       {collaborators?.map((collaborator: any, idx: number) => collaborator && (
-        <div className="relative group" key={idx} title={collaborator.fullName || collaborator.name}>
+        <div className="relative" key={idx} title={collaborator.fullName || collaborator.name}>
           <div
             className={`${getAvatarColor(collaborator)} w-7 h-7 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white border-2 border-background flex items-center justify-center`}
           >
