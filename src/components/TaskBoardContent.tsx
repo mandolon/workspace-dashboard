@@ -62,6 +62,7 @@ const TaskBoardContent = ({
   return (
     <div className="flex-1 bg-background pl-2">
       <div className="h-full flex flex-col">
+        {/* Header now includes connection indicator */}
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={onAddTask} />
 

@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -9,6 +8,8 @@ import { toast } from "@/hooks/use-toast";
 
 // Fallback polling interval in ms if real-time connection fails.
 const FALLBACK_POLL_INTERVAL = 10000;
+const MAX_RECONNECT_ATTEMPTS = 3;
+const RETRY_DELAY_BASE = 1500;
 
 export function useRealtimeTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,6 +17,9 @@ export function useRealtimeTasks() {
   const loadingRef = useRef(false);
   const { currentUser } = useUser();
   const [fallbackTimer, setFallbackTimer] = useState<NodeJS.Timeout | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<"live" | "polling" | "connecting">("connecting");
+  const reconnectAttempts = useRef(0);
+  const notifiedRef = useRef(false);
 
   // Filters and sets tasks so users only see what they should
   const secureSetTasks = (allTasks: Task[]) => {
@@ -57,102 +61,134 @@ export function useRealtimeTasks() {
 
   useEffect(() => {
     let realTimeConnected = false;
-    // Enhanced: handle real-time payloads for instant UI updates
-    const channel = supabase
-      .channel("public-tasks-change")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "tasks" },
-        payload => {
-          realTimeConnected = true;
-          // Get the real-time row and event type
-          const row = payload.new ?? payload.old;
-          if (!row) return;
+    let channel: any;
+    setConnectionStatus("connecting");
+    reconnectAttempts.current = 0;
+    notifiedRef.current = false;
 
-          console.log("Supabase realtime event received:", {
-            eventType: payload.eventType,
-            row,
-            payload,
-            currentUser,
-          });
+    const setupChannel = (retryAttempt: number = 0) => {
+      channel = supabase
+        .channel("public-tasks-change")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "tasks" },
+          payload => {
+            realTimeConnected = true;
+            setConnectionStatus("live");
+            // Get the real-time row and event type
+            const row = payload.new ?? payload.old;
+            if (!row) return;
 
-          setTasks(prev => {
-            // Re-run filter on prev for safety
-            const filteredPrev = filterTasksForUser(prev, currentUser);
+            console.log("Supabase realtime event received:", {
+              eventType: payload.eventType,
+              row,
+              payload,
+              currentUser,
+            });
 
-            const task = dbRowToTask(row);
+            setTasks(prev => {
+              // Re-run filter on prev for safety
+              const filteredPrev = filterTasksForUser(prev, currentUser);
 
-            // Only update UI if new/changed/removed task matches visibility for this user
-            const visible = canUserViewTask(task, currentUser);
-            if (!visible.allowed) {
-              // If losing access and present, remove
-              if (filteredPrev.some(t => t.id === task.id)) {
-                return filteredPrev.filter(t => t.id !== task.id);
+              const task = dbRowToTask(row);
+
+              // Only update UI if new/changed/removed task matches visibility for this user
+              const visible = canUserViewTask(task, currentUser);
+              if (!visible.allowed) {
+                // If losing access and present, remove
+                if (filteredPrev.some(t => t.id === task.id)) {
+                  return filteredPrev.filter(t => t.id !== task.id);
+                }
+                // Not present, do nothing
+                return filteredPrev;
               }
-              // Not present, do nothing
-              return filteredPrev;
-            }
 
-            if (payload.eventType === "INSERT") {
-              // Only add if not already present in state
-              if (!filteredPrev.some(t => t.id === task.id)) {
+              if (payload.eventType === "INSERT") {
+                // Only add if not already present in state
+                if (!filteredPrev.some(t => t.id === task.id)) {
+                  // Debug
+                  console.log("[Realtime] INSERT: Adding task to local state", task);
+                  return [task, ...filteredPrev];
+                }
+                return filteredPrev;
+              }
+              if (payload.eventType === "UPDATE") {
                 // Debug
-                console.log("[Realtime] INSERT: Adding task to local state", task);
+                console.log("[Realtime] UPDATE: Updating existing task", task);
+                const present = filteredPrev.some(t => t.id === task.id);
+                if (present) {
+                  return filteredPrev.map(t => (t.id === task.id ? task : t));
+                }
+                // Was not visible before, now is visible
                 return [task, ...filteredPrev];
               }
-              return filteredPrev;
-            }
-            if (payload.eventType === "UPDATE") {
-              // Debug
-              console.log("[Realtime] UPDATE: Updating existing task", task);
-              const present = filteredPrev.some(t => t.id === task.id);
-              if (present) {
-                return filteredPrev.map(t => (t.id === task.id ? task : t));
+              if (payload.eventType === "DELETE") {
+                // Debug
+                console.log("[Realtime] DELETE: Removing task from local state", task);
+                // Remove deleted task from filtered list
+                return filteredPrev.filter(t => t.id !== task.id);
               }
-              // Was not visible before, now is visible
-              return [task, ...filteredPrev];
+              return filteredPrev;
+            });
+          }
+        )
+        .subscribe((status: string) => {
+          if (status === "SUBSCRIBED") {
+            realTimeConnected = true;
+            setConnectionStatus("live");
+            stopFallbackPolling();
+            // Only show one 'connected' toast per mount
+            if (!notifiedRef.current) {
+              toast({
+                title: "Live updates active",
+                description: "You're getting instant task changes.",
+                duration: 1200,
+              });
+              notifiedRef.current = true;
             }
-            if (payload.eventType === "DELETE") {
-              // Debug
-              console.log("[Realtime] DELETE: Removing task from local state", task);
-              // Remove deleted task from filtered list
-              return filteredPrev.filter(t => t.id !== task.id);
+          } else if (
+            status === "CHANNEL_ERROR" ||
+            status === "TIMED_OUT" ||
+            status === "CLOSED"
+          ) {
+            realTimeConnected = false;
+            reconnectAttempts.current += 1;
+            setConnectionStatus("connecting");
+            // Retry up to threshold, then fallback
+            if (reconnectAttempts.current <= MAX_RECONNECT_ATTEMPTS) {
+              setTimeout(() => setupChannel(reconnectAttempts.current), RETRY_DELAY_BASE * reconnectAttempts.current);
+            } else {
+              setConnectionStatus("polling");
+              startFallbackPolling();
+              if (!notifiedRef.current) {
+                toast({
+                  title: "Live updates not available",
+                  description: "Falling back to polling. New tasks or changes may be delayed.",
+                  duration: 4000,
+                  // Drop destructive variant: less intrusive
+                });
+                notifiedRef.current = true;
+              }
             }
-            return filteredPrev;
-          });
-        }
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          realTimeConnected = true;
-          stopFallbackPolling();
-          toast({
-            title: "Real-time Connected",
-            description: "Live task updates enabled.",
-            duration: 2500,
-          });
-        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
-          realTimeConnected = false;
-          toast({
-            title: "Live updates unavailable",
-            description: "Falling back to polling. Task list may be delayed.",
-            variant: "destructive",
-            duration: 5000,
-          });
-          startFallbackPolling();
-        }
-      });
-
-    // Catch broken websocket right away on mount
-    setTimeout(() => {
-      if (!realTimeConnected) {
-        toast({
-          title: "Live updates not connected",
-          description: "WebSocket could not connect. Tasks may not update instantly.",
-          variant: "destructive",
-          duration: 5000,
+          }
         });
+    };
+
+    setupChannel();
+
+    // If after 2.5s live hasn't connected, set status to polling & notify ONCE
+    setTimeout(() => {
+      if (!realTimeConnected && reconnectAttempts.current === 0) {
+        setConnectionStatus("polling");
         startFallbackPolling();
+        if (!notifiedRef.current) {
+          toast({
+            title: "You're on delayed updates",
+            description: "Instant sync is not available. The board still works, but changes may take up to 10s.",
+            duration: 4000,
+          });
+          notifiedRef.current = true;
+        }
       }
     }, 2500);
 
@@ -163,5 +199,5 @@ export function useRealtimeTasks() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-  return { tasks, setTasks: secureSetTasks, loading };
+  return { tasks, setTasks: secureSetTasks, loading, connectionStatus };
 }
