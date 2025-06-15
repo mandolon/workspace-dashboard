@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const getRandomName = () => {
   const names = [
@@ -17,13 +19,16 @@ const AuthPage: React.FC = () => {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState(""); // New state for full name
+  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
+    // Always redirect logged in users
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
@@ -44,22 +49,36 @@ const AuthPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) setErrorMsg(error.message);
+    if (error) {
+      setErrorMsg(error.message);
+      toast({
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
     setLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
 
     if (!fullName.trim()) {
       setErrorMsg("Full Name is required.");
+      toast({
+        title: "Sign up failed",
+        description: "Full Name is required.",
+        variant: "destructive",
+      });
       setLoading(false);
       return;
     }
@@ -74,7 +93,25 @@ const AuthPage: React.FC = () => {
         emailRedirectTo: redirectTo,
       },
     });
-    if (error) setErrorMsg(error.message);
+    if (error) {
+      setErrorMsg(error.message);
+      toast({
+        title: "Sign up failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      setSuccessMsg("");
+    } else {
+      setErrorMsg("");
+      setSuccessMsg(
+        "Sign up successful! Please check your email to confirm your account before logging in."
+      );
+      toast({
+        title: "Sign up successful",
+        description: "Check your email to confirm your account.",
+        variant: "default",
+      });
+    }
     setLoading(false);
   };
 
@@ -116,28 +153,45 @@ const AuthPage: React.FC = () => {
               : "Sign up to create an account (full name required)"}
           </p>
         </div>
-        <form className="flex flex-col gap-3" onSubmit={isLoginPage ? handleLogin : handleSignUp}>
-          <>
-            <label className="text-sm" htmlFor="full-name">Full Name</label>
-            <Input
-              id="full-name"
-              autoComplete="name"
-              type="text"
-              value={fullName}
-              onChange={e => setFullName(e.target.value)}
-              disabled={loading}
-              required
-              className="mb-2"
-              placeholder="Enter your full name"
-            />
-          </>
+        {/* Show a clear success message after signup */}
+        {successMsg && (
+          <div className="mb-4 p-2 rounded-md bg-green-50 text-green-900 border border-green-200 text-xs text-center dark:bg-green-900/40 dark:text-green-100 dark:border-green-700">
+            {successMsg}
+          </div>
+        )}
+        {/* Alert for error (if any and not handled by toast) */}
+        {errorMsg && (
+          <div className="mb-2 p-2 rounded-md bg-red-50 text-red-800 border border-red-200 text-xs text-center dark:bg-red-900/40 dark:text-red-100 dark:border-red-700">
+            {errorMsg}
+          </div>
+        )}
+        <form className="flex flex-col gap-3"
+          onSubmit={isLoginPage ? handleLogin : handleSignUp}
+          aria-disabled={!!successMsg}
+        >
+          {!isLoginPage && (
+            <>
+              <label className="text-sm" htmlFor="full-name">Full Name</label>
+              <Input
+                id="full-name"
+                autoComplete="name"
+                type="text"
+                value={fullName}
+                onChange={e => setFullName(e.target.value)}
+                disabled={loading || !!successMsg}
+                required
+                className="mb-2"
+                placeholder="Enter your full name"
+              />
+            </>
+          )}
           <label className="text-sm" htmlFor="email">Email</label>
           <Input
             id="email"
             autoComplete="username"
             type="email"
             value={email}
-            disabled={loading}
+            disabled={loading || !!successMsg}
             onChange={e => setEmail(e.target.value)}
             required
             className="mb-2"
@@ -148,15 +202,14 @@ const AuthPage: React.FC = () => {
             autoComplete={isLoginPage ? "current-password" : "new-password"}
             type="password"
             value={password}
-            disabled={loading}
+            disabled={loading || !!successMsg}
             onChange={e => setPassword(e.target.value)}
             required
             className="mb-4"
           />
-          {errorMsg && <div className="text-red-600 dark:text-red-400 text-xs text-center">{errorMsg}</div>}
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || !!successMsg}
             className="w-full mt-2"
           >
             {isLoginPage ? "Log In" : "Sign Up"}
@@ -166,7 +219,12 @@ const AuthPage: React.FC = () => {
           <button
             type="button"
             className="underline text-primary"
-            onClick={() => setIsLoginPage(!isLoginPage)}
+            onClick={() => {
+              setIsLoginPage(!isLoginPage);
+              setErrorMsg("");
+              setSuccessMsg("");
+            }}
+            disabled={loading}
           >
             {isLoginPage ? "Create an account" : "Already have an account?"}
           </button>
