@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { Send, Paperclip, Smile, Image, Calendar, MoreHorizontal, X, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import RecipientMultiSelect from "./RecipientMultiSelect";
 
 interface ComposeDialogProps {
   isOpen: boolean;
@@ -17,20 +17,47 @@ interface ComposeDialogProps {
   };
 }
 
+interface Recipient {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  avatarColor?: string;
+  isCustom?: boolean; // If user-entered
+}
+
 const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
-  const [to, setTo] = useState(replyTo?.senderEmail || '');
+  const [recipients, setRecipients] = useState<Recipient[]>(() =>
+    replyTo && replyTo.senderEmail
+      ? [{ id: replyTo.senderEmail, name: replyTo.sender, email: replyTo.senderEmail }]
+      : []
+  );
   const [subject, setSubject] = useState(replyTo ? `Re: ${replyTo.subject}` : '');
   const [message, setMessage] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSend = () => {
-    // In a real app, this would send the email
-    console.log('Sending email:', { to, subject, message });
-    onClose();
-    // Reset form
-    setTo('');
+  const resetFields = () => {
+    setRecipients([]);
     setSubject('');
     setMessage('');
+  };
+
+  const handleSend = () => {
+    if (recipients.length === 0) {
+      setError("Please add at least one recipient.");
+      return;
+    }
+    // In a real app, this would send the email with recipient emails
+    setSending(true);
+    setTimeout(() => {
+      setSending(false);
+      onClose();
+      resetFields();
+    }, 500);
+    setError(null);
+    // console.log('Sending email:', { to: recipients, subject, message });
   };
 
   return (
@@ -66,22 +93,23 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
             <div className="flex flex-col h-96">
               {/* Email fields */}
               <div className="px-4 py-2 space-y-2 border-b">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 w-8">To</span>
-                  <Input
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                    placeholder="Recipients"
-                    className="border-0 shadow-none focus-visible:ring-0 p-0 h-auto"
-                  />
+                <div>
+                  <span className="text-sm text-gray-600 w-8 mr-2 align-top inline-block">To</span>
+                  <div className="inline-block w-[90%] max-w-lg align-top">
+                    <RecipientMultiSelect
+                      value={recipients}
+                      onChange={setRecipients}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600 w-8">Subject</span>
-                  <Input
+                  <input
+                    type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="Subject"
-                    className="border-0 shadow-none focus-visible:ring-0 p-0 h-auto"
+                    className="border-0 shadow-none focus-visible:ring-0 p-0 h-auto text-sm flex-1 bg-transparent"
                   />
                 </div>
               </div>
@@ -115,15 +143,21 @@ const ComposeDialog = ({ isOpen, onClose, replyTo }: ComposeDialogProps) => {
                 />
               </div>
 
+              {/* Error */}
+              {error && (
+                <div className="px-4 text-sm text-red-500">{error}</div>
+              )}
+
               {/* Bottom toolbar */}
               <div className="px-4 py-3 border-t bg-gray-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Button 
                     onClick={handleSend}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                    disabled={sending}
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    Send
+                    {sending ? "Sending..." : "Send"}
                   </Button>
                   <Button variant="ghost" size="sm" className="h-8 px-2">
                     <Paperclip className="w-4 h-4" />
