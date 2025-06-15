@@ -104,16 +104,35 @@ const AuthPage: React.FC = () => {
     } else {
       setErrorMsg("");
       setSuccessMsg(
-        "Sign up successful! Please check your email to confirm your account before logging in."
+        "signup-success"
       );
       toast({
-        title: "Sign up successful",
-        description: "Check your email to confirm your account.",
+        title: "Check your email to confirm your account",
+        description: "To activate your account, please follow the instructions sent to your email.",
         variant: "default",
       });
     }
     setLoading(false);
   };
+
+  // Custom message for signup success
+  const SignupSuccessAlert = () => (
+    <div className="mb-6 rounded-md border border-blue-300 bg-blue-50 p-4 dark:bg-blue-950/60 dark:border-blue-800 text-blue-900 dark:text-blue-100 shadow-sm">
+      <div className="font-bold text-base mb-2 flex items-center gap-2">
+        <span role="img" aria-label="mail" className="inline-block">📧</span>
+        Check your email to confirm your account
+      </div>
+      <ol className="list-decimal list-inside text-sm space-y-1 pl-0">
+        <li><b>Go to your email inbox</b> for <span className="break-all">{email}</span></li>
+        <li>Open the message from <span className="font-mono">noreply@mail.app.supabase.io</span></li>
+        <li>Click the confirmation link inside the email</li>
+        <li>Return to this app and use your credentials to log in</li>
+      </ol>
+      <div className="mt-2 text-xs text-muted-foreground">
+        Didn&apos;t receive an email? Check your spam folder &mdash; or try signing up again with the correct address.
+      </div>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -153,68 +172,67 @@ const AuthPage: React.FC = () => {
               : "Sign up to create an account (full name required)"}
           </p>
         </div>
-        {/* Show a clear success message after signup */}
-        {successMsg && (
-          <div className="mb-4 p-2 rounded-md bg-green-50 text-green-900 border border-green-200 text-xs text-center dark:bg-green-900/40 dark:text-green-100 dark:border-green-700">
-            {successMsg}
-          </div>
-        )}
+        {/* Show detailed next-steps after signup */}
+        {successMsg === "signup-success" && !isLoginPage && <SignupSuccessAlert />}
         {/* Alert for error (if any and not handled by toast) */}
         {errorMsg && (
           <div className="mb-2 p-2 rounded-md bg-red-50 text-red-800 border border-red-200 text-xs text-center dark:bg-red-900/40 dark:text-red-100 dark:border-red-700">
             {errorMsg}
           </div>
         )}
-        <form className="flex flex-col gap-3"
-          onSubmit={isLoginPage ? handleLogin : handleSignUp}
-          aria-disabled={!!successMsg}
-        >
-          {!isLoginPage && (
-            <>
-              <label className="text-sm" htmlFor="full-name">Full Name</label>
-              <Input
-                id="full-name"
-                autoComplete="name"
-                type="text"
-                value={fullName}
-                onChange={e => setFullName(e.target.value)}
-                disabled={loading || !!successMsg}
-                required
-                className="mb-2"
-                placeholder="Enter your full name"
-              />
-            </>
-          )}
-          <label className="text-sm" htmlFor="email">Email</label>
-          <Input
-            id="email"
-            autoComplete="username"
-            type="email"
-            value={email}
-            disabled={loading || !!successMsg}
-            onChange={e => setEmail(e.target.value)}
-            required
-            className="mb-2"
-          />
-          <label className="text-sm" htmlFor="password">Password</label>
-          <Input
-            id="password"
-            autoComplete={isLoginPage ? "current-password" : "new-password"}
-            type="password"
-            value={password}
-            disabled={loading || !!successMsg}
-            onChange={e => setPassword(e.target.value)}
-            required
-            className="mb-4"
-          />
-          <Button
-            type="submit"
-            disabled={loading || !!successMsg}
-            className="w-full mt-2"
+        {/* Hide the form if signup was successful */}
+        {(!(successMsg === "signup-success" && !isLoginPage)) && (
+          <form className="flex flex-col gap-3"
+            onSubmit={isLoginPage ? handleLogin : handleSignUp}
+            aria-disabled={!!successMsg}
           >
-            {isLoginPage ? "Log In" : "Sign Up"}
-          </Button>
-        </form>
+            {!isLoginPage && (
+              <>
+                <label className="text-sm" htmlFor="full-name">Full Name</label>
+                <Input
+                  id="full-name"
+                  autoComplete="name"
+                  type="text"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
+                  disabled={loading || !!successMsg}
+                  required
+                  className="mb-2"
+                  placeholder="Enter your full name"
+                />
+              </>
+            )}
+            <label className="text-sm" htmlFor="email">Email</label>
+            <Input
+              id="email"
+              autoComplete="username"
+              type="email"
+              value={email}
+              disabled={loading || !!successMsg}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className="mb-2"
+            />
+            <label className="text-sm" htmlFor="password">Password</label>
+            <Input
+              id="password"
+              autoComplete={isLoginPage ? "current-password" : "new-password"}
+              type="password"
+              value={password}
+              disabled={loading || !!successMsg}
+              onChange={e => setPassword(e.target.value)}
+              required
+              className="mb-4"
+            />
+            <Button
+              type="submit"
+              disabled={loading || !!successMsg}
+              className="w-full mt-2"
+            >
+              {isLoginPage ? "Log In" : "Sign Up"}
+            </Button>
+          </form>
+        )}
         <div className="flex flex-row items-center justify-center mt-6 text-xs text-muted-foreground">
           <button
             type="button"
@@ -249,3 +267,5 @@ const AuthPage: React.FC = () => {
 };
 
 export default AuthPage;
+
+// File is now over 250 lines and might benefit from refactoring.
