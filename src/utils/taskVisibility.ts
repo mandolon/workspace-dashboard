@@ -1,3 +1,4 @@
+
 import { Task } from "@/types/task";
 import { User } from "@/types/user";
 import { getCRMRole, isAdmin as isAdminHelper } from "@/utils/userRoleHelpers";
@@ -8,7 +9,7 @@ export function isAdmin(user: User) {
 
 export function isUserMatch(a: any, b: User | null) {
   if (!a || !b) return false;
-  // Try id first, then name, then fullName, then email
+  // Match by id, name, fullName, or email
   return (
     (!!a.id && a.id === b.id) ||
     (!!a.name && a.name === b.name) ||
@@ -18,10 +19,9 @@ export function isUserMatch(a: any, b: User | null) {
 }
 
 /**
- * Determines if a user can view a given task.
- * Returns { allowed: boolean, reason: string }
+ * Determines if user can view a task.
  */
-export function canUserViewTask(task: Task, user: User | null): { allowed: boolean, reason: string } {
+export function canUserViewTask(task: Task, user: User | null): { allowed: boolean; reason: string } {
   if (!user) return { allowed: false, reason: 'No user' };
   if (isAdmin(user)) return { allowed: true, reason: 'Admin' };
 
@@ -31,19 +31,19 @@ export function canUserViewTask(task: Task, user: User | null): { allowed: boole
   if (task.collaborators && task.collaborators.some(c => isUserMatch(c, user))) {
     return { allowed: true, reason: 'Collaborator' };
   }
-  if ((task.createdBy && (task.createdBy === user.name || task.createdBy === user.email))) {
+  if (task.createdBy && (task.createdBy === user.name || task.createdBy === user.email)) {
     return { allowed: true, reason: 'Creator' };
   }
-  return { allowed: false, reason: 'Not assigned, not collab, not creator' };
+  return { allowed: false, reason: 'Not assigned, not collaborator, not creator' };
 }
 
 /**
- * Only show tasks assigned to, created by, or collaborated with the user,
- * unless the user is an admin.
+ * Returns tasks user is allowed to see (not archived or soft-deleted).
  */
 export function filterTasksForUser(tasks: Task[], user: User | null) {
   if (!user) return [];
-  if (isAdmin(user)) return tasks;
-
-  return tasks.filter(t => canUserViewTask(t, user).allowed);
+  if (isAdmin(user)) return tasks.filter(t => !t.deletedAt && !t.archived);
+  return tasks.filter(
+    t => !t.deletedAt && !t.archived && canUserViewTask(t, user).allowed
+  );
 }

@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Task } from "@/types/task";
@@ -11,11 +12,16 @@ export function useRealtimeTasks() {
   const loadingRef = useRef(false);
   const { currentUser } = useUser();
 
-  // Filters and sets tasks so users only see what they should
+  // Only expose tasks that are not soft-deleted or archived
   const secureSetTasks = (allTasks: Task[]) => {
-    setTasks(filterTasksForUser(allTasks, currentUser));
+    const filtered = filterTasksForUser(
+      allTasks.filter(t => !t.deletedAt && !t.archived),
+      currentUser
+    );
+    setTasks(filtered);
   };
 
+  // Fetch on mount / currentUser change
   useEffect(() => {
     if (loadingRef.current) return;
     loadingRef.current = true;
@@ -29,35 +35,30 @@ export function useRealtimeTasks() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
+  // Real-time subscription
   useEffect(() => {
-    // Enhanced: handle real-time payloads for instant UI updates
     const channel = supabase
       .channel("public-tasks-change")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "tasks" },
         payload => {
-          // Get the real-time row and event type
           const row = payload.new ?? payload.old;
           if (!row) return;
+          const task = dbRowToTask(row);
 
           setTasks(prev => {
-            // Re-run filter on prev for safety
-            const filteredPrev = filterTasksForUser(prev, currentUser);
+            // Filter out archived or soft-deleted tasks before updating local state
+            const filteredPrev = filterTasksForUser(
+              prev.filter(t => !t.archived && !t.deletedAt),
+              currentUser
+            );
 
-            const task = dbRowToTask(row);
-
-            // Only update UI if new/changed/removed task matches visibility for this user
             const visible = canUserViewTask(task, currentUser);
-            if (!visible.allowed) {
-              // If losing access and present, remove
-              if (filteredPrev.some(t => t.id === task.id)) {
-                return filteredPrev.filter(t => t.id !== task.id);
-              }
-              // Not present, do nothing
-              return filteredPrev;
+            // Hide if task is deleted or now invisible
+            if (task.deletedAt || task.archived || !visible.allowed) {
+              return filteredPrev.filter(t => t.id !== task.id);
             }
-
             if (payload.eventType === "INSERT") {
               if (!filteredPrev.some(t => t.id === task.id)) {
                 return [task, ...filteredPrev];
@@ -65,15 +66,14 @@ export function useRealtimeTasks() {
               return filteredPrev;
             }
             if (payload.eventType === "UPDATE") {
+              // Update or (if now visible) add the task
               const present = filteredPrev.some(t => t.id === task.id);
               if (present) {
                 return filteredPrev.map(t => (t.id === task.id ? task : t));
               }
-              // Was not visible before, now is visible
               return [task, ...filteredPrev];
             }
             if (payload.eventType === "DELETE") {
-              // Remove deleted task from filtered list
               return filteredPrev.filter(t => t.id !== task.id);
             }
             return filteredPrev;

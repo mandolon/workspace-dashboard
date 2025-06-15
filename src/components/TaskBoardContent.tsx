@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskBoardHeader from './TaskBoardHeader';
 import TaskBoardFilters from './TaskBoardFilters';
@@ -48,16 +47,28 @@ const TaskBoardContent = ({
         onQuickAddSave={onQuickAddSave}
         onTaskClick={onTaskClick}
         onTaskArchive={onTaskArchive}
-        onTaskDeleted={onTaskDeleted} // Pass unchanged! Now guaranteed to be () => void
+        onTaskDeleted={onTaskDeleted} // Always () => void signature
         useContext={false}
-        // Pass these down for assignment
         assignPerson={assignPerson}
         removeAssignee={removeAssignee}
         addCollaborator={addCollaborator}
         removeCollaborator={removeCollaborator}
       />
     )),
-    [taskGroups, showQuickAdd, refreshTrigger, onSetShowQuickAdd, onQuickAddSave, onTaskClick, onTaskArchive, onTaskDeleted, assignPerson, removeAssignee, addCollaborator, removeCollaborator]
+    [
+      taskGroups,
+      showQuickAdd,
+      refreshTrigger,
+      onSetShowQuickAdd,
+      onQuickAddSave,
+      onTaskClick,
+      onTaskArchive,
+      onTaskDeleted,
+      assignPerson,
+      removeAssignee,
+      addCollaborator,
+      removeCollaborator,
+    ]
   );
 
   return (
@@ -65,11 +76,8 @@ const TaskBoardContent = ({
       <div className="h-full flex flex-col">
         <TaskBoardHeader />
         <TaskBoardFilters onAddTask={onAddTask} />
-
         <ScrollArea className="flex-1">
-          <div className="p-4 space-y-6">
-            {renderedGroups}
-          </div>
+          <div className="p-4 space-y-6">{renderedGroups}</div>
         </ScrollArea>
       </div>
     </div>

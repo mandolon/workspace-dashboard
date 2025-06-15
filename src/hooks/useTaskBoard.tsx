@@ -1,4 +1,3 @@
-
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task, TaskGroup, TaskUser } from '@/types/task';
@@ -102,18 +101,18 @@ export const useTaskBoard = () => {
     }
   };
 
-  // ------------- NEW ASSIGN PERSON (and collaborators) HANDLERS FOR SUPABASE --------------
-  // For consistent types, all handlers use .taskId as string
+  // ------------- NEW ASSIGN PERSON (and collaborators) HANDLERS --------------
 
   const assignPerson = async (taskId: string, person: TaskUser) => {
-    // Assign main assignee, set .assignee field to person, leave collaborators unchanged
+    // taskId should always be a string here
     await updateTaskSupabase(taskId, { assignee: person });
-    // Let real-time pull updated row
+    // No need for optimistic updates: realtime will pick up change
   };
   const removeAssignee = async (taskId: string) => {
     await updateTaskSupabase(taskId, { assignee: null });
   };
   const addCollaborator = async (taskId: string, person: TaskUser) => {
+    // De-duplicate, always pass string taskId
     const task = tasks.find(t => t.taskId === taskId);
     const collabs = (task?.collaborators ?? []).slice();
     if (!collabs.find(c => c.id === person.id)) {
