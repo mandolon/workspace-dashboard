@@ -1,13 +1,15 @@
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import TeamsSearchBar from './TeamsSearchBar';
 import TeamMembersTable from './TeamMembersTable';
 import TeamMembersSummary from './TeamMembersSummary';
-import { ADMIN_USERS, TEAM_USERS, CLIENT_USERS, ALL_USERS, TeamMember } from '@/utils/teamUsers';
+import { ADMIN_USERS, TEAM_USERS, CLIENT_USERS, TeamMember } from '@/utils/teamUsers';
 import { ArchitectureRole } from '@/types/roles';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
 import { useSupabaseAdmins } from '@/hooks/useSupabaseAdmins';
+import { mapSupabaseTeamProfile, mapSupabaseClientProfile } from '@/utils/supabaseTeamMappers';
 
 // NEW: direct Supabase client fetch
 import { createClient } from "@supabase/supabase-js";
@@ -32,7 +34,6 @@ const MEMBERS_BATCH = 10;
 const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const { projectId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
-  // Use correct initial data for editing titles
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(
     tab === "admin" ? ADMIN_USERS : (tab === "team" ? TEAM_USERS : CLIENT_USERS)
   );
@@ -44,11 +45,10 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   // Supabase admins (existing)
   const { admins: supabaseAdmins, loading: loadingAdmins } = useSupabaseAdmins();
 
-  // Fetch SUPABASE "team" users
+  // Fetch SUPABASE "team" users (uses new mapper)
   useEffect(() => {
     const fetchRoleMembers = async (role: "team" | "client") => {
       setLoadingMembers(true);
-      // 1. Find users in user_roles with the expected role
       const { data: userRoles, error: userRolesError } = await supabase
         .from("user_roles")
         .select("user_id, role")
@@ -64,7 +64,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         setLoadingMembers(false);
         return;
       }
-      // 2. Fetch profiles for those user_ids
       const userIds = userRoles.map((ur: any) => ur.user_id).filter(Boolean);
       if (userIds.length === 0) {
         if (role === "team") setSupabaseTeamMembers([]);
@@ -81,25 +80,11 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         setLoadingMembers(false);
         return;
       }
-      // 3. Map to TeamMember type - FIX: use explicit undefined for architecture role fields for clients
-      const mappedMembers: TeamMember[] = profiles.map((p: any) => {
-        const isTeam = role === "team";
-        const avatarColor = isTeam ? "bg-blue-700" : "bg-pink-700";
-        const nameInit = (p.full_name?.split(" ")?.map((s: string) => s[0])?.join("")?.toUpperCase() || "SU");
-        return {
-          id: p.id,
-          name: nameInit,
-          fullName: p.full_name || p.email || "Unknown User",
-          crmRole: isTeam ? "Team" : "Client",
-          titleRole: isTeam ? ("Team" as ArchitectureRole) : undefined,
-          lastActive: "—",
-          status: "Active",
-          email: p.email || "",
-          role: isTeam ? ("Team" as ArchitectureRole) : undefined,
-          avatar: nameInit,
-          avatarColor,
-        };
-      });
+      // --- MAPPING NOW EXTERNAL ---
+      const mappedMembers: TeamMember[] =
+        role === "team"
+          ? profiles.map(mapSupabaseTeamProfile)
+          : profiles.map(mapSupabaseClientProfile);
 
       if (role === "team") setSupabaseTeamMembers(mappedMembers);
       else setSupabaseClientMembers(mappedMembers);
@@ -111,20 +96,17 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
     } else if (tab === "client") {
       fetchRoleMembers("client");
     }
-    // No need for admin here (handled in useSupabaseAdmins)
     // eslint-disable-next-line
   }, [tab, supabaseAdmins.length]);
 
   // Memo: Build merged admins only for tab === 'admin'
   let allTeamMembers: TeamMember[] = [];
   if (tab === "admin") {
-    // Convert Supabase admins to TeamMember type, avoid duplicates (email)
+    // Deduplicate admins by email
     const adminLookup = new Map<string, boolean>();
     ADMIN_USERS.forEach(u =>
       adminLookup.set((u.email ?? "").toLowerCase(), true)
     );
-
-    // Map Supabase admins to TeamMember type, add only new ones
     const supabaseAdminMembers: TeamMember[] = supabaseAdmins
       .filter(a => !!a.email && !adminLookup.has(a.email.toLowerCase()))
       .map(a => ({
@@ -132,23 +114,18 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
         name: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
         fullName: a.full_name || a.email || "Unknown User",
         crmRole: "Admin",
-        titleRole: "Admin" as ArchitectureRole,
         lastActive: "—",
         status: "Active",
         email: a.email || "",
-        role: "Admin" as ArchitectureRole,
         avatar: (a.full_name?.split(" ")?.map(s => s[0])?.join("")?.toUpperCase() || "SU"),
         avatarColor: "bg-blue-700"
       }));
 
-    // Merge static + Supabase admins
     allTeamMembers = [
       ...ADMIN_USERS,
       ...supabaseAdminMembers
     ];
   } else if (tab === "team") {
-    // Static + Supabase team
-    // Avoid duplicates based on email
     const userLookup = new Map<string, boolean>();
     TEAM_USERS.forEach(u => userLookup.set((u.email ?? "").toLowerCase(), true));
     const nonDupeSupabaseTeams = supabaseTeamMembers.filter(tm =>
@@ -159,7 +136,6 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
       ...nonDupeSupabaseTeams
     ];
   } else if (tab === "client") {
-    // Static + Supabase clients
     const userLookup = new Map<string, boolean>();
     CLIENT_USERS.forEach(u => userLookup.set((u.email ?? "").toLowerCase(), true));
     const nonDupeSupabaseClients = supabaseClientMembers.filter(cm =>
@@ -192,7 +168,7 @@ const TeamsContent = ({ tab, selectedUserId }: TeamsContentProps) => {
   const handleRoleChange = (memberId: string, newTitleRole: ArchitectureRole) => {
     setTeamMembers(prev =>
       prev.map(m =>
-        m.id === memberId ? { ...m, titleRole: newTitleRole } : m
+        m.id === memberId && m.crmRole === 'Team' ? { ...m, titleRole: newTitleRole } : m
       )
     );
   };

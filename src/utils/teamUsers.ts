@@ -2,19 +2,21 @@
 import { ArchitectureRole } from '@/types/roles';
 import { getAllClients } from '@/data/projectClientData';
 
-// Shared type for all user roles
+/**
+ * Shared type for all user roles.
+ * Only TEAM users have a titleRole, others = undefined.
+ */
 export interface TeamMember {
   id: string;
   name: string; // e.g. "AL"
   fullName: string;
   crmRole: 'Admin' | 'Team' | 'Client';
-  titleRole?: ArchitectureRole;
+  titleRole?: ArchitectureRole; // ONLY used for Team members. Others: undefined.
   lastActive: string;
   status: 'Active' | 'Inactive' | 'Pending';
   avatar: string; // initials ONLY
   email: string;
-  role: ArchitectureRole;
-  avatarColor: string; // Added: always present, Tailwind class
+  avatarColor: string; // Always present, Tailwind class
 }
 
 const CLIENT_COLOR_PALETTE = [
@@ -22,24 +24,23 @@ const CLIENT_COLOR_PALETTE = [
   'bg-pink-500', 'bg-indigo-500', 'bg-orange-500', 'bg-teal-500', 'bg-cyan-500'
 ];
 
-// Static admins
+// Static admins -- NO titleRole
 export const ADMIN_USERS: TeamMember[] = [
   {
     id: 't0',
     name: 'AL',
     fullName: 'Armando Lopez',
     crmRole: 'Admin',
-    titleRole: 'Admin',
+    // titleRole omitted for non-Team
     lastActive: 'Jun 2, 2025',
     status: 'Active',
     email: 'armando.lopez@example.com',
-    role: 'Admin',
     avatar: 'AL',
     avatarColor: 'bg-blue-800'
   }
 ];
 
-// Static team members
+// Static team members - only Team gets titleRole!
 export const TEAM_USERS: TeamMember[] = [
   {
     id: 't1',
@@ -50,7 +51,6 @@ export const TEAM_USERS: TeamMember[] = [
     lastActive: '—',
     status: 'Active',
     email: 'alice.dale@example.com',
-    role: 'Team Lead',
     avatar: 'ALD',
     avatarColor: 'bg-purple-500'
   },
@@ -63,7 +63,6 @@ export const TEAM_USERS: TeamMember[] = [
     lastActive: '—',
     status: 'Active',
     email: 'mark.pinsky@example.com',
-    role: 'Team Lead',
     avatar: 'MP',
     avatarColor: 'bg-green-500'
   },
@@ -76,7 +75,6 @@ export const TEAM_USERS: TeamMember[] = [
     lastActive: '—',
     status: 'Active',
     email: 'stephanie.sharp@example.com',
-    role: 'Team Lead',
     avatar: 'SS',
     avatarColor: 'bg-blue-500'
   },
@@ -89,13 +87,12 @@ export const TEAM_USERS: TeamMember[] = [
     lastActive: '—',
     status: 'Inactive',
     email: 'joshua.jones@example.com',
-    role: 'Team Lead',
     avatar: 'JJ',
     avatarColor: 'bg-orange-500'
   }
 ];
 
-// Dynamic clients
+// Dynamic clients - NO titleRole
 export const CLIENT_USERS: TeamMember[] = getAllClients().map((client, i) => ({
   id: client.clientId,
   name: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
@@ -104,8 +101,6 @@ export const CLIENT_USERS: TeamMember[] = getAllClients().map((client, i) => ({
   lastActive: '—',
   status: 'Active' as const,
   email: client.email || 'unknown@email.com',
-  role: undefined,
-  titleRole: undefined,
   avatar: (client.firstName[0] + (client.lastName?.[0] ?? "")).toUpperCase(),
   avatarColor: CLIENT_COLOR_PALETTE[i % CLIENT_COLOR_PALETTE.length]
 }));
