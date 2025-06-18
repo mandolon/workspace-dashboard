@@ -42,7 +42,7 @@ const Index = () => {
         />
         <div className="flex-1 p-2 px-6 min-h-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-            {/* Left side - Tabbed content and Recent Activity */}
+            {/* Left side - Tabbed content */}
             <div className="lg:col-span-6 flex flex-col min-h-0 gap-4">
               <div className="flex flex-col h-1/2 border border-border rounded-lg">
                 {/* Tabs */}
@@ -76,8 +76,10 @@ const Index = () => {
             
             {/* Right side - Quick Actions only */}
             <div className="lg:col-span-6 flex flex-col min-h-0">
-              <div className="border border-border rounded-lg p-4 w-fit">
-                <QuickActionsHeader />
+              <div className="flex justify-end">
+                <div className="border border-border rounded-lg p-4 w-fit">
+                  <QuickActionsHeader />
+                </div>
               </div>
             </div>
           </div>
