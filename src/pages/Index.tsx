@@ -38,7 +38,7 @@ const Index = () => {
   return (
     <AppLayout showHeader={true}>
       <div className="flex flex-col h-full bg-background">
-        <div className="pr-6">
+        <div className="px-6">
           <PageSectionHeader 
             title="Home" 
           />
