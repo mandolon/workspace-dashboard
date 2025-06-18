@@ -19,19 +19,19 @@ const Index = () => {
         <div className="flex-1 p-2">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 h-full">
             {/* Top Row */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-6">
               <RecentActivitySection />
             </div>
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-6">
               <MyTasksSection />
-            </div>
-            <div className="lg:col-span-3">
-              <CalendarSection />
             </div>
             
             {/* Bottom Row */}
-            <div className="lg:col-span-12">
+            <div className="lg:col-span-8">
               <ToDoSection />
+            </div>
+            <div className="lg:col-span-4">
+              <CalendarSection />
             </div>
           </div>
         </div>
