@@ -44,7 +44,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
             {/* Left side - Tabbed content */}
             <div className="lg:col-span-6 flex flex-col min-h-0">
-              <div className="flex flex-col h-full border border-border rounded-lg">
+              <div className="flex flex-col h-full">
                 {/* Tabs */}
                 <div className="flex w-full border-b border-border mb-4">
                   {tabs.map(tab => (
