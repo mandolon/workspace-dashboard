@@ -18,6 +18,7 @@ const MyTasksSection = () => {
       status: "progress",
       hasAttachment: true,
       dateCreated: "2024-12-15",
+      createdBy: "AL",
       assignee: { name: "You", fullName: "Current User", avatar: "CU" }
     },
     {
@@ -27,6 +28,7 @@ const MyTasksSection = () => {
       status: "redline",
       hasAttachment: false,
       dateCreated: "2024-12-14",
+      createdBy: "MP",
       assignee: { name: "You", fullName: "Current User", avatar: "CU" }
     },
     {
@@ -36,6 +38,7 @@ const MyTasksSection = () => {
       status: "completed",
       hasAttachment: true,
       dateCreated: "2024-12-13",
+      createdBy: "ALD",
       assignee: { name: "You", fullName: "Current User", avatar: "CU" }
     },
     {
@@ -45,6 +48,7 @@ const MyTasksSection = () => {
       status: "progress",
       hasAttachment: false,
       dateCreated: "2024-12-12",
+      createdBy: "JH",
       assignee: { name: "You", fullName: "Current User", avatar: "CU" }
     }
   ];
@@ -62,16 +66,17 @@ const MyTasksSection = () => {
         <div className="space-y-0">
           {/* Header */}
           <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
-            <div className="col-span-6">Name</div>
-            <div className="col-span-2 text-center">Files</div>
-            <div className="col-span-4">Date Created</div>
+            <div className="col-span-5">Name</div>
+            <div className="col-span-1 text-center">Files</div>
+            <div className="col-span-3">Date Created</div>
+            <div className="col-span-3">Created by</div>
           </div>
           
           {/* Task rows */}
           <div className="max-h-[240px] overflow-y-auto space-y-0">
             {myTasks.map((task) => (
               <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
-                <div className="col-span-6 flex items-center gap-2">
+                <div className="col-span-5 flex items-center gap-2">
                   <TaskStatusIcon 
                     status={task.status} 
                     onClick={() => handleTaskStatusClick(task.id)}
@@ -80,13 +85,18 @@ const MyTasksSection = () => {
                     {task.taskId} - {task.title}
                   </span>
                 </div>
-                <div className="col-span-2 flex items-center justify-center">
+                <div className="col-span-1 flex items-center justify-center">
                   {task.hasAttachment && (
                     <Paperclip className="w-4 h-4 text-orange-600" strokeWidth={2} />
                   )}
                 </div>
-                <div className="col-span-4 text-muted-foreground flex items-center">
+                <div className="col-span-3 text-muted-foreground flex items-center">
                   {formatDate(task.dateCreated)}
+                </div>
+                <div className="col-span-3 text-muted-foreground flex items-center">
+                  <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                    {task.createdBy}
+                  </span>
                 </div>
               </div>
             ))}
