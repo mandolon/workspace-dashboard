@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Paperclip } from "lucide-react";
 import { formatDate, getInitials } from "@/utils/taskUtils";
 import { getCRMUser } from "@/utils/taskUserCRM";
@@ -97,9 +96,8 @@ const MyTasksSection = () => {
   };
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4">
-      <h2 className="text-lg font-semibold mb-3">My Tasks</h2>
-      <div className="space-y-0">
+    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+      <div className="flex-1 min-h-0 space-y-0">
         {/* Header */}
         <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
           <div className="col-span-5">Name</div>
@@ -108,8 +106,8 @@ const MyTasksSection = () => {
           <div className="col-span-3">Created by</div>
         </div>
         
-        {/* Task rows */}
-        <div className="max-h-[240px] overflow-y-auto space-y-0">
+        {/* Task rows - scrollable */}
+        <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {myTasks.map((task) => (
             <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-5 flex items-center gap-2">

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Trash2, Check } from 'lucide-react';
@@ -65,11 +64,10 @@ const ToDoSection = () => {
   };
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4">
-      <h2 className="text-lg font-semibold mb-3">To Do</h2>
-      <div className="space-y-2">
+    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+      <div className="space-y-2 flex-1 min-h-0 flex flex-col">
         {/* Add New Todo */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
           <Input 
             placeholder="Add a new task..." 
             value={newTodoText} 
@@ -86,8 +84,8 @@ const ToDoSection = () => {
           </Button>
         </div>
 
-        {/* Todo List */}
-        <div className="max-h-[200px] overflow-y-auto space-y-0.5">
+        {/* Todo List - scrollable */}
+        <div className="flex-1 overflow-y-auto space-y-0.5 min-h-0">
           {todos.length === 0 ? (
             <div className="text-center text-muted-foreground py-3 text-sm">
               No tasks found

@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 
 const activities = [
@@ -14,17 +13,17 @@ const activities = [
 
 const RecentActivitySection = () => {
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4">
-      <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-      <div className="space-y-0">
+    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+      <h2 className="text-lg font-semibold mb-3 flex-shrink-0">Recent Activity</h2>
+      <div className="space-y-0 flex-1 min-h-0 flex flex-col">
         {/* Header */}
-        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1 flex-shrink-0">
           <div className="col-span-8">Activity</div>
           <div className="col-span-4">Time</div>
         </div>
         
-        {/* Activity rows */}
-        <div className="max-h-[240px] overflow-y-auto space-y-0">
+        {/* Activity rows - scrollable */}
+        <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {activities.map((activity, index) => (
             <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-8 flex items-center">

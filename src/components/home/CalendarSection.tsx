@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { getInitials } from "@/utils/taskUtils";
 import { getCRMUser } from "@/utils/taskUserCRM";
 import { getAvatarColor } from "@/utils/avatarColors";
@@ -91,29 +90,29 @@ const CalendarSection = () => {
   ];
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4">
-      <h2 className="text-lg font-semibold flex items-center gap-2 mb-3">
+    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+      <h2 className="text-lg font-semibold flex items-center gap-2 mb-3 flex-shrink-0">
         <Calendar className="w-4 h-4" />
         Upcoming
       </h2>
-      <div className="space-y-0">
+      <div className="space-y-0 flex-1 min-h-0 flex flex-col">
         {/* Header */}
-        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1 flex-shrink-0">
           <div className="col-span-5">Event</div>
           <div className="col-span-1 text-center">Files</div>
           <div className="col-span-3">Date Created</div>
           <div className="col-span-3">Assigned to</div>
         </div>
         
-        {/* Event rows */}
-        <div className="max-h-[240px] overflow-y-auto space-y-0">
+        {/* Event rows - scrollable */}
+        <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {upcomingItems.map((item) => {
             const assignee = getCRMUser(item.assignedTo);
             return (
               <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
                 <div className="col-span-5 flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${
-                    item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'
+                    item.type === 'meeting' ? 'bg-green-500' : 'bg-orange-500'
                   }`} />
                   <span className="text-foreground hover:underline truncate cursor-pointer">
                     {item.title}
