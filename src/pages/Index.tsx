@@ -38,9 +38,11 @@ const Index = () => {
   return (
     <AppLayout showHeader={true}>
       <div className="flex flex-col h-full bg-background">
-        <PageSectionHeader 
-          title="Home" 
-        />
+        <div className="pr-6">
+          <PageSectionHeader 
+            title="Home" 
+          />
+        </div>
         <div className="flex-1 p-2 px-6 min-h-0">
           <div className="flex flex-col gap-6 h-full">
             {/* Top row - Tabs and Quick Actions side by side */}
