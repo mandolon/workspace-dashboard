@@ -39,7 +39,6 @@ const Index = () => {
       <div className="flex flex-col h-full bg-white">
         <PageSectionHeader 
           title="Home" 
-          rightContent={<QuickActionsHeader />}
         />
         <div className="flex-1 p-2 px-6 min-h-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
@@ -70,8 +69,11 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Right side - Fixed Recent Activity */}
-            <div className="lg:col-span-5 flex flex-col min-h-0">
+            {/* Right side - Quick Actions and Recent Activity */}
+            <div className="lg:col-span-5 flex flex-col min-h-0 gap-4">
+              <div className="flex justify-end">
+                <QuickActionsHeader />
+              </div>
               <RecentActivitySection />
             </div>
           </div>
