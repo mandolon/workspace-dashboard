@@ -51,10 +51,10 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <UserProvider>
           <SidebarProvider>
-            <TaskProvider>
-              <ProjectDataProvider>
-                <TaskAttachmentProvider>
-                  <Router>
+            <ProjectDataProvider>
+              <TaskAttachmentProvider>
+                <Router>
+                  <TaskProvider>
                     <ImpersonationGate>
                       <Routes>
                         <Route path="/login" element={<LoginPage />} />
@@ -151,11 +151,11 @@ function App() {
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </ImpersonationGate>
-                  </Router>
-                  <Toaster />
-                </TaskAttachmentProvider>
-              </ProjectDataProvider>
-            </TaskProvider>
+                  </TaskProvider>
+                </Router>
+                <Toaster />
+              </TaskAttachmentProvider>
+            </ProjectDataProvider>
           </SidebarProvider>
         </UserProvider>
       </ThemeProvider>
