@@ -51,35 +51,27 @@ const CalendarSection = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="space-y-0">
-          {/* Header */}
-          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
-            <div className="col-span-3">Date</div>
-            <div className="col-span-9">Event</div>
-          </div>
-          
-          {/* Calendar items */}
-          <div className="max-h-[240px] overflow-y-auto space-y-0">
-            {upcomingItems.map((item) => (
-              <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
-                <div className="col-span-3 flex flex-col">
-                  <span className="font-medium text-xs">{item.date}</span>
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {item.time}
-                  </span>
-                </div>
-                <div className="col-span-9 flex items-center">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'
-                    }`} />
-                    <span className="text-xs truncate">{item.title}</span>
-                  </div>
-                </div>
+        <div className="space-y-1">
+          {upcomingItems.map((item) => (
+            <div key={item.id} className="flex items-center gap-3 py-2 px-2 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+              {/* Date and Time on the left */}
+              <div className="flex flex-col items-center min-w-[60px]">
+                <span className="text-xs font-medium">{item.date}</span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {item.time}
+                </span>
               </div>
-            ))}
-          </div>
+              
+              {/* Event details in the center */}
+              <div className="flex items-center gap-2 flex-1">
+                <div className={`w-2 h-2 rounded-full ${
+                  item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'
+                }`} />
+                <span className="text-sm font-medium text-foreground">{item.title}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>
