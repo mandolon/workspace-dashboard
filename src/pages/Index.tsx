@@ -42,11 +42,11 @@ const Index = () => {
         />
         <div className="flex-1 p-2 px-6 min-h-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-            {/* Left side - Tabbed content */}
-            <div className="lg:col-span-6 flex flex-col min-h-0">
-              <div className="flex flex-col h-full">
+            {/* Left side - Tabbed content and Recent Activity */}
+            <div className="lg:col-span-6 flex flex-col min-h-0 gap-4">
+              <div className="flex flex-col h-1/2 border border-border rounded-lg">
                 {/* Tabs */}
-                <div className="flex w-full border-b border-border mb-4">
+                <div className="flex w-full border-b border-border mb-4 px-4 pt-4">
                   {tabs.map(tab => (
                     <button
                       key={tab.key}
@@ -67,15 +67,17 @@ const Index = () => {
                   {renderTabContent()}
                 </div>
               </div>
+              
+              {/* Recent Activity below tabs */}
+              <div className="flex-1 border border-border rounded-lg">
+                <RecentActivitySection />
+              </div>
             </div>
             
-            {/* Right side - Quick Actions and Recent Activity */}
-            <div className="lg:col-span-6 flex flex-col min-h-0 gap-4">
+            {/* Right side - Quick Actions only */}
+            <div className="lg:col-span-6 flex flex-col min-h-0">
               <div className="border border-border rounded-lg p-4 flex justify-start">
                 <QuickActionsHeader />
-              </div>
-              <div className="border border-border rounded-lg">
-                <RecentActivitySection />
               </div>
             </div>
           </div>
