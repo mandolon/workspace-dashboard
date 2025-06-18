@@ -25,7 +25,7 @@ const RecentActivitySection = () => {
         {/* Activity rows - scrollable */}
         <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {activities.map((activity, index) => (
-            <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
+            <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-8 flex items-center">
                 <span className="font-medium text-xs">{activity.user}: </span>
                 <span className="text-xs text-muted-foreground ml-1 truncate">{activity.text}</span>

@@ -37,7 +37,7 @@ const Index = () => {
 
   return (
     <AppLayout showHeader={true}>
-      <div className="flex flex-col h-full bg-white">
+      <div className="flex flex-col h-full bg-background">
         <PageSectionHeader 
           title="Home" 
         />
@@ -73,13 +73,13 @@ const Index = () => {
               </div>
               
               {/* Quick Actions */}
-              <div className="border border-border rounded-lg p-4 w-fit h-fit">
+              <div className="border border-border rounded-lg p-4 w-fit h-fit bg-card">
                 <QuickActionsHeader />
               </div>
             </div>
             
             {/* Bottom row - Recent Activity full width */}
-            <div className="flex-1 border border-border rounded-lg min-h-0">
+            <div className="flex-1 border border-border rounded-lg min-h-0 bg-card">
               <RecentActivitySection />
             </div>
           </div>
