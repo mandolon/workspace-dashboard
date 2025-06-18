@@ -41,10 +41,11 @@ const Index = () => {
           title="Home" 
         />
         <div className="flex-1 p-2 px-6 min-h-0">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-            {/* Left side - Tabbed content */}
-            <div className="lg:col-span-6 flex flex-col min-h-0 gap-4">
-              <div className="flex flex-col h-1/2 border border-border rounded-lg">
+          <div className="flex flex-col gap-6 h-full">
+            {/* Top row - Tabs and Quick Actions side by side */}
+            <div className="flex gap-6">
+              {/* Tabs card */}
+              <div className="flex-1 flex flex-col h-80 border border-border rounded-lg">
                 {/* Tabs */}
                 <div className="flex w-full border-b border-border mb-4 px-4 pt-4">
                   {tabs.map(tab => (
@@ -68,19 +69,15 @@ const Index = () => {
                 </div>
               </div>
               
-              {/* Recent Activity below tabs */}
-              <div className="flex-1 border border-border rounded-lg">
-                <RecentActivitySection />
+              {/* Quick Actions */}
+              <div className="border border-border rounded-lg p-4 w-fit h-fit">
+                <QuickActionsHeader />
               </div>
             </div>
             
-            {/* Right side - Quick Actions only */}
-            <div className="lg:col-span-6 flex flex-col min-h-0">
-              <div className="flex justify-end">
-                <div className="border border-border rounded-lg p-4 w-fit">
-                  <QuickActionsHeader />
-                </div>
-              </div>
+            {/* Bottom row - Recent Activity full width */}
+            <div className="flex-1 border border-border rounded-lg min-h-0">
+              <RecentActivitySection />
             </div>
           </div>
         </div>
