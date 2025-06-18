@@ -13,14 +13,22 @@ const Index = () => {
       <div className="flex flex-col h-full">
         <PageSectionHeader title="Home" />
         <div className="flex-1 p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
             {/* Top Row */}
-            <RecentActivitySection />
-            <MyTasksSection />
+            <div className="lg:col-span-2">
+              <RecentActivitySection />
+            </div>
+            <div className="lg:col-span-2">
+              <MyTasksSection />
+            </div>
             
             {/* Bottom Row */}
-            <ToDoSection />
-            <QuickActionsSection />
+            <div className="lg:col-span-2">
+              <ToDoSection />
+            </div>
+            <div className="lg:col-span-2">
+              <QuickActionsSection />
+            </div>
           </div>
         </div>
       </div>

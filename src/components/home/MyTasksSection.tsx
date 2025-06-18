@@ -1,69 +1,97 @@
 
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useRealtimeTasks } from "@/hooks/useRealtimeTasks";
-import { useUser } from "@/contexts/UserContext";
-import { formatDate } from "@/utils/taskUtils";
+import { Paperclip } from "lucide-react";
+import { formatDate, getInitials } from "@/utils/taskUtils";
+import { getCRMUser } from "@/utils/taskUserCRM";
+import { getAvatarColor } from "@/utils/avatarColors";
+import { AVATAR_INITIALS_CLASSNAMES } from "@/utils/avatarStyles";
 import TaskStatusIcon from "@/components/TaskStatusIcon";
 
 const MyTasksSection = () => {
-  const { tasks, loading } = useRealtimeTasks();
-  const { currentUser } = useUser();
+  // Hardcoded example tasks similar to task board
+  const myTasks = [
+    {
+      id: 1,
+      taskId: "T0023",
+      title: "Review architectural drawings",
+      status: "progress",
+      hasAttachment: true,
+      dateCreated: "2024-12-15",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 2,
+      taskId: "T0024", 
+      title: "Update project timeline",
+      status: "redline",
+      hasAttachment: false,
+      dateCreated: "2024-12-14",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 3,
+      taskId: "T0025",
+      title: "Client meeting preparation",
+      status: "completed",
+      hasAttachment: true,
+      dateCreated: "2024-12-13",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 4,
+      taskId: "T0026",
+      title: "Site inspection report",
+      status: "progress",
+      hasAttachment: false,
+      dateCreated: "2024-12-12",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    }
+  ];
 
-  // Filter tasks assigned to current user
-  const myTasks = tasks.filter(task => {
-    if (!currentUser) return false;
-    
-    const myNames = [currentUser.name, (currentUser as any).fullName].filter(Boolean);
-    return (
-      // Match on assignee's name or fullName
-      (task.assignee && (
-        myNames.includes(task.assignee?.fullName) ||
-        myNames.includes(task.assignee?.name)
-      )) ||
-      // Or if a collaborator matches
-      (task.collaborators && task.collaborators.some(
-        c => myNames.includes(c.fullName) || myNames.includes(c.name)
-      ))
-    );
-  }).slice(0, 6); // Show only first 6 tasks
-
-  if (loading) {
-    return (
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">My Tasks</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-sm text-muted-foreground">Loading tasks...</div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const handleTaskStatusClick = (taskId: number) => {
+    console.log('Task status clicked:', taskId);
+  };
 
   return (
     <Card className="h-full">
-      <CardHeader>
+      <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">My Tasks</CardTitle>
       </CardHeader>
-      <CardContent>
-        {myTasks.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No tasks assigned</div>
-        ) : (
-          <div className="max-h-[300px] overflow-y-auto space-y-2">
+      <CardContent className="pt-0">
+        <div className="space-y-0">
+          {/* Header */}
+          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1.5 border-b mb-2">
+            <div className="col-span-6">Name</div>
+            <div className="col-span-2 text-center">Files</div>
+            <div className="col-span-4">Date Created</div>
+          </div>
+          
+          {/* Task rows */}
+          <div className="max-h-[280px] overflow-y-auto space-y-0">
             {myTasks.map((task) => (
-              <div key={task.id} className="flex items-center gap-3 py-2 border-b border-border/30 last:border-b-0">
-                <TaskStatusIcon status={task.status} size="sm" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{task.title}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {formatDate(task.dateCreated)}
-                  </div>
+              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+                <div className="col-span-6 flex items-center gap-2">
+                  <TaskStatusIcon 
+                    status={task.status} 
+                    onClick={() => handleTaskStatusClick(task.id)}
+                  />
+                  <span className="text-blue-600 hover:underline truncate cursor-pointer">
+                    {task.taskId} - {task.title}
+                  </span>
+                </div>
+                <div className="col-span-2 flex items-center justify-center">
+                  {task.hasAttachment && (
+                    <Paperclip className="w-4 h-4 text-orange-600" strokeWidth={2} />
+                  )}
+                </div>
+                <div className="col-span-4 text-muted-foreground flex items-center">
+                  {formatDate(task.dateCreated)}
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   );

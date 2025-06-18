@@ -15,18 +15,18 @@ const activities = [
 const RecentActivitySection = () => {
   return (
     <Card className="h-full">
-      <CardHeader>
+      <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="max-h-[300px] overflow-y-auto space-y-3">
+      <CardContent className="pt-0">
+        <div className="max-h-[320px] overflow-y-auto space-y-2">
           {activities.map((activity, index) => (
             <div key={index} className="flex justify-between items-start py-2 border-b border-border/30 last:border-b-0">
-              <div className="flex-1">
+              <div className="flex-1 pr-3">
                 <span className="font-medium text-sm">{activity.user}: </span>
                 <span className="text-sm text-muted-foreground">{activity.text}</span>
               </div>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground ml-3">
+              <span className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
                 <Clock className="w-3 h-3" />
                 {activity.time}
               </span>

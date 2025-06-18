@@ -70,10 +70,10 @@ const ToDoSection = () => {
 
   return (
     <Card className="h-full">
-      <CardHeader>
+      <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">To Do</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="pt-0 space-y-3">
         {/* Add New Todo */}
         <div className="flex gap-2">
           <Input
@@ -81,23 +81,22 @@ const ToDoSection = () => {
             value={newTodoText}
             onChange={(e) => setNewTodoText(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-1 text-sm"
-            size="sm"
+            className="flex-1 text-sm h-8"
           />
-          <Button onClick={handleAddTodo} size="sm" className="bg-foreground text-background hover:bg-foreground/90">
+          <Button onClick={handleAddTodo} size="sm" className="h-8 px-3 bg-foreground text-background hover:bg-foreground/90">
             <Plus className="w-4 h-4" strokeWidth="2" />
           </Button>
         </div>
 
         {/* Todo List */}
-        <div className="max-h-[200px] overflow-y-auto space-y-1">
+        <div className="max-h-[240px] overflow-y-auto space-y-1">
           {todos.length === 0 ? (
             <div className="text-center text-muted-foreground py-4 text-sm">
               No tasks found
             </div>
           ) : (
             todos.map((todo) => (
-              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-accent/50 rounded px-1">
+              <div key={todo.id} className="flex items-center gap-2 py-1.5 text-sm hover:bg-accent/50 rounded px-1">
                 <button
                   onClick={() => handleToggleComplete(todo.id)}
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -109,7 +108,7 @@ const ToDoSection = () => {
                   {todo.completed && <Check className="w-2.5 h-2.5" strokeWidth="2" />}
                 </button>
                 <div className={`flex-1 min-w-0 ${todo.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                  <div className="truncate">{todo.text}</div>
+                  <div className="truncate text-xs">{todo.text}</div>
                 </div>
                 <button
                   onClick={() => handleDeleteTodo(todo.id)}
