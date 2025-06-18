@@ -71,7 +71,7 @@ const Index = () => {
             
             {/* Right side - Quick Actions and Recent Activity */}
             <div className="lg:col-span-5 flex flex-col min-h-0 gap-4">
-              <div className="flex justify-end">
+              <div className="rounded-lg p-4 flex justify-end">
                 <QuickActionsHeader />
               </div>
               <RecentActivitySection />
