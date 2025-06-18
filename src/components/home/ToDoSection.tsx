@@ -92,7 +92,7 @@ const ToDoSection = () => {
             </div>
           ) : (
             todos.map(todo => (
-              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-gray-50 rounded px-1">
+              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-accent/50 rounded px-1">
                 <button 
                   onClick={() => handleToggleComplete(todo.id)} 
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${

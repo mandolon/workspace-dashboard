@@ -110,7 +110,7 @@ const MyTasksSection = () => {
         {/* Task rows - scrollable */}
         <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {myTasks.map((task) => (
-            <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
+            <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-5 flex items-center gap-2">
                 <TaskStatusIcon 
                   status={task.status} 
