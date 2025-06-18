@@ -15,23 +15,32 @@ const activities = [
 const RecentActivitySection = () => {
   return (
     <Card className="h-full">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-1">
         <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="max-h-[280px] overflow-y-auto space-y-1">
-          {activities.map((activity, index) => (
-            <div key={index} className="flex justify-between items-start py-1.5 border-b border-border/30 last:border-b-0">
-              <div className="flex-1 pr-2">
-                <span className="font-medium text-sm">{activity.user}: </span>
-                <span className="text-sm text-muted-foreground">{activity.text}</span>
+        <div className="space-y-0">
+          {/* Header */}
+          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+            <div className="col-span-8">Activity</div>
+            <div className="col-span-4">Time</div>
+          </div>
+          
+          {/* Activity rows */}
+          <div className="max-h-[240px] overflow-y-auto space-y-0">
+            {activities.map((activity, index) => (
+              <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+                <div className="col-span-8 flex items-center">
+                  <span className="font-medium text-xs">{activity.user}: </span>
+                  <span className="text-xs text-muted-foreground ml-1 truncate">{activity.text}</span>
+                </div>
+                <div className="col-span-4 flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="w-3 h-3" />
+                  {activity.time}
+                </div>
               </div>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
-                <Clock className="w-3 h-3" />
-                {activity.time}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>
