@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Calendar, Clock } from 'lucide-react';
@@ -92,7 +91,7 @@ const CalendarSection = () => {
   ];
 
   return (
-    <Card className="h-full">
+    <Card className="h-full border-0 shadow-none bg-slate-50/50">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           <Calendar className="w-4 h-4" />
@@ -114,7 +113,7 @@ const CalendarSection = () => {
             {upcomingItems.map((item) => {
               const assignee = getCRMUser(item.assignedTo);
               return (
-                <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+                <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
                   <div className="col-span-5 flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${
                       item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'

@@ -11,13 +11,13 @@ import CalendarSection from '@/components/home/CalendarSection';
 const Index = () => {
   return (
     <AppLayout showHeader={true}>
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 to-slate-100">
         <PageSectionHeader 
           title="Home" 
           rightContent={<QuickActionsHeader />}
         />
         <div className="flex-1 p-2 px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-full">
             {/* Top Row - Swapped positions */}
             <div className="lg:col-span-6">
               <MyTasksSection />

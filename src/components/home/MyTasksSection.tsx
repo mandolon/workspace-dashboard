@@ -98,8 +98,8 @@ const MyTasksSection = () => {
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-2">
+    <Card className="h-full border-0 shadow-none bg-slate-50/50">
+      <CardHeader className="pb-1">
         <CardTitle className="text-lg font-semibold">My Tasks</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
@@ -115,7 +115,7 @@ const MyTasksSection = () => {
           {/* Task rows */}
           <div className="max-h-[240px] overflow-y-auto space-y-0">
             {myTasks.map((task) => (
-              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
                 <div className="col-span-5 flex items-center gap-2">
                   <TaskStatusIcon 
                     status={task.status} 
