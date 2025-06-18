@@ -13,7 +13,7 @@ const activities = [
 
 const RecentActivitySection = () => {
   return (
-    <div className="h-full rounded-lg p-4 flex flex-col">
+    <div className="h-full rounded-lg p-6 flex flex-col">
       <h2 className="text-lg font-semibold mb-3 flex-shrink-0">Recent Activity</h2>
       <div className="space-y-0 flex-1 min-h-0 flex flex-col">
         {/* Header */}
