@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Paperclip } from "lucide-react";
@@ -98,54 +97,50 @@ const MyTasksSection = () => {
   };
 
   return (
-    <Card className="h-full border-0 shadow-none bg-slate-50/50">
-      <CardHeader className="pb-1">
-        <CardTitle className="text-lg font-semibold">My Tasks</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-0">
-          {/* Header */}
-          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
-            <div className="col-span-5">Name</div>
-            <div className="col-span-1 text-center">Files</div>
-            <div className="col-span-3">Date Created</div>
-            <div className="col-span-3">Created by</div>
-          </div>
-          
-          {/* Task rows */}
-          <div className="max-h-[240px] overflow-y-auto space-y-0">
-            {myTasks.map((task) => (
-              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
-                <div className="col-span-5 flex items-center gap-2">
-                  <TaskStatusIcon 
-                    status={task.status} 
-                    onClick={() => handleTaskStatusClick(task.id)}
-                  />
-                  <span className="text-blue-600 hover:underline truncate cursor-pointer">
-                    {task.taskId} - {task.title}
-                  </span>
-                </div>
-                <div className="col-span-1 flex items-center justify-center">
-                  {task.hasAttachment && (
-                    <Paperclip className="w-4 h-4 text-orange-600" strokeWidth={2} />
-                  )}
-                </div>
-                <div className="col-span-3 text-muted-foreground flex items-center">
-                  <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
-                    {formatDate(task.dateCreated)}
-                  </span>
-                </div>
-                <div className="col-span-3 text-muted-foreground flex items-center">
-                  <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
-                    {task.createdBy}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="h-full rounded-lg bg-gray-50/30 p-4">
+      <h2 className="text-lg font-semibold mb-3">My Tasks</h2>
+      <div className="space-y-0">
+        {/* Header */}
+        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+          <div className="col-span-5">Name</div>
+          <div className="col-span-1 text-center">Files</div>
+          <div className="col-span-3">Date Created</div>
+          <div className="col-span-3">Created by</div>
         </div>
-      </CardContent>
-    </Card>
+        
+        {/* Task rows */}
+        <div className="max-h-[240px] overflow-y-auto space-y-0">
+          {myTasks.map((task) => (
+            <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+              <div className="col-span-5 flex items-center gap-2">
+                <TaskStatusIcon 
+                  status={task.status} 
+                  onClick={() => handleTaskStatusClick(task.id)}
+                />
+                <span className="text-foreground hover:underline truncate cursor-pointer">
+                  {task.taskId} - {task.title}
+                </span>
+              </div>
+              <div className="col-span-1 flex items-center justify-center">
+                {task.hasAttachment && (
+                  <Paperclip className="w-4 h-4 text-orange-600" strokeWidth={2} />
+                )}
+              </div>
+              <div className="col-span-3 text-muted-foreground flex items-center">
+                <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                  {formatDate(task.dateCreated)}
+                </span>
+              </div>
+              <div className="col-span-3 text-muted-foreground flex items-center">
+                <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                  {task.createdBy}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

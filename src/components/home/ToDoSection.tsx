@@ -65,11 +65,9 @@ const ToDoSection = () => {
   };
 
   return (
-    <Card className="h-full border-0 shadow-none bg-slate-50/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold">To Do</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0 space-y-2">
+    <div className="h-full rounded-lg bg-gray-50/30 p-4">
+      <h2 className="text-lg font-semibold mb-3">To Do</h2>
+      <div className="space-y-2">
         {/* Add New Todo */}
         <div className="flex gap-2">
           <Input 
@@ -122,8 +120,8 @@ const ToDoSection = () => {
             ))
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

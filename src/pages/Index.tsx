@@ -11,7 +11,7 @@ import CalendarSection from '@/components/home/CalendarSection';
 const Index = () => {
   return (
     <AppLayout showHeader={true}>
-      <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="flex flex-col h-full bg-white">
         <PageSectionHeader 
           title="Home" 
           rightContent={<QuickActionsHeader />}

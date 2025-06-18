@@ -14,36 +14,32 @@ const activities = [
 
 const RecentActivitySection = () => {
   return (
-    <Card className="h-full border-0 shadow-none bg-slate-50/50">
-      <CardHeader className="pb-1">
-        <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-0">
-          {/* Header */}
-          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
-            <div className="col-span-8">Activity</div>
-            <div className="col-span-4">Time</div>
-          </div>
-          
-          {/* Activity rows */}
-          <div className="max-h-[240px] overflow-y-auto space-y-0">
-            {activities.map((activity, index) => (
-              <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
-                <div className="col-span-8 flex items-center">
-                  <span className="font-medium text-xs">{activity.user}: </span>
-                  <span className="text-xs text-muted-foreground ml-1 truncate">{activity.text}</span>
-                </div>
-                <div className="col-span-4 flex items-center gap-1 text-xs text-muted-foreground">
-                  <Clock className="w-3 h-3" />
-                  {activity.time}
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="h-full rounded-lg bg-gray-50/30 p-4">
+      <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
+      <div className="space-y-0">
+        {/* Header */}
+        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+          <div className="col-span-8">Activity</div>
+          <div className="col-span-4">Time</div>
         </div>
-      </CardContent>
-    </Card>
+        
+        {/* Activity rows */}
+        <div className="max-h-[240px] overflow-y-auto space-y-0">
+          {activities.map((activity, index) => (
+            <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+              <div className="col-span-8 flex items-center">
+                <span className="font-medium text-xs">{activity.user}: </span>
+                <span className="text-xs text-muted-foreground ml-1 truncate">{activity.text}</span>
+              </div>
+              <div className="col-span-4 flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="w-3 h-3" />
+                {activity.time}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -91,61 +91,57 @@ const CalendarSection = () => {
   ];
 
   return (
-    <Card className="h-full border-0 shadow-none bg-slate-50/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Calendar className="w-4 h-4" />
-          Upcoming
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-0">
-          {/* Header */}
-          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
-            <div className="col-span-5">Event</div>
-            <div className="col-span-1 text-center">Files</div>
-            <div className="col-span-3">Date Created</div>
-            <div className="col-span-3">Assigned to</div>
-          </div>
-          
-          {/* Event rows */}
-          <div className="max-h-[240px] overflow-y-auto space-y-0">
-            {upcomingItems.map((item) => {
-              const assignee = getCRMUser(item.assignedTo);
-              return (
-                <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
-                  <div className="col-span-5 flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'
-                    }`} />
-                    <span className="text-blue-600 hover:underline truncate cursor-pointer">
-                      {item.title}
-                    </span>
-                  </div>
-                  <div className="col-span-1 flex items-center justify-center">
-                    {/* Empty for consistency with My Tasks */}
-                  </div>
-                  <div className="col-span-3 text-muted-foreground flex items-center">
-                    <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
-                      {item.date} {item.time}
-                    </span>
-                  </div>
-                  <div className="col-span-3 flex items-center">
-                    {assignee && (
-                      <div className="flex items-center gap-1">
-                        <div className={`w-6 h-6 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getAvatarColor(assignee)}`}>
-                          {getInitials(assignee.fullName ?? assignee.name)}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+    <div className="h-full rounded-lg bg-gray-50/30 p-4">
+      <h2 className="text-lg font-semibold flex items-center gap-2 mb-3">
+        <Calendar className="w-4 h-4" />
+        Upcoming
+      </h2>
+      <div className="space-y-0">
+        {/* Header */}
+        <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
+          <div className="col-span-5">Event</div>
+          <div className="col-span-1 text-center">Files</div>
+          <div className="col-span-3">Date Created</div>
+          <div className="col-span-3">Assigned to</div>
         </div>
-      </CardContent>
-    </Card>
+        
+        {/* Event rows */}
+        <div className="max-h-[240px] overflow-y-auto space-y-0">
+          {upcomingItems.map((item) => {
+            const assignee = getCRMUser(item.assignedTo);
+            return (
+              <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+                <div className="col-span-5 flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    item.type === 'meeting' ? 'bg-blue-500' : 'bg-orange-500'
+                  }`} />
+                  <span className="text-foreground hover:underline truncate cursor-pointer">
+                    {item.title}
+                  </span>
+                </div>
+                <div className="col-span-1 flex items-center justify-center">
+                  {/* Empty for consistency with My Tasks */}
+                </div>
+                <div className="col-span-3 text-muted-foreground flex items-center">
+                  <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                    {item.date} {item.time}
+                  </span>
+                </div>
+                <div className="col-span-3 flex items-center">
+                  {assignee && (
+                    <div className="flex items-center gap-1">
+                      <div className={`w-6 h-6 rounded-full ${AVATAR_INITIALS_CLASSNAMES} text-white ${getAvatarColor(assignee)}`}>
+                        {getInitials(assignee.fullName ?? assignee.name)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 };
 
