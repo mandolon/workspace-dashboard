@@ -7,6 +7,7 @@ import RecentActivitySection from '@/components/home/RecentActivitySection';
 import MyTasksSection from '@/components/home/MyTasksSection';
 import ToDoSection from '@/components/home/ToDoSection';
 import CalendarSection from '@/components/home/CalendarSection';
+import InvoicesSection from '@/components/home/InvoicesSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Index = () => {
@@ -24,10 +25,11 @@ const Index = () => {
             {/* Left side - Tabbed content */}
             <div className="lg:col-span-8 flex flex-col min-h-0">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
-                <TabsList className="grid w-full grid-cols-3 mb-4">
+                <TabsList className="grid w-full grid-cols-4 mb-4">
                   <TabsTrigger value="tasks">My Tasks</TabsTrigger>
                   <TabsTrigger value="todo">To Do</TabsTrigger>
                   <TabsTrigger value="calendar">Calendar</TabsTrigger>
+                  <TabsTrigger value="invoices">Invoices</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="tasks" className="flex-1 min-h-0">
@@ -40,6 +42,10 @@ const Index = () => {
                 
                 <TabsContent value="calendar" className="flex-1 min-h-0">
                   <CalendarSection />
+                </TabsContent>
+
+                <TabsContent value="invoices" className="flex-1 min-h-0">
+                  <InvoicesSection />
                 </TabsContent>
               </Tabs>
             </div>
