@@ -50,6 +50,46 @@ const MyTasksSection = () => {
       dateCreated: "2024-12-12",
       createdBy: "JH",
       assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 5,
+      taskId: "T0027",
+      title: "Submit permit applications",
+      status: "progress",
+      hasAttachment: true,
+      dateCreated: "2024-12-11",
+      createdBy: "AL",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 6,
+      taskId: "T0028",
+      title: "Review structural calculations",
+      status: "redline",
+      hasAttachment: false,
+      dateCreated: "2024-12-10",
+      createdBy: "MP",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 7,
+      taskId: "T0029",
+      title: "Coordinate with electrical contractor",
+      status: "progress",
+      hasAttachment: true,
+      dateCreated: "2024-12-09",
+      createdBy: "JH",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
+    },
+    {
+      id: 8,
+      taskId: "T0030",
+      title: "Finalize material specifications",
+      status: "completed",
+      hasAttachment: false,
+      dateCreated: "2024-12-08",
+      createdBy: "ALD",
+      assignee: { name: "You", fullName: "Current User", avatar: "CU" }
     }
   ];
 
@@ -91,7 +131,9 @@ const MyTasksSection = () => {
                   )}
                 </div>
                 <div className="col-span-3 text-muted-foreground flex items-center">
-                  {formatDate(task.dateCreated)}
+                  <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
+                    {formatDate(task.dateCreated)}
+                  </span>
                 </div>
                 <div className="col-span-3 text-muted-foreground flex items-center">
                   <span className="truncate max-w-[110px] text-xs text-muted-foreground block text-ellipsis">
