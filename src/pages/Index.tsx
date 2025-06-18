@@ -8,6 +8,7 @@ import MyTasksSection from '@/components/home/MyTasksSection';
 import ToDoSection from '@/components/home/ToDoSection';
 import CalendarSection from '@/components/home/CalendarSection';
 import InvoicesSection from '@/components/home/InvoicesSection';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('tasks');
@@ -45,7 +46,7 @@ const Index = () => {
             {/* Top row - Tabs and Quick Actions side by side */}
             <div className="flex gap-6">
               {/* Tabs card */}
-              <div className="flex-1 flex flex-col h-80 border border-border rounded-lg">
+              <div className="flex-1 flex flex-col h-80">
                 {/* Tabs */}
                 <div className="flex w-full border-b border-border mb-4 px-4 pt-4">
                   {tabs.map(tab => (
@@ -63,9 +64,11 @@ const Index = () => {
                   ))}
                 </div>
                 
-                {/* Tab Content */}
-                <div className="flex-1 min-h-0">
-                  {renderTabContent()}
+                {/* Tab Content with ScrollArea */}
+                <div className="flex-1 min-h-0 px-4 pb-4">
+                  <ScrollArea className="h-full">
+                    {renderTabContent()}
+                  </ScrollArea>
                 </div>
               </div>
               
