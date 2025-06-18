@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -39,6 +40,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateClientDashboard = useCallback(() => navigate('/client/dashboard'), [navigate]);
   const handleNavigateClientWhiteboards = useCallback(() => navigate('/client/whiteboards'), [navigate]);
   const handleNavigateHome = useCallback(() => navigate('/'), [navigate]);
+  const handleNavigateHome2 = useCallback(() => navigate('/home2'), [navigate]);
   const handleNavigateTasks = useCallback(() => navigate('/tasks'), [navigate]);
   const handleNavigateInbox = useCallback(() => navigate('/inbox'), [navigate]);
   const handleNavigateChat = useCallback(() => {}, []);
@@ -58,6 +60,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     if (clientMode) return clientNavItems;
     return [
       { icon: Home, label: 'Home', active: false, onClick: handleNavigateHome },
+      { icon: Home, label: 'Home 2', active: false, onClick: handleNavigateHome2 },
       { icon: ClipboardList, label: 'Tasks', active: false, onClick: handleNavigateTasks },
       { icon: Inbox, label: 'Inbox', active: false, onClick: handleNavigateInbox },
       { icon: MessageSquare, label: 'Chat', active: false, onClick: handleNavigateChat },
@@ -66,11 +69,11 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
       { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
       { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
       { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
-      // Help item removed!
     ];
   }, [
     clientMode,
     handleNavigateHome,
+    handleNavigateHome2,
     handleNavigateTasks,
     handleNavigateInbox,
     handleNavigateChat,
