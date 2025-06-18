@@ -16,7 +16,7 @@ const Index = () => {
           title="Home" 
           rightContent={<QuickActionsHeader />}
         />
-        <div className="flex-1 p-2">
+        <div className="flex-1 p-2 px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 h-full">
             {/* Top Row - Swapped positions */}
             <div className="lg:col-span-6">
