@@ -1,140 +1,166 @@
 
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider } from "next-themes";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import ProjectPage from "./pages/ProjectPage";
-import TaskDetailPage from "./pages/TaskDetailPage";
-import InboxPage from "./pages/InboxPage";
-import TeamsPage from "./pages/TeamsPage";
-import InvoicePage from "./pages/InvoicePage";
-import TimesheetsPage from "./pages/TimesheetsPage";
-import WhiteboardsPage from "./pages/WhiteboardsPage";
-import ClientWhiteboards from "./pages/ClientWhiteboards";
-import SettingsPage from "./pages/SettingsPage";
-import NotFound from "./pages/NotFound";
-import TasksPage from "./pages/TasksPage";
-import ClientAccountPage from "./pages/ClientAccountPage";
-import ClientDashboard from "./pages/ClientDashboard";
-import AdminHelpPage from "./pages/AdminHelpPage";
-import TeamHelpPage from "./pages/TeamHelpPage";
-import ClientHelpPage from "./pages/ClientHelpPage";
-import { SidebarProvider } from "./contexts/SidebarContext";
-import { ProjectDataProvider } from "./contexts/ProjectDataContext";
-import { UserProvider } from "./contexts/UserContext";
-import { TaskProvider } from "./contexts/TaskContext";
-import { TaskAttachmentProvider } from "./contexts/TaskAttachmentContext";
-import ImpersonationGate from "./components/ImpersonationGate";
-import LoginPage from "./components/auth/LoginPage";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { SidebarProvider } from '@/contexts/SidebarContext';
+import { UserProvider } from '@/contexts/UserContext';
+import { TaskProvider } from '@/contexts/TaskContext';
+import { ProjectDataProvider } from '@/contexts/ProjectDataContext';
+import { TaskAttachmentProvider } from '@/contexts/TaskAttachmentContext';
+import { ThemeProvider } from 'next-themes';
+import ImpersonationGate from '@/components/ImpersonationGate';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
-const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-    <QueryClientProvider client={new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-          refetchOnWindowFocus: false,
-        },
-      },
-    })}>
-      <TooltipProvider>
-        {children}
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+// Import pages
+import Index from '@/pages/Index';
+import Home2 from '@/pages/Home2';
+import TasksPage from '@/pages/TasksPage';
+import TaskDetailPage from '@/pages/TaskDetailPage';
+import ProjectPage from '@/pages/ProjectPage';
+import TeamsPage from '@/pages/TeamsPage';
+import Dashboard from '@/pages/Dashboard';
+import InboxPage from '@/pages/InboxPage';
+import SettingsPage from '@/pages/SettingsPage';
+import TimesheetsPage from '@/pages/TimesheetsPage';
+import WhiteboardsPage from '@/pages/WhiteboardsPage';
+import InvoicePage from '@/pages/InvoicePage';
+import ClientDashboard from '@/pages/ClientDashboard';
+import ClientAccountPage from '@/pages/ClientAccountPage';
+import ClientWhiteboards from '@/pages/ClientWhiteboards';
+import NotFound from '@/pages/NotFound';
+import LoginPage from '@/components/auth/LoginPage';
 
-const LocationLogger = () => {
-  const location = useLocation();
-  useEffect(() => {
-    console.log('App component is rendering, current path:', location.pathname);
-  }, [location]);
-  return null;
-};
+// Help pages
+import AdminHelpPage from '@/pages/AdminHelpPage';
+import TeamHelpPage from '@/pages/TeamHelpPage';
+import ClientHelpPage from '@/pages/ClientHelpPage';
 
-const App = () => {
-  // Providers that do NOT require router context (ThemeProvider, QueryClientProvider, TooltipProvider) are at the top level.
-  // Providers that REQUIRE router context (UserProvider, TaskProvider, etc.) go INSIDE BrowserRouter.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+function App() {
   return (
-    <AppProviders>
-      <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <UserProvider>
           <SidebarProvider>
-            <ProjectDataProvider>
-              <TaskAttachmentProvider>
-                <TaskProvider>
-                  <Toaster />
-                  <Sonner />
-                  <LocationLogger />
-                  <ImpersonationGate>
-                    <Routes>
-                      <Route path="/login" element={<LoginPage />} />
-                      <Route
-                        path="/*"
-                        element={
+            <TaskProvider>
+              <ProjectDataProvider>
+                <TaskAttachmentProvider>
+                  <Router>
+                    <ImpersonationGate>
+                      <Routes>
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/" element={
                           <ProtectedRoute>
-                            <Routes>
-                              <Route path="/" element={<Index />} />
-                              <Route path="/tasks" element={<TasksPage />} />
-                              <Route path="/dashboard" element={<Dashboard />} />
-                              <Route path="/project/:projectId" element={<ProjectPage />} />
-                              <Route path="/task/:taskId" element={<TaskDetailPage />} />
-                              <Route path="/inbox" element={<InboxPage />} />
-                              <Route path="/teams" element={<TeamsPage />} />
-                              <Route path="/client/account" element={<ClientAccountPage />} />
-                              <Route path="/client/dashboard" element={<ClientDashboard />} />
-                              <Route path="/invoices" element={<InvoicePage />} />
-                              <Route path="/timesheets" element={<TimesheetsPage />} />
-                              <Route path="/whiteboards" element={<WhiteboardsPage />} />
-                              <Route path="/client/whiteboards" element={<ClientWhiteboards />} />
-                              <Route path="/settings" element={<SettingsPage />} />
-                              <Route path="/settings/notifications" element={<SettingsPage />} />
-                              <Route path="/help" element={<HelpRedirector />} />
-                              <Route path="/help/admin" element={<AdminHelpPage />} />
-                              <Route path="/help/team" element={<TeamHelpPage />} />
-                              <Route path="/help/client" element={<ClientHelpPage />} />
-                              <Route path="*" element={<NotFound />} />
-                            </Routes>
+                            <Index />
                           </ProtectedRoute>
-                        }
-                      />
-                    </Routes>
-                  </ImpersonationGate>
-                </TaskProvider>
-              </TaskAttachmentProvider>
-            </ProjectDataProvider>
+                        } />
+                        <Route path="/home2" element={
+                          <ProtectedRoute>
+                            <Home2 />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/tasks" element={
+                          <ProtectedRoute>
+                            <TasksPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/task/:taskId" element={
+                          <ProtectedRoute>
+                            <TaskDetailPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/project/:projectId" element={
+                          <ProtectedRoute>
+                            <ProjectPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/teams" element={
+                          <ProtectedRoute>
+                            <TeamsPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/dashboard" element={
+                          <ProtectedRoute>
+                            <Dashboard />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/inbox" element={
+                          <ProtectedRoute>
+                            <InboxPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/settings" element={
+                          <ProtectedRoute>
+                            <SettingsPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/timesheets" element={
+                          <ProtectedRoute>
+                            <TimesheetsPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/whiteboards" element={
+                          <ProtectedRoute>
+                            <WhiteboardsPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/invoice/:invoiceId" element={
+                          <ProtectedRoute>
+                            <InvoicePage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/client-dashboard" element={
+                          <ProtectedRoute>
+                            <ClientDashboard />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/client-account" element={
+                          <ProtectedRoute>
+                            <ClientAccountPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/client-whiteboards" element={
+                          <ProtectedRoute>
+                            <ClientWhiteboards />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/help/admin" element={
+                          <ProtectedRoute>
+                            <AdminHelpPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/help/team" element={
+                          <ProtectedRoute>
+                            <TeamHelpPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/help/client" element={
+                          <ProtectedRoute>
+                            <ClientHelpPage />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </ImpersonationGate>
+                  </Router>
+                  <Toaster />
+                </TaskAttachmentProvider>
+              </ProjectDataProvider>
+            </TaskProvider>
           </SidebarProvider>
         </UserProvider>
-      </BrowserRouter>
-    </AppProviders>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
-};
-
-import { useUser } from "./contexts/UserContext";
-import { useNavigate } from "react-router-dom";
-
-const HelpRedirector = () => {
-  const { currentUser } = useUser();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!currentUser) return;
-    if (currentUser.role === 'Admin') {
-      navigate('/help/admin', { replace: true });
-    } else if (currentUser.role === 'Team Lead' || currentUser.role === 'Project Manager' || currentUser.role === 'Engineer' || currentUser.role === 'Designer' || currentUser.role === 'Operations' || currentUser.role === 'QA Tester' || currentUser.role === 'Consultant' || currentUser.role === 'CAD Tech' || currentUser.role === 'Jr Designer' || currentUser.role === 'Developer' || currentUser.role === 'Marketing Manager' || currentUser.role === 'Customer Support' || currentUser.role === 'Interior Designer' || currentUser.role === 'Contractor') {
-      navigate('/help/team', { replace: true });
-    } else if (currentUser.role === 'Client') {
-      navigate('/help/client', { replace: true });
-    } else {
-      navigate('/help/client', { replace: true });
-    }
-  }, [currentUser, navigate]);
-  return <div>Redirecting to the appropriate Help page…</div>;
-};
+}
 
 export default App;
