@@ -23,7 +23,7 @@ const Index = () => {
         <div className="flex-1 p-2 px-6 min-h-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
             {/* Left side - Tabbed content */}
-            <div className="lg:col-span-8 flex flex-col min-h-0">
+            <div className="lg:col-span-7 flex flex-col min-h-0">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
                 <TabsList className="grid w-full grid-cols-4 mb-4">
                   <TabsTrigger value="tasks">My Tasks</TabsTrigger>
@@ -51,7 +51,7 @@ const Index = () => {
             </div>
             
             {/* Right side - Fixed Recent Activity */}
-            <div className="lg:col-span-4 flex flex-col min-h-0">
+            <div className="lg:col-span-5 flex flex-col min-h-0">
               <RecentActivitySection />
             </div>
           </div>
