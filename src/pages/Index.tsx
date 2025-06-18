@@ -12,8 +12,8 @@ const Index = () => {
     <AppLayout showHeader={true}>
       <div className="flex flex-col h-full">
         <PageSectionHeader title="Home" />
-        <div className="flex-1 p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+        <div className="flex-1 p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
             {/* Top Row */}
             <div className="lg:col-span-2">
               <RecentActivitySection />

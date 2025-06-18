@@ -70,10 +70,10 @@ const ToDoSection = () => {
 
   return (
     <Card className="h-full">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">To Do</CardTitle>
       </CardHeader>
-      <CardContent className="pt-0 space-y-3">
+      <CardContent className="pt-0 space-y-2">
         {/* Add New Todo */}
         <div className="flex gap-2">
           <Input
@@ -81,22 +81,22 @@ const ToDoSection = () => {
             value={newTodoText}
             onChange={(e) => setNewTodoText(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-1 text-sm h-8"
+            className="flex-1 text-sm h-7"
           />
-          <Button onClick={handleAddTodo} size="sm" className="h-8 px-3 bg-foreground text-background hover:bg-foreground/90">
-            <Plus className="w-4 h-4" strokeWidth="2" />
+          <Button onClick={handleAddTodo} size="sm" className="h-7 px-2 bg-foreground text-background hover:bg-foreground/90">
+            <Plus className="w-3 h-3" strokeWidth="2" />
           </Button>
         </div>
 
         {/* Todo List */}
-        <div className="max-h-[240px] overflow-y-auto space-y-1">
+        <div className="max-h-[200px] overflow-y-auto space-y-0.5">
           {todos.length === 0 ? (
-            <div className="text-center text-muted-foreground py-4 text-sm">
+            <div className="text-center text-muted-foreground py-3 text-sm">
               No tasks found
             </div>
           ) : (
             todos.map((todo) => (
-              <div key={todo.id} className="flex items-center gap-2 py-1.5 text-sm hover:bg-accent/50 rounded px-1">
+              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-accent/50 rounded px-1">
                 <button
                   onClick={() => handleToggleComplete(todo.id)}
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -112,7 +112,7 @@ const ToDoSection = () => {
                 </div>
                 <button
                   onClick={() => handleDeleteTodo(todo.id)}
-                  className="text-red-500 hover:text-red-700 p-1 flex-shrink-0"
+                  className="text-red-500 hover:text-red-700 p-0.5 flex-shrink-0"
                 >
                   <Trash2 className="w-3 h-3" strokeWidth="2" />
                 </button>
@@ -122,7 +122,7 @@ const ToDoSection = () => {
         </div>
 
         {/* Stats */}
-        <div className="flex gap-4 text-xs text-muted-foreground pt-2 border-t border-border/30">
+        <div className="flex gap-4 text-xs text-muted-foreground pt-1 border-t border-border/30">
           <span>Total: {todos.length}</span>
           <span>Completed: {todos.filter(t => t.completed).length}</span>
           <span>Pending: {todos.filter(t => !t.completed).length}</span>

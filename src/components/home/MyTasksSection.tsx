@@ -55,22 +55,22 @@ const MyTasksSection = () => {
 
   return (
     <Card className="h-full">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">My Tasks</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-0">
           {/* Header */}
-          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1.5 border-b mb-2">
+          <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
             <div className="col-span-6">Name</div>
             <div className="col-span-2 text-center">Files</div>
             <div className="col-span-4">Date Created</div>
           </div>
           
           {/* Task rows */}
-          <div className="max-h-[280px] overflow-y-auto space-y-0">
+          <div className="max-h-[240px] overflow-y-auto space-y-0">
             {myTasks.map((task) => (
-              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-2 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
+              <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-accent/50 rounded border-b border-border/30 last:border-b-0">
                 <div className="col-span-6 flex items-center gap-2">
                   <TaskStatusIcon 
                     status={task.status} 

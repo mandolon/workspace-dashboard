@@ -46,21 +46,21 @@ const QuickActionsSection = () => {
 
   return (
     <Card className="h-full">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1.5">
           {actions.map((action, index) => {
             const Icon = action.icon;
             return (
               <Button
                 key={index}
                 variant={action.variant}
-                className="h-auto p-3 flex flex-col items-center gap-1.5 text-center"
+                className="h-auto p-2 flex flex-col items-center gap-1 text-center"
                 onClick={() => console.log(`${action.label} clicked`)}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3 h-3" />
                 <div>
                   <div className="text-xs font-medium">{action.label}</div>
                   <div className="text-xs text-muted-foreground leading-tight">{action.description}</div>
