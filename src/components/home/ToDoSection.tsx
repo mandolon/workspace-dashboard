@@ -64,7 +64,7 @@ const ToDoSection = () => {
   };
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+    <div className="h-full rounded-lg p-4 flex flex-col">
       <div className="space-y-2 flex-1 min-h-0 flex flex-col">
         {/* Add New Todo */}
         <div className="flex gap-2 flex-shrink-0">
@@ -92,7 +92,7 @@ const ToDoSection = () => {
             </div>
           ) : (
             todos.map(todo => (
-              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-white/80 rounded px-1">
+              <div key={todo.id} className="flex items-center gap-2 py-1 text-sm hover:bg-gray-50 rounded px-1">
                 <button 
                   onClick={() => handleToggleComplete(todo.id)} 
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${

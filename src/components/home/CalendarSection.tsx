@@ -90,7 +90,7 @@ const CalendarSection = () => {
   ];
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+    <div className="h-full rounded-lg p-4 flex flex-col">
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-3 flex-shrink-0">
         <Calendar className="w-4 h-4" />
         Upcoming
@@ -109,7 +109,7 @@ const CalendarSection = () => {
           {upcomingItems.map((item) => {
             const assignee = getCRMUser(item.assignedTo);
             return (
-              <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+              <div key={item.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
                 <div className="col-span-5 flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${
                     item.type === 'meeting' ? 'bg-green-500' : 'bg-orange-500'

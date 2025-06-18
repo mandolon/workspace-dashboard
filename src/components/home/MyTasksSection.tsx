@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Paperclip } from "lucide-react";
 import { formatDate, getInitials } from "@/utils/taskUtils";
@@ -96,7 +97,7 @@ const MyTasksSection = () => {
   };
 
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+    <div className="h-full p-4 flex flex-col">
       <div className="flex-1 min-h-0 space-y-0">
         {/* Header */}
         <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
@@ -109,7 +110,7 @@ const MyTasksSection = () => {
         {/* Task rows - scrollable */}
         <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {myTasks.map((task) => (
-            <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+            <div key={task.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-5 flex items-center gap-2">
                 <TaskStatusIcon 
                   status={task.status} 

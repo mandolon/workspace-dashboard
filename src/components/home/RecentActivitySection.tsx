@@ -13,7 +13,7 @@ const activities = [
 
 const RecentActivitySection = () => {
   return (
-    <div className="h-full rounded-lg bg-gray-50/30 p-4 flex flex-col">
+    <div className="h-full rounded-lg p-4 flex flex-col">
       <h2 className="text-lg font-semibold mb-3 flex-shrink-0">Recent Activity</h2>
       <div className="space-y-0 flex-1 min-h-0 flex flex-col">
         {/* Header */}
@@ -25,7 +25,7 @@ const RecentActivitySection = () => {
         {/* Activity rows - scrollable */}
         <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {activities.map((activity, index) => (
-            <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+            <div key={index} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-8 flex items-center">
                 <span className="font-medium text-xs">{activity.user}: </span>
                 <span className="text-xs text-muted-foreground ml-1 truncate">{activity.text}</span>

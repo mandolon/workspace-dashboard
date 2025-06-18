@@ -23,7 +23,7 @@ const InvoicesSection = () => {
   };
 
   return (
-    <div className="h-full bg-gray-50/30 p-4 flex flex-col">
+    <div className="h-full p-4 flex flex-col">
       <div className="flex-1 min-h-0 space-y-0">
         {/* Header */}
         <div className="grid grid-cols-12 text-xs font-medium text-muted-foreground py-1 border-b mb-1">
@@ -37,7 +37,7 @@ const InvoicesSection = () => {
         {/* Invoice rows - scrollable */}
         <div className="flex-1 overflow-y-auto space-y-0 min-h-0">
           {recentInvoices.map((invoice) => (
-            <div key={invoice.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-white/80 rounded border-b border-border/20 last:border-b-0">
+            <div key={invoice.id} className="grid grid-cols-12 gap-2 text-xs py-1.5 hover:bg-gray-50 rounded border-b border-border/20 last:border-b-0">
               <div className="col-span-2 flex items-center">
                 <span 
                   className="text-foreground hover:underline truncate cursor-pointer"
