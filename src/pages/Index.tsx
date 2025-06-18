@@ -8,10 +8,31 @@ import MyTasksSection from '@/components/home/MyTasksSection';
 import ToDoSection from '@/components/home/ToDoSection';
 import CalendarSection from '@/components/home/CalendarSection';
 import InvoicesSection from '@/components/home/InvoicesSection';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('tasks');
+
+  const tabs = [
+    { key: "tasks", label: "My Tasks" },
+    { key: "todo", label: "To Do" },
+    { key: "calendar", label: "Calendar" },
+    { key: "invoices", label: "Invoices" }
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'tasks':
+        return <MyTasksSection />;
+      case 'todo':
+        return <ToDoSection />;
+      case 'calendar':
+        return <CalendarSection />;
+      case 'invoices':
+        return <InvoicesSection />;
+      default:
+        return <MyTasksSection />;
+    }
+  };
 
   return (
     <AppLayout showHeader={true}>
@@ -24,30 +45,29 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
             {/* Left side - Tabbed content */}
             <div className="lg:col-span-7 flex flex-col min-h-0">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
-                <TabsList className="grid w-full grid-cols-4 mb-4">
-                  <TabsTrigger value="tasks">My Tasks</TabsTrigger>
-                  <TabsTrigger value="todo">To Do</TabsTrigger>
-                  <TabsTrigger value="calendar">Calendar</TabsTrigger>
-                  <TabsTrigger value="invoices">Invoices</TabsTrigger>
-                </TabsList>
+              <div className="flex flex-col h-full">
+                {/* Tabs */}
+                <div className="flex w-full border-b border-border mb-4">
+                  {tabs.map(tab => (
+                    <button
+                      key={tab.key}
+                      className={`py-2 px-4 -mb-px border-b-2 text-sm font-medium focus:outline-none transition-colors ${
+                        activeTab === tab.key 
+                          ? "border-primary text-primary"
+                          : "border-transparent text-muted-foreground hover:text-foreground"
+                      }`}
+                      onClick={() => setActiveTab(tab.key)}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
                 
-                <TabsContent value="tasks" className="flex-1 min-h-0">
-                  <MyTasksSection />
-                </TabsContent>
-                
-                <TabsContent value="todo" className="flex-1 min-h-0">
-                  <ToDoSection />
-                </TabsContent>
-                
-                <TabsContent value="calendar" className="flex-1 min-h-0">
-                  <CalendarSection />
-                </TabsContent>
-
-                <TabsContent value="invoices" className="flex-1 min-h-0">
-                  <InvoicesSection />
-                </TabsContent>
-              </Tabs>
+                {/* Tab Content */}
+                <div className="flex-1 min-h-0">
+                  {renderTabContent()}
+                </div>
+              </div>
             </div>
             
             {/* Right side - Fixed Recent Activity */}
