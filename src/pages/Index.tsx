@@ -27,11 +27,11 @@ const Index = () => {
             </div>
             
             {/* Bottom Row */}
-            <div className="lg:col-span-4">
-              <ToDoSection />
-            </div>
             <div className="lg:col-span-8">
               <CalendarSection />
+            </div>
+            <div className="lg:col-span-4">
+              <ToDoSection />
             </div>
           </div>
         </div>
