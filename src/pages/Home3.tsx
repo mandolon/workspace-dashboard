@@ -5,6 +5,7 @@ import { CheckCircle, ListTodo, Calendar, FileText, Plus, MessageSquare, Users, 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const Home3 = () => {
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
@@ -132,113 +133,203 @@ const Home3 = () => {
       initials: "MP",
       action: "uploaded revised Floor Plan (v2.4)",
       time: "1h ago",
-      avatarColor: "bg-blue-500"
+      avatarColor: "bg-rose-200"
     },
     {
       user: "You",
       initials: "You",
       action: "approved design revisions",
       time: "3h ago",
-      avatarColor: "bg-green-500"
+      avatarColor: "bg-emerald-200"
     },
     {
       user: "Armando L.",
       initials: "AL",
       action: "added meeting minutes from last site visit",
       time: "1d ago",
-      avatarColor: "bg-purple-500"
+      avatarColor: "bg-violet-200"
     },
     {
       user: "Sarah K.",
       initials: "SK",
       action: "shared Construction Docs – Sheet A200.pdf",
       time: "2d ago",
-      avatarColor: "bg-orange-500"
+      avatarColor: "bg-amber-200"
     },
     {
       user: "John D.",
       initials: "JD",
       action: "completed task review for project milestone",
       time: "3d ago",
-      avatarColor: "bg-red-500"
+      avatarColor: "bg-cyan-200"
     }
   ];
 
-  const renderPreviewContent = (preview: any[]) => {
+  const renderPreviewTable = (preview: any[]) => {
     if (selectedPreview === "Check your tasks") {
-      return preview.map((item: any, index: number) => (
-        <div key={index} className="p-2 bg-gray-50 border border-gray-200 rounded text-xs mb-2">
-          <div className="flex justify-between items-start mb-1">
-            <span className="font-medium text-gray-900">{item.title}</span>
-            <span className="text-gray-500 text-xs">{item.id}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-600">
-            <span>Assignee: {item.assignee}</span>
-            <span>Due: {item.dueDate}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Priority: {item.priority}</span>
-            <span>Status: {item.status}</span>
-          </div>
-        </div>
-      ));
+      return (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-xs">Task</TableHead>
+              <TableHead className="text-xs">ID</TableHead>
+              <TableHead className="text-xs">Assignee</TableHead>
+              <TableHead className="text-xs">Due</TableHead>
+              <TableHead className="text-xs">Priority</TableHead>
+              <TableHead className="text-xs">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {preview.map((item: any, index: number) => (
+              <TableRow key={index} className="hover:bg-gray-50/50">
+                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
+                <TableCell className="text-xs">{item.assignee}</TableCell>
+                <TableCell className="text-xs">{item.dueDate}</TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.priority === 'High' ? 'bg-red-100 text-red-800' :
+                    item.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {item.priority}
+                  </span>
+                </TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.status === 'Done' ? 'bg-green-100 text-green-800' :
+                    item.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                    item.status === 'In Review' ? 'bg-purple-100 text-purple-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {item.status}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
     }
     
     if (selectedPreview === "View To Do List") {
-      return preview.map((item: any, index: number) => (
-        <div key={index} className="p-2 bg-gray-50 border border-gray-200 rounded text-xs mb-2">
-          <div className="flex justify-between items-start mb-1">
-            <span className="font-medium text-gray-900">{item.title}</span>
-            <span className="text-gray-500 text-xs">{item.id}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-600">
-            <span>Category: {item.category}</span>
-            <span>Due: {item.dueDate}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Priority: {item.priority}</span>
-            <span>Status: {item.completed ? 'Completed' : 'Pending'}</span>
-          </div>
-        </div>
-      ));
+      return (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-xs">Todo</TableHead>
+              <TableHead className="text-xs">ID</TableHead>
+              <TableHead className="text-xs">Category</TableHead>
+              <TableHead className="text-xs">Due</TableHead>
+              <TableHead className="text-xs">Priority</TableHead>
+              <TableHead className="text-xs">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {preview.map((item: any, index: number) => (
+              <TableRow key={index} className="hover:bg-gray-50/50">
+                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
+                <TableCell className="text-xs">{item.category}</TableCell>
+                <TableCell className="text-xs">{item.dueDate}</TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.priority === 'High' ? 'bg-red-100 text-red-800' :
+                    item.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {item.priority}
+                  </span>
+                </TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {item.completed ? 'Completed' : 'Pending'}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
     }
     
     if (selectedPreview === "Look at your schedule") {
-      return preview.map((item: any, index: number) => (
-        <div key={index} className="p-2 bg-gray-50 border border-gray-200 rounded text-xs mb-2">
-          <div className="flex justify-between items-start mb-1">
-            <span className="font-medium text-gray-900">{item.title}</span>
-            <span className="text-gray-500 text-xs">{item.id}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-600">
-            <span>Time: {item.time}</span>
-            <span>Duration: {item.duration}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Type: {item.type}</span>
-            <span>{item.location && `Location: ${item.location}`}</span>
-          </div>
-        </div>
-      ));
+      return (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-xs">Event</TableHead>
+              <TableHead className="text-xs">ID</TableHead>
+              <TableHead className="text-xs">Time</TableHead>
+              <TableHead className="text-xs">Duration</TableHead>
+              <TableHead className="text-xs">Type</TableHead>
+              <TableHead className="text-xs">Location</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {preview.map((item: any, index: number) => (
+              <TableRow key={index} className="hover:bg-gray-50/50">
+                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
+                <TableCell className="text-xs">{item.time}</TableCell>
+                <TableCell className="text-xs">{item.duration}</TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.type === 'Meeting' ? 'bg-blue-100 text-blue-800' :
+                    item.type === 'Deadline' ? 'bg-red-100 text-red-800' :
+                    item.type === 'Social' ? 'bg-green-100 text-green-800' :
+                    'bg-purple-100 text-purple-800'
+                  }`}>
+                    {item.type}
+                  </span>
+                </TableCell>
+                <TableCell className="text-xs">{item.location || '-'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
     }
     
     if (selectedPreview === "Review Invoices") {
-      return preview.map((item: any, index: number) => (
-        <div key={index} className="p-2 bg-gray-50 border border-gray-200 rounded text-xs mb-2">
-          <div className="flex justify-between items-start mb-1">
-            <span className="font-medium text-gray-900">{item.title}</span>
-            <span className="text-gray-500 text-xs">{item.id}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-600">
-            <span>Amount: {item.amount}</span>
-            <span>Client: {item.client}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Status: {item.status}</span>
-            <span>Created: {item.dateCreated}</span>
-          </div>
-        </div>
-      ));
+      return (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-xs">Invoice</TableHead>
+              <TableHead className="text-xs">ID</TableHead>
+              <TableHead className="text-xs">Amount</TableHead>
+              <TableHead className="text-xs">Client</TableHead>
+              <TableHead className="text-xs">Status</TableHead>
+              <TableHead className="text-xs">Created</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {preview.map((item: any, index: number) => (
+              <TableRow key={index} className="hover:bg-gray-50/50">
+                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
+                <TableCell className="text-xs font-semibold">{item.amount}</TableCell>
+                <TableCell className="text-xs">{item.client}</TableCell>
+                <TableCell className="text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.status === 'Paid' ? 'bg-green-100 text-green-800' :
+                    item.status === 'Overdue' ? 'bg-red-100 text-red-800' :
+                    item.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
+                    item.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
+                    'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {item.status}
+                  </span>
+                </TableCell>
+                <TableCell className="text-xs">{item.dateCreated}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
     }
     
     return null;
@@ -249,19 +340,19 @@ const Home3 = () => {
       <div className="min-h-screen bg-white">
         {/* Header Section */}
         <div className="bg-white">
-          <div className="max-w-4xl mx-auto px-6 py-6">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-6">Good Evening, Armando.</h1>
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-4">Good Evening, Armando.</h1>
             
             {/* Search Bar - No Icon */}
-            <div className="relative mb-4">
+            <div className="relative mb-3">
               <Input 
                 placeholder="Search anything" 
-                className="pl-4 pr-4 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600 placeholder:text-xs"
+                className="pl-3 pr-3 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600 placeholder:text-xs"
               />
             </div>
 
             {/* Quick Actions - Buttons below search */}
-            <div className="flex gap-2 mb-8">
+            <div className="flex gap-2 mb-4">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
@@ -279,30 +370,30 @@ const Home3 = () => {
 
             {/* Preview Section */}
             {selectedPreview && (
-              <div className="mb-6 p-3 bg-gray-50 border border-gray-200 rounded-lg max-h-64 overflow-y-auto">
-                {renderPreviewContent(quickActions.find(action => action.title === selectedPreview)?.preview || [])}
+              <div className="mb-4 p-3 bg-white border border-gray-200 rounded-lg max-h-80 overflow-y-auto shadow-sm">
+                {renderPreviewTable(quickActions.find(action => action.title === selectedPreview)?.preview || [])}
               </div>
             )}
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-6 pb-8 overflow-y-auto">
+        <div className="max-w-5xl mx-auto px-4 pb-6 overflow-y-auto">
           {/* Recent Activity Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="bg-white rounded border border-gray-200 p-3">
-              <div className="space-y-2">
+            <div className="bg-white rounded border border-gray-200 p-2">
+              <div className="space-y-1">
                 {recentActivities.map((activity, index) => (
                   <div key={index} className="flex items-center justify-between w-full py-1">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <Avatar className="w-6 h-6 flex-shrink-0">
-                        <AvatarFallback className={`${activity.avatarColor} text-white text-xs font-medium`}>
+                      <Avatar className="w-5 h-5 flex-shrink-0">
+                        <AvatarFallback className={`${activity.avatarColor} text-gray-700 text-xs font-medium`}>
                           {activity.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -320,24 +411,24 @@ const Home3 = () => {
           </div>
 
           {/* Quick Actions Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-900">Quick actions</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               {projectActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
-                  <div key={index} className="bg-white rounded border border-gray-200 p-2.5 hover:border-gray-300 transition-colors">
-                    <div className="flex items-start gap-2 mb-2">
-                      <Icon className="w-3.5 h-3.5 text-gray-600 mt-0.5 flex-shrink-0" />
+                  <div key={index} className="bg-white rounded border border-gray-200 p-2 hover:border-gray-300 transition-colors">
+                    <div className="flex items-start gap-2 mb-1.5">
+                      <Icon className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-xs font-medium text-gray-900 mb-1 leading-tight">{action.title}</h3>
+                        <h3 className="text-xs font-medium text-gray-900 mb-0.5 leading-tight">{action.title}</h3>
                         {action.subtitle && (
-                          <p className="text-xs text-gray-600 mb-1.5 leading-tight">{action.subtitle}</p>
+                          <p className="text-xs text-gray-600 mb-1 leading-tight">{action.subtitle}</p>
                         )}
                       </div>
                     </div>
@@ -349,31 +440,31 @@ const Home3 = () => {
           </div>
 
           {/* Recommendations Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-900">Recommendations</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {recommendations.map((rec, index) => (
-                <div key={index} className="bg-white rounded border border-gray-200 p-4 relative">
-                  <button className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xs">
+                <div key={index} className="bg-white rounded border border-gray-200 p-3 relative">
+                  <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xs">
                     ✕
                   </button>
-                  <div className="flex items-start gap-3 pr-8">
-                    <div className="w-10 h-10 bg-blue-500 rounded flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-start gap-3 pr-6">
+                    <div className="w-8 h-8 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded flex items-center justify-center flex-shrink-0">
                       {typeof rec.icon === 'string' ? (
-                        <img src={rec.icon} alt="" className="w-5 h-5" />
+                        <img src={rec.icon} alt="" className="w-4 h-4" />
                       ) : (
-                        <rec.icon className="w-5 h-5 text-white" />
+                        <rec.icon className="w-4 h-4 text-indigo-600" />
                       )}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xs font-medium text-gray-900 mb-2">{rec.title}</h3>
-                      <p className="text-xs text-gray-600 mb-3 leading-relaxed">{rec.description}</p>
-                      <Button size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-1 text-xs h-auto font-normal">
+                      <h3 className="text-xs font-medium text-gray-900 mb-1">{rec.title}</h3>
+                      <p className="text-xs text-gray-600 mb-2 leading-relaxed">{rec.description}</p>
+                      <Button size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 py-1 text-xs h-auto font-normal">
                         {rec.buttonText}
                       </Button>
                     </div>
@@ -384,15 +475,15 @@ const Home3 = () => {
           </div>
 
           {/* Feed Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-900">Feed</h2>
               <Button variant="outline" size="sm" className="text-gray-600 border-gray-300 text-xs px-2 py-1 h-auto bg-white hover:bg-gray-50">
                 <span className="mr-1">⚙</span>
                 Filter
               </Button>
             </div>
-            <div className="bg-white rounded border border-gray-200 p-6">
+            <div className="bg-white rounded border border-gray-200 p-4">
               <p className="text-xs text-gray-600 text-center">
                 Your project activity feed will appear here once you start working on tasks and collaborating with your team.
               </p>
