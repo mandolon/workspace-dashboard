@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Search, CheckCircle, ListTodo, Calendar, FileText, Plus, MessageSquare, Users, Settings, Clock, Download } from 'lucide-react';
@@ -97,22 +96,20 @@ const Home3 = () => {
 
   return (
     <AppLayout showHeader={true}>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gray-50 overflow-y-auto">
         {/* Header Section */}
-        <div className="bg-white">
+        <div className="bg-gray-50">
           <div className="max-w-4xl mx-auto px-6 py-6">
-            <h1 className="text-base font-normal text-gray-900 mb-6">Good Evening, Armando.</h1>
+            <h1 className="text-lg font-medium text-gray-900 mb-6">Good Evening, Armando.</h1>
             
             {/* Search Bar */}
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
               <Input 
                 placeholder="Search anything" 
-                className="pl-8 pr-12 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600"
+                className="pl-8 pr-4 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600 placeholder:text-xs"
+                style={{ fontSize: '0.75rem' }}
               />
-              <Button size="sm" className="absolute right-0.5 top-1/2 transform -translate-y-1/2 px-1.5 py-0.5 text-xs h-6 bg-gray-100 hover:bg-gray-200 text-gray-600 border-0">
-                <Search className="w-2.5 h-2.5" />
-              </Button>
             </div>
 
             {/* Quick Actions - Buttons below search */}
@@ -134,7 +131,7 @@ const Home3 = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-4xl mx-auto px-6 pb-8">
           {/* Recent Activity Section */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
