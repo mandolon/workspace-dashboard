@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Search, CheckCircle, ListTodo, Calendar, FileText, Plus, MessageSquare, Users, Settings, Clock, Download } from 'lucide-react';
+import { CheckCircle, ListTodo, Calendar, FileText, Plus, MessageSquare, Users, Settings, Clock, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -14,25 +13,49 @@ const Home3 = () => {
       icon: CheckCircle,
       title: "Check your tasks",
       description: "Review and manage your active tasks",
-      preview: "You have 12 active tasks and 3 overdue items that need attention."
+      preview: [
+        "• Review client feedback on homepage design",
+        "• Complete wireframes for mobile app",
+        "• Update project timeline for Q2 deliverables",
+        "• Send final invoice to Acme Corp",
+        "• Schedule team standup for next week"
+      ]
     },
     {
       icon: ListTodo,
       title: "View To Do List",
       description: "See your personal todo items",
-      preview: "Your personal to-do list contains 8 items, 2 of which are high priority."
+      preview: [
+        "• Buy groceries for weekend",
+        "• Call dentist to schedule appointment",
+        "• Review quarterly budget report",
+        "• Update LinkedIn profile",
+        "• Plan team building activity"
+      ]
     },
     {
       icon: Calendar,
       title: "Look at your schedule",
       description: "Check upcoming meetings and deadlines",
-      preview: "You have 3 meetings today and 2 deadlines approaching this week."
+      preview: [
+        "• 10:00 AM - Client presentation meeting",
+        "• 2:00 PM - Project review with Sarah",
+        "• 4:00 PM - Team retrospective",
+        "• Tomorrow: Design review deadline",
+        "• Friday: Monthly team lunch"
+      ]
     },
     {
       icon: FileText,
       title: "Review Invoices",
       description: "Manage client billing and payments",
-      preview: "5 invoices pending approval and 2 payments overdue from clients."
+      preview: [
+        "• Invoice #1234 - $2,500 (Pending approval)",
+        "• Invoice #1235 - $1,800 (Overdue 5 days)",
+        "• Invoice #1236 - $3,200 (Draft)",
+        "• Invoice #1237 - $950 (Paid)",
+        "• Invoice #1238 - $4,100 (Sent yesterday)"
+      ]
     }
   ];
 
@@ -106,46 +129,53 @@ const Home3 = () => {
     {
       user: "Matthew P.",
       initials: "MP",
-      action: "uploaded",
-      description: "revised Floor Plan (v2.4)",
-      link: "Floor Plan v2.4",
+      action: "uploaded revised Floor Plan (v2.4)",
       time: "1h ago",
       avatarColor: "bg-blue-500"
     },
     {
       user: "You",
       initials: "You",
-      action: "approved",
-      description: "design revisions",
-      link: "Design Revisions",
+      action: "approved design revisions",
       time: "3h ago",
       avatarColor: "bg-green-500"
     },
     {
       user: "Armando L.",
       initials: "AL",
-      action: "added",
-      description: "meeting minutes from last site visit",
-      link: "Meeting Minutes",
+      action: "added meeting minutes from last site visit",
       time: "1d ago",
       avatarColor: "bg-purple-500"
+    },
+    {
+      user: "Sarah K.",
+      initials: "SK",
+      action: "shared Construction Docs – Sheet A200.pdf",
+      time: "2d ago",
+      avatarColor: "bg-orange-500"
+    },
+    {
+      user: "John D.",
+      initials: "JD",
+      action: "completed task review for project milestone",
+      time: "3d ago",
+      avatarColor: "bg-red-500"
     }
   ];
 
   return (
     <AppLayout showHeader={true}>
-      <div className="min-h-screen bg-white overflow-y-auto">
+      <div className="min-h-screen bg-white">
         {/* Header Section */}
         <div className="bg-white">
           <div className="max-w-4xl mx-auto px-6 py-6">
-            <h1 className="text-lg font-medium text-gray-900 mb-6">Good Evening, Armando.</h1>
+            <h1 className="text-xl font-semibold text-gray-900 mb-6">Good Evening, Armando.</h1>
             
-            {/* Search Bar */}
+            {/* Search Bar - No Icon */}
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
               <Input 
                 placeholder="Search anything" 
-                className="pl-8 pr-4 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600 placeholder:text-xs"
+                className="pl-4 pr-4 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600"
                 style={{ fontSize: '0.75rem' }}
               />
             </div>
@@ -170,16 +200,20 @@ const Home3 = () => {
             {/* Preview Section */}
             {selectedPreview && (
               <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-xs text-blue-800">
-                  {quickActions.find(action => action.title === selectedPreview)?.preview}
-                </p>
+                <div className="space-y-1">
+                  {quickActions.find(action => action.title === selectedPreview)?.preview.map((item, index) => (
+                    <p key={index} className="text-xs text-blue-800">
+                      {item}
+                    </p>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-6 pb-8">
+        <div className="max-w-4xl mx-auto px-6 pb-8 overflow-y-auto">
           {/* Recent Activity Section */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
@@ -189,26 +223,22 @@ const Home3 = () => {
               </Button>
             </div>
             <div className="bg-white rounded border border-gray-200 p-4">
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <Avatar className="w-7 h-7">
+                  <div key={index} className="flex items-center gap-3 w-full">
+                    <Avatar className="w-8 h-8 flex-shrink-0">
                       <AvatarFallback className={`${activity.avatarColor} text-white text-xs font-medium`}>
                         {activity.initials}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className="font-medium text-gray-900">{activity.user}</span>
-                        <span className="text-gray-600">{activity.action}</span>
-                        <span className="text-gray-600">{activity.description}</span>
+                    <div className="flex-1 min-w-0 flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <span className="font-medium text-gray-900 text-xs flex-shrink-0">{activity.user}</span>
+                        <span className="text-gray-600 text-xs truncate">{activity.action}</span>
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <button className="text-xs text-blue-600 hover:text-blue-800 underline">
-                          {activity.link}
-                        </button>
-                        <span className="text-xs text-gray-400">•</span>
-                        <span className="text-xs text-gray-500">{activity.time}</span>
+                      <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0 ml-4">
+                        <Clock className="w-3 h-3" />
+                        <span>{activity.time}</span>
                       </div>
                     </div>
                   </div>
