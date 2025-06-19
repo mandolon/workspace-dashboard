@@ -91,32 +91,32 @@ const Home3 = () => {
       icon: Users,
       title: "Invite Team Members",
       description: "Team collaboration simplifies project workflows and brings advanced project features to your workspace, helping teams of all sizes work more effectively.",
-      buttonText: "Invite Team"
+      buttonText: "Download"
     }
   ];
 
   return (
     <AppLayout showHeader={true}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         {/* Header Section */}
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-4 py-4">
-            <h1 className="text-xl font-normal text-gray-900 mb-4">Good Evening, Armando.</h1>
+        <div className="bg-white">
+          <div className="max-w-4xl mx-auto px-6 py-6">
+            <h1 className="text-base font-normal text-gray-900 mb-6">Good Evening, Armando.</h1>
             
-            {/* Search Bar */}
+            {/* Search Bar - Much smaller */}
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
               <Input 
                 placeholder="Search anything" 
-                className="pl-9 pr-10 py-1.5 w-full max-w-md border-gray-300 rounded-md text-xs"
+                className="pl-8 pr-12 py-1 w-80 border-gray-300 rounded text-xs h-7 text-gray-600"
               />
-              <Button size="sm" className="absolute right-0.5 top-1/2 transform -translate-y-1/2 px-2 py-0.5 text-xs h-auto">
+              <Button size="sm" className="absolute right-0.5 top-1/2 transform -translate-y-1/2 px-1.5 py-0.5 text-xs h-6 bg-gray-100 hover:bg-gray-200 text-gray-600 border-0">
                 <Search className="w-2.5 h-2.5" />
               </Button>
             </div>
 
             {/* Quick Actions - Buttons below search */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 mb-8">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
@@ -125,7 +125,7 @@ const Home3 = () => {
                     className="flex items-center gap-2 p-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-left transition-colors"
                   >
                     <Icon className="w-3 h-3 text-gray-600 flex-shrink-0" />
-                    <span className="text-gray-900 font-medium text-xs">{action.title}</span>
+                    <span className="text-gray-900 font-normal text-xs">{action.title}</span>
                   </button>
                 );
               })}
@@ -134,18 +134,18 @@ const Home3 = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-4xl mx-auto px-6">
           {/* Recent Activity Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
-              <Button variant="ghost" size="sm" className="text-gray-500 text-xs px-2 py-1 h-auto">
+              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="bg-white rounded border border-gray-200 p-3">
-              <div className="space-y-2">
-                <div className="flex items-start gap-2">
+            <div className="bg-white rounded border border-gray-200 p-4">
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
                   <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                     <span className="text-xs font-medium text-gray-600">MP</span>
                   </div>
@@ -153,10 +153,10 @@ const Home3 = () => {
                     <p className="text-xs text-gray-900">
                       <span className="font-medium">Matthew P.</span> uploaded revised Floor Plan (v2.4)
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">1h ago</p>
+                    <p className="text-xs text-gray-500 mt-1">1h ago</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
                   <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                     <span className="text-xs font-medium text-gray-600">You</span>
                   </div>
@@ -164,10 +164,10 @@ const Home3 = () => {
                     <p className="text-xs text-gray-900">
                       <span className="font-medium">You</span> approved design revisions
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">3h ago</p>
+                    <p className="text-xs text-gray-500 mt-1">3h ago</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
                   <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                     <span className="text-xs font-medium text-gray-600">AL</span>
                   </div>
@@ -175,7 +175,7 @@ const Home3 = () => {
                     <p className="text-xs text-gray-900">
                       <span className="font-medium">Armando L.</span> added meeting minutes from last site visit
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">1d ago</p>
+                    <p className="text-xs text-gray-500 mt-1">1d ago</p>
                   </div>
                 </div>
               </div>
@@ -183,22 +183,22 @@ const Home3 = () => {
           </div>
 
           {/* Quick Actions Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-gray-900">Quick actions</h2>
-              <Button variant="ghost" size="sm" className="text-gray-500 text-xs px-2 py-1 h-auto">
+              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-4">
               {projectActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
-                  <div key={index} className="bg-white rounded border border-gray-200 p-2.5 hover:border-gray-300 transition-colors">
-                    <div className="flex items-start gap-2 mb-1.5">
+                  <div key={index} className="bg-white rounded border border-gray-200 p-3 hover:border-gray-300 transition-colors">
+                    <div className="flex items-start gap-2 mb-2">
                       <Icon className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-xs font-medium text-gray-900 mb-0.5">{action.title}</h3>
+                        <h3 className="text-xs font-medium text-gray-900 mb-1">{action.title}</h3>
                         {action.subtitle && (
                           <p className="text-xs text-gray-600 mb-1">{action.subtitle}</p>
                         )}
@@ -212,31 +212,31 @@ const Home3 = () => {
           </div>
 
           {/* Recommendations Section */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-gray-900">Recommendations</h2>
-              <Button variant="ghost" size="sm" className="text-gray-500 text-xs px-2 py-1 h-auto">
+              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {recommendations.map((rec, index) => (
-                <div key={index} className="bg-white rounded border border-gray-200 p-3 relative">
-                  <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xs">
+                <div key={index} className="bg-white rounded border border-gray-200 p-4 relative">
+                  <button className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xs">
                     ✕
                   </button>
-                  <div className="flex items-start gap-3 pr-6">
-                    <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-start gap-3 pr-8">
+                    <div className="w-10 h-10 bg-blue-500 rounded flex items-center justify-center flex-shrink-0">
                       {typeof rec.icon === 'string' ? (
-                        <img src={rec.icon} alt="" className="w-4 h-4" />
+                        <img src={rec.icon} alt="" className="w-5 h-5" />
                       ) : (
-                        <rec.icon className="w-4 h-4 text-white" />
+                        <rec.icon className="w-5 h-5 text-white" />
                       )}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xs font-medium text-gray-900 mb-1">{rec.title}</h3>
-                      <p className="text-xs text-gray-600 mb-2 leading-relaxed">{rec.description}</p>
-                      <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white px-3 py-1 text-xs h-auto">
+                      <h3 className="text-xs font-medium text-gray-900 mb-2">{rec.title}</h3>
+                      <p className="text-xs text-gray-600 mb-3 leading-relaxed">{rec.description}</p>
+                      <Button size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-1 text-xs h-auto font-normal">
                         {rec.buttonText}
                       </Button>
                     </div>
@@ -247,16 +247,16 @@ const Home3 = () => {
           </div>
 
           {/* Feed Section */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-gray-900">Feed</h2>
-              <Button variant="outline" size="sm" className="text-gray-600 border-gray-300 text-xs px-2 py-1 h-auto">
+              <Button variant="outline" size="sm" className="text-gray-600 border-gray-300 text-xs px-2 py-1 h-auto bg-white hover:bg-gray-50">
                 <span className="mr-1">⚙</span>
                 Filter
               </Button>
             </div>
-            <div className="bg-white rounded border border-gray-200 p-4">
-              <p className="text-xs text-gray-600 text-center py-4">
+            <div className="bg-white rounded border border-gray-200 p-6">
+              <p className="text-xs text-gray-600 text-center">
                 Your project activity feed will appear here once you start working on tasks and collaborating with your team.
               </p>
             </div>
