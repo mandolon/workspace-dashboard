@@ -7,9 +7,9 @@ const UserProfile = () => {
   const { currentUser } = useUser();
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+    <Card className="p-6 bg-white border-gray-200">
       <div className="text-center">
-        <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-xl">
+        <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center text-gray-600 font-bold text-xl">
           {currentUser?.name?.charAt(0) || 'U'}
         </div>
         <h3 className="font-semibold text-gray-900">{currentUser?.name || 'User'}</h3>
@@ -26,7 +26,7 @@ const UserProfile = () => {
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Completion Rate</span>
-            <span className="font-semibold text-green-600">94%</span>
+            <span className="font-semibold text-gray-900">94%</span>
           </div>
         </div>
       </div>

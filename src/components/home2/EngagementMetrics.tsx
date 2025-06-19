@@ -1,88 +1,43 @@
 
 import React from 'react';
 import { Card } from "@/components/ui/card";
-import { ArrowUp, ArrowDown, TrendingUp, Users, Calendar, Star } from 'lucide-react';
+import { Plus, Calendar, MessageSquare, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const EngagementMetrics = () => {
-  const metrics = [
-    {
-      title: "Today",
-      value: "24",
-      icon: TrendingUp,
-      color: "bg-red-500",
-      trend: "up"
-    },
-    {
-      title: "This Week", 
-      value: "156",
-      icon: Calendar,
-      color: "bg-orange-500",
-      trend: "down"
-    },
-    {
-      title: "This Month",
-      value: "423",
-      icon: Users,
-      color: "bg-yellow-500",
-      trend: "up"
-    },
-    {
-      title: "Completed",
-      value: "89",
-      icon: Star,
-      color: "bg-green-500",
-      trend: "up"
-    }
+  const quickActions = [
+    { label: "Task", icon: Plus },
+    { label: "Meeting", icon: Calendar },
+    { label: "Message", icon: MessageSquare },
+    { label: "Project", icon: FileText }
   ];
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-orange-100 to-orange-200 border-orange-300">
+    <Card className="p-6 bg-white border-gray-200">
       <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Task Engagement</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Quick Actions</h3>
         <p className="text-sm text-gray-600">
-          General statistics of task engagement processes.
+          Quickly create new items and manage your workflow.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {metrics.map((metric, index) => {
-          const Icon = metric.icon;
-          const TrendIcon = metric.trend === 'up' ? ArrowUp : ArrowDown;
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {quickActions.map((action, index) => {
+          const Icon = action.icon;
           
           return (
-            <Card key={index} className="p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-8 h-8 rounded-full ${metric.color} flex items-center justify-center`}>
-                  <Icon className="w-4 h-4 text-white" />
-                </div>
-                <div className={`flex items-center gap-1 text-xs ${
-                  metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  <TrendIcon className="w-3 h-3" />
-                </div>
+            <Button
+              key={index}
+              variant="outline"
+              className="h-auto p-4 flex flex-col items-center gap-2 text-center border-gray-200 hover:bg-gray-50"
+            >
+              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                <Icon className="w-4 h-4 text-gray-600" />
               </div>
-              
-              <div className="text-2xl font-bold text-gray-900 mb-1">
-                {metric.value}
-              </div>
-              <div className="text-xs text-gray-600 font-medium">
-                {metric.title}
-              </div>
-            </Card>
+              <span className="text-sm font-medium text-gray-900">{action.label}</span>
+            </Button>
           );
         })}
-      </div>
-
-      <div className="mt-6 bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-lg p-4 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm font-medium">Your New Metrics</div>
-            <div className="text-xs opacity-90">Track your progress</div>
-          </div>
-          <div className="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center">
-            <ArrowUp className="w-4 h-4 text-white" />
-          </div>
-        </div>
       </div>
     </Card>
   );

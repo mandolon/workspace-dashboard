@@ -4,52 +4,37 @@ import { Card } from "@/components/ui/card";
 import { Check, AlertCircle, Clock } from 'lucide-react';
 
 const PerformanceCard = () => {
-  const achievements = [
-    {
-      icon: Check,
-      text: "Project milestone completed",
-      color: "bg-green-500"
-    },
-    {
-      icon: AlertCircle,
-      text: "Design review scheduled",
-      color: "bg-blue-500"
-    },
-    {
-      icon: Clock,
-      text: "Client meeting confirmed",
-      color: "bg-orange-500"
-    }
+  const myTasks = [
+    { title: "Review architectural drawings", status: "In Progress" },
+    { title: "Update project timeline", status: "Red Line" },
+    { title: "Client meeting preparation", status: "Completed" },
+    { title: "Site inspection report", status: "In Progress" },
+    { title: "Submit permit applications", status: "In Progress" }
   ];
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 text-white">
+    <Card className="p-6 bg-white border-gray-200">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-6">Performance</h3>
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <div className="text-3xl font-bold">84%</div>
-            <div className="text-sm text-slate-300">Tasks Completed</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">67%</div>
-            <div className="text-sm text-slate-300">On Schedule</div>
-          </div>
+        <h3 className="text-lg font-semibold mb-4">My Tasks</h3>
+        <div className="space-y-3">
+          {myTasks.slice(0, 3).map((task, index) => (
+            <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+              <span className="text-sm text-gray-900 truncate flex-1">{task.title}</span>
+              <span className="text-xs text-gray-600 ml-2">{task.status}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="space-y-3">
-        {achievements.map((achievement, index) => {
-          const Icon = achievement.icon;
-          return (
-            <div key={index} className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full ${achievement.color} flex items-center justify-center`}>
-                <Icon className="w-3 h-3 text-white" />
-              </div>
-              <span className="text-sm text-slate-200">{achievement.text}</span>
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+        <div>
+          <div className="text-2xl font-bold text-gray-900">8</div>
+          <div className="text-sm text-gray-600">Total Tasks</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-gray-900">3</div>
+          <div className="text-sm text-gray-600">Completed</div>
+        </div>
       </div>
     </Card>
   );

@@ -11,8 +11,10 @@ import UserProfile from '@/components/home2/UserProfile';
 const Home2 = () => {
   return (
     <AppLayout showHeader={true}>
-      <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 to-slate-100">
-        <PageSectionHeader title="Home 2" />
+      <div className="flex flex-col h-full bg-background">
+        <div className="px-6">
+          <PageSectionHeader title="Home 2" />
+        </div>
         <div className="flex-1 p-6 overflow-auto">
           <div className="max-w-7xl mx-auto">
             {/* Top Row */}
