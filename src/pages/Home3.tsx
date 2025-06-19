@@ -170,37 +170,37 @@ const Home3 = () => {
       return (
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="text-xs">Task</TableHead>
-              <TableHead className="text-xs">ID</TableHead>
-              <TableHead className="text-xs">Assignee</TableHead>
-              <TableHead className="text-xs">Due</TableHead>
-              <TableHead className="text-xs">Priority</TableHead>
-              <TableHead className="text-xs">Status</TableHead>
+            <TableRow className="border-b border-gray-100">
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Task</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Assignee</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Due</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Priority</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
-              <TableRow key={index} className="hover:bg-gray-50/50">
-                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
-                <TableCell className="text-xs">{item.assignee}</TableCell>
-                <TableCell className="text-xs">{item.dueDate}</TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.priority === 'High' ? 'bg-red-100 text-red-800' :
-                    item.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-green-100 text-green-800'
+              <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
+                <TableCell className="text-xs py-1.5 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1.5 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.assignee}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.dueDate}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.priority === 'High' ? 'bg-red-50 text-red-700' :
+                    item.priority === 'Medium' ? 'bg-yellow-50 text-yellow-700' :
+                    'bg-green-50 text-green-700'
                   }`}>
                     {item.priority}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.status === 'Done' ? 'bg-green-100 text-green-800' :
-                    item.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                    item.status === 'In Review' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.status === 'Done' ? 'bg-green-50 text-green-700' :
+                    item.status === 'In Progress' ? 'bg-blue-50 text-blue-700' :
+                    item.status === 'In Review' ? 'bg-purple-50 text-purple-700' :
+                    'bg-gray-50 text-gray-700'
                   }`}>
                     {item.status}
                   </span>
@@ -216,34 +216,34 @@ const Home3 = () => {
       return (
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="text-xs">Todo</TableHead>
-              <TableHead className="text-xs">ID</TableHead>
-              <TableHead className="text-xs">Category</TableHead>
-              <TableHead className="text-xs">Due</TableHead>
-              <TableHead className="text-xs">Priority</TableHead>
-              <TableHead className="text-xs">Status</TableHead>
+            <TableRow className="border-b border-gray-100">
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Todo</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Category</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Due</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Priority</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
-              <TableRow key={index} className="hover:bg-gray-50/50">
-                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
-                <TableCell className="text-xs">{item.category}</TableCell>
-                <TableCell className="text-xs">{item.dueDate}</TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.priority === 'High' ? 'bg-red-100 text-red-800' :
-                    item.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-green-100 text-green-800'
+              <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
+                <TableCell className="text-xs py-1.5 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1.5 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.category}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.dueDate}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.priority === 'High' ? 'bg-red-50 text-red-700' :
+                    item.priority === 'Medium' ? 'bg-yellow-50 text-yellow-700' :
+                    'bg-green-50 text-green-700'
                   }`}>
                     {item.priority}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.completed ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-700'
                   }`}>
                     {item.completed ? 'Completed' : 'Pending'}
                   </span>
@@ -259,33 +259,33 @@ const Home3 = () => {
       return (
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="text-xs">Event</TableHead>
-              <TableHead className="text-xs">ID</TableHead>
-              <TableHead className="text-xs">Time</TableHead>
-              <TableHead className="text-xs">Duration</TableHead>
-              <TableHead className="text-xs">Type</TableHead>
-              <TableHead className="text-xs">Location</TableHead>
+            <TableRow className="border-b border-gray-100">
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Event</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Time</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Duration</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Type</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Location</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
-              <TableRow key={index} className="hover:bg-gray-50/50">
-                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
-                <TableCell className="text-xs">{item.time}</TableCell>
-                <TableCell className="text-xs">{item.duration}</TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.type === 'Meeting' ? 'bg-blue-100 text-blue-800' :
-                    item.type === 'Deadline' ? 'bg-red-100 text-red-800' :
-                    item.type === 'Social' ? 'bg-green-100 text-green-800' :
-                    'bg-purple-100 text-purple-800'
+              <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
+                <TableCell className="text-xs py-1.5 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1.5 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.time}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.duration}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.type === 'Meeting' ? 'bg-blue-50 text-blue-700' :
+                    item.type === 'Deadline' ? 'bg-red-50 text-red-700' :
+                    item.type === 'Social' ? 'bg-green-50 text-green-700' :
+                    'bg-purple-50 text-purple-700'
                   }`}>
                     {item.type}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs">{item.location || '-'}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.location || '-'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -297,34 +297,34 @@ const Home3 = () => {
       return (
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="text-xs">Invoice</TableHead>
-              <TableHead className="text-xs">ID</TableHead>
-              <TableHead className="text-xs">Amount</TableHead>
-              <TableHead className="text-xs">Client</TableHead>
-              <TableHead className="text-xs">Status</TableHead>
-              <TableHead className="text-xs">Created</TableHead>
+            <TableRow className="border-b border-gray-100">
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Invoice</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Amount</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Client</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Status</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-2 px-2">Created</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
-              <TableRow key={index} className="hover:bg-gray-50/50">
-                <TableCell className="text-xs font-medium max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500">{item.id}</TableCell>
-                <TableCell className="text-xs font-semibold">{item.amount}</TableCell>
-                <TableCell className="text-xs">{item.client}</TableCell>
-                <TableCell className="text-xs">
-                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
-                    item.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                    item.status === 'Overdue' ? 'bg-red-100 text-red-800' :
-                    item.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
-                    item.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
-                    'bg-yellow-100 text-yellow-800'
+              <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
+                <TableCell className="text-xs py-1.5 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1.5 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs font-semibold py-1.5 px-2">{item.amount}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.client}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">
+                  <span className={`px-1 py-0.5 rounded text-xs ${
+                    item.status === 'Paid' ? 'bg-green-50 text-green-700' :
+                    item.status === 'Overdue' ? 'bg-red-50 text-red-700' :
+                    item.status === 'Sent' ? 'bg-blue-50 text-blue-700' :
+                    item.status === 'Draft' ? 'bg-gray-50 text-gray-700' :
+                    'bg-yellow-50 text-yellow-700'
                   }`}>
                     {item.status}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs">{item.dateCreated}</TableCell>
+                <TableCell className="text-xs py-1.5 px-2">{item.dateCreated}</TableCell>
               </TableRow>
             ))}
           </TableBody>
