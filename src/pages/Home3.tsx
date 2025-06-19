@@ -103,7 +103,7 @@ const Home3 = () => {
           <div className="max-w-4xl mx-auto px-6 py-6">
             <h1 className="text-base font-normal text-gray-900 mb-6">Good Evening, Armando.</h1>
             
-            {/* Search Bar - Much smaller */}
+            {/* Search Bar */}
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
               <Input 
@@ -116,16 +116,16 @@ const Home3 = () => {
             </div>
 
             {/* Quick Actions - Buttons below search */}
-            <div className="grid grid-cols-4 gap-2 mb-8">
+            <div className="flex gap-2 mb-8">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
                   <button
                     key={index}
-                    className="flex items-center gap-2 p-2 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 text-left transition-colors"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 text-left transition-colors"
                   >
                     <Icon className="w-3 h-3 text-gray-600 flex-shrink-0" />
-                    <span className="text-gray-900 font-normal text-xs">{action.title}</span>
+                    <span className="text-gray-900 font-normal text-xs whitespace-nowrap">{action.title}</span>
                   </button>
                 );
               })}
@@ -136,8 +136,8 @@ const Home3 = () => {
         {/* Main Content */}
         <div className="max-w-4xl mx-auto px-6">
           {/* Recent Activity Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
@@ -183,14 +183,14 @@ const Home3 = () => {
           </div>
 
           {/* Quick Actions Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-gray-900">Quick actions</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
               </Button>
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-3">
               {projectActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
@@ -212,8 +212,8 @@ const Home3 = () => {
           </div>
 
           {/* Recommendations Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-gray-900">Recommendations</h2>
               <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-1 h-auto hover:bg-transparent">
                 •••
@@ -248,7 +248,7 @@ const Home3 = () => {
 
           {/* Feed Section */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-gray-900">Feed</h2>
               <Button variant="outline" size="sm" className="text-gray-600 border-gray-300 text-xs px-2 py-1 h-auto bg-white hover:bg-gray-50">
                 <span className="mr-1">⚙</span>
