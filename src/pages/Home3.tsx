@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Home3 = () => {
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
@@ -122,7 +124,13 @@ const Home3 = () => {
       icon: Users,
       title: "Invite Team Members",
       description: "Team collaboration simplifies project workflows and brings advanced project features to your workspace, helping teams of all sizes work more effectively.",
-      buttonText: "Download"
+      buttonText: "Invite"
+    },
+    {
+      icon: Settings,
+      title: "Setup Integrations",
+      description: "Connect your favorite tools and services to streamline your workflow and boost productivity.",
+      buttonText: "Configure"
     }
   ];
 
@@ -132,35 +140,35 @@ const Home3 = () => {
       initials: "MP",
       action: "uploaded revised Floor Plan (v2.4)",
       time: "1h ago",
-      avatarColor: "bg-rose-200"
+      avatarColor: "bg-rose-100 text-rose-800"
     },
     {
       user: "You",
       initials: "You",
       action: "approved design revisions",
       time: "3h ago",
-      avatarColor: "bg-emerald-200"
+      avatarColor: "bg-emerald-100 text-emerald-800"
     },
     {
       user: "Armando L.",
       initials: "AL",
       action: "added meeting minutes from last site visit",
       time: "1d ago",
-      avatarColor: "bg-violet-200"
+      avatarColor: "bg-violet-100 text-violet-800"
     },
     {
       user: "Sarah K.",
       initials: "SK",
       action: "shared Construction Docs – Sheet A200.pdf",
       time: "2d ago",
-      avatarColor: "bg-amber-200"
+      avatarColor: "bg-amber-100 text-amber-800"
     },
     {
       user: "John D.",
       initials: "JD",
       action: "completed task review for project milestone",
       time: "3d ago",
-      avatarColor: "bg-cyan-200"
+      avatarColor: "bg-cyan-100 text-cyan-800"
     }
   ];
 
@@ -170,23 +178,23 @@ const Home3 = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100">
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Task</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">ID</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Assignee</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Due</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Priority</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Status</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Task</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Assignee</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Due</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Priority</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
               <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
-                <TableCell className="text-xs py-0.5 px-1 max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500 py-0.5 px-1">{item.id}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.assignee}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.dueDate}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
+                <TableCell className="text-xs py-1 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.assignee}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.dueDate}</TableCell>
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
                     item.priority === 'High' ? 'bg-red-50 text-red-700' :
                     item.priority === 'Medium' ? 'bg-yellow-50 text-yellow-700' :
                     'bg-green-50 text-green-700'
@@ -194,10 +202,10 @@ const Home3 = () => {
                     {item.priority}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
                     item.status === 'Done' ? 'bg-green-50 text-green-700' :
-                    item.status === 'In Progress' ? 'bg-gray-50 text-gray-700' :
+                    item.status === 'In Progress' ? 'bg-blue-50 text-blue-700' :
                     item.status === 'In Review' ? 'bg-purple-50 text-purple-700' :
                     'bg-gray-50 text-gray-700'
                   }`}>
@@ -216,23 +224,23 @@ const Home3 = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100">
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Todo</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">ID</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Category</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Due</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Priority</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Status</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Todo</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Category</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Due</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Priority</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
               <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
-                <TableCell className="text-xs py-0.5 px-1 max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500 py-0.5 px-1">{item.id}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.category}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.dueDate}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
+                <TableCell className="text-xs py-1 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.category}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.dueDate}</TableCell>
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
                     item.priority === 'High' ? 'bg-red-50 text-red-700' :
                     item.priority === 'Medium' ? 'bg-yellow-50 text-yellow-700' :
                     'bg-green-50 text-green-700'
@@ -240,8 +248,8 @@ const Home3 = () => {
                     {item.priority}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
                     item.completed ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-700'
                   }`}>
                     {item.completed ? 'Completed' : 'Pending'}
@@ -259,24 +267,24 @@ const Home3 = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100">
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Event</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">ID</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Time</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Duration</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Type</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Location</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Event</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Time</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Duration</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Type</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Location</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
               <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
-                <TableCell className="text-xs py-0.5 px-1 max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500 py-0.5 px-1">{item.id}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.time}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.duration}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
-                    item.type === 'Meeting' ? 'bg-gray-50 text-gray-700' :
+                <TableCell className="text-xs py-1 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.time}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.duration}</TableCell>
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                    item.type === 'Meeting' ? 'bg-blue-50 text-blue-700' :
                     item.type === 'Deadline' ? 'bg-red-50 text-red-700' :
                     item.type === 'Social' ? 'bg-green-50 text-green-700' :
                     'bg-purple-50 text-purple-700'
@@ -284,7 +292,7 @@ const Home3 = () => {
                     {item.type}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.location || '-'}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.location || '-'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -297,33 +305,33 @@ const Home3 = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100">
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Invoice</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">ID</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Amount</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Client</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Status</TableHead>
-              <TableHead className="text-xs font-medium text-gray-700 py-1 px-1">Created</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Invoice</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">ID</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Amount</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Client</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Status</TableHead>
+              <TableHead className="text-xs font-medium text-gray-700 py-1 px-2">Created</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {preview.map((item: any, index: number) => (
               <TableRow key={index} className="hover:bg-gray-50/50 border-b border-gray-50">
-                <TableCell className="text-xs py-0.5 px-1 max-w-48 truncate">{item.title}</TableCell>
-                <TableCell className="text-xs text-gray-500 py-0.5 px-1">{item.id}</TableCell>
-                <TableCell className="text-xs font-semibold py-0.5 px-1">{item.amount}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.client}</TableCell>
-                <TableCell className="text-xs py-0.5 px-1">
-                  <span className={`px-1 py-0.5 rounded text-xs ${
+                <TableCell className="text-xs py-1 px-2 max-w-48 truncate">{item.title}</TableCell>
+                <TableCell className="text-xs text-gray-500 py-1 px-2">{item.id}</TableCell>
+                <TableCell className="text-xs font-semibold py-1 px-2">{item.amount}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.client}</TableCell>
+                <TableCell className="text-xs py-1 px-2">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs ${
                     item.status === 'Paid' ? 'bg-green-50 text-green-700' :
                     item.status === 'Overdue' ? 'bg-red-50 text-red-700' :
-                    item.status === 'Sent' ? 'bg-gray-50 text-gray-700' :
+                    item.status === 'Sent' ? 'bg-blue-50 text-blue-700' :
                     item.status === 'Draft' ? 'bg-gray-50 text-gray-700' :
                     'bg-yellow-50 text-yellow-700'
                   }`}>
                     {item.status}
                   </span>
                 </TableCell>
-                <TableCell className="text-xs py-0.5 px-1">{item.dateCreated}</TableCell>
+                <TableCell className="text-xs py-1 px-2">{item.dateCreated}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -336,32 +344,32 @@ const Home3 = () => {
 
   return (
     <AppLayout showHeader={true}>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gray-50">
         {/* Header Section */}
-        <div className="bg-white">
-          <div className="max-w-5xl mx-auto px-3 py-3">
-            <h1 className="text-xl font-semibold text-gray-900 mb-3">Good Evening, Armando.</h1>
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-6xl mx-auto px-6 py-6">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-4">Good Evening, Armando.</h1>
             
-            {/* Search Bar - No Icon */}
-            <div className="relative mb-2">
+            {/* Search Bar */}
+            <div className="relative mb-6">
               <Input 
                 placeholder="Search anything" 
-                className="pl-3 pr-3 py-1 w-80 border-gray-300 rounded text-xs h-6 text-gray-600 placeholder:text-xs"
+                className="w-full max-w-md border-gray-300 rounded-md"
               />
             </div>
 
             {/* Quick Actions - Buttons below search */}
-            <div className="flex gap-1.5 mb-3">
+            <div className="flex flex-wrap gap-2 mb-6">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
                   <button
                     key={index}
-                    className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 text-left transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 rounded-md border border-gray-200 text-left transition-colors"
                     onClick={() => setSelectedPreview(selectedPreview === action.title ? null : action.title)}
                   >
-                    <Icon className="w-3 h-3 text-gray-600 flex-shrink-0" />
-                    <span className="text-gray-900 font-normal text-xs whitespace-nowrap">{action.title}</span>
+                    <Icon className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                    <span className="text-gray-900 font-medium text-sm whitespace-nowrap">{action.title}</span>
                   </button>
                 );
               })}
@@ -369,125 +377,151 @@ const Home3 = () => {
 
             {/* Preview Section */}
             {selectedPreview && (
-              <div className="mb-3 p-2 bg-white border border-gray-200 rounded-lg max-h-52 overflow-y-auto shadow-sm">
-                {renderPreviewTable(quickActions.find(action => action.title === selectedPreview)?.preview || [])}
-              </div>
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <div className="max-h-64 overflow-y-auto">
+                    {renderPreviewTable(quickActions.find(action => action.title === selectedPreview)?.preview || [])}
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-5xl mx-auto px-3 pb-4 overflow-y-auto">
+        <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
           {/* Recent Activity Section */}
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
-              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-0.5 h-auto hover:bg-transparent">
-                •••
-              </Button>
-            </div>
-            <div className="bg-white rounded border border-gray-200 p-1.5">
-              <div className="space-y-0.5">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
+                  •••
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-3">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center justify-between w-full py-0.5">
-                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                      <Avatar className="w-4 h-4 flex-shrink-0">
-                        <AvatarFallback className={`${activity.avatarColor} text-gray-700 text-xs font-medium`}>
+                  <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Avatar className="w-8 h-8">
+                        <AvatarFallback className={`${activity.avatarColor} text-sm font-medium`}>
                           {activity.initials}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="font-medium text-gray-900 text-xs flex-shrink-0">{activity.user}</span>
-                      <span className="text-gray-600 text-xs truncate flex-1">{activity.action}</span>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm text-gray-900">{activity.user}</span>
+                        <span className="text-sm text-gray-600 ml-1">{activity.action}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-0.5 text-xs text-gray-500 flex-shrink-0 ml-1.5">
-                      <Clock className="w-2.5 h-2.5" />
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <Clock className="w-4 h-4" />
                       <span>{activity.time}</span>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Quick Actions Section */}
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <h2 className="text-sm font-semibold text-gray-900">Quick actions</h2>
-              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-0.5 h-auto hover:bg-transparent">
-                •••
-              </Button>
-            </div>
-            <div className="grid grid-cols-4 gap-1.5">
-              {projectActions.map((action, index) => {
-                const Icon = action.icon;
-                return (
-                  <div key={index} className="bg-white rounded border border-gray-200 p-1.5 hover:border-gray-300 transition-colors">
-                    <div className="flex items-start gap-1.5 mb-1">
-                      <Icon className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xs font-medium text-gray-900 mb-0.5 leading-tight">{action.title}</h3>
-                        {action.subtitle && (
-                          <p className="text-xs text-gray-600 mb-0.5 leading-tight">{action.subtitle}</p>
-                        )}
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
+                  •••
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {projectActions.map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <div key={index} className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors cursor-pointer">
+                      <div className="flex items-start gap-3 mb-2">
+                        <Icon className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-gray-900 mb-1 leading-tight">{action.title}</h3>
+                          {action.subtitle && (
+                            <p className="text-sm text-gray-600 mb-2 leading-tight">{action.subtitle}</p>
+                          )}
+                        </div>
                       </div>
+                      <p className="text-xs text-gray-500">{action.readTime}</p>
                     </div>
-                    <p className="text-xs text-gray-500">{action.readTime}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Recommendations Section */}
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <h2 className="text-sm font-semibold text-gray-900">Recommendations</h2>
-              <Button variant="ghost" size="sm" className="text-gray-400 text-xs px-1 py-0.5 h-auto hover:bg-transparent">
-                •••
-              </Button>
-            </div>
-            <div className="space-y-1.5">
-              {recommendations.map((rec, index) => (
-                <div key={index} className="bg-white rounded border border-gray-200 p-2 relative">
-                  <button className="absolute top-1.5 right-1.5 text-gray-400 hover:text-gray-600 text-xs">
-                    ✕
-                  </button>
-                  <div className="flex items-start gap-2 pr-5">
-                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded flex items-center justify-center flex-shrink-0">
-                      {typeof rec.icon === 'string' ? (
-                        <img src={rec.icon} alt="" className="w-3 h-3" />
-                      ) : (
-                        <rec.icon className="w-3 h-3 text-indigo-600" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xs font-medium text-gray-900 mb-0.5">{rec.title}</h3>
-                      <p className="text-xs text-gray-600 mb-1.5 leading-relaxed">{rec.description}</p>
-                      <Button size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-1.5 py-0.5 text-xs h-auto font-normal">
-                        {rec.buttonText}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Recommendations Section with Carousel */}
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Recommendations</CardTitle>
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
+                  •••
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {recommendations.map((rec, index) => (
+                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                      <div className="p-4 border border-gray-200 rounded-lg relative">
+                        <button className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-sm">
+                          ✕
+                        </button>
+                        <div className="flex items-start gap-3 pr-6">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            {typeof rec.icon === 'string' ? (
+                              <img src={rec.icon} alt="" className="w-5 h-5" />
+                            ) : (
+                              <rec.icon className="w-5 h-5 text-blue-600" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-medium text-gray-900 mb-2">{rec.title}</h3>
+                            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{rec.description}</p>
+                            <Button size="sm" variant="outline" className="text-sm">
+                              {rec.buttonText}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </CardContent>
+          </Card>
 
           {/* Feed Section */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <h2 className="text-sm font-semibold text-gray-900">Feed</h2>
-              <Button variant="outline" size="sm" className="text-gray-600 border-gray-300 text-xs px-1.5 py-0.5 h-auto bg-white hover:bg-gray-50">
-                <span className="mr-0.5">⚙</span>
-                Filter
-              </Button>
-            </div>
-            <div className="bg-white rounded border border-gray-200 p-3">
-              <p className="text-xs text-gray-600 text-center">
-                Your project activity feed will appear here once you start working on tasks and collaborating with your team.
-              </p>
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Feed</CardTitle>
+                <Button variant="outline" size="sm" className="text-gray-600 border-gray-300">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Filter
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-600">
+                  Your project activity feed will appear here once you start working on tasks and collaborating with your team.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </AppLayout>
