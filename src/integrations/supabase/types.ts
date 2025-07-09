@@ -14,7 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      task_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          task_id: string
+          updated_at: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          task_id: string
+          updated_at?: string
+          user_id: string
+          user_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          task_id?: string
+          updated_at?: string
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          archived: boolean | null
+          assignee: Json | null
+          collaborators: Json[] | null
+          created_at: string
+          created_by: string
+          date_created: string | null
+          deleted_at: string | null
+          deleted_by: string | null
+          description: string | null
+          due_date: string | null
+          estimated_completion: string | null
+          has_attachment: boolean | null
+          id: string
+          project: string
+          project_id: string
+          status: string
+          task_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean | null
+          assignee?: Json | null
+          collaborators?: Json[] | null
+          created_at?: string
+          created_by: string
+          date_created?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          estimated_completion?: string | null
+          has_attachment?: boolean | null
+          id?: string
+          project: string
+          project_id: string
+          status?: string
+          task_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean | null
+          assignee?: Json | null
+          collaborators?: Json[] | null
+          created_at?: string
+          created_by?: string
+          date_created?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          estimated_completion?: string | null
+          has_attachment?: boolean | null
+          id?: string
+          project?: string
+          project_id?: string
+          status?: string
+          task_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
