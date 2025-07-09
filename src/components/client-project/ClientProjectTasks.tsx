@@ -94,41 +94,41 @@ const ClientProjectTasks = ({ projectName, projectId }: ClientProjectTasksProps)
     <div className="p-4">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Task</TableHead>
-            <TableHead>Assignee</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Priority</TableHead>
-            <TableHead>Due Date</TableHead>
-            <TableHead>Progress</TableHead>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Task</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Assignee</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Status</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Priority</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Due Date</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Progress</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&_tr:last-child]:border-b">
           {tasks.map((task) => (
-            <TableRow key={task.id} className="hover:bg-muted/50">
-              <TableCell className="font-medium">{task.title}</TableCell>
-              <TableCell>
+            <TableRow key={task.id} className="hover:bg-accent/50">
+              <TableCell className="py-2 font-medium text-sm">{task.title}</TableCell>
+              <TableCell className="py-2">
                 <div className="flex items-center gap-2">
                   <Avatar className="w-6 h-6">
                     <AvatarFallback className="text-xs bg-primary/10">
                       {task.assignee.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  {task.assignee}
+                  <span className="text-sm">{task.assignee}</span>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="py-2">
                 <Badge variant="outline" className={`text-xs ${getStatusColor(task.status)}`}>
                   {task.status.replace('-', ' ')}
                 </Badge>
               </TableCell>
-              <TableCell>
+              <TableCell className="py-2">
                 <Badge variant="outline" className={`text-xs ${getPriorityColor(task.priority)}`}>
                   {task.priority}
                 </Badge>
               </TableCell>
-              <TableCell className="text-muted-foreground">{formatDate(task.dueDate)}</TableCell>
-              <TableCell>
+              <TableCell className="py-2 text-xs text-muted-foreground">{formatDate(task.dueDate)}</TableCell>
+              <TableCell className="py-2">
                 <div className="flex items-center gap-2">
                   <Progress value={task.progress} className="w-16 h-2" />
                   <span className="text-xs text-muted-foreground">{task.progress}%</span>

@@ -19,27 +19,27 @@ const ClientProjectSettings = () => {
     <div className="p-4">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-48">Setting</TableHead>
-            <TableHead>Value</TableHead>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-48">Setting</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Value</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">Project Name</TableCell>
-            <TableCell>
+        <TableBody className="[&_tr:last-child]:border-b">
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Project Name</TableCell>
+            <TableCell className="py-2">
               <Input defaultValue="Adams - 1063 40th Street" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Project ID</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Project ID</TableCell>
+            <TableCell className="py-2">
               <Input defaultValue="adams-1063-40th-street" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Project Type</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Project Type</TableCell>
+            <TableCell className="py-2">
               <Select defaultValue="renovation">
                 <SelectTrigger className="h-8">
                   <SelectValue />
@@ -53,9 +53,9 @@ const ClientProjectSettings = () => {
               </Select>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Status</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Status</TableCell>
+            <TableCell className="py-2">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
                   In Progress
@@ -74,33 +74,33 @@ const ClientProjectSettings = () => {
               </div>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Start Date</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Start Date</TableCell>
+            <TableCell className="py-2">
               <Input type="date" defaultValue="2024-01-01" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">End Date</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">End Date</TableCell>
+            <TableCell className="py-2">
               <Input type="date" defaultValue="2024-03-31" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Total Budget</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Total Budget</TableCell>
+            <TableCell className="py-2">
               <Input defaultValue="$75,000" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Amount Spent</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Amount Spent</TableCell>
+            <TableCell className="py-2">
               <Input defaultValue="$27,450" className="h-8" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Budget Progress</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Budget Progress</TableCell>
+            <TableCell className="py-2">
               <div className="space-y-1">
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>36.6% used</span>
@@ -110,9 +110,9 @@ const ClientProjectSettings = () => {
               </div>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Project Manager</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Project Manager</TableCell>
+            <TableCell className="py-2">
               <Select defaultValue="john-smith">
                 <SelectTrigger className="h-8">
                   <SelectValue />
@@ -125,9 +125,9 @@ const ClientProjectSettings = () => {
               </Select>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Lead Contractor</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Lead Contractor</TableCell>
+            <TableCell className="py-2">
               <Select defaultValue="mike-johnson">
                 <SelectTrigger className="h-8">
                   <SelectValue />
@@ -140,9 +140,9 @@ const ClientProjectSettings = () => {
               </Select>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Architect</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Architect</TableCell>
+            <TableCell className="py-2">
               <Select defaultValue="sarah-davis">
                 <SelectTrigger className="h-8">
                   <SelectValue />
@@ -155,9 +155,9 @@ const ClientProjectSettings = () => {
               </Select>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Project Description</TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Project Description</TableCell>
+            <TableCell className="py-2">
               <Textarea 
                 placeholder="Detailed project description..."
                 className="min-h-24"
@@ -165,9 +165,9 @@ const ClientProjectSettings = () => {
               />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2"></TableCell>
+            <TableCell className="py-2">
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">Cancel</Button>
                 <Button size="sm">Save Changes</Button>

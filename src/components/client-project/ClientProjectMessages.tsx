@@ -7,6 +7,8 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
@@ -59,17 +61,25 @@ const ClientProjectMessages = () => {
       {/* Messages Table */}
       <div className="flex-1 p-4 overflow-auto">
         <Table>
-          <TableBody>
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-12"></TableHead>
+              <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-24">User</TableHead>
+              <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Message</TableHead>
+              <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-20">Time</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="[&_tr:last-child]:border-b">
             {messages.map((message) => (
-              <TableRow key={message.id} className="hover:bg-muted/50">
-                <TableCell className="w-12">
+              <TableRow key={message.id} className="hover:bg-accent/50">
+                <TableCell className="py-2">
                   <Avatar className="w-8 h-8">
                     <AvatarFallback className="text-xs bg-primary/10">{message.avatar}</AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell className="w-24 font-medium">{message.user}</TableCell>
-                <TableCell>{message.message}</TableCell>
-                <TableCell className="w-20 text-right text-xs text-muted-foreground">{message.timestamp}</TableCell>
+                <TableCell className="py-2 font-medium text-sm">{message.user}</TableCell>
+                <TableCell className="py-2 text-sm">{message.message}</TableCell>
+                <TableCell className="py-2 text-xs text-muted-foreground">{message.timestamp}</TableCell>
               </TableRow>
             ))}
           </TableBody>

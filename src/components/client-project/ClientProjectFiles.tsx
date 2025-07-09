@@ -31,24 +31,24 @@ const ClientProjectFiles = () => {
     <div className="p-4">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Size</TableHead>
-            <TableHead>Modified</TableHead>
-            <TableHead className="w-16"></TableHead>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Name</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Type</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Size</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Modified</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-16"></TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&_tr:last-child]:border-b">
           {files.map((file, index) => (
-            <TableRow key={index} className="hover:bg-muted/50">
-              <TableCell className="font-medium">{file.name}</TableCell>
-              <TableCell>
+            <TableRow key={index} className="hover:bg-accent/50">
+              <TableCell className="py-2 font-medium text-sm">{file.name}</TableCell>
+              <TableCell className="py-2">
                 <Badge variant="outline" className="text-xs">{file.type}</Badge>
               </TableCell>
-              <TableCell className="text-muted-foreground">{file.size}</TableCell>
-              <TableCell className="text-muted-foreground">{file.modified}</TableCell>
-              <TableCell>
+              <TableCell className="py-2 text-xs text-muted-foreground">{file.size}</TableCell>
+              <TableCell className="py-2 text-xs text-muted-foreground">{file.modified}</TableCell>
+              <TableCell className="py-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">

@@ -78,18 +78,18 @@ const ClientProjectInvoices = () => {
     <div className="p-4">
       {/* Summary Table */}
       <Table className="mb-6">
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">Total Invoiced</TableCell>
-            <TableCell className="text-right font-semibold">${totalAmount.toLocaleString()}</TableCell>
+        <TableBody className="[&_tr:last-child]:border-b">
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm">Total Invoiced</TableCell>
+            <TableCell className="py-2 text-right font-semibold text-sm">${totalAmount.toLocaleString()}</TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-green-800">Paid</TableCell>
-            <TableCell className="text-right font-semibold text-green-800">${paidAmount.toLocaleString()}</TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm text-green-800">Paid</TableCell>
+            <TableCell className="py-2 text-right font-semibold text-sm text-green-800">${paidAmount.toLocaleString()}</TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-yellow-800">Outstanding</TableCell>
-            <TableCell className="text-right font-semibold text-yellow-800">${(totalAmount - paidAmount).toLocaleString()}</TableCell>
+          <TableRow className="hover:bg-accent/50">
+            <TableCell className="py-2 font-medium text-sm text-yellow-800">Outstanding</TableCell>
+            <TableCell className="py-2 text-right font-semibold text-sm text-yellow-800">${(totalAmount - paidAmount).toLocaleString()}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -97,30 +97,30 @@ const ClientProjectInvoices = () => {
       {/* Invoices Table */}
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Invoice</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Issued</TableHead>
-            <TableHead>Due</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead className="w-20"></TableHead>
+          <TableRow className="border-b border-border">
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Invoice</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Description</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Status</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Issued</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Due</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline">Amount</TableHead>
+            <TableHead className="text-muted-foreground font-medium text-xs py-1.5 h-auto align-baseline w-20"></TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&_tr:last-child]:border-b">
           {invoices.map((invoice) => (
-            <TableRow key={invoice.id} className="hover:bg-muted/50">
-              <TableCell className="font-medium">{invoice.id}</TableCell>
-              <TableCell>{invoice.description}</TableCell>
-              <TableCell>
+            <TableRow key={invoice.id} className="hover:bg-accent/50">
+              <TableCell className="py-2 font-medium text-sm">{invoice.id}</TableCell>
+              <TableCell className="py-2 text-sm">{invoice.description}</TableCell>
+              <TableCell className="py-2">
                 <Badge variant="outline" className={`text-xs ${getStatusColor(invoice.status)}`}>
                   {invoice.status}
                 </Badge>
               </TableCell>
-              <TableCell className="text-muted-foreground">{formatDate(invoice.date)}</TableCell>
-              <TableCell className="text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
-              <TableCell className="font-semibold">{invoice.amount}</TableCell>
-              <TableCell>
+              <TableCell className="py-2 text-xs text-muted-foreground">{formatDate(invoice.date)}</TableCell>
+              <TableCell className="py-2 text-xs text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
+              <TableCell className="py-2 font-semibold text-sm">{invoice.amount}</TableCell>
+              <TableCell className="py-2">
                 <div className="flex gap-1">
                   <Button variant="outline" size="sm" className="h-7 px-2">
                     <Eye className="w-3 h-3" />
