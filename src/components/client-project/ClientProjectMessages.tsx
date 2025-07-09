@@ -3,6 +3,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/ui/table";
 
 const ClientProjectMessages = () => {
   const messages = [
@@ -50,39 +56,24 @@ const ClientProjectMessages = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Messages */}
-      <div className="flex-1 p-4 space-y-3 overflow-auto">
-        {messages.map((message) => (
-          <div key={message.id} className={`flex gap-2 ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
-            {!message.isOwn && (
-              <Avatar className="w-7 h-7 flex-shrink-0">
-                <AvatarFallback className="text-xs bg-primary/10">{message.avatar}</AvatarFallback>
-              </Avatar>
-            )}
-            
-            <div className={`max-w-md ${message.isOwn ? 'order-first' : ''}`}>
-              <div className={`rounded-lg p-2 ${
-                message.isOwn 
-                  ? 'bg-primary text-primary-foreground ml-auto' 
-                  : 'bg-muted'
-              }`}>
-                {!message.isOwn && (
-                  <div className="text-xs font-medium mb-1">{message.user}</div>
-                )}
-                <p className="text-sm">{message.message}</p>
-              </div>
-              <div className={`text-xs text-muted-foreground mt-1 ${message.isOwn ? 'text-right' : ''}`}>
-                {message.timestamp}
-              </div>
-            </div>
-
-            {message.isOwn && (
-              <Avatar className="w-7 h-7 flex-shrink-0">
-                <AvatarFallback className="text-xs bg-primary/10">{message.avatar}</AvatarFallback>
-              </Avatar>
-            )}
-          </div>
-        ))}
+      {/* Messages Table */}
+      <div className="flex-1 p-4 overflow-auto">
+        <Table>
+          <TableBody>
+            {messages.map((message) => (
+              <TableRow key={message.id} className="hover:bg-muted/50">
+                <TableCell className="w-12">
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="text-xs bg-primary/10">{message.avatar}</AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell className="w-24 font-medium">{message.user}</TableCell>
+                <TableCell>{message.message}</TableCell>
+                <TableCell className="w-20 text-right text-xs text-muted-foreground">{message.timestamp}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
       
       {/* Input */}

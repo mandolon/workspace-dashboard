@@ -2,6 +2,14 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download, Eye } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const ClientProjectInvoices = () => {
   const invoices = [
@@ -67,47 +75,52 @@ const ClientProjectInvoices = () => {
     }, 0);
 
   return (
-    <div className="p-4 overflow-auto">
-      {/* Summary */}
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="bg-muted/50 rounded-lg p-3">
-          <div className="text-2xl font-bold">${totalAmount.toLocaleString()}</div>
-          <div className="text-xs text-muted-foreground">Total Invoiced</div>
-        </div>
-        <div className="bg-green-50 rounded-lg p-3">
-          <div className="text-2xl font-bold text-green-800">${paidAmount.toLocaleString()}</div>
-          <div className="text-xs text-green-600">Paid</div>
-        </div>
-        <div className="bg-yellow-50 rounded-lg p-3">
-          <div className="text-2xl font-bold text-yellow-800">${(totalAmount - paidAmount).toLocaleString()}</div>
-          <div className="text-xs text-yellow-600">Outstanding</div>
-        </div>
-      </div>
+    <div className="p-4">
+      {/* Summary Table */}
+      <Table className="mb-6">
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">Total Invoiced</TableCell>
+            <TableCell className="text-right font-semibold">${totalAmount.toLocaleString()}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium text-green-800">Paid</TableCell>
+            <TableCell className="text-right font-semibold text-green-800">${paidAmount.toLocaleString()}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium text-yellow-800">Outstanding</TableCell>
+            <TableCell className="text-right font-semibold text-yellow-800">${(totalAmount - paidAmount).toLocaleString()}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-      {/* Invoices List */}
-      <div className="space-y-2">
-        {invoices.map((invoice) => (
-          <div key={invoice.id} className="border border-border rounded-lg p-3 hover:bg-muted/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="font-medium text-sm">{invoice.id}</span>
-                  <Badge variant="outline" className={`text-xs ${getStatusColor(invoice.status)}`}>
-                    {invoice.status}
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-1">{invoice.description}</p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>Issued: {formatDate(invoice.date)}</span>
-                  <span>•</span>
-                  <span>Due: {formatDate(invoice.dueDate)}</span>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="font-semibold">{invoice.amount}</div>
-                </div>
+      {/* Invoices Table */}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Invoice</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Issued</TableHead>
+            <TableHead>Due</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead className="w-20"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice) => (
+            <TableRow key={invoice.id} className="hover:bg-muted/50">
+              <TableCell className="font-medium">{invoice.id}</TableCell>
+              <TableCell>{invoice.description}</TableCell>
+              <TableCell>
+                <Badge variant="outline" className={`text-xs ${getStatusColor(invoice.status)}`}>
+                  {invoice.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-muted-foreground">{formatDate(invoice.date)}</TableCell>
+              <TableCell className="text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
+              <TableCell className="font-semibold">{invoice.amount}</TableCell>
+              <TableCell>
                 <div className="flex gap-1">
                   <Button variant="outline" size="sm" className="h-7 px-2">
                     <Eye className="w-3 h-3" />
@@ -116,11 +129,11 @@ const ClientProjectInvoices = () => {
                     <Download className="w-3 h-3" />
                   </Button>
                 </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
