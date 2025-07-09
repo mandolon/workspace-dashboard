@@ -1,10 +1,8 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Mail, Phone, MapPin, Edit } from 'lucide-react';
 
 interface ClientProjectClientProps {
   onDataChange?: () => void;
@@ -12,103 +10,90 @@ interface ClientProjectClientProps {
 
 const ClientProjectClient = ({ onDataChange }: ClientProjectClientProps) => {
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="p-4 overflow-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Client Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Client Information
-              <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" defaultValue="Robert" />
-              </div>
-              <div>
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" defaultValue="Adams" />
-              </div>
-            </div>
-            
+        <div className="space-y-4">
+          <div className="border-b border-border pb-2">
+            <h3 className="font-medium text-sm">Client Information</h3>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="email">Email</Label>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-muted-foreground" />
-                <Input id="email" defaultValue="robert.adams@email.com" />
-              </div>
+              <Label htmlFor="firstName" className="text-xs">First Name</Label>
+              <Input id="firstName" defaultValue="Robert" className="h-8 text-sm" />
             </div>
-            
             <div>
-              <Label htmlFor="phone">Phone</Label>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-muted-foreground" />
-                <Input id="phone" defaultValue="(555) 123-4567" />
-              </div>
+              <Label htmlFor="lastName" className="text-xs">Last Name</Label>
+              <Input id="lastName" defaultValue="Adams" className="h-8 text-sm" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          
+          <div>
+            <Label htmlFor="email" className="text-xs">Email</Label>
+            <Input id="email" defaultValue="robert.adams@email.com" className="h-8 text-sm" />
+          </div>
+          
+          <div>
+            <Label htmlFor="phone" className="text-xs">Phone</Label>
+            <Input id="phone" defaultValue="(555) 123-4567" className="h-8 text-sm" />
+          </div>
+
+          <div>
+            <Label htmlFor="company" className="text-xs">Company</Label>
+            <Input id="company" defaultValue="Adams Construction LLC" className="h-8 text-sm" />
+          </div>
+        </div>
 
         {/* Project Address */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Project Address
-              <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="space-y-4">
+          <div className="border-b border-border pb-2">
+            <h3 className="font-medium text-sm">Project Address</h3>
+          </div>
+          
+          <div>
+            <Label htmlFor="address" className="text-xs">Street Address</Label>
+            <Input id="address" defaultValue="1063 40th Street" className="h-8 text-sm" />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="address">Street Address</Label>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-muted-foreground" />
-                <Input id="address" defaultValue="1063 40th Street" />
-              </div>
+              <Label htmlFor="city" className="text-xs">City</Label>
+              <Input id="city" defaultValue="Sacramento" className="h-8 text-sm" />
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="city">City</Label>
-                <Input id="city" defaultValue="Sacramento" />
-              </div>
-              <div>
-                <Label htmlFor="state">State</Label>
-                <Input id="state" defaultValue="CA" />
-              </div>
-            </div>
-            
             <div>
-              <Label htmlFor="zipCode">ZIP Code</Label>
-              <Input id="zipCode" defaultValue="95819" />
+              <Label htmlFor="state" className="text-xs">State</Label>
+              <Input id="state" defaultValue="CA" className="h-8 text-sm" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          
+          <div>
+            <Label htmlFor="zipCode" className="text-xs">ZIP Code</Label>
+            <Input id="zipCode" defaultValue="95819" className="h-8 text-sm" />
+          </div>
+
+          <div>
+            <Label htmlFor="projectType" className="text-xs">Project Type</Label>
+            <Input id="projectType" defaultValue="Kitchen Renovation" className="h-8 text-sm" />
+          </div>
+        </div>
 
         {/* Project Notes */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Project Notes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Textarea 
-              placeholder="Add project notes, special instructions, or important details..."
-              className="min-h-32"
-              defaultValue="Kitchen renovation project with modern appliances. Client prefers neutral colors and open concept design."
-            />
-            <div className="flex justify-end mt-4">
-              <Button onClick={onDataChange}>Save Changes</Button>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="lg:col-span-2 space-y-4">
+          <div className="border-b border-border pb-2">
+            <h3 className="font-medium text-sm">Project Notes</h3>
+          </div>
+          
+          <Textarea 
+            placeholder="Add project notes, special instructions, or important details..."
+            className="min-h-20 text-sm"
+            defaultValue="Kitchen renovation project with modern appliances. Client prefers neutral colors and open concept design. Special attention to lighting and counter space."
+          />
+          
+          <div className="flex justify-end">
+            <Button onClick={onDataChange} size="sm">Save Changes</Button>
+          </div>
+        </div>
       </div>
     </div>
   );

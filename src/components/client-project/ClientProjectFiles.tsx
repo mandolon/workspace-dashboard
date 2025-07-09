@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { FileText, Download, Eye, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { MoreHorizontal, Download, Eye } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,45 +11,55 @@ import {
 
 const ClientProjectFiles = () => {
   const files = [
-    { name: 'Project Proposal.pdf', size: '2.4 MB', modified: '2 days ago', type: 'pdf' },
-    { name: 'Floor Plans.dwg', size: '5.2 MB', modified: '1 week ago', type: 'dwg' },
-    { name: 'Material Specs.xlsx', size: '1.8 MB', modified: '3 days ago', type: 'xlsx' },
-    { name: 'Progress Photos.zip', size: '45.2 MB', modified: '1 day ago', type: 'zip' },
+    { name: 'Project Proposal.pdf', size: '2.4 MB', modified: '2 days ago', type: 'Document' },
+    { name: 'Floor Plans.dwg', size: '5.2 MB', modified: '1 week ago', type: 'Drawing' },
+    { name: 'Material Specs.xlsx', size: '1.8 MB', modified: '3 days ago', type: 'Spreadsheet' },
+    { name: 'Progress Photos.zip', size: '45.2 MB', modified: '1 day ago', type: 'Archive' },
+    { name: 'Contract Agreement.pdf', size: '890 KB', modified: '2 weeks ago', type: 'Document' },
+    { name: 'Site Survey.pdf', size: '3.1 MB', modified: '1 month ago', type: 'Document' },
   ];
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="p-4 overflow-auto">
+      <div className="space-y-2">
         {files.map((file, index) => (
-          <Card key={index} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <FileText className="w-8 h-8 text-primary" />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Eye className="w-4 h-4 mr-2" />
-                      Preview
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+          <div key={index} className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
+                  <span className="text-xs font-semibold text-primary">
+                    {file.type.charAt(0)}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{file.name}</p>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <span>{file.size}</span>
+                    <span>•</span>
+                    <span>{file.modified}</span>
+                    <Badge variant="outline" className="text-xs">{file.type}</Badge>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-medium text-sm mb-1 line-clamp-2">{file.name}</h3>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <p>{file.size}</p>
-                <p>Modified {file.modified}</p>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-background border z-50">
+                <DropdownMenuItem>
+                  <Eye className="w-4 h-4 mr-2" />
+                  Preview
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ))}
       </div>
     </div>
