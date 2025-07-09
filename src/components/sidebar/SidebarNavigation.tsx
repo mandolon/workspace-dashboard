@@ -12,7 +12,8 @@ import {
   Receipt,
   FileImage,
   ClipboardList,
-  Clock
+  Clock,
+  FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -48,11 +49,13 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
   const handleNavigateInvoices = useCallback(() => navigate('/invoices'), [navigate]);
   const handleNavigateWhiteboards = useCallback(() => navigate('/whiteboards'), [navigate]);
   const handleNavigateTimesheets = useCallback(() => navigate('/timesheets'), [navigate]);
+  const handleNavigateClientProject = useCallback(() => navigate('/client-project'), [navigate]);
 
   // Client gets dashboard and Whiteboards
   const clientNavItems = [
     { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
     { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateClientWhiteboards },
+    { icon: FileText, label: 'Client Project', active: false, onClick: handleNavigateClientProject },
   ];
 
   // Admin/team: full nav, but no Help item (removed!)
@@ -68,7 +71,8 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
       { icon: Receipt, label: 'Invoices', active: false, onClick: handleNavigateInvoices },
       { icon: FileImage, label: 'Whiteboards', active: false, onClick: handleNavigateWhiteboards },
       { icon: Clock, label: 'Timesheets', active: false, onClick: handleNavigateTimesheets },
-      { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard }
+      { icon: LayoutDashboard, label: 'Client Dashboard', active: false, onClick: handleNavigateClientDashboard },
+      { icon: FileText, label: 'Client Project', active: false, onClick: handleNavigateClientProject }
     ];
   }, [
     clientMode,
@@ -83,6 +87,7 @@ const SidebarNavigation = React.memo(({ isCollapsed, isOpen, onToggle }: Sidebar
     handleNavigateTimesheets,
     handleNavigateClientDashboard,
     handleNavigateClientWhiteboards,
+    handleNavigateClientProject,
   ]);
 
   // Collapsed view (clients only show icon for dashboard and new whiteboards)

@@ -28,6 +28,7 @@ import InvoicePage from '@/pages/InvoicePage';
 import ClientDashboard from '@/pages/ClientDashboard';
 import ClientAccountPage from '@/pages/ClientAccountPage';
 import ClientWhiteboards from '@/pages/ClientWhiteboards';
+import ClientProjectPage from '@/pages/ClientProjectPage';
 import NotFound from '@/pages/NotFound';
 import LoginPage from '@/components/auth/LoginPage';
 
@@ -136,6 +137,11 @@ function App() {
                         <Route path="/client-whiteboards" element={
                           <ProtectedRoute>
                             <ClientWhiteboards />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/client-project" element={
+                          <ProtectedRoute>
+                            <ClientProjectPage />
                           </ProtectedRoute>
                         } />
                         <Route path="/help/admin" element={
