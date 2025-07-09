@@ -7,325 +7,23 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
-      emails: {
-        Row: {
-          avatar: string | null
-          content: string | null
-          created_at: string
-          has_attachment: boolean | null
-          id: string
-          is_read: boolean | null
-          is_starred: boolean | null
-          preview: string | null
-          recipient: string | null
-          recipient_id: string | null
-          sender_email: string | null
-          sender_id: string
-          sender_name: string
-          status: string
-          subject: string
-          time: string | null
-          to_emails: string[] | null
-          updated_at: string
-        }
-        Insert: {
-          avatar?: string | null
-          content?: string | null
-          created_at?: string
-          has_attachment?: boolean | null
-          id?: string
-          is_read?: boolean | null
-          is_starred?: boolean | null
-          preview?: string | null
-          recipient?: string | null
-          recipient_id?: string | null
-          sender_email?: string | null
-          sender_id: string
-          sender_name: string
-          status: string
-          subject: string
-          time?: string | null
-          to_emails?: string[] | null
-          updated_at?: string
-        }
-        Update: {
-          avatar?: string | null
-          content?: string | null
-          created_at?: string
-          has_attachment?: boolean | null
-          id?: string
-          is_read?: boolean | null
-          is_starred?: boolean | null
-          preview?: string | null
-          recipient?: string | null
-          recipient_id?: string | null
-          sender_email?: string | null
-          sender_id?: string
-          sender_name?: string
-          status?: string
-          subject?: string
-          time?: string | null
-          to_emails?: string[] | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      pdf_comments: {
-        Row: {
-          comment_number: number
-          comment_text: string
-          created_at: string
-          id: string
-          page_number: number
-          updated_at: string
-          user_id: string
-          whiteboard_id: string
-          x: number
-          y: number
-        }
-        Insert: {
-          comment_number: number
-          comment_text: string
-          created_at?: string
-          id?: string
-          page_number?: number
-          updated_at?: string
-          user_id: string
-          whiteboard_id: string
-          x: number
-          y: number
-        }
-        Update: {
-          comment_number?: number
-          comment_text?: string
-          created_at?: string
-          id?: string
-          page_number?: number
-          updated_at?: string
-          user_id?: string
-          whiteboard_id?: string
-          x?: number
-          y?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pdf_comments_whiteboard_id_fkey"
-            columns: ["whiteboard_id"]
-            isOneToOne: false
-            referencedRelation: "whiteboards"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email: string | null
-          full_name: string | null
-          id: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email?: string | null
-          full_name?: string | null
-          id: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email?: string | null
-          full_name?: string | null
-          id?: string
-        }
-        Relationships: []
-      }
-      task_messages: {
-        Row: {
-          created_at: string
-          id: string
-          message: string
-          task_id: string
-          updated_at: string
-          user_id: string
-          user_name: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          message: string
-          task_id: string
-          updated_at?: string
-          user_id: string
-          user_name: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          message?: string
-          task_id?: string
-          updated_at?: string
-          user_id?: string
-          user_name?: string
-        }
-        Relationships: []
-      }
-      tasks: {
-        Row: {
-          archived: boolean | null
-          assignee: Json | null
-          collaborators: Json | null
-          created_at: string
-          created_by: string
-          date_created: string | null
-          deleted_at: string | null
-          deleted_by: string | null
-          description: string | null
-          due_date: string | null
-          estimated_completion: string | null
-          has_attachment: boolean | null
-          id: number
-          project: string | null
-          project_id: string
-          status: string | null
-          task_id: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          archived?: boolean | null
-          assignee?: Json | null
-          collaborators?: Json | null
-          created_at?: string
-          created_by: string
-          date_created?: string | null
-          deleted_at?: string | null
-          deleted_by?: string | null
-          description?: string | null
-          due_date?: string | null
-          estimated_completion?: string | null
-          has_attachment?: boolean | null
-          id?: number
-          project?: string | null
-          project_id: string
-          status?: string | null
-          task_id: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          archived?: boolean | null
-          assignee?: Json | null
-          collaborators?: Json | null
-          created_at?: string
-          created_by?: string
-          date_created?: string | null
-          deleted_at?: string | null
-          deleted_by?: string | null
-          description?: string | null
-          due_date?: string | null
-          estimated_completion?: string | null
-          has_attachment?: boolean | null
-          id?: number
-          project?: string | null
-          project_id?: string
-          status?: string | null
-          task_id?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      whiteboards: {
-        Row: {
-          created_at: string
-          created_by: string
-          id: string
-          last_modified: string
-          pdf_url: string | null
-          project_id: string
-          shared_with_client: boolean
-          thumbnail: string | null
-          title: string
-          tldraw_data: Json | null
-          type: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          id: string
-          last_modified?: string
-          pdf_url?: string | null
-          project_id: string
-          shared_with_client?: boolean
-          thumbnail?: string | null
-          title: string
-          tldraw_data?: Json | null
-          type: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          id?: string
-          last_modified?: string
-          pdf_url?: string | null
-          project_id?: string
-          shared_with_client?: boolean
-          thumbnail?: string | null
-          title?: string
-          tldraw_data?: Json | null
-          type?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
-      admin_users_with_profile: {
-        Row: {
-          created_at: string | null
-          email: string | null
-          full_name: string | null
-          id: string | null
-          role: Database["public"]["Enums"]["app_role"] | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "team" | "client"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -333,21 +31,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -365,14 +67,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -388,14 +92,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -411,14 +117,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -426,22 +134,22 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "moderator", "user", "team", "client"],
-    },
+    Enums: {},
   },
 } as const
